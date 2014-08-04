@@ -1,2 +1,3 @@
 exportPattern("^[[:alpha:]]+")
-import(ggm, lavaan, lmerTest)
+import("lavaan", "lmerTest")
+importFrom("ggm", "DAG", "basiSet")

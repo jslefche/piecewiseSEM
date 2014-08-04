@@ -7,3 +7,4 @@ Author: Jon Lefcheck
 Maintainer: Jon Lefcheck <jselfche@vims.edu>
 Description: Implements goodness-of-fit tests and extraction of path coefficients for piecewise structural equation models.
 License: MIT
+Imports: ggm, lavaan, lmerTest

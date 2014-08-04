@@ -27,7 +27,7 @@ library(piecewiseSEM)
 ###Load data from Shipley 2009
 
 ```
-data(shipley)
+data(Shipley)
 ```
 The data is alternately hosted in Ecological Archives E090-028-S1 (DOI: 10.1890/08-1034.1).
 
@@ -58,7 +58,7 @@ Shipley.modlist = list(
 
 ###Run Shipley tests
 
-`shipley.test` returns a list of the following:
+`get.sem.fit` returns a list of the following:
 (1) the missing paths, whether these paths are conditional on any other variables in the model, and associated p-values;
 (2) the Fisher's C statistic and p-value for the model (derived from a Chi-squared distribution);
 (3) the AIC and AICc (corrected for small sample size) for the model.
@@ -70,7 +70,7 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 (See ["p-values and all that"](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
 ```
-shipley.test(Shipley.modlist)
+get.sem.fit(Shipley.modlist)
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.

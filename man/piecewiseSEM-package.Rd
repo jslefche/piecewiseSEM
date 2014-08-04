@@ -20,7 +20,7 @@ Depends: \tab R (>=3.1.0), ggm, lavaan, lmerTest\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
 }
-The primary functions in the package are \code{\link{shipley.test}} which performs goodness-of-fit tests, and \code{\link{get.sem.coefs}} which returns path coefficients and standard errors.
+The primary functions in the package are \code{\link{get.sem.fit}} which performs goodness-of-fit tests, and \code{\link{get.sem.coefs}} which returns path coefficients and standard errors.
 }
 \section{Warning}{
 \strong{This package is still in beta!}
@@ -61,7 +61,7 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Get goodness-of-fit and AIC
-shipley.test(Shipley.modlist, progressBar = T)
+get.sem.fit(Shipley.modlist, progressBar = T)
 
 # Get path coefficients
 get.sem.coefs(Shipley.modlist, standardized = T)

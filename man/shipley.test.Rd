@@ -1,5 +1,5 @@
-\name{shipley.test}
-\alias{shipley.test}
+\name{get.sem.fit}
+\alias{get.sem.fit}
 \title{
 Shipley's goodness-of-fit tests for piecewise SEM.
 }
@@ -65,5 +65,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Conduct goodness-of-fit tests
-shipley.test(Shipley.modlist, .progressBar = T)
+get.sem.fit(Shipley.modlist, .progressBar = T)
 }
