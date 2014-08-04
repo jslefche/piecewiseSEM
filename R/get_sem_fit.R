@@ -1,4 +1,4 @@
-shipley.test = function(modelList, add.vars = NULL, adjust.p = FALSE, .progressBar = FALSE) {
+get.sem.fit = function(modelList, add.vars = NULL, adjust.p = FALSE, .progressBar = FALSE) {
 
   if(!all(sapply(modelList, function(i) 
     all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) ) ) )
