@@ -1,10 +1,11 @@
 Package: piecewiseSEM
 Type: Package
 Title: Piecewise Structural Equation Modeling
-Version: 0.1.2
+Version: 0.1.4
 Date: 2014-08-04
 Author: Jon Lefcheck
 Maintainer: Jon Lefcheck <jselfche@vims.edu>
 Description: Implements goodness-of-fit tests and extraction of path coefficients for piecewise structural equation models.
 License: MIT
+Depends: ggm, lavaan, lmerTest
 Imports: ggm, lavaan, lmerTest
