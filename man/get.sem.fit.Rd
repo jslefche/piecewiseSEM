@@ -47,7 +47,7 @@ Jon Lefcheck
 \code{\link{dag.updated}}, \code{\link{get.missing.paths}}, \code{\link{get.fisher.c}}, \code{\link{get.aic}}
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
