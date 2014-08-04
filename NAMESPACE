@@ -1,2 +1,4 @@
 exportPattern("^[[:alpha:]]+")
-import("gg", "lavaan", "lmerTest")
+import(ggm)
+import(lavaan)
+import(lmerTest)
