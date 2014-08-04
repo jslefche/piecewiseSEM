@@ -1,6 +1,6 @@
 # Piecewise Structural Equation Modeling
 
-  Implementation of piecewise structural equation modeling (SEM), including estimation of path coefficients and goodness-of-fit statistics. 
+  Implementation of piecewise structural equation modeling (SEM) in R, including estimation of path coefficients and goodness-of-fit statistics. 
   
   For more information, see: 
 
@@ -10,16 +10,17 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.9 (2014-08-03)
+Version: 0.1.4 (2014-08-04)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
 ##Examples
 
-###Load dependencies
+###Load package
 
 ```
-# install_github(repo = ###)
+# library(devtools)
+# install_github("piecewiseSEM", "jslefche")
 library(piecewiseSEM)
 ```
 
@@ -57,7 +58,7 @@ Shipley.modlist = list(
 
 ###Run Shipley tests
 
-`shipley.test` returns a list reporting:
+`shipley.test` returns a list of the following:
 (1) the missing paths, whether these paths are conditional on any other variables in the model, and associated p-values;
 (2) the Fisher's C statistic and p-value for the model (derived from a Chi-squared distribution);
 (3) the AIC and AICc (corrected for small sample size) for the model.
