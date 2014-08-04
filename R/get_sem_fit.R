@@ -13,7 +13,7 @@ get.sem.fit = function(modelList, add.vars = NULL, adjust.p = FALSE, .progressBa
   
   basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
     
-  basis.set = filter.exogenous(basis.set, add.vars)
+  basis.set = filter.exogenous(modelList, basis.set, add.vars)
   
   if(length(basis.set) < 1) 
     warning("All endogenous variables are conditionally dependent: no test of d-sep necessary")
