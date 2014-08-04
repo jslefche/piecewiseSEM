@@ -1,14 +1,16 @@
 get.lavaan.sem = function(modelList, add.vars = NULL) {
 
-  model = paste(unlist(lapply(modelList, function(i) paste(format(formula(i)), collapse = ""))), collapse = "\n")
+  sem.model = paste(unlist(lapply(modelList, function(model) paste(format(formula(model)), collapse = ""))), collapse = "\n")
 
-  if(!is.null(add.vars)) model = paste(model, 
+  if(!is.null(add.vars)) sem.model = paste(sem.model, 
     paste(unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep="~")))), collapse="\n"), sep = "\n")
   
-  if(all(class(i) %in% c("lm", "glm", "negbin"))) model.data = i$model else 
-    if(all(class(i) %in% c("lme", "glmmPQL"))) model.data = i$data else
-      if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) model.data = i@frame
+  model = modelList[[which.max(lapply(modelList, nobs))]]
   
-  sem(model, model.data) 
+  if(all(class(model) %in% c("lm", "glm", "negbin"))) sem.model.data = model$sem.model else 
+    if(all(class(model) %in% c("lme", "glmmPQL"))) sem.model.data = model$data else
+      if(all(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) sem.model.data = model@frame
+  
+  sem(sem.model, sem.model.data) 
 
 }
