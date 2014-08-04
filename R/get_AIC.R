@@ -1,4 +1,4 @@
-get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, progressBar = FALSE, basis.set = NULL, add.vars = NULL) {
+get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, add.vars = NULL) {
   
   if(is.null(basis.set)) { 
     
@@ -15,11 +15,11 @@ get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, progressBar =
   
   if(is.null(pvalues.df)) {
     
-    if(progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+    if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
     
-    pvalues.df = get.missing.paths(modelList, adjust.p, progressBar, basis.set, add.vars) }
+    pvalues.df = get.missing.paths(modelList, adjust.p, .progressBar, basis.set, add.vars) }
   
-  fisher.c = get.fisher.c(modelList, pvalues.df, adjust.p, progressBar, basis.set, add.vars)
+  fisher.c = get.fisher.c(modelList, pvalues.df, adjust.p, .progressBar, basis.set, add.vars)
   
   K = do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
   

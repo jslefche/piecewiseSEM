@@ -8,7 +8,7 @@ Evaluates independence claims for a piecewise structural equation model (SEM), a
 }
 \usage{
 get.fisher.c(modelList, pvalues.df = NULL, adjust.p = FALSE, 
-progressBar = FALSE, basis.set = NULL, add.vars = NULL)
+.progressBar = FALSE, basis.set = NULL, add.vars = NULL)
 }
 \arguments{
   \item{modelList}{
@@ -20,7 +20,7 @@ An optional \code{data.frame} corresponding to p-values for independence claims.
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
-  \item{progressBar}{
+  \item{.progressBar}{
 Enable optional text progress bar.
 }
   \item{basis.set}{

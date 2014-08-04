@@ -8,7 +8,7 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 }
 \usage{
 shipley.test = function(modelList, add.vars = NULL, 
-adjust.p = FALSE, progressBar = FALSE)
+adjust.p = FALSE, .progressBar = FALSE)
 }
 \arguments{
    \item{modelList}{
@@ -20,7 +20,7 @@ A vector of additional variables whose independence claims should be evaluated, 
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
-  \item{progressBar}{
+  \item{.progressBar}{
 Enable optional text progress bar.
 }
 }
@@ -65,5 +65,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Conduct goodness-of-fit tests
-shipley.test(Shipley.modlist)
+shipley.test(Shipley.modlist, .progressBar = T)
 }

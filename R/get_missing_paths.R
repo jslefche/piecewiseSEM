@@ -1,8 +1,8 @@
-get.missing.paths = function(modelList, adjust.p = FALSE, progressBar = FALSE, basis.set = NULL, add.vars = NULL) {
+get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, add.vars = NULL) {
   
   if(is.null(basis.set)) basis.set = basiSet(dag.updated(modelList, add.vars = NULL))
   
-  if(progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+  if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
   pvalues.df = do.call(rbind, lapply(seq_along(basis.set), function(i) {
     
@@ -62,7 +62,7 @@ get.missing.paths = function(modelList, adjust.p = FALSE, progressBar = FALSE, b
         p = summary(basis.mod)$coefficients[basis.set[[i]][1],5] }
     }
 
-    if(progressBar == TRUE) setTxtProgressBar(pb, i)
+    if(.progressBar == TRUE) setTxtProgressBar(pb, i)
 
     data.frame(
       missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
