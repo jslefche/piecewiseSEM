@@ -1,5 +1,5 @@
-\name{get.AIC}
-\alias{get.AIC}
+\name{get.aic}
+\alias{get.aic}
 \title{
 Extracts AIC scores for a piecewise structural equation model.
 }
