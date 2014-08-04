@@ -10,8 +10,11 @@ Identifies exogenous variables (variables that have no paths leading to them) an
 filter.exogenous(basis.set, add.vars = NULL)
 }
 \arguments{
+ \item{modelList}{
+A \code{list} of regressions representing the structural equation model. 
+}
   \item{basis.set}{
-A \code{list} of vectors representing conditional independence statements.
+A optional \code{list} of vectors representing conditional independence statements.
 }
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
@@ -48,10 +51,12 @@ Shipley.modlist = list(
   data = Shipley),
   glmer(Live~Growth+(1|site)+(1|tree), 
   family=binomial(link = "logit"), data = Shipley) )
-  
-# Generate basis set
-basis.set = basiSet(dag.updated(modelList))
 
 # Filter exogenous variables
-filter.exogenous(basis.set) # No exogenous variables in this dataset
+filter.exogenous(modelList)
+# Compare with original basis set
+identical(
+  basiSet(dag.updated(modelList)),
+  filter.exogenous(modelList) )
+# No exogenous variables in this dataset!
 }
