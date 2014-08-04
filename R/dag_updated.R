@@ -8,7 +8,7 @@ dag.updated = function(modelList, add.vars = NULL) {
     dag = dag else 
       dag = append(dag, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep="~")))))
   
-  dag = lapply(dag, function(i) if(grepl("\\*", format(formula(i)))) {
+  dag = lapply(dag, function(i) if(grepl("\\*", paste(format(formula(i)), collapse = ""))) {
     f = paste(formula(i)[[2]], "~", paste(colnames(attr(terms(i), "factors")), collapse = "+"))
     f = gsub("\\:", paste(LETTERS[1:10], collapse = ""), f)
     formula(f) }  else i )
