@@ -2,6 +2,8 @@ get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar 
   
   if(is.null(basis.set)) { 
     
+    dag = dag.updated(modelList)
+    
     basis.set = basiSet(dag)
     
     basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
