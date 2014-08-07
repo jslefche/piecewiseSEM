@@ -2,11 +2,9 @@ get.fisher.c = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progres
   
   if(is.null(basis.set)) { 
     
-    basis.set = basiSet(dag)
-                           
-    basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
-                           
-    basis.set = filter.exogenous(basis.set, add.vars) 
+    basis.set = get.basis.set(modelList, add.vars)
+    
+    basis.set = filter.exogenous(modelList, basis.set, add.vars) 
     
   }
   

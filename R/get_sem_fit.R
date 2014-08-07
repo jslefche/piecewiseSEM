@@ -7,12 +7,8 @@ get.sem.fit = function(modelList, add.vars = NULL, adjust.p = FALSE, .progressBa
   if(!all(unlist(lapply(modelList, nobs)))) 
     warning("All models do not have the same number of observations")
   
-  dag = dag.updated(modelList, add.vars)
+  basis.set = get.basis.set(modelList, add.vars)
   
-  basis.set = basiSet(dag)
-  
-  basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
-    
   basis.set = filter.exogenous(modelList, basis.set, add.vars)
   
   if(length(basis.set) < 1) 
