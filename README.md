@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.1.4 (2014-08-04)
+Version: 0.1.5 (2014-08-07)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -77,7 +77,7 @@ The missing paths output differs from Table 2 in Shipley 2009. However, running 
 
 ###Extract path coefficients
 
-Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean). Default is `FALSE`. The function returns a list of length up to 2, corresponding to non-significant and/or significant paths based. Default is `alpha = 0.05`.
+Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean). Default is `FALSE`. The function returns a `data.frame` sorted by increasing p-value.
 
 ```
 get.sem.coefs(Shipley.modlist)
