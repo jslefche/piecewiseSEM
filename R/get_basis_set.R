@@ -1,4 +1,4 @@
-dag.updated = function(modelList, add.vars = NULL) {
+get.basis.set = function(modelList, add.vars = NULL) {
   
   dag = lapply(modelList, function(i) 
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL"))) formula(i) else 
@@ -15,10 +15,12 @@ dag.updated = function(modelList, add.vars = NULL) {
    
   body(DAG)[[2]] = substitute(f <- dag) 
   
-  dag = DAG(dag)
+  basis.set = basiSet(DAG(dag))
+  
+  basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
 
   body(DAG)[[2]] = substitute(f <- list(...))
   
-  return(dag)
+  return(basis.set)
   
 }

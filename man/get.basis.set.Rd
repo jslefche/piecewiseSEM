@@ -1,13 +1,13 @@
-\name{dag.updated}
-\alias{dag.updated}
+\name{get.basis.set}
+\alias{get.basis.set}
 \title{
-Directed acyclic graphs (DAGs)
+Derive basis set of independence claims
 }
 \description{
-Generates a matrix representing directed acylic graph (DAG) from a model list.
+Generates a list representing the (conditional) independence claims from a model list.
 }
 \usage{
-dag.updated(modelList, add.vars = NULL)
+get.basis.set(modelList, add.vars = NULL)
 }
 \arguments{
   \item{modelList}{
@@ -21,7 +21,7 @@ A vector of additional variables whose independence claims should be evaluated, 
 The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default is \code{NULL} (there is no additional independence claims that do not appear in the model list).
 }
 \value{
-Returns a adjacency matrix of the DAG, with rows and columns corresponding to the nodes of the graph, and a \code{1} if the variables are connected, or a \code{0} if they are not.
+Returns a \code{list} of independence claims. Each entry in the \code{list} is a vector where the first entry is the predictor whose independence from the response is being evaluated, the second is the response, and remaining entries represent the variables on which the independence claim is conditional. 
 }
 \references{
 Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
@@ -30,10 +30,10 @@ Shipley, Bill. "A new inferential test for path models based on directed acyclic
 Jon Lefcheck
 }
 \note{
-Unlike the function \code{DAG} in the \code{ggm} package, this function incorporates interactions if they included in the models.
+Unlike the functions \code{DAG} and \code{basiSet} in the \code{ggm} package, this function incorporates interactions if they included in the models.
 }
 \seealso{
-\code{\link{DAG}} 
+\code{\link{DAG}}, \code{\link{basiSet}}
 }
 \examples{
 data(shipley) # Data from Shipley 2009
@@ -53,6 +53,6 @@ Shipley.modlist = list(
   glmer(Live~Growth+(1|site)+(1|tree), 
   family=binomial(link = "logit"), data = Shipley) )
 
-dag.updated(Shipley.modlist)
+get.basis.set(Shipley.modlist)
 
 }
