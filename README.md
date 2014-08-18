@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.1.5 (2014-08-07)
+Version: 0.1.5 (2014-08-18)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -61,7 +61,7 @@ Shipley.modlist = list(
 `get.sem.fit` returns a list of the following:
 (1) the missing paths, whether these paths are conditional on any other variables in the model, and associated p-values;
 (2) the Fisher's C statistic and p-value for the model (derived from a Chi-squared distribution);
-(3) the AIC and AICc (corrected for small sample size) for the model.
+(3) the AIC, AICc (corrected for small sample size), and associated d.f. for the model.
 
 The argument `add.vars` allows you to specify a vector of additional variables whose causal independence you also wish to test. This is useful if you are comparing nested models. Default is `NULL`.
 
