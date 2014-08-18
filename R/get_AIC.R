@@ -22,6 +22,6 @@ get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar 
   
   AICc = fisher.c[1] + 2 * K * (mean(unlist(lapply(modelList, nobs)))/(mean(unlist(lapply(modelList, nobs))) - K - 1))
   
-  c(AIC = AIC, AICc = AICc)
+  c(AIC = AIC, AICc = AICc, K = K)
 
 }

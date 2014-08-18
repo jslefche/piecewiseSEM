@@ -34,7 +34,7 @@ A vector of additional variables whose independence claims should be evaluated, 
 This function calculates AIC and AICc (corrected for small sample sizes) values for a piecewise structural equation model (SEM). For more information, see Shipley 2013.
 }
 \value{
-Returns a vector where the first entry is the AIC score, and the second is the AICc score.
+Returns a vector where the first entry is the AIC score, and the second is the AICc score, and the third is the degrees of freedom (K).
 }
 \references{
 Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
