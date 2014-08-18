@@ -56,28 +56,29 @@ get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, 
     
     if(!grepl(":", basis.set[[i]][1])) rowname = basis.set[[i]][1] else {
       int = attr(terms(basis.mod), "term.labels")[grepl(":", attr(terms(basis.mod), "term.labels"))]
-      rowname = int[sapply(lapply(int, function(j) unlist(strsplit(j, ":"))), function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
+      rowname = int[sapply(lapply(int, function(j) unlist(strsplit(j, ":"))), 
+        function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
     }
     
     if(adjust.p == TRUE) {
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
-        p = summary(basis.mod)$coefficients[rowname,3] 
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),3] 
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        t.value = summary(basis.mod)$tTable[rowname,4] 
+        t.value = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4] 
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(apply(basis.mod$groups,2,function(x) length(unique(x))))))
       } else if(all(class(basis.mod) %in% c("glmerMod"))) {
-        z.value = summary(basis.mod)$coefficients[rowname,4]
+        z.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4]
         p = 2*(1 - pt(abs(z.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
       } else if(all(class(basis.mod) %in% c("merModLmerTest"))) {
-        t.value = summary(basis.mod)$coefficients[rowname,4]
+        t.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4]
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps))) }  
     } else if(adjust.p == FALSE) {
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin", "glmerMod"))) {
-        p = summary(basis.mod)$coefficients[rowname,4] 
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4] 
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        p = summary(basis.mod)$tTable[rowname,5]
+        p = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),5]
       } else if(class(basis.mod) %in% c("merModLmerTest")) {
-        p = summary(basis.mod)$coefficients[rowname,5] }
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),5] }
     }
     
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
