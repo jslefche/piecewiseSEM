@@ -18,10 +18,10 @@ get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar 
   
   K = do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
   
-  AIC = fisher.c[1] + 2 * K
+  AIC = unname(fisher.c[1] + 2 * K)
   
-  AICc = fisher.c[1] + 2 * K * (mean(unlist(lapply(modelList, nobs)))/(mean(unlist(lapply(modelList, nobs))) - K - 1))
+  AICc = unname(fisher.c[1] + 2 * K * (max(unlist(lapply(modelList, nobs)))/(max(unlist(lapply(modelList, nobs))) - K - 1)))
   
-  c(AIC = AIC, AICc = AICc, K = K)
+  c(AIC = AIC, AICc = AICc, df = K)
 
 }
