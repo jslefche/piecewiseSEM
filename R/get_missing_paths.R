@@ -46,6 +46,14 @@ get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, 
     
     if(class(basis.mod) %in% "lmerMod") basis.mod = as(basis.mod, "merModLmerTest") 
     
+    ###
+    
+    if(class(basis.mod) %in% c("lmerMod", "merModLmerTest")) {
+      x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
+      if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying lmerControl") }
+    
+    ###
+    
     if(!grepl(":", basis.set[[i]][1])) rowname = basis.set[[i]][1] else {
       int = attr(terms(basis.mod), "term.labels")[grepl(":", attr(terms(basis.mod), "term.labels"))]
       rowname = int[sapply(lapply(int, function(j) unlist(strsplit(j, ":"))), function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
