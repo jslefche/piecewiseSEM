@@ -7,7 +7,7 @@ Filter exogenous variables from the basis set
 Identifies exogenous variables (variables that have no paths leading to them) and removes them from the basis set when they appear as responses.
 }
 \usage{
-filter.exogenous(basis.set, add.vars = NULL)
+filter.exogenous(modelList, basis.set = NULL, add.vars = NULL)
 }
 \arguments{
  \item{modelList}{
