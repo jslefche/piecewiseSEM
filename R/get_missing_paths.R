@@ -64,7 +64,7 @@ get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, 
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
         p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),3] 
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        t.value = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4] 
+        t.value = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)),4] 
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(apply(basis.mod$groups,2,function(x) length(unique(x))))))
       } else if(all(class(basis.mod) %in% c("glmerMod"))) {
         z.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4]
@@ -76,7 +76,7 @@ get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, 
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin", "glmerMod"))) {
         p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4] 
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        p = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),5]
+        p = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)),5]
       } else if(class(basis.mod) %in% c("merModLmerTest")) {
         p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),5] }
     }
