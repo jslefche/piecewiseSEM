@@ -1,4 +1,4 @@
-get.basis.set = function(modelList, add.vars = NULL) {
+get.basis.set = function(modelList, add.vars = NULL, corr.errors = NULL) {
   
   dag = lapply(modelList, function(i) 
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL"))) formula(i) else 
@@ -18,9 +18,21 @@ get.basis.set = function(modelList, add.vars = NULL) {
   basis.set = basiSet(DAG(dag))
   
   basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
-
+  
+  basis.set =  lapply(1:length(basis.set), function(i) {
+    
+    inset = unlist(lapply(corr.errors, function(j) {
+        
+    corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
+    
+    all(basis.set[[i]][1:2] %in% corr.vars) } ))
+    
+    if(any(inset == TRUE)) NULL else basis.set[[i]]  
+      
+    } )
+  
   body(DAG)[[2]] = substitute(f <- list(...))
   
-  return(basis.set)
+  return( basis.set[!sapply(basis.set, is.null)] )
   
 }

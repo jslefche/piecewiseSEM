@@ -17,11 +17,14 @@ A list of regressions representing the structural equation model.
   \item{standardized}{
 Returns standardized coefficients.
 }
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
+}
 }
 \details{
-Unstandardized coefficients are extracted directly from model output.
+Unstandardized coefficients are extracted directly from model output. Standardized coefficients are scaled by mean and variance using the function \code{scale} on the raw data. If predictors are factors, then they are left in their original units. If models are not gaussian, then the response is left unscaled so the same model parameters can be fit as in the original model.
 
-Standardized coefficients are scaled by mean and variance using the function \code{scale} on the raw data. If predictors are factors, then they are left in their original units. If models are not gaussian, then the response is left unscaled so the same model parameters can be fit as in the original model.
+Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. P-values for correlated errors are derived from a t-distribution using the transformation in Shipley, 2000 (p.76).
 }
 \value{
 Returns a \code{data.frame} with the causal path, the coefficient estimate, the standard error, and p-value.

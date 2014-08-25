@@ -1,8 +1,8 @@
-get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, add.vars = NULL) {
+get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, add.vars = NULL, corr.errors = NULL) {
   
   if(is.null(basis.set)) { 
     
-    basis.set = get.basis.set(modelList, add.vars)
+    basis.set = get.basis.set(modelList, add.vars, corr.errors)
     
     basis.set = filter.exogenous(modelList, basis.set, add.vars) 
     
@@ -85,7 +85,9 @@ get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, 
     
     data.frame(
       missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
-      conditional.on = paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),
+      conditional.on = 
+        if(nchar(paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ",")) > 40) paste("Character vector too long") else
+          paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),
       p.value = round(p, 3))
     
   } ) )

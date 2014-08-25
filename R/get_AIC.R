@@ -1,8 +1,9 @@
-get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, add.vars = NULL) {
+get.aic = function(modelList, pvalues.df = NULL, add.vars = NULL, corr.errors = NULL, adjust.p = FALSE, 
+                   .progressBar = FALSE, basis.set = NULL) {
   
   if(is.null(basis.set)) { 
     
-    basis.set = get.basis.set(modelList, add.vars)
+    basis.set = get.basis.set(modelList, add.vars, corr.errors)
     
     basis.set = filter.exogenous(modelList, basis.set, add.vars) 
     
@@ -12,9 +13,9 @@ get.aic = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar 
     warning("All endogenous variables are conditionally dependent: no test of d-sep necessary")
   
   if(is.null(pvalues.df))
-    pvalues.df = get.missing.paths(modelList, adjust.p, .progressBar, basis.set, add.vars)
+    pvalues.df = get.missing.paths(modelList, adjust.p, .progressBar, basis.set, add.vars, corr.errors)
   
-  fisher.c = get.fisher.c(modelList, pvalues.df, adjust.p, .progressBar, basis.set, add.vars)
+  fisher.c = get.fisher.c(modelList, pvalues.df, adjust.p, .progressBar, basis.set, add.vars, corr.errors)
   
   K = do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
   

@@ -20,12 +20,19 @@ A vector of additional variables whose independence claims should be evaluated, 
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
+}
   \item{.progressBar}{
 Enable optional text progress bar.
 }
 }
 \details{
 The argument \code{add.vars} takes a vector of character strings corresponding to column names in the dataset used to construct the models in the model list, and incorporates these variables into the independence claims. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated for the current SEM, but which do not have any hypothesized paths.
+
+For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
+
+Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the assumption that their correlations will be quantified later using the function \code{get.sem.coefs}.
 }
 \value{
 Returns a \code{list} with the following:

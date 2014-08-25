@@ -17,6 +17,12 @@ A \code{list} of regressions representing the structural equation model.
   \item{pvalues.df}{
 An optional \code{data.frame} corresponding to p-values for independence claims.
 }
+  \item{add.vars}{
+A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+}
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
+}
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
@@ -25,9 +31,6 @@ Enable optional text progress bar.
 }
   \item{basis.set}{
 Provide an optional basis set.
-}
-  \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 }
 \details{

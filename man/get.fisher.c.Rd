@@ -17,6 +17,9 @@ A \code{list} of regressions representing the structural equation model.
   \item{pvalues.df}{
 An optional \code{data.frame} corresponding to p-values for independence claims.
 }
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
+}
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
