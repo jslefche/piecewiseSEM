@@ -1,4 +1,4 @@
-get.partial.resid = function(var1, var2, modelList) {
+get.partial.resid = function(y, x, modelList) {
   
   y.model = modelList[[match(y, unlist(lapply(modelList, function(i) as.character(formula(i)[2]))))]]
   

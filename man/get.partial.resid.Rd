@@ -8,7 +8,7 @@ Calculates partial residuals for two variables.
 Extracts partial residuals for y ~ x | Z, where Z represents all other variables present in a structured equation upon which y and x are conditional.
 }
 \usage{
-get.sem.coefs(y, x, modelList)
+get.partial.resid(y, x, modelList)
 }
 \arguments{
    \item{y}{
