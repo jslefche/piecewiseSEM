@@ -8,7 +8,7 @@ Retrieves path coefficients for structural equation model.
 Extracts unstandardized or standardized (in units of standard deviations of the mean) path coefficients for a piecewise structural equation model (SEM).
 }
 \usage{
-get.sem.coefs(modelList, standardized = FALSE)
+get.sem.coefs(modelList, standardized = FALSE, corr.errors = NULL)
 }
 \arguments{
   \item{modelList}{

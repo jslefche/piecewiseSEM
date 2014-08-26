@@ -8,7 +8,8 @@ Evaluates independence claims for a piecewise structural equation model (SEM), a
 }
 \usage{
 get.fisher.c(modelList, pvalues.df = NULL, adjust.p = FALSE, 
-.progressBar = FALSE, basis.set = NULL, add.vars = NULL)
+.progressBar = FALSE, basis.set = NULL, add.vars = NULL,
+corr.errors = NULL)
 }
 \arguments{
   \item{modelList}{

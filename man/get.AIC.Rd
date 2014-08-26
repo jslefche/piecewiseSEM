@@ -8,7 +8,8 @@ Extracts the AIC and AICc (corrected for small sample size) values from a piecew
 }
 \usage{
 get.aic(modelList, pvalues.df = NULL, adjust.p = FALSE, 
-.progressBar = FALSE, basis.set = NULL, add.vars = NULL)  
+.progressBar = FALSE, basis.set = NULL, add.vars = NULL,
+corr.errors = NULL)  
 }
 \arguments{
   \item{modelList}{

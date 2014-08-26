@@ -8,7 +8,7 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 }
 \usage{
 get.missing.paths(modelList, adjust.p = FALSE, .progressBar = FALSE, 
-basis.set = NULL, add.vars = NULL)
+basis.set = NULL, add.vars = NULL, corr.errors = NULL)
 }
 \arguments{
   \item{modelList}{

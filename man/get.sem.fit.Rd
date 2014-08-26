@@ -8,7 +8,7 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 }
 \usage{
 shipley.test = function(modelList, add.vars = NULL, 
-adjust.p = FALSE, .progressBar = FALSE)
+adjust.p = FALSE, corr.errors = NULL, .progressBar = FALSE)
 }
 \arguments{
    \item{modelList}{
