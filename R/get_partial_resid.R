@@ -5,7 +5,7 @@ get.partial.resid = function(y, x, modelList) {
   
   y.model = modelList[[match(y, unlist(lapply(modelList, function(i) as.character(formula(i)[2]))))]]
   
-  if(is.null(ymodel)) stop("Check spelling of correlated variables")
+  if(is.null(y.model)) stop("Check spelling of correlated variables")
   
   if(all(x %in% as.character(formula(y.model)[[3]]))) stop("Y is a direct function of X, no partial residuals obtainable")
   
