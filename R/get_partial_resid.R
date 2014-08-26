@@ -23,7 +23,7 @@ get.partial.resid = function(y, x, modelList) {
   
   resids.data = data.frame(resid(y.nox.model), resid(x.noy.model) )
 
-  names(resids.data)=c(paste(y, "others", sep="|"), paste(x, "others", sep="|"))
+  names(resids.data)=c(paste(y, "given.others", sep="."), paste(x, "given.others", sep="."))
   
   return(resids.data)
   
