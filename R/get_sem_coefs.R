@@ -31,23 +31,24 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
     
   } else if(standardized == TRUE) {
     
-    data = do.call(rbind, lapply(modelList, function(i) {
+    dataframe = do.call(rbind, lapply(modelList, function(i) {
       
       if(all(class(i) %in% c("lm", "glm", "negbin"))) model.data = i$model else 
         if(all(class(i) %in% c("lme", "glmmPQL"))) model.data = i$data else
           if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) model.data = i@frame
 
-      vars.toscale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
+      vars.to.scale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
         if(any(class(i) %in% c("glm", "negbin", "glmmPQL"))) {
           message("Model is not gaussian: keeping response on original scale")
           rownames(attr(i$terms, "factors"))[-1] } else 
             if(all(class(i) %in% c("merModLmerTest")))
               rownames(attr(attr(i@frame, "terms"), "factors"))[!rownames(attr(attr(i@frame, "terms"), "factors")) %in% names(i@flist)] else
                 if(all(class(i) %in% c("glmerMod"))) {
-                  message("Model is not gaussian: keeping response on original scale")
+                  message("Reponse is not modeled to a gaussian distribution: keeping response on original scale")
                   rownames(attr(attr(i@frame, "terms"), "factors"))[!rownames(attr(attr(i@frame, "terms"), "factors")) %in% names(i@flist)][-1] }
 
-      model.data[, vars.toscale] = apply(model.data[, vars.toscale, drop = F], 2, function(x) if(is.numeric(x)) scale(x) else x )
+      for(j in vars.to.scale) if(is.numeric(model.data[,j])) model.data[,j] = scale(model.data[,j]) else 
+        model.data[,j] = model.data[,j]
       
       model = update(i, data = model.data)
       
