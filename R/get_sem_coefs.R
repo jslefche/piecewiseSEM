@@ -98,4 +98,6 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
     } ) ) )
   }
   
+  return(dataframe)
+  
 }

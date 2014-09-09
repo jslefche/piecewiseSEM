@@ -19,17 +19,20 @@ get.basis.set = function(modelList, add.vars = NULL, corr.errors = NULL) {
   
   basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
   
-  basis.set =  lapply(1:length(basis.set), function(i) {
-    
-    inset = unlist(lapply(corr.errors, function(j) {
-        
-    corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
-    
-    all(basis.set[[i]][1:2] %in% corr.vars) } ))
-    
-    if(any(inset == TRUE)) NULL else basis.set[[i]]  
+  if(!is.null(corr.errors)) {
+  
+    basis.set =  lapply(1:length(basis.set), function(i) {
       
-    } )
+      inset = unlist(lapply(corr.errors, function(j) {
+          
+      corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
+      
+      all(basis.set[[i]][1:2] %in% corr.vars) } ))
+      
+      if(any(inset == TRUE)) NULL else basis.set[[i]]  
+        
+      } )
+    }
   
   body(DAG)[[2]] = substitute(f <- list(...))
   

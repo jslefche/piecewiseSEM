@@ -18,8 +18,8 @@ get.sem.fit = function(modelList, add.vars = NULL, adjust.p = FALSE, corr.errors
   
   fisher.c = get.fisher.c(modelList, pvalues.df, adjust.p, .progressBar, basis.set, add.vars, corr.errors)
     
-  AIC.c = get.aic(modelList, pvalues.df, adjust.p, .progressBar, basis.set, add.vars, corr.errors)
-    
+  AIC.c = get.aic(modelList, pvalues.df, add.vars, corr.errors, adjust.p, .progressBar, basis.set)
+  
   l = list(pvalues.df, fisher.c, AIC.c)
   
   names(l) = c("missing.paths", "Fisher.C", "AIC")
