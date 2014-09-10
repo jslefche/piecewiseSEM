@@ -1,7 +1,7 @@
 get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
-
+  
   names(modelList) = NULL
- 
+  
   if(standardized == FALSE) {
     dataframe = do.call(rbind, lapply(modelList, function(i) {
       
@@ -36,7 +36,7 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
       if(all(class(i) %in% c("lm", "glm", "negbin"))) model.data = i$model else 
         if(all(class(i) %in% c("lme", "glmmPQL"))) model.data = i$data else
           if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) model.data = i@frame
-
+      
       vars.to.scale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
         if(any(class(i) %in% c("glm", "negbin", "glmmPQL"))) {
           message("Model is not gaussian: keeping response on original scale")
@@ -46,7 +46,7 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
                 if(all(class(i) %in% c("glmerMod"))) {
                   message("Reponse is not modeled to a gaussian distribution: keeping response on original scale")
                   rownames(attr(attr(i@frame, "terms"), "factors"))[!rownames(attr(attr(i@frame, "terms"), "factors")) %in% names(i@flist)][-1] }
-
+      
       for(j in vars.to.scale) if(is.numeric(model.data[,j])) model.data[,j] = scale(model.data[,j]) else 
         model.data[,j] = model.data[,j]
       
@@ -83,19 +83,39 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
   dataframe = dataframe[order(dataframe$p.value),]
   
   if(!is.null(corr.errors)) {
-    rbind(dataframe, do.call(rbind, lapply(corr.errors, function(j) {
+    dataframe = rbind(dataframe, do.call(rbind, lapply(corr.errors, function(j) {
       
       corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
       
-      resid.data = get.partial.resid(y = corr.vars[1], x = corr.vars[2], modelList)
+      if(all(corr.vars %in% unlist(lapply(modelList, function(i) as.character(formula(i)[2]))))) {
         
-      data.frame(
-        path = j,
-        estimate = round(cor(resid.data)[1,2], 3),
-        std.error = NA,
-        p.value = round(1 - pt((cor(resid.data)[1, 2] * sqrt(nrow(resid.data) - 2))/(sqrt(1 - cor(resid.data)[1, 2]^2)),nrow(resid.data)-2), 3),
-        row.names = NULL) 
-
+        resid.data = get.partial.resid(y = corr.vars[1], x = corr.vars[2], modelList)
+        
+        data.frame(
+          path = j,
+          estimate = round(cor(resid.data)[1,2], 3),
+          std.error = NA,
+          p.value = round(1 - pt((cor(resid.data)[1, 2] * sqrt(nrow(resid.data) - 2))/(sqrt(1 - cor(resid.data)[1, 2]^2)),nrow(resid.data)-2), 3),
+          row.names = NULL) 
+        
+      } else {
+        
+        model.data = do.call(cbind, lapply(modelList, function(i)           
+          if(all(class(i) %in% c("lm", "glm", "negbin"))) model.data = i$model else 
+            if(all(class(i) %in% c("lme", "glmmPQL"))) model.data = i$data else
+              if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) model.data = i@frame ) )
+        
+        model.data = model.data[!duplicated(colnames(model.data))]
+        
+        data.frame(
+          path = j,
+          estimate = round(cor(model.data[, corr.vars[1]], model.data[, corr.vars[2]]), 3),
+          std.error = "-",
+          p.value = round(1 - pt((cor(model.data[, corr.vars[1]], model.data[, corr.vars[2]]) * sqrt(nrow(model.data) - 2))/(sqrt(1 - cor(model.data[, corr.vars[1]], model.data[, corr.vars[2]])^2)),nrow(model.data)-2), 3),
+          row.names = NULL)
+        
+      }
+      
     } ) ) ) }
   
   return(dataframe)
