@@ -7,11 +7,14 @@ Constructs variance-covariance based structural equation model.
 Estimates variance-covariance based (traditional) SEM using \code{lavaan}.
 }
 \usage{
-get.lavaan.sem(modelList, corr.errors = NULL, add.vars = NULL)
+get.lavaan.sem(modelList, data, corr.errors = NULL, add.vars = NULL)
 }
 \arguments{
   \item{modelList}{
 A list of regressions representing the structural equation model. 
+}
+  \item{data}{
+A \code{data.frame} containing the full dataset for the SEM.
 }
   \item{corr.errors}{
 A vector of variables with correlated errors (separated by "~~").
