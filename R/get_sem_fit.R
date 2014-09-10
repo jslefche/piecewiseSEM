@@ -1,4 +1,5 @@
-get.sem.fit = function(modelList, add.vars = NULL, adjust.p = FALSE, corr.errors = NULL, .progressBar = FALSE) {
+get.sem.fit = function(modelList, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
+                       basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE) {
 
   if(!all(sapply(modelList, function(i) 
     all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) ) ) )
@@ -7,18 +8,26 @@ get.sem.fit = function(modelList, add.vars = NULL, adjust.p = FALSE, corr.errors
   if(!all(unlist(lapply(modelList, nobs)))) 
     warning("All models do not have the same number of observations")
   
-  basis.set = get.basis.set(modelList, add.vars, corr.errors)
-  
-  basis.set = filter.exogenous(modelList, basis.set, add.vars)
+  if(is.null(basis.set)) { 
+    
+    basis.set = get.basis.set(modelList, corr.errors, add.vars)
+    
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
+    
+  }
   
   if(length(basis.set) < 1) 
     warning("All endogenous variables are conditionally dependent: no test of d-sep necessary")
 
-  pvalues.df = get.missing.paths(modelList, adjust.p, .progressBar, basis.set, add.vars, corr.errors)
-  
-  fisher.c = get.fisher.c(modelList, pvalues.df, adjust.p, .progressBar, basis.set, add.vars, corr.errors)
+  if(is.null(pvalues.df)) {
     
-  AIC.c = get.aic(modelList, pvalues.df, add.vars, corr.errors, adjust.p, .progressBar, basis.set)
+    if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+    
+    pvalues.df = pvalues.df = get.missing.paths(modelList, corr.errors, add.vars, adjust.p, basis.set, .progressBar) }
+  
+  fisher.c = get.fisher.c(modelList, corr.errors, add.vars, adjust.p, basis.set, pvalues.df, .progressBar)
+    
+  AIC.c = get.aic(modelList, corr.errors, add.vars, adjust.p, basis.set, pvalues.df, .progressBar)
   
   l = list(pvalues.df, fisher.c, AIC.c)
   

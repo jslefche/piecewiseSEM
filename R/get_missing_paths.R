@@ -1,10 +1,11 @@
-get.missing.paths = function(modelList, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, add.vars = NULL, corr.errors = NULL) {
+get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL, 
+                             adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
     
-    basis.set = get.basis.set(modelList, add.vars, corr.errors)
+    basis.set = get.basis.set(modelList, corr.errors, add.vars)
     
-    basis.set = filter.exogenous(modelList, basis.set, add.vars) 
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
     
   }
   

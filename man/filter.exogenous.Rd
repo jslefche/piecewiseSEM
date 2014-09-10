@@ -7,7 +7,7 @@ Filter exogenous variables from the basis set
 Identifies exogenous variables (variables that have no paths leading to them) and removes them from the basis set when they appear as responses.
 }
 \usage{
-filter.exogenous(modelList, basis.set = NULL, add.vars = NULL)
+filter.exogenous(modelList, basis.set = NULL, corr.errors = NULL, add.vars = NULL)
 }
 \arguments{
  \item{modelList}{
@@ -15,6 +15,9 @@ A \code{list} of regressions representing the structural equation model.
 }
   \item{basis.set}{
 A optional \code{list} of vectors representing conditional independence statements.
+}
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.

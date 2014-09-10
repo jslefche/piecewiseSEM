@@ -1,11 +1,11 @@
-get.fisher.c = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progressBar = FALSE, basis.set = NULL, 
-                        add.vars = NULL, corr.errors = NULL) {
+get.fisher.c = function(modelList, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
+                        basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
     
-    basis.set = get.basis.set(modelList, add.vars, corr.errors)
+    basis.set = get.basis.set(modelList, corr.errors, add.vars)
     
-    basis.set = filter.exogenous(modelList, basis.set, add.vars) 
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
     
   }
   
@@ -16,7 +16,7 @@ get.fisher.c = function(modelList, pvalues.df = NULL, adjust.p = FALSE, .progres
     
     if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
     
-    pvalues.df = get.missing.paths(modelList, adjust.p, .progressBar, basis.set, add.vars, corr.errors) }
+    pvalues.df = pvalues.df = get.missing.paths(modelList, corr.errors, add.vars, adjust.p, basis.set, .progressBar) }
 
   fisherC = -2 * sum(log(pvalues.df$p.value + 2e-16))
   

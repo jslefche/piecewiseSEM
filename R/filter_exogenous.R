@@ -1,6 +1,6 @@
-filter.exogenous = function(modelList, basis.set = NULL, add.vars = NULL) {
+filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add.vars = NULL) {
   
-  if(is.null(basis.set)) basis.set = get.basis.set(modelList, add.vars)
+  if(is.null(basis.set)) basis.set = get.basis.set(modelList, corr.errors, add.vars)
   
   exogenous.vars = c(add.vars, unlist(lapply(modelList, function(i) colnames(attr(terms(i), "factors")))) )
   

@@ -7,12 +7,15 @@ Shipley's goodness-of-fit tests for piecewise SEM.
 Tests independence claims and calculates Fisher's C statistic and associated p-value, and AIC and AICc, for piecewise structural equation model (SEM).
 }
 \usage{
-shipley.test = function(modelList, add.vars = NULL, 
-adjust.p = FALSE, corr.errors = NULL, .progressBar = FALSE)
+get.sem.fit = function(modelList, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE,
+basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
 }
 \arguments{
    \item{modelList}{
 A \code{list} of regressions representing the structural equation model. 
+}
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
@@ -20,16 +23,20 @@ A vector of additional variables whose independence claims should be evaluated, 
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
-  \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+  \item{basis.set}{
+Provide an optional basis set.
+}
+  \item{pvalues.df}{
+An optional \code{data.frame} corresponding to p-values for independence claims.
 }
   \item{.progressBar}{
 Enable optional text progress bar.
 }
 }
 \details{
-The argument \code{add.vars} takes a vector of character strings corresponding to column names in the dataset used to construct the models in the model list, and incorporates these variables into the independence claims. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated for the current SEM, but which do not have any hypothesized paths.
+Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the assumption that their correlations will be quantified later using the function \code{get.sem.coefs}.
 
+The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default is \code{NULL} (there is no additional independence claims that do not appear in the model list).
 For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
 
 Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the assumption that their correlations will be quantified later using the function \code{get.sem.coefs}.

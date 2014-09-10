@@ -1,4 +1,4 @@
-get.basis.set = function(modelList, add.vars = NULL, corr.errors = NULL) {
+get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   dag = lapply(modelList, function(i) 
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL"))) formula(i) else 

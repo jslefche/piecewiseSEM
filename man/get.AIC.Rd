@@ -7,38 +7,37 @@ Extracts AIC scores for a piecewise structural equation model.
 Extracts the AIC and AICc (corrected for small sample size) values from a piecewise structural equation model (SEM).
 }
 \usage{
-get.aic(modelList, pvalues.df = NULL, adjust.p = FALSE, 
-.progressBar = FALSE, basis.set = NULL, add.vars = NULL,
-corr.errors = NULL)  
+get.aic(modelList, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
+basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)  
 }
 \arguments{
   \item{modelList}{
 A \code{list} of regressions representing the structural equation model. 
 }
-  \item{pvalues.df}{
-An optional \code{data.frame} corresponding to p-values for independence claims.
+  \item{corr.errors}{
+A vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
-  \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
-}
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
-  \item{.progressBar}{
-Enable optional text progress bar.
-}
   \item{basis.set}{
 Provide an optional basis set.
+}
+  \item{pvalues.df}{
+An optional \code{data.frame} corresponding to p-values for independence claims.
+}
+  \item{.progressBar}{
+Enable optional text progress bar.
 }
 }
 \details{
 This function calculates AIC and AICc (corrected for small sample sizes) values for a piecewise structural equation model (SEM). For more information, see Shipley 2013.
 }
 \value{
-Returns a vector where the first entry is the AIC score, and the second is the AICc score, and the third is the degrees of freedom (K).
+Returns a vector where the first entry is the AIC score, and the second is the AICc score, and the third is the likelihood degrees of freedom (K).
 }
 \references{
 Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
