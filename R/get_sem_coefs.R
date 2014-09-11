@@ -50,6 +50,8 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
       for(j in vars.to.scale) if(is.numeric(model.data[,j])) model.data[,j] = scale(model.data[,j]) else 
         model.data[,j] = model.data[,j]
       
+      names(model.data) = gsub(".*\\((.*)\\).*", "\\1", names(model.data))
+      
       model = update(i, data = model.data)
       
       if(class(model) == "lmerMod") model = as(model, "merModLmerTest")
