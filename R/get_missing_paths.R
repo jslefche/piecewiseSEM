@@ -13,7 +13,7 @@ get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL,
   
   pvalues.df = do.call(rbind, lapply(seq_along(basis.set), function(i) {
     
-    basis.mod = modelList[unlist(lapply(modelList, function(j) grepl(basis.set[[i]][2], formula(j)[2])))][[1]]
+    basis.mod = modelList[[match(basis.set[[i]][2], unlist(lapply(modelList,function(j) as.character(formula(j)[2]))))]]
     
     fixed.formula = paste(basis.set[[i]][2], "~", paste(basis.set[[i]][c(1, 3:length(basis.set[[i]]))], collapse = "+"))
     
