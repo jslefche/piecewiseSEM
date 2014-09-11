@@ -33,10 +33,6 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
     
     dataframe = do.call(rbind, lapply(modelList, function(i) {
       
-      if(all(class(i) %in% c("lm", "glm", "negbin"))) model.data = i$model else 
-        if(all(class(i) %in% c("lme", "glmmPQL"))) model.data = i$data else
-          if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) model.data = i@frame
-      
       vars.to.scale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
         if(any(class(i) %in% c("glm", "negbin", "glmmPQL"))) {
           message("Model is not gaussian: keeping response on original scale")
@@ -47,12 +43,17 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
                   message("Reponse is not modeled to a gaussian distribution: keeping response on original scale")
                   rownames(attr(attr(i@frame, "terms"), "factors"))[!rownames(attr(attr(i@frame, "terms"), "factors")) %in% names(i@flist)][-1] }
       
-      for(j in vars.to.scale) if(is.numeric(model.data[,j])) model.data[,j] = scale(model.data[,j]) else 
-        model.data[,j] = model.data[,j]
+      form = gsub(" ", "", unlist(strsplit(paste(format(formula(i)), collapse = ""), "\\+|\\~")))
       
-      names(model.data) = gsub(".*\\((.*)\\).*", "\\1", names(model.data))
+      form[match(vars.to.scale, form)] = paste("scale(", form[match(vars.to.scale, form)], ")")
       
-      model = update(i, data = model.data)
+      form = if(length(form) > 2)
+        paste(paste(form[1], "~", form[2], "+"), paste(form[-c(1:2)], collapse = "+")) else
+          paste(paste(form[1], "~", form[2]))
+      
+      if(all(class(i) %in% c("lme", "glmmPQL")))
+        model = update(i, fixed = formula(form)) else
+          model = update(i, formula = form)
       
       if(class(model) == "lmerMod") model = as(model, "merModLmerTest")
       
