@@ -14,8 +14,8 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{lme
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 0.1.5\cr
-Date: \tab 2014-08-07\cr
+Version: \tab 0.2.8\cr
+Date: \tab 2014-09-11\cr
 Depends: \tab R (>=3.1.0), ggm, lavaan, lmerTest\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
@@ -61,10 +61,10 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Get goodness-of-fit and AIC
-get.sem.fit(Shipley.modlist, progressBar = T)
+get.sem.fit(Shipley.modlist)
 
 # Get path coefficients
-get.sem.coefs(Shipley.modlist, standardized = T)
+get.sem.coefs(Shipley.modlist)
 
 # Get variance-covariance SEM (calls on package::lavaan)
 summary(get.lavaan.sem(Shipley.modlist))
