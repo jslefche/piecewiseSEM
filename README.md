@@ -88,7 +88,7 @@ get.sem.coefs(Shipley.modlist)
 Generate variance-covariance based SEM from the list of linear mixed models. The resulting object can be treated like any other model object constructed using the package `lavaan`.
 
 ```
-lavaan.model = get.lavaan.sem(Shipley.modlist)
+lavaan.model = get.lavaan.sem(Shipley.modlist, Shipley)
 summary(lavaan.model)
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.
