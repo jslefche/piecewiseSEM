@@ -44,8 +44,14 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
                   rownames(attr(attr(i@frame, "terms"), "factors"))[!rownames(attr(attr(i@frame, "terms"), "factors")) %in% names(i@flist)][-1] }
       
       form = gsub(" ", "", unlist(strsplit(paste(format(formula(i)), collapse = ""), "\\+|\\~")))
-      
-      form[match(vars.to.scale, form)] = paste("scale(", form[match(vars.to.scale, form)], ")")
+ 
+      if(any(grepl("\\*|\\:", form))) {
+        ints = strsplit(form[grepl("\\*|\\:", form)], "\\*")
+        ints.scaled = lapply(ints, function(j) paste(paste("scale(",j,")"), collapse = "*"))
+        form[grepl("\\*|\\:", form)] = unlist(ints.scaled)
+        vars.to.scale=vars.to.scale[-match(unique(unlist(ints)),vars.to.scale)] }
+        
+      if(length(vars.to.scale) > 0) form[match(vars.to.scale, form)] = paste("scale(", form[match(vars.to.scale, form)], ")")
       
       form = if(length(form) > 2)
         paste(paste(form[1], "~", form[2], "+"), paste(form[-c(1:2)], collapse = "+")) else

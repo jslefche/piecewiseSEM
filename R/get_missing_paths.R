@@ -45,11 +45,11 @@ get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL,
         basis.mod = update(basis.mod, fixed = formula(fixed.formula), random = formula(random.formula)) else
           basis.mod = update(basis.mod, formula = formula(paste(fixed.formula, "+", random.formula, sep="", collapse="+")))
     
-    if(class(basis.mod) %in% "lmerMod") basis.mod = as(basis.mod, "merModLmerTest") 
+    if(any(class(basis.mod) %in% "lmerMod")) basis.mod = as(basis.mod, "merModLmerTest") 
     
     ###
     
-    if(class(basis.mod) %in% c("lmerMod", "merModLmerTest")) {
+    if(all(class(basis.mod) %in% c("lmerMod", "merModLmerTest"))) {
       x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
       if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying lmerControl") }
     
