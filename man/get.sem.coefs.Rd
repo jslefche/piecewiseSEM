@@ -41,7 +41,7 @@ Jon Lefcheck
 \code{\link{lm.beta}}, \code{\link{scale}}, \code{\link{summary}}
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
@@ -60,4 +60,5 @@ Shipley.modlist = list(
   
 # Get path coefficients
 get.sem.coefs(Shipley.modlist)
+get.sem.coefs(Shipley.modlist, standardized = T)
 }

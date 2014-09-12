@@ -58,7 +58,7 @@ Jon Lefcheck
 \seealso{
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
@@ -76,5 +76,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Evaluate independence claims
-get.missing.paths(modelList, .progressBar = T)
+get.missing.paths(Shipley.modlist)
 }

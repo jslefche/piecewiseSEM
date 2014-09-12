@@ -41,7 +41,7 @@ Jon Lefcheck
 \code{\link[lavaan]{sem}}
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
@@ -59,5 +59,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
   
 # Get variance-covariance based SEM
-summary(get.lavaan.sem(Shipley.modlist))
+summary(get.lavaan.sem(Shipley.modlist, Shipley))
 }

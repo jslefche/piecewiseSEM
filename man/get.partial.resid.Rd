@@ -39,7 +39,7 @@ Jon Lefcheck
 
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
@@ -57,5 +57,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
   
 # Get path coefficients
-get.partial.resid(y = "Date", x = "DD", modelList) # Returns error
+get.partial.resid(y = "Date", x = "DD", Shipley.modlist) # Returns error
 }

@@ -41,7 +41,7 @@ Unlike the functions \code{DAG} and \code{basiSet} in the \code{ggm} package, th
 \code{\link{DAG}}, \code{\link{basiSet}}
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)

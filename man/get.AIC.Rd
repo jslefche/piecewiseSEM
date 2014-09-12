@@ -50,7 +50,7 @@ Jon Lefcheck
 \seealso{
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
@@ -68,5 +68,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
   
 # Get AIC scores
-get.aic(modelList)
+get.aic(Shipley.modlist)
 }

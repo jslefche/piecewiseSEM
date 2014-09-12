@@ -38,12 +38,11 @@ Jon Lefcheck
 \note{
 }
 \examples{
-data(shipley) # Data from Shipley 2009
+data(Shipley) # Data from Shipley 2009
 
 # Load model packages
 library(lmerTest)
 library(nlme)
-
 # Create list of models 
 Shipley.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
@@ -56,10 +55,10 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Filter exogenous variables
-filter.exogenous(modelList)
-# Compare with original basis set
+filter.exogenous(Shipley.modlist)
+# Compare with output from get.basis.set
 identical(
-  basiSet(dag.updated(modelList)),
-  filter.exogenous(modelList) )
-# No exogenous variables in this dataset!
+  get.basis.set(Shipley.modlist),
+  filter.exogenous(Shipley.modlist) )
+# Results are identical (get.basis.set calls filter.exogenous)
 }

@@ -14,13 +14,13 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{lme
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 0.2.8\cr
+Version: \tab 0.2.6\cr
 Date: \tab 2014-09-11\cr
 Depends: \tab R (>=3.1.0), ggm, lavaan, lmerTest\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
 }
-The primary functions in the package are \code{\link{get.sem.fit}} which performs goodness-of-fit tests, and \code{\link{get.sem.coefs}} which returns path coefficients and standard errors.
+The primary functions in the package are \code{\link{get.sem.fit}} which performs goodness-of-fit tests, and \code{\link{get.sem.coefs}} which returns (standardized) path coefficients and standard errors.
 }
 \section{Warning}{
 \strong{This package is still in beta!}
@@ -67,5 +67,5 @@ get.sem.fit(Shipley.modlist)
 get.sem.coefs(Shipley.modlist)
 
 # Get variance-covariance SEM (calls on package::lavaan)
-summary(get.lavaan.sem(Shipley.modlist))
+summary(get.lavaan.sem(Shipley.modlist, Shipley))
 }

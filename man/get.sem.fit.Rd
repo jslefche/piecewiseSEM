@@ -79,5 +79,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Conduct goodness-of-fit tests
-get.sem.fit(Shipley.modlist, .progressBar = T)
+get.sem.fit(Shipley.modlist)
 }
