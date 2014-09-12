@@ -7,12 +7,15 @@ Evaluate independence claims for piecewise SEM.
 Identifies missing paths from a piecewise SEM, fits models, extracts path p-values and returns in a \code{data.frame}.
 }
 \usage{
-get.missing.paths(modelList, corr.errors = NULL, add.vars = NULL, 
+get.missing.paths(modelList, data, corr.errors = NULL, add.vars = NULL, 
 adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
 A \code{list} of regressions representing the structural equation model. 
+}
+\item{data}{
+A \code{data.frame} used to construct the structured equations.
 }
   \item{corr.errors}{
 A vector of variables with correlated errors (separated by "~~").
@@ -76,5 +79,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Evaluate independence claims
-get.missing.paths(Shipley.modlist)
+get.missing.paths(Shipley.modlist, Shipley)
 }

@@ -7,12 +7,15 @@ Extracts AIC scores for a piecewise structural equation model.
 Extracts the AIC and AICc (corrected for small sample size) values from a piecewise structural equation model (SEM).
 }
 \usage{
-get.aic(modelList, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
+get.aic(modelList, data, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
 basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)  
 }
 \arguments{
   \item{modelList}{
 A \code{list} of regressions representing the structural equation model. 
+}
+\item{data}{
+A \code{data.frame} used to construct the structured equations.
 }
   \item{corr.errors}{
 A vector of variables with correlated errors (separated by "~~").
@@ -68,5 +71,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
   
 # Get AIC scores
-get.aic(Shipley.modlist)
+get.aic(Shipley.modlist, Shipley)
 }

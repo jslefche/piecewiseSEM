@@ -1,4 +1,4 @@
-get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL, 
+get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                              adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
@@ -20,7 +20,7 @@ get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL,
     random.formula = if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) 
       gsub("^.*\\|(.*?)", "\\1", basis.mod$call[[4]])[2] else
         if(all(class(basis.mod) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
-          unlist(regmatches(format(formula(basis.mod)), gregexpr("(?<=\\|).*?(?=\\))", format(formula(basis.mod)), perl=TRUE))) else 
+          gsub("^.*\\|(.*?)", "\\1", unlist(lapply(findbars(formula(basis.mod)),format))) else 
             NULL
     
     modelList.random.slopes = unlist(
@@ -40,10 +40,10 @@ get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL,
           paste(paste("(", paste(random.slopes, collapse="+"), "|", random.formula, ")", sep=""), collapse="+") else
             NULL
     
-    if(is.null(random.formula)) basis.mod = update(basis.mod, fixed.formula) else
+    if(is.null(random.formula)) basis.mod = update(basis.mod, fixed.formula, data = data) else
       if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) 
-        basis.mod = update(basis.mod, fixed = formula(fixed.formula), random = formula(random.formula)) else
-          basis.mod = update(basis.mod, formula = formula(paste(fixed.formula, "+", random.formula, sep="", collapse="+")))
+        basis.mod = update(basis.mod, fixed = formula(fixed.formula), random = formula(random.formula), data = data) else
+          basis.mod = update(basis.mod, formula = formula(paste(fixed.formula, "+", random.formula, sep="", collapse="+")), data = data)
     
     if(any(class(basis.mod) %in% "lmerMod")) basis.mod = as(basis.mod, "merModLmerTest") 
     
@@ -58,7 +58,7 @@ get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL,
     if(!grepl(":", basis.set[[i]][1])) rowname = basis.set[[i]][1] else {
       int = attr(terms(basis.mod), "term.labels")[grepl(":", attr(terms(basis.mod), "term.labels"))]
       rowname = int[sapply(lapply(int, function(j) unlist(strsplit(j, ":"))), 
-        function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
+                           function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
     }
     
     if(adjust.p == TRUE) {
@@ -87,7 +87,7 @@ get.missing.paths = function(modelList, corr.errors = NULL, add.vars = NULL,
     data.frame(
       missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
       conditional.on = 
-        if(nchar(paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ",")) > 40) paste("Character vector too long") else
+        if(nchar(paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ",")) > 60) paste("Too many to show") else
           paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),
       p.value = round(p, 3))
     

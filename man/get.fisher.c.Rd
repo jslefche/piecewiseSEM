@@ -7,12 +7,15 @@ Goodness-of-fit for piecewise SEM.
 Evaluates independence claims for a piecewise structural equation model (SEM), and calculates Fisher's C and associated p-value to evaluate model fit.
 }
 \usage{
-get.fisher.c(modelList, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
-basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
+get.fisher.c(modelList, data, corr.errors = NULL, add.vars = NULL, 
+adjust.p = FALSE,basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
 A \code{list} of regressions representing the structural equation model. 
+}
+\item{data}{
+A \code{data.frame} used to construct the structured equations.
 }
   \item{corr.errors}{
 A vector of variables with correlated errors (separated by "~~").
@@ -67,5 +70,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Get goodness-of-fit statistics
-get.fisher.c(Shipley.modlist)
+get.fisher.c(Shipley.modlist, Shipley)
 }

@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.2.6 (2014-09-11)
+Version: 0.2.6 (2014-09-12)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -70,7 +70,7 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 (See ["p-values and all that"](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
 ```
-get.sem.fit(Shipley.modlist)
+get.sem.fit(Shipley.modlist, Shipley)
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
