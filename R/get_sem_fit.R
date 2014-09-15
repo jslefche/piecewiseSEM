@@ -5,6 +5,8 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL, adj
     all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) ) ) )
     stop("Model classes in model list are not supported")
   
+  if(is.null(data)) stop("Must supply dataset to function")
+  
   if(!all(unlist(lapply(modelList, nobs)))) 
     warning("All models do not have the same number of observations")
   
