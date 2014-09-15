@@ -1,4 +1,4 @@
-get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
+get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NULL) {
   
   names(modelList) = NULL
   
@@ -44,13 +44,13 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
                   rownames(attr(attr(i@frame, "terms"), "factors"))[!rownames(attr(attr(i@frame, "terms"), "factors")) %in% names(i@flist)][-1] }
       
       form = gsub(" ", "", unlist(strsplit(paste(format(formula(i)), collapse = ""), "\\+|\\~")))
- 
+      
       if(any(grepl("\\*|\\:", form))) {
         ints = strsplit(form[grepl("\\*|\\:", form)], "\\*")
         ints.scaled = lapply(ints, function(j) paste(paste("scale(",j,")"), collapse = "*"))
         form[grepl("\\*|\\:", form)] = unlist(ints.scaled)
         vars.to.scale=vars.to.scale[-match(unique(unlist(ints)),vars.to.scale)] }
-        
+      
       if(length(vars.to.scale) > 0) form[match(vars.to.scale, form)] = paste("scale(", form[match(vars.to.scale, form)], ")")
       
       form = if(length(form) > 2)
@@ -98,7 +98,7 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
       
       if(all(corr.vars %in% unlist(lapply(modelList, function(i) as.character(formula(i)[2]))))) {
         
-        resid.data = get.partial.resid(y = corr.vars[1], x = corr.vars[2], modelList)
+        resid.data = get.partial.resid(y = corr.vars[1], x = corr.vars[2], modelList, data)
         
         data.frame(
           path = j,
@@ -109,18 +109,12 @@ get.sem.coefs = function(modelList, standardized = FALSE, corr.errors = NULL) {
         
       } else {
         
-        model.data = do.call(cbind, lapply(modelList, function(i)           
-          if(all(class(i) %in% c("lm", "glm", "negbin"))) model.data = i$model else 
-            if(all(class(i) %in% c("lme", "glmmPQL"))) model.data = i$data else
-              if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) model.data = i@frame ) )
-        
-        model.data = model.data[!duplicated(colnames(model.data))]
-        
         data.frame(
           path = j,
-          estimate = round(cor(model.data[, corr.vars[1]], model.data[, corr.vars[2]]), 3),
+          estimate = round(cor(data[, corr.vars[1]], data[, corr.vars[2]]), 3),
           std.error = "-",
-          p.value = round(1 - pt((cor(model.data[, corr.vars[1]], model.data[, corr.vars[2]]) * sqrt(nrow(model.data) - 2))/(sqrt(1 - cor(model.data[, corr.vars[1]], model.data[, corr.vars[2]])^2)),nrow(model.data)-2), 3),
+          p.value = round(1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]]) * sqrt(nrow(data) - 2))/
+                                   (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]])^2)),nrow(data)-2), 3),
           row.names = NULL)
         
       }
