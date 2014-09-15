@@ -7,8 +7,9 @@ Evaluate independence claims for piecewise SEM.
 Identifies missing paths from a piecewise SEM, fits models, extracts path p-values and returns in a \code{data.frame}.
 }
 \usage{
-get.missing.paths(modelList, data, corr.errors = NULL, add.vars = NULL, 
-adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE)
+get.missing.paths(modelList, data, corr.errors = NULL, 
+add.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
+.progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{

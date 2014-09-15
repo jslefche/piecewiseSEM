@@ -7,8 +7,9 @@ Extracts AIC scores for a piecewise structural equation model.
 Extracts the AIC and AICc (corrected for small sample size) values from a piecewise structural equation model (SEM).
 }
 \usage{
-get.aic(modelList, data, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
-basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)  
+get.aic(modelList, data, corr.errors = NULL, 
+add.vars = NULL, adjust.p = FALSE,basis.set = NULL, 
+pvalues.df = NULL, .progressBar = TRUE)  
 }
 \arguments{
   \item{modelList}{

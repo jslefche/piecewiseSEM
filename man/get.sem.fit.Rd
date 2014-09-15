@@ -7,8 +7,9 @@ Shipley's goodness-of-fit tests for piecewise SEM.
 Tests independence claims and calculates Fisher's C statistic and associated p-value, and AIC and AICc, for piecewise structural equation model (SEM).
 }
 \usage{
-get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
-adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
+get.sem.fit = function(modelList, data, 
+corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
+basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
 }
 \arguments{
    \item{modelList}{

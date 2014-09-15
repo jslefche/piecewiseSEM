@@ -7,8 +7,9 @@ Goodness-of-fit for piecewise SEM.
 Evaluates independence claims for a piecewise structural equation model (SEM), and calculates Fisher's C and associated p-value to evaluate model fit.
 }
 \usage{
-get.fisher.c(modelList, data, corr.errors = NULL, add.vars = NULL, 
-adjust.p = FALSE,basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
+get.fisher.c(modelList, data, corr.errors = NULL, 
+add.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
+pvalues.df = NULL, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
