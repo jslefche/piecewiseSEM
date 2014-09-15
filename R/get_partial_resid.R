@@ -1,4 +1,4 @@
-get.partial.corrs = function(y, x, modelList, data) {
+get.partial.resid = function(y, x, modelList, data) {
   
   y = gsub(" ", "", y)
   x = gsub(" ", "", x)
