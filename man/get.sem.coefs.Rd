@@ -8,11 +8,15 @@ Retrieves path coefficients for structural equation model.
 Extracts unstandardized or standardized (in units of standard deviations of the mean) path coefficients for a piecewise structural equation model (SEM).
 }
 \usage{
-get.sem.coefs(modelList, standardized = FALSE, corr.errors = NULL)
+get.sem.coefs(modelList, data, standardized = FALSE, 
+corr.errors = NULL)
 }
 \arguments{
   \item{modelList}{
 A list of regressions representing the structural equation model. 
+}
+\item{data}{
+A \code{data.frame} used to construct the structured equations.
 }
   \item{standardized}{
 Returns standardized coefficients.
@@ -59,6 +63,6 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
   
 # Get path coefficients
-get.sem.coefs(Shipley.modlist)
-get.sem.coefs(Shipley.modlist, standardized = T)
+get.sem.coefs(Shipley.modlist, Shipley)
+get.sem.coefs(Shipley.modlist, Shipley, standardized = T)
 }

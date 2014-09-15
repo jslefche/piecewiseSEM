@@ -8,7 +8,7 @@ Calculates partial residuals for two variables.
 Extracts partial residuals for y ~ x | Z, where Z represents all other variables present in a structured equation upon which y and x are conditional.
 }
 \usage{
-get.partial.resid(y, x, modelList)
+get.partial.resid(y, x, modelList, data)
 }
 \arguments{
    \item{y}{
@@ -19,6 +19,9 @@ The predictor variable whose partial relationship with y is desired.
 } 
  \item{modelList}{
 A list of regressions representing the structural equation model. 
+}
+\item{data}{
+A \code{data.frame} used to construct the structured equations.
 }
 }
 \details{
@@ -57,5 +60,5 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
   
 # Get path coefficients
-get.partial.resid(y = "Date", x = "DD", Shipley.modlist) # Returns error
+get.partial.resid(y = "Date", x = "DD", Shipley.modlist, Shipley) # Returns error
 }

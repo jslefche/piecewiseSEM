@@ -61,10 +61,10 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Get goodness-of-fit and AIC
-get.sem.fit(Shipley.modlist)
+get.sem.fit(Shipley.modlist, Shipley)
 
 # Get path coefficients
-get.sem.coefs(Shipley.modlist)
+get.sem.coefs(Shipley.modlist, Shipley)
 
 # Get variance-covariance SEM (calls on package::lavaan)
 summary(get.lavaan.sem(Shipley.modlist, Shipley))
