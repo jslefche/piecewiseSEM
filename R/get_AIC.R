@@ -1,5 +1,6 @@
 get.aic = function(modelList, data, corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
-                   basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE) {
+                   basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE,
+                   grouping.var = NULL, top.level.vars = NULL) {
   
   if(is.null(basis.set)) { 
     
@@ -13,9 +14,11 @@ get.aic = function(modelList, data, corr.errors = NULL, add.vars = NULL, adjust.
     warning("All endogenous variables are conditionally dependent: no test of d-sep necessary")
   
   if(is.null(pvalues.df))
-    pvalues.df = get.missing.paths(modelList, data, corr.errors, add.vars, adjust.p, basis.set, .progressBar)
+    pvalues.df = get.missing.paths(modelList, data, corr.errors, add.vars, adjust.p, 
+                                   basis.set, .progressBar, grouping.var, top.level.vars)
   
-  fisher.c = get.fisher.c(modelList, data, corr.errors, add.vars, adjust.p, basis.set, pvalues.df, .progressBar)
+  fisher.c = get.fisher.c(modelList, data, corr.errors, add.vars, adjust.p, basis.set, 
+                          pvalues.df, .progressBar, grouping.var, top.level.vars)
   
   K = do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
   

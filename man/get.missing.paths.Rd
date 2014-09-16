@@ -9,7 +9,8 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 \usage{
 get.missing.paths(modelList, data, corr.errors = NULL, 
 add.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
-.progressBar = TRUE)
+.progressBar = TRUE, grouping.var = NULL, 
+top.level.vars = NULL)
 }
 \arguments{
   \item{modelList}{
@@ -32,6 +33,12 @@ Provide an optional basis set.
 }
   \item{.progressBar}{
 Enable optional text progress bar.
+}
+\item{grouping.var}{
+An optional variable that represents the highest level of a hierarchical dataset.
+}
+\item{top.level.vars}{
+An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
 }
 \details{
