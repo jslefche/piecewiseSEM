@@ -24,6 +24,12 @@ A vector of variables with correlated errors (separated by "~~").
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
+\item{grouping.var}{
+An optional variable that represents the highest level of a hierarchical dataset.
+}
+\item{top.level.vars}{
+An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+}
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
@@ -42,6 +48,8 @@ Variables with correlated errors have no direct relationship but rather are hypo
 
 The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default is \code{NULL} (there is no additional independence claims that do not appear in the model list).
 For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
+
+\code{top.level.vars} allows the user to optionally specify one or more top level variables for a hierarchical dataset, which will be summarized based on one or more grouping variables specified by \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
 
 Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the assumption that their correlations will be quantified later using the function \code{get.sem.coefs}.
 }
@@ -84,4 +92,20 @@ Shipley.modlist = list(
 
 # Conduct goodness-of-fit tests
 get.sem.fit(Shipley.modlist, Shipley)
+
+# Add new variable with no hypothesized links and test for independence
+set.seed(1)
+add.var = rnorm(nrow(Shipley), 50, 20)
+
+get.sem.fit(Shipley.modlist, Shipley, add.vars = c("add.var"))
+
+# Add new variable grouped at site level
+set.seed(2)
+Shipley$site.var = rep(rnorm(20, 10, 5), each = 95)
+
+Shipley.modlist2 = append(Shipley.modlist, list(
+  lm(site.var~Growth, data = aggregate(Shipley, by = list(site = Shipley[,"site"]), mean, na.rm = T))) )
+
+get.sem.fit(Shipley.modlist2, Shipley, grouping.vars = c("site"), top.level.vars = c("site.var"))
+
 }

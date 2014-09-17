@@ -1,6 +1,6 @@
 get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
-                             adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE,
-                             grouping.var = NULL, top.level.vars = NULL) {
+                             grouping.vars = NULL, top.level.vars = NULL,
+                             adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
     
@@ -41,9 +41,9 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
           paste(paste("(", paste(random.slopes, collapse="+"), "|", random.formula, ")", sep=""), collapse="+") else
             NULL
     
-    if(!is.null(grouping.var) & 
+    if(!is.null(grouping.vars) & 
          any(top.level.vars %in% gsub(".*\\((.*)\\)", "\\1", unlist(as.character(formula(basis.mod)[2])))))
-      data = suppressWarnings(aggregate(data, by = list(grouping.var = data[ ,grouping.var]), mean))
+      data = suppressWarnings(aggregate(data, by = lapply(grouping.vars, function(i) data[ ,i]), mean, na.rm = T))
     
     if(is.null(random.formula)) basis.mod = update(basis.mod, fixed.formula, data = data) else
       if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) 
@@ -68,37 +68,40 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     if(adjust.p == TRUE) {
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),3] 
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3] 
         df = basis.mod$df.residual
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        t.value = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)),4] 
+        t.value = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 4] 
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(apply(basis.mod$groups,2,function(x) length(unique(x))))))
-        df = NA
+        df = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 3]
       } else if(all(class(basis.mod) %in% c("glmerMod"))) {
-        z.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4]
+        z.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
         p = 2*(1 - pt(abs(z.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
         df = NA
       } else if(all(class(basis.mod) %in% c("merModLmerTest"))) {
-        t.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4]
+        t.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
-        df = NA }  
+        df = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3] }  
     } else if(adjust.p == FALSE) {
-      if(all(class(basis.mod) %in% c("lm", "glm", "negbin", "glmerMod"))) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),4]
+      if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
         df = basis.mod$df.residual
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        p = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)),5]
+        p = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 5]
+        df = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 3]
+      } else if(class(basis.mod) %in% c("glmerMod")) {
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
         df = NA
       } else if(class(basis.mod) %in% c("merModLmerTest")) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)),5]
-        df = NA }
+        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 5]
+        df = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3]  }
     }
     
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
     data.frame(
       missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
-#     df = df, 
+      df = df, 
 #       conditional.on = 
 #         if(nchar(paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ",")) > 60) paste("Too many to show") else
 #           paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),

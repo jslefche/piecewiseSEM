@@ -68,4 +68,20 @@ get.sem.coefs(Shipley.modlist, Shipley)
 
 # Get variance-covariance SEM (calls on package::lavaan)
 summary(get.lavaan.sem(Shipley.modlist, Shipley))
+
+# Add new variable with no hypothesized links and test for independence
+set.seed(1)
+add.var = rnorm(nrow(Shipley), 50, 20)
+
+get.sem.fit(Shipley.modlist, Shipley, add.vars = c("add.var"))
+
+# Add new variable grouped at site level
+set.seed(2)
+Shipley$site.var = rep(rnorm(20, 10, 5), each = 95)
+
+Shipley.modlist2 = append(Shipley.modlist, list(
+  lm(site.var~Growth, data = aggregate(Shipley, by = list(site = Shipley[,"site"]), mean, na.rm = T))) )
+
+get.sem.fit(Shipley.modlist2, Shipley, grouping.vars = c("site"), top.level.vars = c("site.var"))
+
 }

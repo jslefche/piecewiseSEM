@@ -8,9 +8,10 @@ Evaluates independence claims for a piecewise structural equation model (SEM), a
 }
 \usage{
 get.fisher.c(modelList, data, corr.errors = NULL, 
-add.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
-pvalues.df = NULL, .progressBar = TRUE,
-grouping.var = NULL, top.level.vars = NULL)
+add.vars = NULL,grouping.var = NULL, 
+top.level.vars = NULL, adjust.p = FALSE, 
+basis.set = NULL, pvalues.df = NULL, 
+.progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
@@ -25,6 +26,12 @@ A vector of variables with correlated errors (separated by "~~").
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
+\item{grouping.var}{
+An optional variable that represents the highest level of a hierarchical dataset.
+}
+\item{top.level.vars}{
+An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+}
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
@@ -36,12 +43,6 @@ An optional \code{data.frame} corresponding to p-values for independence claims.
 }
   \item{.progressBar}{
 Enable optional text progress bar.
-}
-\item{grouping.var}{
-An optional variable that represents the highest level of a hierarchical dataset.
-}
-\item{top.level.vars}{
-An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
 }
 \details{
