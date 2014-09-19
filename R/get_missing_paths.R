@@ -10,7 +10,7 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
   }
   
-  if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+  if(.progressBar == T) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
   pvalues.df = do.call(rbind, lapply(seq_along(basis.set), function(i) {
     

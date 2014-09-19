@@ -10,14 +10,14 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   dag = lapply(dag, function(i) if(grepl("\\*|\\:", paste(format(formula(i)), collapse = ""))) {
     f = paste(formula(i)[[2]], "~", paste(colnames(attr(terms(i), "factors")), collapse = "+"))
-    f = gsub("\\:", paste(LETTERS[1:10], collapse = ""), f)
+    f = gsub("\\:", paste(LETTERS[20:1], collapse = ""), f)
     formula(f) }  else i )
    
   body(DAG)[[2]] = substitute(f <- dag) 
   
   basis.set = basiSet(DAG(dag))
   
-  basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[1:10], collapse = ""), "\\:", i))
+  basis.set = lapply(basis.set, function(i) gsub(paste(LETTERS[20:1], collapse = ""), "\\:", i))
   
   if(!is.null(corr.errors)) {
   
@@ -25,9 +25,11 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       
       inset = unlist(lapply(corr.errors, function(j) {
           
-      corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
+        corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
+        
+        #corr.vars = gsub(".*\\((.*)\\).*", "\\1", corr.vars)
       
-      all(basis.set[[i]][1:2] %in% corr.vars) } ))
+        all(basis.set[[i]][1:2] %in% corr.vars) } ))
       
       if(any(inset == TRUE)) NULL else basis.set[[i]]  
         
@@ -36,6 +38,6 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   body(DAG)[[2]] = substitute(f <- list(...))
   
-  return( basis.set[!sapply(basis.set, is.null)] )
+  return(basis.set[!sapply(basis.set, is.null)])
   
 }

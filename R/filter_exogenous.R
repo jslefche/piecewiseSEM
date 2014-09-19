@@ -2,11 +2,11 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   
   if(is.null(basis.set)) basis.set = get.basis.set(modelList, corr.errors, add.vars)
   
-  exogenous.vars = c(add.vars, unlist(lapply(modelList, function(i) colnames(attr(terms(i), "factors")))) )
+  pred.vars = c(add.vars, unlist(lapply(modelList, function(i) colnames(attr(terms(i), "factors")))) )
   
-  pred.vars = unlist(lapply(modelList, function(i) rownames(attr(terms(i), "factors"))[1]))
+  response.vars = unlist(lapply(modelList, function(i) rownames(attr(terms(i), "factors"))[1]))
   
-  filter.vars = exogenous.vars[!exogenous.vars %in% pred.vars]
+  filter.vars = pred.vars[!pred.vars %in% response.vars]
   
   basis.set = lapply(1:length(basis.set), function(i) if(basis.set[[i]][2] %in% filter.vars) NULL else basis.set[[i]])
   
