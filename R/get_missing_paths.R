@@ -1,6 +1,7 @@
 get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                              grouping.vars = NULL, top.level.vars = NULL,
-                             adjust.p = FALSE, basis.set = NULL, .progressBar = TRUE) {
+                             adjust.p = FALSE, basis.set = NULL, disp.conditional = FALSE,
+                             .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
     
@@ -77,7 +78,7 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
       } else if(all(class(basis.mod) %in% c("glmerMod"))) {
         z.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
         p = 2*(1 - pt(abs(z.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
-        df = NA
+        df = "-"
       } else if(all(class(basis.mod) %in% c("merModLmerTest"))) {
         t.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
@@ -91,7 +92,7 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
         df = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 3]
       } else if(class(basis.mod) %in% c("glmerMod")) {
         p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
-        df = NA
+        df = "-"
       } else if(class(basis.mod) %in% c("merModLmerTest")) {
         p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 5]
         df = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3]  }
@@ -99,13 +100,16 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
-    data.frame(
-      missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
-      df = df, 
-#       conditional.on = 
-#         if(nchar(paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ",")) > 60) paste("Too many to show") else
-#           paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),
-      p.value = round(p, 3))
+    if(disp.conditional == FALSE)
+      data.frame(
+        missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
+        df = df,
+        p.value = round(p, 3))  else
+          data.frame(
+            missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
+            df = df, 
+            conditional.on = paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),
+            p.value = round(p, 3))
     
   } ) )
   

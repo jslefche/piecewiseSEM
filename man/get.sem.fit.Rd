@@ -9,7 +9,8 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 \usage{
 get.sem.fit = function(modelList, data, 
 corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
-basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE)
+basis.set = NULL, pvalues.df = NULL, 
+disp.conditional = FALSE, .progressBar = TRUE)
 }
 \arguments{
    \item{modelList}{
@@ -38,6 +39,9 @@ Provide an optional basis set.
 }
   \item{pvalues.df}{
 An optional \code{data.frame} corresponding to p-values for independence claims.
+}
+  \item{disp.conditional}{
+Display conditional variables in reporting d-sep test results.
 }
   \item{.progressBar}{
 Enable optional text progress bar.

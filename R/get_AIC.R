@@ -1,6 +1,7 @@
 get.aic = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                    grouping.vars = NULL, top.level.vars = NULL, adjust.p = FALSE, 
-                   basis.set = NULL, pvalues.df = NULL, .progressBar = TRUE) {
+                   basis.set = NULL, pvalues.df = NULL,  disp.conditional = FALSE,
+                   .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
     
@@ -15,10 +16,10 @@ get.aic = function(modelList, data, corr.errors = NULL, add.vars = NULL,
   
   if(is.null(pvalues.df))
     pvalues.df = get.missing.paths(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars,
-                                   adjust.p, basis.set, .progressBar)
+                                   adjust.p, basis.set, disp.conditional, .progressBar)
   
   fisher.c = get.fisher.c(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars,
-                          adjust.p, basis.set, pvalues.df, .progressBar)
+                          adjust.p, basis.set, pvalues.df, disp.conditional, .progressBar)
   
   K = do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
   
@@ -26,6 +27,6 @@ get.aic = function(modelList, data, corr.errors = NULL, add.vars = NULL,
   
   AICc = unname(fisher.c[1] + 2 * K * (mean(unlist(lapply(modelList, nobs)))/(max(unlist(lapply(modelList, nobs))) - K - 1)))
   
-  c(AIC = AIC, AICc = AICc, df = K)
+  c(AIC = AIC, AICc = AICc)
 
 }

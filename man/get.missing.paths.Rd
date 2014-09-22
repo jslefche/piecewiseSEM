@@ -8,9 +8,9 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 }
 \usage{
 get.missing.paths(modelList, data, corr.errors = NULL, 
-add.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
-.progressBar = TRUE, grouping.var = NULL, 
-top.level.vars = NULL)
+add.vars = NULL, grouping.var = NULL, 
+top.level.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
+disp.conditional = FALSE, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
@@ -33,6 +33,9 @@ Provide an optional basis set.
 }
   \item{.progressBar}{
 Enable optional text progress bar.
+}
+  \item{disp.conditional}{
+Display conditional variables in reporting d-sep test results.
 }
 \item{grouping.var}{
 An optional variable that represents the highest level of a hierarchical dataset.

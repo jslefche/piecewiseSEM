@@ -11,7 +11,7 @@ get.fisher.c(modelList, data, corr.errors = NULL,
 add.vars = NULL,grouping.var = NULL, 
 top.level.vars = NULL, adjust.p = FALSE, 
 basis.set = NULL, pvalues.df = NULL, 
-.progressBar = TRUE)
+disp.conditional = FALSE, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
@@ -40,6 +40,9 @@ Provide an optional basis set.
 }
   \item{pvalues.df}{
 An optional \code{data.frame} corresponding to p-values for independence claims.
+}
+  \item{disp.conditional}{
+Display conditional variables in reporting d-sep test results.
 }
   \item{.progressBar}{
 Enable optional text progress bar.
