@@ -128,7 +128,10 @@ shipley2013.modlist = list(
   lme(x4~x2, random = ~x2 | species, data = shipley2013),
   lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013) )
 
-get.sem.fit(shipley2013.modlist, shipley2013) #Whoops, convergence error!
+## NOT RUN ##
+# get.sem.fit(shipley2013.modlist, shipley2013) 
+# Convergence error!
+## NOT RUN ##
 
 # Specify model controls by switching to old optimizer
 get.sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))

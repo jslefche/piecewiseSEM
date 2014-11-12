@@ -21,7 +21,7 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
   }
   
   if(length(basis.set) < 1) 
-    warning("All endogenous variables are conditionally dependent: no test of d-sep necessary")
+    stop("All endogenous variables are conditionally dependent: no test of d-sep necessary")
 
   if(is.null(pvalues.df)) {
     
