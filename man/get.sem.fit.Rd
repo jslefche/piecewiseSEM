@@ -102,7 +102,7 @@ shipley2009.modlist = list(
   family=binomial(link = "logit"), data = shipley2009) )
 
 # Conduct goodness-of-fit tests
-get.sem.fitshipley2009, shipley2009)
+get.sem.fit(shipley2009.modlist, shipley2009)
 
 # Add new variable with no hypothesized links and test for independence
 set.seed(1)
@@ -114,8 +114,8 @@ get.sem.fit(shipley2009.modlist, shipley2009, add.vars = c("add.var"))
 set.seed(2)
 shipley2009$site.var = rep(rnorm(20, 10, 5), each = 95)
 
-shipley2009.modlist2 = append(shipley2009, list(
-  lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = Shipley[,"site"]), mean, na.rm = T))) )
+shipley2009.modlist2 = append(shipley2009.modlist, list(
+  lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = shipley2009[,"site"]), mean, na.rm = T))) )
 
 get.sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), top.level.vars = c("site.var"))
 
