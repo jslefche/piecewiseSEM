@@ -41,23 +41,24 @@ Unlike the functions \code{DAG} and \code{basiSet} in the \code{ggm} package, th
 \code{\link{DAG}}, \code{\link{basiSet}}
 }
 \examples{
-data(Shipley) # Data from Shipley 2009
+# Fit model from Shipley (2009)
+data(shipley2009) 
 
 # Load model packages
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
-Shipley.modlist = list(
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
 
-get.basis.set(Shipley.modlist)
+get.basis.set(shipley2009.modlist)
 
 }

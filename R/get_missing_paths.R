@@ -1,7 +1,7 @@
 get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                              grouping.vars = NULL, top.level.vars = NULL,
                              adjust.p = FALSE, basis.set = NULL, disp.conditional = FALSE,
-                             .progressBar = TRUE) {
+                             model.control = NULL, .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
     
@@ -46,18 +46,29 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
          any(top.level.vars %in% gsub(".*\\((.*)\\)", "\\1", unlist(as.character(formula(basis.mod)[2])))))
       data = suppressWarnings(aggregate(data, by = lapply(grouping.vars, function(i) data[ ,i]), mean, na.rm = T))
     
+    if(is.null(model.control)) {
+      if(class(basis.mod) %in% c("lme", "glmmPQL")) control = lmeControl() else 
+        if(class(basis.mod) %in% c("lmerMod", "merModLmerTest")) control = lmerControl() else
+          if(class(basis.mod) %in% c("glmerMod")) control = glmerControl()} else {
+            if(!is.null(model.control) & class(basis.mod) %in% c("lme", "glmmPQL"))
+              control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), is.null))]] else
+                if(!is.null(model.control) & class(basis.mod) %in% c("lmerMod", "merModLmerTest"))
+                  control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), function(x) any(x %in% "lmerControl")))]] else
+                    if(!is.null(model.control) & class(basis.mod) %in% c("glmerMod"))
+                      control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), function(x) any(x %in% "glmerControl")))]] }
+        
     if(is.null(random.formula)) basis.mod = update(basis.mod, fixed.formula, data = data) else
       if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) 
-        basis.mod = update(basis.mod, fixed = formula(fixed.formula), random = formula(random.formula), data = data) else
-          basis.mod = update(basis.mod, formula = formula(paste(fixed.formula, "+", random.formula, sep="", collapse="+")), data = data)
-    
+        basis.mod = update(basis.mod, fixed = formula(fixed.formula), random = formula(random.formula), control = control, data = data) else
+          basis.mod = update(basis.mod, formula = formula(paste(fixed.formula, "+", random.formula, sep="", collapse="+")), control = control, data = data)
+  
     if(any(class(basis.mod) %in% "lmerMod")) basis.mod = as(basis.mod, "merModLmerTest") 
     
     ###
     
     if(all(class(basis.mod) %in% c("lmerMod", "merModLmerTest"))) {
       x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
-      if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying lmerControl") }
+      if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying model.control") }
     
     ###
     
@@ -98,18 +109,17 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
         df = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3]  }
     }
     
+    ret = data.frame(
+      missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
+      df = df,
+      p.value = round(p, 3) )
+    
+    if(disp.conditional == TRUE) 
+      ret = cbind(ret, conditional.on = paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","))
+    
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
-    if(disp.conditional == FALSE)
-      data.frame(
-        missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
-        df = df,
-        p.value = round(p, 3))  else
-          data.frame(
-            missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
-            df = df, 
-            conditional.on = paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","),
-            p.value = round(p, 3))
+    return(ret)
     
   } ) )
   

@@ -14,8 +14,8 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{lme
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 0.2.6\cr
-Date: \tab 2014-09-11\cr
+Version: \tab 0.4\cr
+Date: \tab 2014-11-12\cr
 Depends: \tab R (>=3.1.0), ggm, lavaan, lmerTest\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
@@ -43,45 +43,31 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 \code{\link{get.sem.coefs}}
 }
 \examples{
-data(Shipley) # Data from Shipley 2009
+# Fit model from Shipley (2009)
+data(shipley2009) 
 
-# Load dependencies
+# Load model packages
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
-Shipley.modlist = list(
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
 
 # Get goodness-of-fit and AIC
-get.sem.fit(Shipley.modlist, Shipley)
+get.sem.fit(shipley2009.modlist, shipley2009)
 
 # Get path coefficients
-get.sem.coefs(Shipley.modlist, Shipley)
+get.sem.coefs(shipley2009.modlist, shipley2009)
 
 # Get variance-covariance SEM (calls on package::lavaan)
-summary(get.lavaan.sem(Shipley.modlist, Shipley))
-
-# Add new variable with no hypothesized links and test for independence
-set.seed(1)
-add.var = rnorm(nrow(Shipley), 50, 20)
-
-get.sem.fit(Shipley.modlist, Shipley, add.vars = c("add.var"))
-
-# Add new variable grouped at site level
-set.seed(2)
-Shipley$site.var = rep(rnorm(20, 10, 5), each = 95)
-
-Shipley.modlist2 = append(Shipley.modlist, list(
-  lm(site.var~Growth, data = aggregate(Shipley, by = list(site = Shipley[,"site"]), mean, na.rm = T))) )
-
-get.sem.fit(Shipley.modlist2, Shipley, grouping.vars = c("site"), top.level.vars = c("site.var"))
+summary(get.lavaan.sem(shipley2009.modlist, shipley2009))
 
 }

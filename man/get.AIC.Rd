@@ -11,7 +11,8 @@ get.aic(modelList, data, corr.errors = NULL,
 add.vars = NULL, grouping.var = NULL, 
 top.level.vars = NULL, adjust.p = FALSE,
 basis.set = NULL, pvalues.df = NULL, 
-disp.conditional = FALSE, .progressBar = TRUE)  
+disp.conditional = FALSE, model.control = NULL, 
+.progressBar = TRUE)  
 }
 \arguments{
   \item{modelList}{
@@ -44,6 +45,9 @@ An optional \code{data.frame} corresponding to p-values for independence claims.
   \item{disp.conditional}{
 Display conditional variables in reporting d-sep test results.
 }
+  \item{model.control}{
+A \code{list} of model control arguments to be passed to d-sep models.
+}
   \item{.progressBar}{
 Enable optional text progress bar.
 }
@@ -65,23 +69,24 @@ Jon Lefcheck
 \seealso{
 }
 \examples{
-data(Shipley) # Data from Shipley 2009
+# Fit model from Shipley (2009)
+data(shipley2009) 
 
 # Load model packages
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
-Shipley.modlist = list(
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
   
 # Get AIC scores
-get.aic(Shipley.modlist, Shipley)
+get.aic(shipley2009.modlist, shipley2009)
 }

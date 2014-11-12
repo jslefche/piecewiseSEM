@@ -10,7 +10,8 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 get.sem.fit = function(modelList, data, 
 corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
 basis.set = NULL, pvalues.df = NULL, 
-disp.conditional = FALSE, .progressBar = TRUE)
+disp.conditional = FALSE, model.control = NULL,
+.progressBar = TRUE)
 }
 \arguments{
    \item{modelList}{
@@ -43,6 +44,9 @@ An optional \code{data.frame} corresponding to p-values for independence claims.
   \item{disp.conditional}{
 Display conditional variables in reporting d-sep test results.
 }
+  \item{model.control}{
+A \code{list} of model control arguments to be passed to d-sep models.
+}
   \item{.progressBar}{
 Enable optional text progress bar.
 }
@@ -56,6 +60,8 @@ For linear mixed effects models, p-values can be adjusted to accommodate the ful
 \code{top.level.vars} allows the user to optionally specify one or more top level variables for a hierarchical dataset, which will be summarized based on one or more grouping variables specified by \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
 
 Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the assumption that their correlations will be quantified later using the function \code{get.sem.coefs}.
+
+The model controls in \code{model.control} will be passed to any subsequent d-sep models that fall under that model class. So, if a response is fit using \code{lme} and the \code{list} provided in \code{model.control} contains \code{lmeControl}, then all d-sep models including that response will inherit those arguments from \code{lmeControl}.
 }
 \value{
 Returns a \code{list} with the following:
@@ -77,14 +83,15 @@ Jon Lefcheck
 \code{\link{dag.updated}}, \code{\link{get.missing.paths}}, \code{\link{get.fisher.c}}, \code{\link{get.aic}}
 }
 \examples{
-data(Shipley) # Data from Shipley 2009
+# Fit model from Shipley (2009)
+data(shipley2009) 
 
 # Load model packages
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
-Shipley.modlist = list(
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
   data = Shipley),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
@@ -95,21 +102,35 @@ Shipley.modlist = list(
   family=binomial(link = "logit"), data = Shipley) )
 
 # Conduct goodness-of-fit tests
-get.sem.fit(Shipley.modlist, Shipley)
+get.sem.fitshipley2009, shipley2009)
 
 # Add new variable with no hypothesized links and test for independence
 set.seed(1)
-add.var = rnorm(nrow(Shipley), 50, 20)
+add.var = rnorm(nrow(shipley2009), 50, 20)
 
-get.sem.fit(Shipley.modlist, Shipley, add.vars = c("add.var"))
+get.sem.fit(shipley2009.modlist, shipley2009, add.vars = c("add.var"))
 
 # Add new variable grouped at site level
 set.seed(2)
-Shipley$site.var = rep(rnorm(20, 10, 5), each = 95)
+shipley2009$site.var = rep(rnorm(20, 10, 5), each = 95)
 
-Shipley.modlist2 = append(Shipley.modlist, list(
-  lm(site.var~Growth, data = aggregate(Shipley, by = list(site = Shipley[,"site"]), mean, na.rm = T))) )
+shipley2009.modlist2 = append(shipley2009, list(
+  lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = Shipley[,"site"]), mean, na.rm = T))) )
 
-get.sem.fit(Shipley.modlist2, Shipley, grouping.vars = c("site"), top.level.vars = c("site.var"))
+get.sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), top.level.vars = c("site.var"))
+
+# Fit model from Shipley (2013)
+data(shipley2013)
+
+shipley2013.modlist = list(
+  lme(x2~x1, random = ~x1 | species, data = shipley2013),
+  lme(x3~x2, random = ~x2 | species, data = shipley2013),
+  lme(x4~x2, random = ~x2 | species, data = shipley2013),
+  lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013) )
+
+get.sem.fit(shipley2013.modlist, shipley2013) #Whoops, convergence error!
+
+# Specify model controls by switching to old optimizer
+get.sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))
 
 }

@@ -45,24 +45,25 @@ Jon Lefcheck
 \code{\link{lm.beta}}, \code{\link{scale}}, \code{\link{summary}}
 }
 \examples{
-data(Shipley) # Data from Shipley 2009
+# Fit model from Shipley (2009)
+data(shipley2009) 
 
 # Load model packages
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
-Shipley.modlist = list(
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
   
 # Get path coefficients
-get.sem.coefs(Shipley.modlist, Shipley)
-get.sem.coefs(Shipley.modlist, Shipley, standardized = T)
+get.sem.coefs(shipley2009.modlist, shipley2009)
+get.sem.coefs(shipley2009.modlist, shipley2009, standardized = T)
 }

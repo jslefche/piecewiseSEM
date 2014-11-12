@@ -9,8 +9,9 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 \usage{
 get.missing.paths(modelList, data, corr.errors = NULL, 
 add.vars = NULL, grouping.var = NULL, 
-top.level.vars = NULL, adjust.p = FALSE, basis.set = NULL, 
-disp.conditional = FALSE, .progressBar = TRUE)
+top.level.vars = NULL, adjust.p = FALSE, 
+basis.set = NULL, disp.conditional = FALSE, 
+model.control = NULL, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
@@ -25,23 +26,26 @@ A vector of variables with correlated errors (separated by "~~").
   \item{add.vars}{
 A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
+\item{grouping.var}{
+An optional variable that represents the highest level of a hierarchical dataset.
+}
+\item{top.level.vars}{
+An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+}
   \item{adjust.p}{
 Whether p-values degrees of freedom should be adjusted.
 }
   \item{basis.set}{
 Provide an optional basis set.
 }
-  \item{.progressBar}{
-Enable optional text progress bar.
-}
   \item{disp.conditional}{
 Display conditional variables in reporting d-sep test results.
 }
-\item{grouping.var}{
-An optional variable that represents the highest level of a hierarchical dataset.
+  \item{model.control}{
+A \code{list} of model control arguments to be passed to d-sep models.
 }
-\item{top.level.vars}{
-An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+  \item{.progressBar}{
+Enable optional text progress bar.
 }
 }
 \details{
@@ -72,23 +76,24 @@ Jon Lefcheck
 \seealso{
 }
 \examples{
-data(Shipley) # Data from Shipley 2009
+# Fit model from Shipley (2009)
+data(shipley2009) 
 
 # Load model packages
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
-Shipley.modlist = list(
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
 
 # Evaluate independence claims
-get.missing.paths(Shipley.modlist, Shipley)
+get.missing.paths(shipley2009.modlist, shipley2009)
 }

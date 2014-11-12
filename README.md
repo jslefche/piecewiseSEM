@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.3.2 (2014-09-22)
+Version: 0.4 (2014-11-12)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -27,7 +27,7 @@ library(piecewiseSEM)
 ###Load data from Shipley 2009
 
 ```
-data(Shipley)
+data(shipley2009)
 ```
 The data is alternately hosted in Ecological Archives E090-028-S1 (DOI: 10.1890/08-1034.1).
 
@@ -44,15 +44,16 @@ Models are constructed using a mix of the `nlme` and `lmerTest` packages, as in 
 library(lmerTest)
 library(nlme)
 
-Shipley.modlist = list(
+# Create list of models 
+shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
 ```
 
 
@@ -70,7 +71,7 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 (See ["p-values and all that"](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
 ```
-get.sem.fit(Shipley.modlist, Shipley)
+get.sem.fit(shipley2009.modlist, shipley2009)
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
@@ -80,7 +81,7 @@ The missing paths output differs from Table 2 in Shipley 2009. However, running 
 Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean). Default is `FALSE`. The function returns a `data.frame` sorted by increasing p-value.
 
 ```
-get.sem.coefs(Shipley.modlist)
+get.sem.coefs(shipley2009.modlist, shipley2009)
 ```
 
 ###Generate variance-covariance SEM using `lavaan`
@@ -88,7 +89,7 @@ get.sem.coefs(Shipley.modlist)
 Generate variance-covariance based SEM from the list of linear mixed models. The resulting object can be treated like any other model object constructed using the package `lavaan`.
 
 ```
-lavaan.model = get.lavaan.sem(Shipley.modlist, Shipley)
+lavaan.model = get.lavaan.sem(shipley2009.modlist, shipley2009)
 summary(lavaan.model)
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.

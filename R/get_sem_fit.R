@@ -1,7 +1,7 @@
 get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                        grouping.vars = NULL, top.level.vars = NULL, adjust.p = FALSE, 
                        basis.set = NULL, pvalues.df = NULL, disp.conditional = FALSE,
-                       .progressBar = TRUE) {
+                       model.control = NULL, .progressBar = TRUE) {
 
   if(!all(sapply(modelList, function(i) 
     all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) ) ) )
@@ -27,11 +27,11 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
     
     if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
     
-    pvalues.df = pvalues.df = get.missing.paths(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, disp.conditional, .progressBar) }
+    pvalues.df = get.missing.paths(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, disp.conditional, model.control, .progressBar) }
   
-  fisher.c = get.fisher.c(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, pvalues.df, disp.conditional, .progressBar)
+  fisher.c = get.fisher.c(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, pvalues.df, disp.conditional, model.control, .progressBar)
     
-  AIC.c = get.aic(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, pvalues.df, disp.conditional, .progressBar)
+  AIC.c = get.aic(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, pvalues.df, disp.conditional, model.control, .progressBar)
   
   l = list(pvalues.df, fisher.c, AIC.c)
   
