@@ -93,13 +93,13 @@ library(nlme)
 # Create list of models 
 shipley2009.modlist = list(
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = Shipley),
+  data = shipley2009),
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = Shipley) )
+  family=binomial(link = "logit"), data = shipley2009) )
 
 # Conduct goodness-of-fit tests
 get.sem.fitshipley2009, shipley2009)
