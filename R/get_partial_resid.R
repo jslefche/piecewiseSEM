@@ -1,10 +1,10 @@
-get.partial.resid = function(formula = y ~ x, modelList, data, model.control = NULL) {
+get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL) {
   
-  vars = unlist(strsplit(deparse(formula), "~"))
+  vars = unlist(strsplit(deparse(.formula), "~"))
   y = gsub(" ", "", vars[1])
   x = gsub(" ", "", vars[2])
   
-  y.model = modelList[[match(y, unlist(lapply(modelList, function(i) as.character(formula(i)[2]))))]]
+  y.model = modelList[[match(y, unlist(lapply(modelList, function(i) gsub(".*\\((.*?)\\)+.*", "\\1", formula(i)[2]))))]]
   
   if(is.null(y.model)) stop("Check spelling of correlated variables - must match exactly response in model formula!")
   
@@ -21,23 +21,22 @@ get.partial.resid = function(formula = y ~ x, modelList, data, model.control = N
                   if(!is.null(model.control) & class(y.model) %in% c("glmerMod"))
                     control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), function(x) any(x %in% "glmerControl")))]] }
   
-  if(all(class(y.model) %in% c("lme", "glmmPQL"))) {
-    y.nox.formula = gsub(x, "", paste(deparse(y.model$call), collapse = ""))
-    fixed = gsub(".*fixed = (.*), data = .*$", "\\1", y.nox.formula)
-    random = gsub(".*random = (.*))", "\\1", y.nox.formula)
-    y.nox.model = update(y.model, fixed = as.formula(fixed), random = as.formula(random), control = control, data = data) } else {
-      y.nox.formula = gsub(x, "", paste(formula(y.model), collapse = ""))
-      y.nox.model = update(y.model, formula = formula(y.nox.formula), control = control, data = data) }
   
-  y.replace = gsub("\\(", "\\\\(", y)
-  y.replace = gsub("\\)", "\\\\)", y.replace)
+  ### NEED TO FIX RANDOM FORMULA FOR BOTH NLME AND LME4
   
-  x.noy.formula = gsub(y.replace, x, y.nox.formula)
+  random = as.formula(gsub(x, "", gsub(".*random = (.*))", "\\1",  paste(deparse(y.model$call), collapse = ""))))
   
-  if(all(class(y.model) %in% c("lme", "glmmPQL"))) {
-    fixed = gsub(".*fixed = (.*), data = .*$", "\\1", x.noy.formula)
-    x.noy.model = update(y.model, fixed = formula(fixed), random = as.formula(random), control = control, data = data) } else 
-      x.noy.model = update(y.model, formula = formula(x.noy.formula), control = control, data = data)
+  if(all(class(y.model) %in% c("lme", "glmmPQL")))
+    y.nox.model = update(y.model, fixed = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), random = random, control = control) else
+      y.nox.model = update(y.model, formula = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), control = control)
+  
+  x.sub = attr(y.model$terms, "term.labels")[grep(x, attr(y.model$terms, "term.labels"))][1]
+  
+  if(all(class(y.nox.model) %in% c("lme", "glmmPQL"))) 
+    x.noy.model = update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), random = random, control = control) else 
+      x.noy.model = update(y.model, formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), control = control)
+  
+  ### 
   
   resids.data = data.frame(resid(y.nox.model), resid(x.noy.model) )
   

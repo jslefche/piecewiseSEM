@@ -8,17 +8,14 @@ Calculates partial residuals for two variables.
 Extracts partial residuals for y ~ x | Z, where Z represents all other variables present in a structured equation upon which y and x are conditional.
 }
 \usage{
-get.partial.resid(y ~ x, modelList, data, model.control = NULL)
+get.partial.resid(y ~ x, modelList, model.control = NULL)
 }
 \arguments{
-   \item{formula}{
+   \item{.formula}{
 The partial residuals of \code{y ~ x}.
 }
  \item{modelList}{
 A list of regressions representing the structural equation model. 
-}
-\item{data}{
-A \code{data.frame} used to construct the structured equations.
 }
   \item{model.control}{
 A \code{list} of model control arguments to be passed to partial models.
