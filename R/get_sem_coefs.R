@@ -98,12 +98,12 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
       
       if(all(corr.vars %in% unlist(lapply(modelList, function(i) as.character(formula(i)[2]))))) {
         
-        resid.data = get.partial.resid(y = corr.vars[1], x = corr.vars[2], modelList, data)
+        resid.data = get.partial.resid(as.formula(paste(corr.vars[1], "~", corr.vars[2])), modelList)
         
         data.frame(
           path = j,
           estimate = round(cor(resid.data)[1,2], 3),
-          std.error = NA,
+          std.error = "",
           p.value = round(1 - pt((cor(resid.data)[1, 2] * sqrt(nrow(resid.data) - 2))/(sqrt(1 - cor(resid.data)[1, 2]^2)),nrow(resid.data)-2), 3),
           row.names = NULL) 
         
@@ -112,7 +112,7 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
         data.frame(
           path = j,
           estimate = round(cor(data[, corr.vars[1]], data[, corr.vars[2]]), 3),
-          std.error = "-",
+          std.error = "",
           p.value = round(1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]]) * sqrt(nrow(data) - 2))/
                                    (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]])^2)),nrow(data)-2), 3),
           row.names = NULL)

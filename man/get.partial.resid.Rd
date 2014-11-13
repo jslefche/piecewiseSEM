@@ -53,7 +53,7 @@ shipley2013.modlist = list(
   lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013) )
 
 # Get partial residuals of x3 on x5 conditional on x4
-resids.df = get.partial.resid(x5 ~ x3, shipley2013.modlist, shipley2013, list(lmeControl(opt = "optim")))
+resids.df = get.partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "optim")))
 
 # Plot partial residuals against one another to look for partial dependency
 plot(resids.df[ ,1] ~ resids.df [,2])

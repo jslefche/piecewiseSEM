@@ -17,6 +17,9 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     basis.mod = modelList[[match(basis.set[[i]][2], unlist(lapply(modelList, function(j) as.character(formula(j)[2]))))]]
     
+    
+    #### Need to fix getting random effects structure    
+    
     fixed.formula = paste(basis.set[[i]][2], "~", paste(basis.set[[i]][c(1, 3:length(basis.set[[i]]))], collapse = "+"))
     
     random.formula = if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) 
@@ -77,6 +80,8 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
       rowname = int[sapply(lapply(int, function(j) unlist(strsplit(j, ":"))), 
                            function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
     }
+    
+    ####
     
     if(adjust.p == TRUE) {
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
