@@ -17,7 +17,7 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     basis.mod = modelList[[match(basis.set[[i]][2], unlist(lapply(modelList, function(j) as.character(formula(j)[2]))))]]
     
-    
+  
     #### Need to fix getting random effects structure    
     
     fixed.formula = paste(basis.set[[i]][2], "~", paste(basis.set[[i]][c(1, 3:length(basis.set[[i]]))], collapse = "+"))
@@ -49,6 +49,8 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
          any(top.level.vars %in% gsub(".*\\((.*)\\)", "\\1", unlist(as.character(formula(basis.mod)[2])))))
       data = suppressWarnings(aggregate(data, by = lapply(grouping.vars, function(i) data[ ,i]), mean, na.rm = T))
     
+    if(length(model.control)>10) model.control = list(model.control)
+    
     if(is.null(model.control)) {
       if(class(basis.mod) %in% c("lme", "glmmPQL")) control = lmeControl() else 
         if(class(basis.mod) %in% c("lmerMod", "merModLmerTest")) control = lmerControl() else
@@ -75,43 +77,38 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     ###
     
-    if(!grepl(":", basis.set[[i]][1])) rowname = basis.set[[i]][1] else {
-      int = attr(terms(basis.mod), "term.labels")[grepl(":", attr(terms(basis.mod), "term.labels"))]
-      rowname = int[sapply(lapply(int, function(j) unlist(strsplit(j, ":"))), 
-                           function(k) all(unlist(strsplit(basis.set[[i]][1], ":")) %in% k))]
-    }
-    
-    ####
+    if(!grepl(":|\\*", basis.set[[i]][1])) row.num = which(basis.set[[i]][1] == attr(terms(basis.mod), "term.labels")) + 1 else
+      row.num = which(grepl(":|\\*", attr(terms(basis.mod), "term.labels"))) + 1 
     
     if(adjust.p == TRUE) {
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3] 
+        p = summary(basis.mod)$coefficients[row.num, 3] 
         df = basis.mod$df.residual
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        t.value = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 4] 
+        t.value = summary(basis.mod)$tTable[row.num, 4] 
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(apply(basis.mod$groups,2,function(x) length(unique(x))))))
-        df = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 3]
+        df = summary(basis.mod)$tTable[row.num, 3]
       } else if(all(class(basis.mod) %in% c("glmerMod"))) {
-        z.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
+        z.value = summary(basis.mod)$coefficients[row.num, 4]
         p = 2*(1 - pt(abs(z.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
         df = "-"
       } else if(all(class(basis.mod) %in% c("merModLmerTest"))) {
-        t.value = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
+        t.value = summary(basis.mod)$coefficients[row.num, 4]
         p = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps)))
-        df = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3] }  
+        df = summary(basis.mod)$coefficients[row.num, 3] }  
     } else if(adjust.p == FALSE) {
       if(all(class(basis.mod) %in% c("lm", "glm", "negbin"))) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
+        p = summary(basis.mod)$coefficients[row.num, 4]
         df = basis.mod$df.residual
       } else if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
-        p = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 5]
-        df = summary(basis.mod)$tTable[pmatch(rowname, rownames(summary(basis.mod)$tTable)), 3]
+        p = summary(basis.mod)$tTable[row.num, 5]
+        df = summary(basis.mod)$tTable[row.num, 3]
       } else if(class(basis.mod) %in% c("glmerMod")) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 4]
+        p = summary(basis.mod)$coefficients[row.num, 4]
         df = "-"
       } else if(class(basis.mod) %in% c("merModLmerTest")) {
-        p = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 5]
-        df = summary(basis.mod)$coefficients[pmatch(rowname, rownames(summary(basis.mod)$coefficients)), 3]  }
+        p = summary(basis.mod)$coefficients[row.num, 5]
+        df = summary(basis.mod)$coefficients[row.num, 3]  }
     }
     
     ret = data.frame(

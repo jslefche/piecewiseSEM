@@ -45,7 +45,7 @@ An optional \code{data.frame} corresponding to p-values for independence claims.
 Display conditional variables in reporting d-sep test results.
 }
   \item{model.control}{
-A \code{list} of model control arguments to be passed to d-sep models.
+A \code{control} function or a \code{list} of model control arguments to be passed to d-sep models.
 }
   \item{.progressBar}{
 Enable optional text progress bar.

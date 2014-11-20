@@ -2,7 +2,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   
   if(is.null(basis.set)) basis.set = get.basis.set(modelList, corr.errors, add.vars)
   
-  pred.vars = c(add.vars, unlist(lapply(modelList, function(i) colnames(attr(terms(i), "factors")))) )
+  pred.vars = unique(c(add.vars, unlist(lapply(modelList, function(i) attr(terms(i), "term.labels")))))
   
   response.vars = unlist(lapply(modelList, function(i) rownames(attr(terms(i), "factors"))[1]))
   

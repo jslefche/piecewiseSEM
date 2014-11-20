@@ -11,6 +11,8 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL) 
   if(all(x %in% strsplit(deparse(formula(y.model)[[3]]), "\\+")[[1]])) 
     stop("Y is a direct function of X, no partial residuals obtainable")
   
+  if(length(model.control)>10) model.control = list(model.control)
+  
   if(is.null(model.control)) {
     if(class(y.model) %in% c("lme", "glmmPQL")) control = lmeControl() else 
       if(class(y.model) %in% c("lmerMod", "merModLmerTest")) control = lmerControl() else
