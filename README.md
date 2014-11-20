@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.4 (2014-11-12)
+Version: 0.4.1 (2014-11-20)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
