@@ -19,7 +19,7 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   basis.set = basiSet(DAG(dag))
   
-  basis.set = lapply(basis.set, function(i) gsub(paste("\\%\\*\\%", collapse = ""), "\\:", i))
+  basis.set = lapply(basis.set, function(i) gsub(paste(".\\%\\*\\%.", collapse = ""), "\\:", i))
   
   if(!is.null(corr.errors)) {
   
@@ -40,9 +40,7 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     }
   
   body(DAG)[[2]] = substitute(f <- list(...))
-  
-  basis.set = lapply(basis.set, function(i) gsub(" ", "", i))
-  
+
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
   return(basis.set)

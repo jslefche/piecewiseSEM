@@ -3,7 +3,7 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
   names(modelList) = NULL
   
   if(standardized == FALSE) {
-    dataframe = do.call(rbind, lapply(modelList, function(i) {
+    ret = lapply(modelList, function(i) {
       
       if(all(class(i) %in% c("lm", "glm", "negbin", "glmerMod"))) {
         tab = summary(i)$coefficients
@@ -27,11 +27,11 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
                    estimate = round(tab[-1, 1], 3),
                    std.error = round(tab[-1, 2], 3),
                    p.value = round(tab[-1, 5], 3), 
-                   row.names = NULL) } } ) )
+                   row.names = NULL) } } )
     
   } else if(standardized == TRUE) {
     
-    dataframe = do.call(rbind, lapply(modelList, function(i) {
+    ret = lapply(modelList, function(i) {
       
       vars.to.scale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
         if(any(class(i) %in% c("glm", "negbin", "glmmPQL"))) {
@@ -86,13 +86,11 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
                    std.error = round(tab[-1, 2], 3),
                    p.value = round(tab[-1, 5], 3), 
                    row.names = NULL) } 
-    } ) )
+    } )
   }
-  
-  dataframe = dataframe[order(dataframe$p.value),]
-  
+
   if(!is.null(corr.errors)) {
-    dataframe = rbind(dataframe, do.call(rbind, lapply(corr.errors, function(j) {
+    ret = append(ret, lapply(corr.errors, function(j) {
       
       corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
       
@@ -111,14 +109,16 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
         
         data.frame(
           path = j,
-          estimate = round(cor(data[, corr.vars[1]], data[, corr.vars[2]]), 3),
+          estimate = round(cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs"), 3),
           std.error = "",
-          p.value = round(1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]]) * sqrt(nrow(data) - 2))/
-                                   (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]])^2)),nrow(data)-2), 3),
+          p.value = round(1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs") * sqrt(nrow(data) - 2))/
+                                   (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs")^2)),nrow(data)-2), 3),
           row.names = NULL)
         
-      } ) ) ) }
-  
-  return(dataframe)
-  
+      } ) ) }
+
+  ret = lapply(ret, function(i) { i = i[order(i$p.value),]; rownames(i) = NULL; return(i) } )
+
+  return(ret)
+
 }
