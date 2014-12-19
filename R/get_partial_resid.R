@@ -28,20 +28,21 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL) 
                 control = NULL }
   
   if(class(y.model) %in% c("lme", "glmmPQL")) {
-    
-    if(grepl("\\+", deparse(y.model$call$random))) random = y.model$call$random else {
+    if(!grepl("\\+", deparse(y.model$call$random))) random = y.model$call$random else {
       random = drop.terms(terms(as.formula(gsub("\\|", "+BERLIOZ+", deparse(y.model$call$random))), special = c("+BERLIOZ+","\\/")),
                         which(all.vars(y.model$call$random) == x))
       random = as.formula(gsub("\\+.BERLIOZ.\\+", "\\|", deparse(random)))
       if(grepl("\\:", deparse(random))) random = as.formula(gsub("..[^\\+]+:", "\\/", deparse(random))) }
-    y.nox.model = update(y.model, fixed = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), random = random, control = control) } else
+    y.nox.model = update(y.model, fixed = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), random = as.formula(random), control = control) 
+    } else {
       y.nox.model = suppressWarnings(
         update(y.model, formula = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), control = control) )
+    }
   
   x.sub = attr(y.model$terms, "term.labels")[grep(x, attr(y.model$terms, "term.labels"))][1]
   
   if(all(class(y.nox.model) %in% c("lme", "glmmPQL"))) 
-    x.noy.model = update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), random = random, control = control) else 
+    x.noy.model = update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), random = as.formula(random), control = control) else 
       x.noy.model = suppressWarnings( 
         update(y.model, formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), control = control) )
   

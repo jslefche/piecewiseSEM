@@ -65,5 +65,5 @@ shipley2009.modlist = list(
   
 # Get path coefficients
 get.sem.coefs(shipley2009.modlist, shipley2009)
-get.sem.coefs(shipley2009.modlist, shipley2009, standardized = T)
+get.sem.coefs(shipley2009.modlist, shipley2009, standardized = TRUE)
 }
