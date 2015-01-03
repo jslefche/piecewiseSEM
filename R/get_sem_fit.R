@@ -20,8 +20,7 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
     
   }
   
-  if(length(basis.set) < 1) 
-    stop("All endogenous variables are conditionally dependent: no test of d-sep necessary")
+  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent: no test of d-sep necessary")
 
   if(is.null(pvalues.df)) {
     
@@ -33,7 +32,7 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
     
   AIC.c = get.aic(modelList, data, sig, corr.errors, add.vars, grouping.vars, top.level.vars, adjust.p, basis.set, pvalues.df, disp.conditional, model.control, .progressBar)
   
-  pvalues.df$p.value = round(pvalues.df$p.value, sig)
+  pvalues.df[,c("estimate","std.error","crit.value","p.value")] = round(pvalues.df[,c("estimate","std.error","crit.value","p.value")], sig)
   
   l = list(pvalues.df, fisher.c, AIC.c)
   
