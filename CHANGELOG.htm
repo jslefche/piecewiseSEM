@@ -1,3 +1,10 @@
+2015-01-03 Version 0.4.2
+  * get.missing.paths now returns more information for d-sep tests
+  * get.basis.set drops independence claims in the basis set where interactions predict their corresponding main effects 
+  * get.fisher.c now reports k df and get.aic now reports K and n df
+  * Fixed rounding error that misreported Fisher's C
+  * Allow user-specified rounding using `sig=` argument in get.sem.fit, get.fisher.c, and get.aic
+
 2014-12-19 Version 0.4.1
   * Fixed minor bug in get.partial.resid where random effects threw an error for lme models
   * Fixed interaction bug in filter.exogenous which was returning incompatible models from the basis set
