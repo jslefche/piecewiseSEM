@@ -39,6 +39,17 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       } )
     }
   
+  basis.set =  lapply(1:length(basis.set), function(i) {
+    
+    if(grepl("\\:",basis.set[[i]][1])) {
+    
+    int = strsplit(basis.set[[i]][1],"\\:")[[1]]
+    
+    if(any(int %in% basis.set[[i]][2])) NULL else basis.set[[i]] } else basis.set[[i]]
+    
+  } )
+  
+  
   body(DAG)[[2]] = substitute(f <- list(...))
 
   basis.set = basis.set[!sapply(basis.set, is.null)]

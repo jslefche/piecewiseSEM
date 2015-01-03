@@ -10,7 +10,6 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   
   basis.set = lapply(1:length(basis.set), function(i) 
     if(basis.set[[i]][2] %in% filter.vars | 
-#          all(basis.set[[i]] %in% pred.vars) | 
          any(basis.set[[i]][1] %in% gsub(".*\\((.*)\\).*", "\\1", basis.set[[i]][2:length(basis.set[[i]])]))) NULL else 
       basis.set[[i]])
   
