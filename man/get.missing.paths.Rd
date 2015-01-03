@@ -11,7 +11,7 @@ get.missing.paths(modelList, data, corr.errors = NULL,
 add.vars = NULL, grouping.var = NULL, 
 top.level.vars = NULL, adjust.p = FALSE, 
 basis.set = NULL, disp.conditional = FALSE, 
-model.control = NULL, .progressBar = TRUE)
+model.control = NULL, sig = 3, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
@@ -43,6 +43,9 @@ Display conditional variables in reporting d-sep test results.
 }
   \item{model.control}{
 A \code{list} of model control arguments to be passed to d-sep models.
+}
+\item{sig}{
+Number of significant digits to round output. Default is \code{3}.
 }
   \item{.progressBar}{
 Enable optional text progress bar.

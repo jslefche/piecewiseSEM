@@ -16,7 +16,6 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
   pvalues.df = do.call(rbind, lapply(seq_along(basis.set), function(i) {
     
     basis.mod = modelList[[match(basis.set[[i]][2], unlist(lapply(modelList, function(j) as.character(formula(j)[2]))))]]
-    
   
     #### Need to fix getting random effects structure    
     
@@ -114,7 +113,7 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     ret = data.frame(
       missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), 
       df = df,
-      p.value = round(p, 3) )
+      p.value = p)
     
     if(disp.conditional == TRUE) 
       ret = cbind(ret, conditional.on = paste(basis.set[[i]][3:length(basis.set[[i]])], collapse = ","))
