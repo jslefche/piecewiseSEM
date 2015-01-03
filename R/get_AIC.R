@@ -25,8 +25,8 @@ get.aic = function(modelList, data, sig = 3, corr.errors = NULL, add.vars = NULL
   
   AIC = unname(fisher.c[1] + 2 * K)
   
-  AICc = unname(fisher.c[1] + 2 * K * (max(unlist(lapply(modelList, nobs)))/(max(unlist(lapply(modelList, nobs))) - K - 1)))
+  AICc = unname(fisher.c[1] + 2 * K * (min(unlist(lapply(modelList, nobs)))/(min(unlist(lapply(modelList, nobs))) - K - 1)))
   
-  round(c(AIC = AIC, AICc = AICc, K = K, n = max(unlist(lapply(modelList, nobs)))), sig)
+  round(c(AIC = AIC, AICc = AICc, K = K, n = min(unlist(lapply(modelList, nobs)))), sig)
 
 }
