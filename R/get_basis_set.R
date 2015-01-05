@@ -13,8 +13,8 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       f = paste(rownames(attr(terms(i), "factors"))[1], "~",paste(colnames(attr(terms(i), "factors")), collapse = "+"))
       f = gsub("\\:", paste("%*%", collapse = ""), f)
       formula(f) 
-      } else i )
-   
+    } else i )
+  
   body(DAG)[[2]] = substitute(f <- dag) 
   
   basis.set = basiSet(DAG(dag))
@@ -22,37 +22,40 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   basis.set = lapply(basis.set, function(i) gsub(paste(".\\%\\*\\%.", collapse = ""), "\\:", i))
   
   if(!is.null(corr.errors)) {
-  
+    
     basis.set =  lapply(1:length(basis.set), function(i) {
       
       inset = unlist(lapply(corr.errors, function(j) {
-          
+        
         corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
         
         basis.set.sub = c() 
         for(k in 1:2) basis.set.sub[k] = gsub(".*\\((.*?)\\)+.*", "\\1", basis.set[[i]][k])
-      
+        
         all(basis.set.sub %in% corr.vars) } ))
       
       if(any(inset == TRUE)) NULL else basis.set[[i]]  
-        
-      } )
-    }
+      
+    } )
+  }
   
   basis.set =  lapply(1:length(basis.set), function(i) {
     
-    if(grepl("\\:",basis.set[[i]][1])) {
-    
-    int = strsplit(basis.set[[i]][1],"\\:")[[1]]
-    
-    if(any(int %in% basis.set[[i]][2])) NULL else basis.set[[i]] } else basis.set[[i]]
+    if(is.null(basis.set[[i]])) NULL else {
+      
+      if(grepl("\\:",basis.set[[i]][1])) {
+        
+        int = strsplit(basis.set[[i]][1],"\\:")[[1]]
+        
+        if(any(int %in% basis.set[[i]][2])) NULL else basis.set[[i]] } else basis.set[[i]]
+      
+    }
     
   } )
   
+  basis.set = basis.set[!sapply(basis.set, is.null)]
   
   body(DAG)[[2]] = substitute(f <- list(...))
-
-  basis.set = basis.set[!sapply(basis.set, is.null)]
   
   return(basis.set)
   
