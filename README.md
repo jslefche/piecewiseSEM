@@ -93,3 +93,12 @@ lavaan.model = get.lavaan.sem(shipley2009.modlist, shipley2009)
 summary(lavaan.model)
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.
+
+###Get R^2 for individual models 
+
+From: https://github.com/jslefche/rsquared.glmm
+
+```
+source(https://raw.githubusercontent.com/jslefche/rsquared.glmm/master/rsquaredglmm.R)
+rsquared.glmm(shipley2009.modlist)
+```
