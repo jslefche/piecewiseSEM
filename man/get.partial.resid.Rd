@@ -5,7 +5,7 @@
 Calculates partial residuals for two variables.
 }
 \description{
-Extracts partial residuals for y ~ x | Z, where Z represents all other variables present in a structured equation upon which y and x are conditional.
+Extracts partial residuals for \code{y ~ x | Z}, where \code{Z} represents all other variables present in a structured equation upon which \code{y} and \code{x} are conditional.
 }
 \usage{
 get.partial.resid(y ~ x, modelList, model.control = NULL)
@@ -20,12 +20,18 @@ A list of regressions representing the structural equation model.
   \item{model.control}{
 A \code{list} of model control arguments to be passed to partial models.
 }
+  \item{plot}{
+Whether the partial plot of \code{y ~ x | Z} should be returned. Default is \code{TRUE}.
+}
+  \item{regr}{
+Whether the partial regression of \code{y ~ x | Z} should also be plotted. Default is \code{TRUE}.
+}
 }
 \details{
 
 }
 \value{
-Returns a \code{data.frame} where the first column are the partial residuals of y ~ Z | x, and the second column is the partial residuals of x ~ Z | y.
+Returns a \code{data.frame} where the first column are the partial residuals of \code{y ~ x | Z} , and the second column is the partial residuals of \code{x ~ Z | y}. If \code{plot == TRUE} then a plot of \code{y ~ x | Z}. If \code{regr == TRUE} then the plot includes the linear regression of \code{y ~ x | Z} .
 }
 \references{
 Shipley, Bill. Cause and correlation in biology: a user's guide to path analysis, structural equations and causal inference. Cambridge University Press, 2002.
@@ -55,6 +61,6 @@ shipley2013.modlist = list(
 # Get partial residuals of x3 on x5 conditional on x4
 resids.df = get.partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "optim")))
 
-# Plot partial residuals against one another to look for partial dependency
-plot(resids.df[ ,1] ~ resids.df [,2])
+# Also returns raw residuals values for plotting in other packages
+head(resids.df)
 }

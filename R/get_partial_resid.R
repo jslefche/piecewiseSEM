@@ -1,4 +1,4 @@
-get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL) {
+get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot = T, regr = T) {
   
   vars = unlist(strsplit(deparse(.formula), "~"))
   y = gsub(" ", "", vars[1])
@@ -49,6 +49,10 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL) 
   resids.data = data.frame(resid(y.nox.model), resid(x.noy.model) )
   
   names(resids.data)=c(paste(y, "given.others", sep="."), paste(x, "given.others", sep="."))
+  
+  if(plot == TRUE) plot(resids.data[, 1] ~ resids.data[ ,2], xlab = paste(x, " | given others"), ylab = paste(y, " | given others")) 
+  
+  if(plot == TRUE & regr == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
   
   return(resids.data)
   
