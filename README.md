@@ -100,9 +100,8 @@ One might be interested in the partial effects of one variable on another given 
 
 ###Get R<sup>2</sup> for individual models 
 
-From: https://github.com/jslefche/rsquared.glmm
+Return R<sup>2</sup> and AIC values for component models in the SEM.
 
 ```
-source(https://raw.githubusercontent.com/jslefche/rsquared.glmm/master/rsquaredglmm.R)
-rsquared.glmm(shipley2009.modlist)
+get.model.fits(shipley2009.modlist)
 ```
