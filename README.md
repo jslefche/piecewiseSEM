@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.4.2 (2015-01-03)
+Version: 0.4.3 (2015-01-26)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -93,6 +93,10 @@ lavaan.model = get.lavaan.sem(shipley2009.modlist, shipley2009)
 summary(lavaan.model)
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.
+
+###Plot partial effect between two variables
+
+One might be interested in the partial effects of one variable on another given covariates in the SEM. The function `get.partial.resid` returns a `data.frame` of the partial residuals of `y ~ x` and plots the partial effect.
 
 ###Get R<sup>2</sup> for individual models 
 
