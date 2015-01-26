@@ -1,5 +1,5 @@
-\name{get.model.fit}
-\alias{get.model.fit}
+\name{get.model.fits}
+\alias{get.model.fits}
 \title{
 Goodness-of-fit statistics for component models.
 }
