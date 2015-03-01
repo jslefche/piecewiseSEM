@@ -1,35 +1,38 @@
-get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NULL) {
+get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = NULL) {
   
   names(modelList) = NULL
   
-  if(standardized == FALSE) {
+  if(standardized == "none") {
     ret = lapply(modelList, function(i) {
       
       if(all(class(i) %in% c("lm", "glm", "negbin", "glmerMod"))) {
         tab = summary(i)$coefficients
-        data.frame(path = paste(Reduce(paste, deparse(formula(i)[[2]])), "<-", rownames(tab)[-1]),
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 4], 3), 
-                   row.names = NULL)
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+              predictor = rownames(tab)[-1],
+              estimate = round(tab[-1, 1], 3),
+              std.error = round(tab[-1, 2], 3),
+              p.value = round(tab[-1, 4], 3), 
+              row.names = NULL)
         
       } else if(all(class(i) %in% c("lme", "glmmPQL"))) {
         tab = summary(i)$tTable
-        data.frame(path = paste(Reduce(paste, deparse(formula(i)[[2]])), "<-", rownames(tab)[-1]),
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 5], 3), 
-                   row.names = NULL)
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+              predictor = rownames(tab)[-1],
+              estimate = round(tab[-1, 1], 3),
+              std.error = round(tab[-1, 2], 3),
+              p.value = round(tab[-1, 5], 3), 
+              row.names = NULL)
         
       } else if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
         tab = summary(as(i, "merModLmerTest"))$coefficients
-        data.frame(path = paste(Reduce(paste, deparse(formula(i)[[2]])), "<-", rownames(tab)[-1]),
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 5], 3), 
-                   row.names = NULL) } } )
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+              predictor = rownames(tab)[-1],
+              estimate = round(tab[-1, 1], 3),
+              std.error = round(tab[-1, 2], 3),
+              p.value = round(tab[-1, 5], 3), 
+              row.names = NULL) } } )
     
-  } else if(standardized == TRUE) {
+  } else if(standardized != "none") {
     
     ret = lapply(modelList, function(i) {
       
@@ -51,8 +54,11 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
         form[grepl("\\*|\\:", form)] = unlist(ints.scaled)
         vars.to.scale=vars.to.scale[-match(unique(unlist(ints)),vars.to.scale)] }
       
-      if(length(vars.to.scale) > 0) form[match(vars.to.scale, form)] = paste("scale(", form[match(vars.to.scale, form)], ")")
-      
+      if(length(vars.to.scale) > 0 & standardized == "scaled") 
+        form[match(vars.to.scale, form)] = paste("scale(", form[match(vars.to.scale, form)], ")") else
+          if(length(vars.to.scale) > 0 & standardized == "range")
+            form[match(vars.to.scale, form)] = paste("scale.range(", form[match(vars.to.scale, form)], ")")
+          
       form = if(length(form) > 2)
         paste(paste(form[1], "~", form[2], "+"), paste(form[-c(1:2)], collapse = "+")) else
           paste(paste(form[1], "~", form[2]))
@@ -65,27 +71,30 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
       
       if(all(class(model) %in% c("lm", "glm", "negbin", "glmerMod"))) {
         tab = summary(model)$coefficients
-        data.frame(path = paste(Reduce(paste, deparse(formula(model)[[2]])), "<-", rownames(tab)[-1]),
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 4], 3), 
-                   row.names = NULL)
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+              predictor = rownames(tab)[-1],
+              estimate = round(tab[-1, 1], 3),
+              std.error = round(tab[-1, 2], 3),
+              p.value = round(tab[-1, 4], 3), 
+              row.names = NULL)
         
       } else if(all(class(model) %in% c("lme", "glmmPQL"))) {
         tab = summary(model)$tTable
-        data.frame(path = paste(Reduce(paste, deparse(formula(model)[[2]])), "<-", rownames(tab)[-1]),
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 5], 3), 
-                   row.names = NULL)
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+              predictor = rownames(tab)[-1],
+              estimate = round(tab[-1, 1], 3),
+              std.error = round(tab[-1, 2], 3),
+              p.value = round(tab[-1, 5], 3), 
+              row.names = NULL)
         
       } else if(all(class(model) %in% c("merModLmerTest"))) {
         tab = summary(model)$coefficients
-        data.frame(path = paste(Reduce(paste, deparse(formula(model)[[2]])), "<-", rownames(tab)[-1]),
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 5], 3), 
-                   row.names = NULL) } 
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+              predictor = rownames(tab)[-1],
+              estimate = round(tab[-1, 1], 3),
+              std.error = round(tab[-1, 2], 3),
+              p.value = round(tab[-1, 5], 3), 
+              row.names = NULL) } 
     } )
   }
 
@@ -119,6 +128,17 @@ get.sem.coefs = function(modelList, data, standardized = FALSE, corr.errors = NU
 
   ret = lapply(ret, function(i) { i = i[order(i$p.value),]; rownames(i) = NULL; return(i) } )
 
+  ret = do.call(rbind,ret)
+  
+  ret = data.frame(ret, . =
+        ifelse(ret$p.value > 0.10, "",
+        ifelse(ret$p.value > 0.05 & ret$p.value <= 0.10, ".",
+        ifelse(ret$p.value > 0.01 & ret$p.value <= 0.05, "*", 
+        ifelse(ret$p.value > 0.001 & ret$p.value <= 0.01, "**",
+        ifelse(ret$p.value <= 0.001, "***") ) ) ) ) )
+  
+  colnames(ret)[6] = ""
+  
   return(ret)
 
 }
