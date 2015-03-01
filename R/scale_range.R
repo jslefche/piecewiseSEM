@@ -1,0 +1,1 @@
+scale.range = function(x) { ( (x-min(x, na.rm = T)) / diff(range(x, na.rm = T)) ) }
