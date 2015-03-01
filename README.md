@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.4.3 (2015-01-26)
+Version: 0.4.4 (2015-03-01)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -66,7 +66,7 @@ shipley2009.modlist = list(
 
 The argument `add.vars` allows you to specify a vector of additional variables whose causal independence you also wish to test. This is useful if you are comparing nested models. Default is `NULL`.
 
-The argument `adjust.p` allows you to adjust the p-values returned by the function based on the the total d.f. for the model (see supplementary material, Shipley 2013). Default is `FALSE` (uses the d.f. reported in the summary table).
+The argument `adjust.p` allows you to adjust the p-values returned by the function based on the the total degrees of freedom for the model (see supplementary material, Shipley 2013). Default is `FALSE` (uses the d.f. reported in the summary table).
 
 (See ["p-values and all that"](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
