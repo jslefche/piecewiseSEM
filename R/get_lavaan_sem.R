@@ -1,4 +1,4 @@
-get.lavaan.sem = function(modelList, data, corr.errors = NULL, add.vars = NULL) {
+get.lavaan.sem = function(modelList, data, corr.errors = NULL, add.vars = NULL, ...) {
 
   if(is.null(data)) stop("Must supply dataset to function")
   
@@ -14,6 +14,6 @@ get.lavaan.sem = function(modelList, data, corr.errors = NULL, add.vars = NULL) 
     
     sem.model = paste(sem.model, paste(unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep="~")))), collapse="\n"), sep = "\n")
   
-  sem(sem.model, data)
+  sem(sem.model, data, ...)
 
 }

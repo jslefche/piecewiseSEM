@@ -1,27 +1,29 @@
 \name{get.lavaan.sem}
 \alias{get.lavaan.sem}
 \title{
-Constructs variance-covariance based structural equation model.
+Constructs variance-covariance based SEM
 }
 \description{
-Estimates variance-covariance based (traditional) SEM using \code{lavaan}.
+Estimates variance-covariance based (traditional) structural equation model (SEM) using the \code{lavaan} package.
 }
 \usage{
-get.lavaan.sem(modelList, data, corr.errors = NULL, 
-add.vars = NULL)
+get.lavaan.sem(modelList, data, corr.errors, add.vars, ...)
 }
 \arguments{
   \item{modelList}{
-A list of regressions representing the structural equation model. 
+a list of regressions representing the structural equation model. 
 }
   \item{data}{
-A \code{data.frame} containing the full dataset for the SEM.
+a \code{data.frame} containing the full dataset for the SEM.
 }
   \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+a vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+}
+  \item{...}{
+additional arguments passed to \code{lavaan}.
 }
 }
 \details{
