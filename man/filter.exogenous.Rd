@@ -1,31 +1,30 @@
 \name{filter.exogenous}
 \alias{filter.exogenous}
 \title{
-Filter exogenous variables from the basis set
+Filter exogenous variables from the basis set for SEM
 }
 \description{
 Identifies exogenous variables (variables that have no paths leading to them) and removes them from the basis set when they appear as responses.
 }
 \usage{
-filter.exogenous(modelList, basis.set = NULL, corr.errors = NULL, 
-add.vars = NULL)
+filter.exogenous(modelList, basis.set, corr.errors, add.vars)
 }
 \arguments{
  \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
   \item{basis.set}{
-A optional \code{list} of vectors representing conditional independence statements.
+an optional \code{list} of vectors representing conditional independence statements.
 }
   \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+a vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 }
 \details{
-
+Helper function for \code{get.basis.set}.
 }
 \value{
 A \code{list} of vectors representing conditional independence statements. The first string is the response, the second is the predictor, and the remaining strings are the variables (if any) upon which the indepedence claim are conditional.
@@ -63,5 +62,5 @@ filter.exogenous(shipley2009.modlist)
 identical(
   get.basis.set(shipley2009.modlist),
   filter.exogenous(shipley2009.modlist) )
-# Results are identical (get.basis.set calls filter.exogenous)
+# Results are identical 
 }

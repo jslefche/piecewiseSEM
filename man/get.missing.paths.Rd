@@ -1,54 +1,53 @@
 \name{get.missing.paths}
 \alias{get.missing.paths}
 \title{
-Evaluate independence claims for piecewise SEM.
+Evaluate independence claims for piecewise SEM
 }
 \description{
 Identifies missing paths from a piecewise SEM, fits models, extracts path p-values and returns in a \code{data.frame}.
 }
 \usage{
-get.missing.paths(modelList, data, corr.errors = NULL, 
-add.vars = NULL, grouping.var = NULL, 
-top.level.vars = NULL, adjust.p = FALSE, 
-basis.set = NULL, disp.conditional = FALSE, 
-model.control = NULL, sig = 3, .progressBar = TRUE)
+get.missing.paths(modelList, data, corr.errors, add.vars, grouping.var, 
+                  top.level.vars, adjust.p = FALSE, basis.set, 
+                  disp.conditional = FALSE, model.control, sig = 3, 
+                  .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
 \item{data}{
-A \code{data.frame} used to construct the structured equations.
+a \code{data.frame} used to construct the structured equations.
 }
   \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+a vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 \item{grouping.var}{
-An optional variable that represents the highest level of a hierarchical dataset.
+an optional variable that represents the highest level of a hierarchical dataset.
 }
 \item{top.level.vars}{
-An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
   \item{adjust.p}{
-Whether p-values degrees of freedom should be adjusted.
+whether p-values degrees of freedom should be adjusted (see below). Default is \code{FALSE}.
 }
   \item{basis.set}{
-Provide an optional basis set.
+provide an optional basis set.
 }
   \item{disp.conditional}{
-Display conditional variables in reporting d-sep test results.
+display conditional variables in reporting d-sep test results. Default is \code{FALSE}.
 }
   \item{model.control}{
-A \code{list} of model control arguments to be passed to d-sep models.
+a \code{list} of model control arguments to be passed to d-sep models.
 }
 \item{sig}{
-Number of significant digits to round output. Default is \code{3}.
+number of significant digits to round output. Default is \code{3}.
 }
   \item{.progressBar}{
-Enable optional text progress bar.
+enable optional text progress bar. Default is \code{TRUE}.
 }
 }
 \details{
@@ -61,7 +60,6 @@ Variables with correlated errors have no direct relationship but rather are hypo
 The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default is \code{NULL} (there is no additional independence claims that do not appear in the model list).
 
 For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
-
 }
 \value{
 Returns a \code{data.frame} with the first column representing the independence claim as a directed arrow between the two variables, the second column representing a vector of variables upon which the claim is conditional, and the third column the p-value from a regression modeling the missing path.

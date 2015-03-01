@@ -1,23 +1,23 @@
 \name{get.basis.set}
 \alias{get.basis.set}
 \title{
-Derive basis set of independence claims
+Derive basis set of independence claims for SEM
 }
 \description{
 Generates a list representing the (conditional) independence claims from a model list.
 }
 \usage{
-get.basis.set(modelList, corr.errors = NULL, add.vars = NULL)
+get.basis.set(modelList, corr.errors, add.vars)
 }
 \arguments{
   \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
   \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+a vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 }
 \details{
@@ -60,5 +60,4 @@ shipley2009.modlist = list(
   family=binomial(link = "logit"), data = shipley2009) )
 
 get.basis.set(shipley2009.modlist)
-
 }

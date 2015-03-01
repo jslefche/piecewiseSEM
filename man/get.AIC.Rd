@@ -1,62 +1,61 @@
 \name{get.aic}
 \alias{get.aic}
 \title{
-Extracts AIC scores for a piecewise structural equation model.
+Extracts AIC scores for piecewise SEM
 }
 \description{
 Extracts the AIC and AICc (corrected for small sample size) values from a piecewise structural equation model (SEM).
 }
 \usage{
-get.aic(modelList, data, sig = 3, 
-corr.errors = NULL, add.vars = NULL, 
-grouping.var = NULL, top.level.vars = NULL, 
-adjust.p = FALSE, basis.set = NULL, 
-pvalues.df = NULL, disp.conditional = FALSE,
-model.control = NULL, .progressBar = TRUE)  
+get.aic(modelList, data, sig = 3, corr.errors, add.vars, grouping.var, 
+        top.level.vars, adjust.p = FALSE, basis.set, pvalues.df, 
+        disp.conditional = FALSE, model.control, .progressBar = TRUE)  
 }
 \arguments{
   \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
 \item{data}{
-A \code{data.frame} used to construct the structured equations.
+a \code{data.frame} used to construct the structured equations.
 }
 \item{sig}{
-Number of significant digits to round output. Default is \code{3}.
+number of significant digits to round output. Default is \code{3}.
 }
   \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+a vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 \item{grouping.var}{
-An optional variable that represents the highest level of a hierarchical dataset.
+an optional variable that represents the highest level of a hierarchical dataset.
 }
 \item{top.level.vars}{
-An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
   \item{adjust.p}{
-Whether p-values degrees of freedom should be adjusted.
+whether p-values degrees of freedom should be adjusted (see below). Default is \code{FALSE}.
 }
   \item{basis.set}{
-Provide an optional basis set.
+provide an optional basis set.
 }
   \item{pvalues.df}{
-An optional \code{data.frame} corresponding to p-values for independence claims.
+an optional \code{data.frame} corresponding to p-values for independence claims.
 }
   \item{disp.conditional}{
-Display conditional variables in reporting d-sep test results.
+Display conditional variables in reporting d-sep test results. Default is \code{FALSE}.
 }
   \item{model.control}{
-A \code{list} of model control arguments to be passed to d-sep models.
+a \code{list} of model control arguments to be passed to d-sep models.
 }
   \item{.progressBar}{
-Enable optional text progress bar.
+enable optional text progress bar. Default is \code{TRUE}.
 }
 }
 \details{
-This function calculates AIC and AICc (corrected for small sample sizes) values for a piecewise structural equation model (SEM). For more information, see Shipley 2013.
+This function calculates AIC and AICc (corrected for small sample sizes) values for a piecewise structural equation model (SEM).
+
+For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
 }
 \value{
 Returns a vector where the first entry is the AIC score, and the second is the AICc score, and the third is the likelihood degrees of freedom (K).

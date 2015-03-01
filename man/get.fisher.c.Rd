@@ -1,22 +1,19 @@
 \name{get.fisher.c}
 \alias{get.fisher.c}
 \title{
-Goodness-of-fit for piecewise SEM.
+Goodness-of-fit test for piecewise SEM
 }
 \description{
 Evaluates independence claims for a piecewise structural equation model (SEM), and calculates Fisher's C and associated p-value to evaluate model fit.
 }
 \usage{
-get.fisher.c(modelList, data, sig = 3,
-corr.errors = NULL, add.vars = NULL,
-grouping.var = NULL, top.level.vars = NULL, 
-adjust.p = FALSE, basis.set = NULL, 
-pvalues.df = NULL, disp.conditional = FALSE, 
-model.control = NULL, .progressBar = TRUE)
+get.fisher.c(modelList, data, sig = 3, corr.errors, add.vars, grouping.var, 
+             top.level.vars, adjust.p = FALSE, basis.set, pvalues.df, 
+            disp.conditional = FALSE, model.control, .progressBar = TRUE)  
 }
 \arguments{
   \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
 \item{data}{
 A \code{data.frame} used to construct the structured equations.
@@ -46,7 +43,7 @@ Provide an optional basis set.
 An optional \code{data.frame} corresponding to p-values for independence claims.
 }
   \item{disp.conditional}{
-Display conditional variables in reporting d-sep test results.
+Display conditional variables in reporting d-sep test results. Default is \code{FALSE}.
 }
   \item{model.control}{
 A \code{list} of model control arguments to be passed to d-sep models.
@@ -59,6 +56,8 @@ Enable optional text progress bar.
 }
 \value{
 Returns a vector with the first entry corresponding to Fisher's C statistic, and the second corresponding to the associated p-value (derived from a Chi-squared distribution). 
+
+For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
 }
 \references{
 Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context." Ecology 90.2 (2009): 363-368.

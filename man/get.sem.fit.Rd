@@ -1,54 +1,52 @@
 \name{get.sem.fit}
 \alias{get.sem.fit}
 \title{
-Shipley's goodness-of-fit tests for piecewise SEM.
+Shipley's goodness-of-fit tests for piecewise SEM
 }
 \description{
 Tests independence claims and calculates Fisher's C statistic and associated p-value, and AIC and AICc, for a piecewise structural equation model (SEM).
 }
 \usage{
-get.sem.fit = function(modelList, data, 
-corr.errors = NULL, add.vars = NULL, adjust.p = FALSE, 
-basis.set = NULL, pvalues.df = NULL, 
-disp.conditional = FALSE, model.control = NULL,
-.progressBar = TRUE)
+get.sem.fit(modelList, data, corr.errors, add.vars, adjust.p = FALSE, 
+            basis.set, pvalues.df, disp.conditional = FALSE, model.control,
+            .progressBar = TRUE)
 }
 \arguments{
    \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
 \item{data}{
-A \code{data.frame} used to construct the structured equations.
+a \code{data.frame} used to construct the structured equations.
 }
   \item{corr.errors}{
-A vector of variables with correlated errors (separated by "~~").
+a vector of variables with correlated errors (separated by "~~").
 }
   \item{add.vars}{
-A vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 \item{grouping.var}{
-An optional variable that represents the highest level of a hierarchical dataset.
+an optional variable that represents the highest level of a hierarchical dataset.
 }
 \item{top.level.vars}{
-An optional \code{vector} of variables that are identical at the highest level of the hierarchy.
+an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
   \item{adjust.p}{
-Whether p-values degrees of freedom should be adjusted.
+whether p-values degrees of freedom should be adjusted (see below). Default is \code{FALSE}.
 }
   \item{basis.set}{
-Provide an optional basis set.
+provide an optional basis set.
 }
   \item{pvalues.df}{
-An optional \code{data.frame} corresponding to p-values for independence claims.
+an optional \code{data.frame} corresponding to p-values for independence claims.
 }
   \item{disp.conditional}{
-Display conditional variables in reporting d-sep test results.
+display conditional variables in reporting d-sep test results. Default is \code{FALSE}.
 }
   \item{model.control}{
-A \code{control} function or a \code{list} of model control arguments to be passed to d-sep models.
+a \code{control} function or a \code{list} of model control arguments to be passed to d-sep models.
 }
   \item{.progressBar}{
-Enable optional text progress bar.
+enable optional text progress bar. Default is \code{TRUE}.
 }
 }
 \details{
@@ -135,5 +133,4 @@ shipley2013.modlist = list(
 
 # Specify model controls by switching to old optimizer
 get.sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))
-
 }

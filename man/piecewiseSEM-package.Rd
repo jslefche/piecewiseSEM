@@ -14,9 +14,9 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{lme
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 0.4.3\cr
-Date: \tab 2014-01-26\cr
-Depends: \tab R (>=3.1.0), ggm, lavaan, lmerTest\cr
+Version: \tab 0.4.4\cr
+Date: \tab 2014-03-01\cr
+Depends: \tab R (>=3.2.0), ggm, lavaan, lmerTest\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
 }
@@ -69,5 +69,4 @@ get.sem.coefs(shipley2009.modlist, shipley2009)
 
 # Get variance-covariance SEM (calls on package::lavaan)
 summary(get.lavaan.sem(shipley2009.modlist, shipley2009))
-
 }
