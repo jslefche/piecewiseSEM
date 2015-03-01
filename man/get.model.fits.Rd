@@ -1,17 +1,17 @@
 \name{get.model.fits}
 \alias{get.model.fits}
 \title{
-Goodness-of-fit statistics for component models.
+Goodness-of-fit statistics for linear models
 }
 \description{
 Returns (pseudo)-R^2 and AIC values for component models in structural equation model (SEM).
 }
 \usage{
-get.sem.fit = function(modelList)
+get.sem.fit(modelList)
 }
 \arguments{
    \item{modelList}{
-A \code{list} of regressions representing the structural equation model. 
+a \code{list} of regressions representing the structural equation model. 
 }
 
 }
