@@ -1,4 +1,4 @@
-get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot = T, regr = T) {
+get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, na.action = na.omit, plot = T, regr = T) {
   
   vars = unlist(strsplit(deparse(.formula), "~"))
   y = gsub(" ", "", vars[1])
@@ -46,11 +46,13 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, 
       x.noy.model = suppressWarnings( 
         update(y.model, formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), control = control) )
   
-  resids.data = data.frame(resid(y.nox.model), resid(x.noy.model) )
+  resids.data = data.frame(na.action(resid(y.nox.model)), na.action(resid(x.noy.model)) )
   
-  names(resids.data)=c(paste(y, "given.others", sep="."), paste(x, "given.others", sep="."))
+  names(resids.data)=c(
+    ifelse(length(attr(y.model$terms, "term.labels")[-1]) >= 1, paste(y, " | ", attr(y.model$terms, "term.labels")[-1], sep=""), paste(y)),
+    ifelse(length(attr(y.nox.model$terms, "term.labels")[-1]) > 1, paste(x, " | ", attr(y.nox.model$terms, "term.labels")[-1], sep=""), paste(x)) )
   
-  if(plot == TRUE) plot(resids.data[, 1] ~ resids.data[ ,2], xlab = paste(x, " | given others"), ylab = paste(y, " | given others")) 
+  if(plot == TRUE) plot(resids.data[, 1] ~ resids.data[ ,2], xlab = colnames(resids.data)[2], ylab =  colnames(resids.data)[1]) 
   
   if(plot == TRUE & regr == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
   
