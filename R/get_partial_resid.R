@@ -1,4 +1,6 @@
-get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, na.action = na.omit, plot = T, regr = T) {
+get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot = T, regr = T) {
+  
+  if(class(modelList) != "list") modelList = list(modelList)
   
   vars = unlist(strsplit(deparse(.formula), "~"))
   y = gsub(" ", "", vars[1])
@@ -46,11 +48,19 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, 
       x.noy.model = suppressWarnings( 
         update(y.model, formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), control = control) )
   
-  resids.data = data.frame(na.action(resid(y.nox.model)), na.action(resid(x.noy.model)) )
+  y1 = data.frame(.id = names(resid(y.nox.model)), resid(y.nox.model))
+  x1 = data.frame(.id = names(resid(x.noy.model)), resid(x.noy.model))
+  resids.data = merge(y1, x1, by = ".id")[ , -1]
   
-  names(resids.data)=c(
-    ifelse(length(attr(y.model$terms, "term.labels")[-1]) >= 1, paste(y, " | ", attr(y.model$terms, "term.labels")[-1], sep=""), paste(y)),
-    ifelse(length(attr(y.nox.model$terms, "term.labels")[-1]) > 1, paste(x, " | ", attr(y.nox.model$terms, "term.labels")[-1], sep=""), paste(x)) )
+  if(length(attr(y.nox.model$terms, "term.labels")) <= 3)
+    names(resids.data) = c(
+      ifelse(length(attr(y.nox.model$terms, "term.labels")[-1]) > 1, paste(y, paste(attr(y.nox.model$terms, "term.labels")[-1], collapse=" + "), sep = " | "), paste(y)),
+      ifelse(length(attr(x.noy.model$terms, "term.labels")[-1]) > 1, paste(x, paste(attr(x.noy.model$terms, "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)) ) 
+  else 
+    names(resids.data) = c(
+      paste(y, " | others"),
+      paste(x, " | others") )
+  
   
   if(plot == TRUE) plot(resids.data[, 1] ~ resids.data[ ,2], xlab = colnames(resids.data)[2], ylab =  colnames(resids.data)[1]) 
   

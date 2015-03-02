@@ -7,21 +7,17 @@ Calculates partial residuals for two variables
 Extracts partial residuals for \code{y ~ x | Z}, where \code{Z} represents all other variables present in a structured equation upon which \code{y} and \code{x} are conditional.
 }
 \usage{
-get.partial.resid(y ~ x, modelList, model.control, 
-                  na.action = na.omit, plot = T, regr = T)
+get.partial.resid(y ~ x, modelList, model.control, plot = T, regr = T)
 }
 \arguments{
    \item{.formula}{
 the partial residuals of \code{y ~ x}.
 }
  \item{modelList}{
-a list of regressions representing the structural equation model. 
+a model or list of regressions representing the structural equation model. 
 }
   \item{model.control}{
 a \code{list} of model control arguments to be passed to partial models.
-}
-  \item{na.action}{
-defines how to treat missing values. Default is \code{na.omit}.
 }
   \item{plot}{
 whether the partial plot of \code{y ~ x | Z} should be returned. Default is \code{TRUE}.
