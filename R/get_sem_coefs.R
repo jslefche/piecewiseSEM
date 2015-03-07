@@ -134,8 +134,7 @@ get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = N
         ifelse(ret$p.value > 0.10, "",
         ifelse(ret$p.value > 0.05 & ret$p.value <= 0.10, ".",
         ifelse(ret$p.value > 0.01 & ret$p.value <= 0.05, "*", 
-        ifelse(ret$p.value > 0.001 & ret$p.value <= 0.01, "**",
-        ifelse(ret$p.value <= 0.001, "***") ) ) ) ) )
+        ifelse(ret$p.value > 0.001 & ret$p.value <= 0.01, "**", "***") ) ) ) )
   
   colnames(ret)[6] = ""
   
