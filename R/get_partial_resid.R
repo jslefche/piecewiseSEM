@@ -1,4 +1,4 @@
-get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot = T, regr = T) {
+get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit= T, regr = T) {
   
   if(class(modelList) != "list") modelList = list(modelList)
   
@@ -32,14 +32,14 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, 
   if(class(y.model) %in% c("lme", "glmmPQL")) {
     if(!grepl("\\+", deparse(y.model$call$random))) random = y.model$call$random else {
       random = drop.terms(terms(as.formula(gsub("\\|", "+BERLIOZ+", deparse(y.model$call$random))), special = c("+BERLIOZ+","\\/")),
-                        which(all.vars(y.model$call$random) == x))
+                          which(all.vars(y.model$call$random) == x))
       random = as.formula(gsub("\\+.BERLIOZ.\\+", "\\|", deparse(random)))
       if(grepl("\\:", deparse(random))) random = as.formula(gsub("..[^\\+]+:", "\\/", deparse(random))) }
     y.nox.model = update(y.model, fixed = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), random = as.formula(random), control = control) 
-    } else {
-      y.nox.model = suppressWarnings(
-        update(y.model, formula = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), control = control) )
-    }
+  } else {
+    y.nox.model = suppressWarnings(
+      update(y.model, formula = drop.terms(y.model$terms, grep(x, attr(y.model$terms, "term.labels")), keep.response = TRUE), control = control) )
+  }
   
   x.sub = attr(y.model$terms, "term.labels")[grep(x, attr(y.model$terms, "term.labels"))][1]
   
@@ -47,25 +47,23 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, 
     x.noy.model = update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), random = as.formula(random), control = control) else 
       x.noy.model = suppressWarnings( 
         update(y.model, formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), control = control) )
+    
+  y1 = data.frame(.id = 1:length(resid(y.nox.model)), resid(y.nox.model))
+  x1 = data.frame(.id = 1:length(resid(x.noy.model)), resid(x.noy.model))
+  resids.data = merge(y1, x1, by = ".id")[, -1]
   
-  y1 = data.frame(.id = names(resid(y.nox.model)), resid(y.nox.model))
-  x1 = data.frame(.id = names(resid(x.noy.model)), resid(x.noy.model))
-  resids.data = merge(y1, x1, by = ".id")[ , -1]
-  
-  if(length(attr(y.nox.model$terms, "term.labels")) <= 3)
-    names(resids.data) = c(
-      ifelse(length(attr(y.nox.model$terms, "term.labels")[-1]) > 1, paste(y, paste(attr(y.nox.model$terms, "term.labels")[-1], collapse=" + "), sep = " | "), paste(y)),
-      ifelse(length(attr(x.noy.model$terms, "term.labels")[-1]) > 1, paste(x, paste(attr(x.noy.model$terms, "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)) ) 
-  else 
-    names(resids.data) = c(
-      paste(y, " | others"),
-      paste(x, " | others") )
-  
-  
-  if(plot == TRUE) plot(resids.data[, 1] ~ resids.data[ ,2], xlab = colnames(resids.data)[2], ylab =  colnames(resids.data)[1]) 
-  
-  if(plot == TRUE & regr == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
+  colnames(resids.data) = gsub(" ", "", c(y, x))
+    
+  if(plotit == TRUE) plot(resids.data[, 1] ~ resids.data[ ,2], 
+                          xlab = ifelse(length(attr(y.nox.model$terms, "term.labels")) <= 3,
+                                        ifelse(length(attr(y.nox.model$terms, "term.labels")[-1]) > 1, paste(y, paste(attr(y.nox.model$terms, "term.labels")[-1], collapse=" + "), sep = " | "), paste(y)),
+                                        paste(y, "| others") ),
+                          ylab = ifelse(length(attr(x.noy.model$terms, "term.labels")) <= 3,
+                                        ifelse(length(attr(x.noy.model$terms, "term.labels")[-1]) > 1, paste(x, paste(attr(x.noy.model$terms, "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)),
+                                        paste(x, "| others") )) 
+    
+  if(plotit == TRUE & regr == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
   
   return(resids.data)
-  
+    
 }
