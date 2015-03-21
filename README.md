@@ -20,7 +20,7 @@ Author: Jon Lefcheck <jslefche@vims.edu>
 
 ```
 # library(devtools)
-# install_github("piecewiseSEM", "jslefche")
+# install_github("jslefche/piecewiseSEM")
 library(piecewiseSEM)
 ```
 
