@@ -20,8 +20,6 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
     
   }
   
-  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent: no test of d-sep necessary")
-
   if(is.null(pvalues.df)) {
     
     if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL

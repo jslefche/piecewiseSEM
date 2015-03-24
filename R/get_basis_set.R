@@ -19,6 +19,8 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   basis.set = basiSet(DAG(dag))
   
+  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent: model is satured.\n  Test of directed separation not possible!")
+  
   basis.set = lapply(basis.set, function(i) gsub(paste(".\\%\\*\\%.", collapse = ""), "\\:", i))
   
   if(!is.null(corr.errors)) {
