@@ -19,15 +19,22 @@ get.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, 
     if(class(y.model) %in% c("lme", "glmmPQL")) control = lmeControl() else 
       if(class(y.model) %in% c("lmerMod", "merModLmerTest")) control = lmerControl() else
         if(class(y.model) %in% c("glmerMod")) control = glmerControl() else
-          control = NULL    
+          if(class(y.model) %in% c("glm")) control = glm.control() else
+            control = NULL    
   } else {
+    
+    ## re-write by parsing names in list
+    
+    
     if(!is.null(model.control) & class(y.model) %in% c("lme", "glmmPQL"))
       control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), is.null))]] else
         if(!is.null(model.control) & class(y.model) %in% c("lmerMod", "merModLmerTest"))
           control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), function(x) any(x %in% "lmerControl")))]] else
             if(!is.null(model.control) & class(y.model) %in% c("glmerMod"))
               control = model.control[[which(sapply(lapply(model.control, function(x) attr(x, "class")), function(x) any(x %in% "glmerControl")))]] else
-                control = NULL }
+                if(!is.null(model.control) & class(y.model) %in% c("glm"))
+                  control = model.control[[which(sapply(model.control,length))]] else
+                    control = NULL }
   
   if(class(y.model) %in% c("lme", "glmmPQL")) {
     if(!grepl("\\+", deparse(y.model$call$random))) random = y.model$call$random else {

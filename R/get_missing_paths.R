@@ -50,6 +50,8 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     if(length(model.control)>10) model.control = list(model.control)
     
+    ## need to include glm.control
+    
     if(is.null(model.control)) {
       if(class(basis.mod) %in% c("lme", "glmmPQL")) control = lmeControl() else 
         if(class(basis.mod) %in% c("lmerMod", "merModLmerTest")) control = lmerControl() else
