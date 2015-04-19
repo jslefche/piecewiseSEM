@@ -76,12 +76,14 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
       x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
       if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying model.control") }
     
-    ###
+    ###  
+    if (!grepl(":|\\*", basis.set[[i]][1])) 
+      row.num = which(basis.set[[i]][1] == if(all(class(basis.mod) %in% c("pgls"))) attr(coef(basis.mod), "names") else
+        attr(terms(basis.mod), "term.labels")) + 1 else 
+      row.num = which(grepl(":|\\*", if(all(class(basis.mod) %in% c("pgls"))) attr(coef(basis.mod), "names") else
+        attr(terms(basis.mod), "term.labels"))) + 1 
     
-    if(!grepl(":|\\*", basis.set[[i]][1])) row.num = which(basis.set[[i]][1] == attr(terms(basis.mod), "term.labels")) + 1 else
-      row.num = which(grepl(":|\\*", attr(terms(basis.mod), "term.labels"))) + 1 
-    
-    ret = if(all(class(basis.mod) %in% c("lm", "glm", "negbin", "glmerMod", "merModLmerTest"))) 
+    ret = if(all(class(basis.mod) %in% c("lm", "glm", "negbin", "glmerMod", "merModLmerTest","pgls"))) 
       as.data.frame(t(unname(summary(basis.mod)$coefficients[row.num, ]))) else
         as.data.frame(t(unname(summary(basis.mod)$tTable[row.num, ])))
    
