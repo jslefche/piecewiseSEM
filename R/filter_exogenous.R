@@ -2,10 +2,17 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   
   if(is.null(basis.set)) basis.set = get.basis.set(modelList, corr.errors, add.vars)
   
-  pred.vars = unique(c(add.vars, unlist(lapply(modelList, function(i) attr(terms(i), "term.labels")))))
+  if(all(class(i) %in% c("lm", "glm", "negbin", "glmerMod", "lme", "glmmPQL"))) {
+    
+    pred.vars = unique(c(add.vars, unlist(lapply(modelList, function(i) attr(terms(i), "term.labels")))))
+    response.vars = unlist(lapply(modelList, function(i) rownames(attr(terms(i), "factors"))[1]))
+    
+  } else if(all(class(i) %in% c("pgls"))) {
+    pred.vars = unique(c(unlist(lapply(modelList, function(i) attr(coef(i), "names")))))
+    pred.vars = pred.vars[!pred.vars %in% c('(Intercept)')]
+    response.vars = unlist(lapply(modelList, function(i) i$namey))
+  } 
   
-  response.vars = unlist(lapply(modelList, function(i) rownames(attr(terms(i), "factors"))[1]))
-
   filter.vars = pred.vars[!pred.vars %in% response.vars]
   
   basis.set = lapply(1:length(basis.set), function(i) 
