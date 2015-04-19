@@ -1,4 +1,4 @@
-get.sem.fit2 = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
+get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                        grouping.vars = NULL, top.level.vars = NULL, adjust.p = FALSE, 
                        basis.set = NULL, pvalues.df = NULL, disp.conditional = FALSE,
                        model.control = NULL, sig = 3, .progressBar = TRUE) {
