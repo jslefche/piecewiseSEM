@@ -4,7 +4,7 @@ get.sem.fit2 = function(modelList, data, corr.errors = NULL, add.vars = NULL,
                        model.control = NULL, sig = 3, .progressBar = TRUE) {
 
   if(!all(sapply(modelList, function(i) 
-    all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL", "pgls")) ) ) )
+    all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL","pgls")) ) ) )
     stop("Model classes in model list are not supported")
   
   if(is.null(data)) stop("Must supply dataset to function")
