@@ -1,15 +1,13 @@
 get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                              grouping.vars = NULL, top.level.vars = NULL,
-                             adjust.p = FALSE, basis.set = NULL, disp.conditional = FALSE,
+                             adjust.p = FALSE, basis.set = NULL, disp.conditional = FALSE, filter.ex = FALSE,
                              model.control = NULL, .progressBar = TRUE) {
   
-  if(is.null(basis.set)) { 
-    
+  if(is.null(basis.set)) 
     basis.set = get.basis.set(modelList, corr.errors, add.vars)
     
-    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
-    
-  }
+  if(filter.ex  == FALSE) basis.set = basis.set else 
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
   
   if(.progressBar == T) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   

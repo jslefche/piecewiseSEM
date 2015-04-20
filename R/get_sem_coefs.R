@@ -36,7 +36,8 @@ get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = N
     
     ret = lapply(modelList, function(i) {
       
-      vars.to.scale = if(all(class(i) %in% c("lm", "lme","pgls"))) rownames(attr(i$terms, "factors")) else
+    vars.to.scale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
+      if(all(class(i) %in% c("pgls"))) i$namey else 
         if(any(class(i) %in% c("glm", "negbin", "glmmPQL"))) {
           message("Model is not gaussian: keeping response on original scale")
           rownames(attr(i$terms, "factors"))[-1] } else 
