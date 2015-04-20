@@ -1,15 +1,17 @@
 get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
-                             grouping.vars = NULL, top.level.vars = NULL,
+                             grouping.vars = NULL, top.level.vars = NULL, filter.exogenous=FALSE,
                              adjust.p = FALSE, basis.set = NULL, disp.conditional = FALSE,
                              model.control = NULL, .progressBar = TRUE) {
   
   if(is.null(basis.set)) { 
-    
-    basis.set = get.basis.set(modelList, corr.errors, add.vars)
-    
-    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
-    
+     basis.set = get.basis.set(modelList, corr.errors, add.vars)   
   }
+  
+  #AVH: exogenous indipendencies filtered only if filter.exogenous = TRUE
+  if(filter.exogenous==TRUE) {
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) } else basis.set = basis.set
+    
+ 
   
   if(.progressBar == T) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
@@ -17,9 +19,14 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     
     basis.mod = modelList[[match(basis.set[[i]][2], unlist(lapply(modelList, function(j) as.character(formula(j)[2]))))]]
     
-    #### Need to fix getting random effects structure    
+      #### Need to fix getting random effects structure    
+  
+    ### AVH: this gives the correct basis set including exogenous variables 
+    fixed.formula = rbind(
+        if(length(basis.set[[i]])<3) paste(basis.set[[i]][2], "~", paste(basis.set[[i]][1])),
+        if (length(basis.set[[i]])>2) paste(basis.set[[i]][2], "~", paste(basis.set[[i]][c(1, 3:length(basis.set[[i]]))], collapse = "+"))
+      )
     
-    fixed.formula = paste(basis.set[[i]][2], "~", paste(basis.set[[i]][c(1, 3:length(basis.set[[i]]))], collapse = "+"))
     
     random.formula = if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) 
       gsub("^.*\\|(.*?)", "\\1", basis.mod$call[[4]])[2] else
@@ -80,13 +87,13 @@ get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NUL
     if (!grepl(":|\\*", basis.set[[i]][1])) 
       if(all(class(basis.mod) %in% c("pgls"))) row.num = which(basis.set[[i]][1] ==  attr(coef(basis.mod), "names")) else
         row.num = which(basis.set[[i]][1] == attr(terms(basis.mod), "term.labels")) + 1  else 
-      if(all(class(basis.mod) %in% c("pgls"))) row.num = which(grepl(":|\\*",  attr(coef(basis.mod), "names"))) else
-        row.num = which(grepl(":|\\*", attr(terms(basis.mod), "term.labels"))) + 1 
+          if(all(class(basis.mod) %in% c("pgls"))) row.num = which(grepl(":|\\*",  attr(coef(basis.mod), "names"))) else
+            row.num = which(grepl(":|\\*", attr(terms(basis.mod), "term.labels"))) + 1 
     
     ret = if(all(class(basis.mod) %in% c("lm", "glm", "negbin", "glmerMod", "merModLmerTest","pgls"))) 
       as.data.frame(t(unname(summary(basis.mod)$coefficients[row.num, ]))) else
         as.data.frame(t(unname(summary(basis.mod)$tTable[row.num, ])))
-   
+    
     if(length(ret) != 5) ret = cbind(ret[1:2], NA, ret[3:4])
     
     names(ret)=c("estimate","std.error","DF","crit.value","p.value")
