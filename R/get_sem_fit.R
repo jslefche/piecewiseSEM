@@ -16,6 +16,9 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
     
     basis.set = get.basis.set(modelList, corr.errors, add.vars)
   
+  if(filter.ex  == FALSE) basis.set = basis.set else 
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
+  
   if(is.null(pvalues.df)) {
     
     if(.progressBar == T & length(basis.set) > 1) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
