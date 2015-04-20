@@ -1,7 +1,7 @@
 get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                        grouping.vars = NULL, top.level.vars = NULL, adjust.p = FALSE, 
                        basis.set = NULL, pvalues.df = NULL, disp.conditional = FALSE,
-                       model.control = NULL, sig = 3, .progressBar = TRUE) {
+                       model.control = NULL, filter.ex = FALSE, sig = 3, .progressBar = TRUE) {
 
   if(!all(sapply(modelList, function(i) 
     all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL","pgls")) ) ) )
