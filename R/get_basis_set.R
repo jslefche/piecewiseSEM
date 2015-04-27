@@ -31,11 +31,11 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
         
         corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
         
-        basis.set.sub = c() 
-        for(k in 1:2) basis.set.sub[k] = gsub(".*\\((.*?)\\)+.*", "\\1", basis.set[[i]][k])
+        all(unlist(lapply(1:2, function(k)
+          grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) ) ) ) 
         
-        all(basis.set.sub %in% corr.vars) } ))
-      
+        } ) )
+        
       if(any(inset == TRUE)) NULL else basis.set[[i]]  
       
     } )
