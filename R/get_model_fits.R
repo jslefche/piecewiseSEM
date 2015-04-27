@@ -1,56 +1,20 @@
-#' R-squared and pseudo-rsquared for a list of (generalized) linear (mixed) models
-#'
-#' This function calls the generic \code{\link{r.squared}} function for each of the
-#' models in the list and rbinds the outputs into one data frame
-#'
-#' @param a single model or a list of fitted (generalized) linear (mixed) model objects
-#' @return a dataframe with one row per model, and "Class",
-#'         "Family", "Marginal", "Conditional" and "AIC" columns
+
 get.model.fits <- function(modlist) {
   if( class(modlist) != "list" ) modlist = list(modlist) else modlist
   # Iterate over each model in the list
   do.call(rbind, lapply(modlist, r.squared))
 }
 
-#' R-squared and pseudo-rsquared for (generalized) linear (mixed) models
-#'
-#' This generic function calculates the r squared and pseudo r-squared for
-#' a variety of(generalized) linear (mixed) model fits.
-#' Currently implemented for \code{\link{lm}}, \code{\link{lmerTest::merMod}},
-#' and \code{\link{nlme::lme}} objects.
-#' Implementing methods usually call \code{\link{.rsquared.glmm}}
-#'
-#' @param mdl a fitted (generalized) linear (mixed) model object
-#' @return Implementing methods usually return a dataframe with "Class",
-#'         "Family", "Marginal", "Conditional", and "AIC" columns
 r.squared <- function(mdl){
   UseMethod("r.squared")
 }
 
-#' Marginal r-squared for lm objects
-#'
-#' This method uses r.squared from \code{\link{summary}} as the marginal.
-#' Contrary to other \code{\link{r.squared}} methods, 
-#' this one doesn't call \code{\link{.rsquared.glmm}}
-#'
-#' @param mdl an lm object (usually fit using \code{\link{lm}},
-#' @return a dataframe with with "Class" = "lm", "Family" = "gaussian",
-#'        "Marginal" = unadjusted r-squared, "Conditional" = NA, and "AIC" columns
 r.squared.lm <- function(mdl){
   data.frame(Class=class(mdl), Family="gaussian", Link="identity",
              Marginal=summary(mdl)$r.squared,
              Conditional=NA, AIC=AIC(mdl))
 }
 
-#' Marginal and conditional r-squared for merMod objects
-#'
-#' This method extracts the variance for fixed and random effects, residuals,
-#' and the fixed effects for the null model (in the case of Poisson family),
-#' and calls \code{\link{.rsquared.glmm}}
-#'
-#' @param mdl an merMod model (usually fit using \code{\link{lme4::lmer}},
-#'        \code{\link{lme4::glmer}}, \code{\link{lmerTest::lmer}},
-#'        \code{\link{blme::blmer}}, \code{\link{blme::bglmer}}, etc)
 r.squared.merMod <- function(mdl){
   # Get variance of fixed effects by multiplying coefficients by design matrix
   VarF <- var(as.vector(lme4::fixef(mdl) %*% t(mdl@pp$X)))
@@ -102,12 +66,6 @@ r.squared.merMod <- function(mdl){
                  null.fixef = null.fixef)
 }
 
-#' Marginal and conditional r-squared for lme objects
-#'
-#' This method extracts the variance for fixed and random effects,
-#' as well as residuals, and calls \code{\link{.rsquared.glmm}}
-#'
-#' @param mdl an lme model (usually fit using \code{\link{nlme::lme}})
 r.squared.lme <- function(mdl){
   # Get design matrix of fixed effects from model
   Fmat <- model.matrix(eval(mdl$call$fixed)[-2], mdl$data)
@@ -138,24 +96,6 @@ r.squared.lme <- function(mdl){
                  mdl.class = class(mdl))
 }
 
-#' Marginal and conditional r-squared for glmm given fixed and random variances
-#'
-#' This function is based on Nakagawa and Schielzeth (2013). It returns the marginal
-#' and conditional r-squared, as well as the AIC for each glmm.
-#' Users should call the higher-level generic "r.squared", or implement a method for the
-#' corresponding class to get varF, varRand and the family from the specific object
-#'
-#' @param varF Variance of fixed effects
-#' @param varRand Variance of random effects
-#' @param varResid Residual variance. Only necessary for "gaussian" family
-#' @param family family of the glmm (currently works with gaussian, binomial and poisson)
-#' @param link model link function. Working links are: gaussian: "identity" (default);
-#'        binomial: "logit" (default), "probit"; poisson: "log" (default), "sqrt"
-#' @param mdl.aic The model's AIC
-#' @param mdl.class The name of the model's class
-#' @param null.fixef Numeric vector containing the fixed effects of the null model.
-#'        Only necessary for "poisson" family
-#' @return A data frame with "Class", "Family", "Marginal", "Conditional", and "AIC" columns
 .rsquared.glmm <- function(varF, varRand, varResid = NULL, varDisp = NULL, family, link,
                            mdl.aic, mdl.class, null.fixef = NULL){
   if(family == "gaussian"){
