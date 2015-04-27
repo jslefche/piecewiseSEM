@@ -23,7 +23,7 @@ Returns a \code{data.frame} with the model class, the family, the link function,
 }
 \references{
 Nakagawa, Shinichi, and Holger Schielzeth. "A general and simple method for obtaining R2 from 
-generalized linear mixed‐effects models." Methods in Ecology and Evolution 4.2 (2013): 133-142.
+generalized linear mixed-effects models." Methods in Ecology and Evolution 4.2 (2013): 133-142.
 
 Johnson, Paul C.D. "Extension of Nakagawa & Schielzeth's R2GLMM to random slopes models." Methods in
 Ecology and Evolution.
