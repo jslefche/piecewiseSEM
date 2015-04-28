@@ -1,4 +1,4 @@
-get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = NULL) {
+get.sem.coefs = function(modelList, data, standardized = "none", sig = 3, corr.errors = NULL) {
   
   names(modelList) = NULL
   
@@ -9,27 +9,27 @@ get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = N
         tab = summary(i)$coefficients
         data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                    predictor = rownames(tab)[-1],
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 4], 3), 
+                   estimate = signif(tab[-1, 1], 3),
+                   std.error = signif(tab[-1, 2], 3),
+                   p.value = signif(tab[-1, 4], 3), 
                    row.names = NULL)
         
       } else if(all(class(i) %in% c("lme", "glmmPQL"))) {
         tab = summary(i)$tTable
         data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                    predictor = rownames(tab)[-1],
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 5], 3), 
+                   estimate = signif(tab[-1, 1], 3),
+                   std.error = signif(tab[-1, 2], 3),
+                   p.value = signif(tab[-1, 5], 3), 
                    row.names = NULL)
         
       } else if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
         tab = summary(as(i, "merModLmerTest"))$coefficients
         data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                    predictor = rownames(tab)[-1],
-                   estimate = round(tab[-1, 1], 3),
-                   std.error = round(tab[-1, 2], 3),
-                   p.value = round(tab[-1, 5], 3), 
+                   estimate = signif(tab[-1, 1], 3),
+                   std.error = signif(tab[-1, 2], 3),
+                   p.value = signif(tab[-1, 5], 3), 
                    row.names = NULL) } } )
     
   } else if(standardized != "none") {
@@ -73,27 +73,27 @@ get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = N
               tab = summary(model)$coefficients
               data.frame(response = Reduce(paste, deparse(formula(model)[[2]])),
                          predictor = rownames(tab)[-1],
-                         estimate = round(tab[-1, 1], 3),
-                         std.error = round(tab[-1, 2], 3),
-                         p.value = round(tab[-1, 4], 3), 
+                         estimate = signif(tab[-1, 1], 3),
+                         std.error = signif(tab[-1, 2], 3),
+                         p.value = signif(tab[-1, 4], 3), 
                          row.names = NULL)
               
             } else if(all(class(model) %in% c("lme", "glmmPQL"))) {
               tab = summary(model)$tTable
               data.frame(response = Reduce(paste, deparse(formula(model)[[2]])),
                          predictor = rownames(tab)[-1],
-                         estimate = round(tab[-1, 1], 3),
-                         std.error = round(tab[-1, 2], 3),
-                         p.value = round(tab[-1, 5], 3), 
+                         estimate = signif(tab[-1, 1], 3),
+                         std.error = signif(tab[-1, 2], 3),
+                         p.value = signif(tab[-1, 5], 3), 
                          row.names = NULL)
               
             } else if(all(class(model) %in% c("merModLmerTest"))) {
               tab = summary(model)$coefficients
               data.frame(response = Reduce(paste, deparse(formula(model)[[2]])),
                          predictor = rownames(tab)[-1],
-                         estimate = round(tab[-1, 1], 3),
-                         std.error = round(tab[-1, 2], 3),
-                         p.value = round(tab[-1, 5], 3), 
+                         estimate = signif(tab[-1, 1], 3),
+                         std.error = signif(tab[-1, 2], 3),
+                         p.value = signif(tab[-1, 5], 3), 
                          row.names = NULL) } 
     } )
   }
@@ -109,9 +109,9 @@ get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = N
       #         
       #         data.frame(
       #           path = j,
-      #           estimate = round(cor(resid.data)[1,2], 3),
+      #           estimate = signif(cor(resid.data)[1,2], 3),
       #           std.error = "",
-      #           p.value = round(1 - pt((cor(resid.data)[1, 2] * sqrt(nrow(resid.data) - 2))/(sqrt(1 - cor(resid.data)[1, 2]^2)),nrow(resid.data)-2), 3),
+      #           p.value = signif(1 - pt((cor(resid.data)[1, 2] * sqrt(nrow(resid.data) - 2))/(sqrt(1 - cor(resid.data)[1, 2]^2)),nrow(resid.data)-2), 3),
       #           row.names = NULL) 
       #         
       #       } else {
@@ -119,9 +119,9 @@ get.sem.coefs = function(modelList, data, standardized = "none", corr.errors = N
       data.frame(
         response = unlist(strsplit(j, "~~"))[1],
         predictor = unlist(strsplit(j, "~~"))[2],
-        estimate = round(cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs"), 3),
+        estimate = signif(cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs"), 3),
         std.error = "",
-        p.value = round(1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs") * sqrt(nrow(data) - 2))/
+        p.value = signif(1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs") * sqrt(nrow(data) - 2))/
                                  (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs")^2)),nrow(data)-2), 3),
         row.names = NULL)
       
