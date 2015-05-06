@@ -1,28 +1,53 @@
 get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
+  # Get DAG from model list
   dag = lapply(modelList, function(i) 
-    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL","pgls"))) formula(i) else 
-      nobars(formula(i)) )
+    
+    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "pgls"))) formula(i) else 
+    
+        if(all(class(i) %in% c("lmer", "glmerMod", "lme4"))) nobars(formula(i))
+    
+    )
+      
+  if(any(unlist(lapply(dag, is.null)))) stop("At least one model class not yet supported")
   
-  if(is.null(add.vars)) 
-    dag = dag else 
-      dag = append(dag, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep="~")))))
+  # If additional variables are preesnt, add them to the basis set
+  if(!is.null(add.vars)) dag = 
+      
+      append(dag, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep="~")))))
   
+  # Expand interactions to include interaction and main effects
   dag = lapply(dag, function(i) 
+    
     if(grepl("\\*|\\:", paste(format(formula(i)), collapse = ""))) {
-      f = paste(rownames(attr(terms(i), "factors"))[1], "~",paste(colnames(attr(terms(i), "factors")), collapse = "+"))
-      f = gsub("\\:", paste("%*%", collapse = ""), f)
-      formula(f) 
-    } else i )
-  
+      
+      lhs = paste(rownames(attr(terms(i), "factors"))[1])
+      
+      rhs = paste(attr(terms(i), "term.labels"), collapse = " + ")
+      
+      # Insert placeholder for interaction symbol :
+      rhs = gsub("\\:", "%%", rhs)
+      
+      formula(paste(lhs, " ~ ", rhs))
+      
+    }
+    
+    else i
+    
+  )
+    
+  # Modify DAG() function from ggm package to accept a list
   body(DAG)[[2]] = substitute(f <- dag) 
-  
+
+  # Generate basis set
   basis.set = basiSet(DAG(dag))
   
   if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent: model is satured.\n  Test of directed separation not possible!")
   
-  basis.set = lapply(basis.set, function(i) gsub(paste(".\\%\\*\\%.", collapse = ""), "\\:", i))
+  # Replace placeholder for interaction symbol with :
+  basis.set = lapply(basis.set, function(i) gsub(paste("%%", collapse = ""), "\\:", i))
   
+  # If correlated errors are present, remove them from the basis set
   if(!is.null(corr.errors)) {
     
     basis.set =  lapply(1:length(basis.set), function(i) {
@@ -31,8 +56,17 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
         
         corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
         
-        all(unlist(lapply(1:2, function(k)
-          grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) ) ) ) 
+        all(
+          
+          unlist(
+            
+            lapply(1:2, function(k)
+              
+              grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) 
+              
+              ) 
+            ) 
+          ) 
         
         } ) )
         
@@ -41,22 +75,29 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     } )
   }
   
-  basis.set =  lapply(1:length(basis.set), function(i) {
+  # Replace any d-sep where interactions are regressed against the main effect with NULL
+  basis.set = lapply(basis.set, function(i) {
     
-    if(is.null(basis.set[[i]])) NULL else {
+    if(is.null(i)) NULL else {
       
-      if(grepl("\\:",basis.set[[i]][1])) {
+      if(grepl("\\:", i[1])) {
         
-        int = strsplit(basis.set[[i]][1],"\\:")[[1]]
+        int = strsplit(i[1], "\\:")[[1]]
         
-        if(any(int %in% basis.set[[i]][2])) NULL else basis.set[[i]] } else basis.set[[i]]
+        if(any(int %in% i[2])) NULL else i 
+        
+        } 
+      
+      else i
       
     }
     
   } )
   
+  # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
+  # Replace edit in DAG() function in the ggm package
   body(DAG)[[2]] = substitute(f <- list(...))
   
   return(basis.set)
