@@ -1,4 +1,4 @@
-get.missing.paths = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
+get.missing.paths2 = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                              grouping.vars = NULL, top.level.vars = NULL, filter.exogenous=FALSE,
                              adjust.p = FALSE, basis.set = NULL, disp.conditional = FALSE,
                              model.control = NULL, .progressBar = TRUE) {

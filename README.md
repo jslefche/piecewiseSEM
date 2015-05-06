@@ -81,7 +81,7 @@ The missing paths output differs from Table 2 in Shipley 2009. However, running 
 Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean). Default is `FALSE`. The function returns a `data.frame` sorted by increasing p-value.
 
 ```
-get.sem.coefs(shipley2009.modlist, shipley2009)
+get.sem.coefs(shipley2009.modlist, shipley2009, standardized="scaled")
 ```
 
 ###Generate variance-covariance SEM using `lavaan`

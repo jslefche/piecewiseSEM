@@ -1,7 +1,7 @@
 get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   dag = lapply(modelList, function(i) 
-    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL"))) formula(i) else 
+    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL","pgls"))) formula(i) else 
       nobars(formula(i)) )
   
   if(is.null(add.vars)) 

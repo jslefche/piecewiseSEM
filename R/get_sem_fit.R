@@ -1,10 +1,10 @@
 get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL, 
                        grouping.vars = NULL, top.level.vars = NULL, adjust.p = FALSE, 
-                       basis.set = NULL, pvalues.df = NULL, disp.conditional = FALSE,
+                       basis.set = NULL, pvalues.df = NULL, filter.exogenous = FALSE, disp.conditional = FALSE,
                        model.control = NULL, sig = 3, .progressBar = TRUE) {
 
   if(!all(sapply(modelList, function(i) 
-    all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) ) ) )
+    all(class(i) %in% c("lm", "glm", "negbin", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL","pgls")) ) ) )
     stop("Model classes in model list are not supported")
   
   if(is.null(data)) stop("Must supply dataset to function")
@@ -12,13 +12,15 @@ get.sem.fit = function(modelList, data, corr.errors = NULL, add.vars = NULL,
   if(!all(unlist(lapply(modelList, nobs)))) 
     warning("All models do not have the same number of observations")
   
+  
   if(is.null(basis.set)) { 
-    
-    basis.set = get.basis.set(modelList, corr.errors, add.vars)
-    
-    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
-    
+    basis.set = get.basis.set(modelList, corr.errors, add.vars)   
   }
+  
+  #AVH: exogenous indipendencies filtered only if filter.exogenous = TRUE
+  if(filter.exogenous==TRUE) {
+    basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) } else basis.set = basis.set
+  
   
   if(is.null(pvalues.df)) {
     

@@ -5,7 +5,7 @@ get.sem.coefs = function(modelList, data, standardized = "none", sig = 3, corr.e
   if(standardized == "none") {
     ret = lapply(modelList, function(i) {
       
-      if(all(class(i) %in% c("lm", "glm", "negbin", "glmerMod"))) {
+      if(all(class(i) %in% c("lm", "glm", "negbin", "glmerMod", "pgls"))) {
         tab = summary(i)$coefficients
         data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                    predictor = rownames(tab)[-1],
@@ -36,7 +36,7 @@ get.sem.coefs = function(modelList, data, standardized = "none", sig = 3, corr.e
     
     ret = lapply(modelList, function(i) {
       
-      vars.to.scale = if(all(class(i) %in% c("lm", "lme"))) rownames(attr(i$terms, "factors")) else
+      vars.to.scale = if(all(class(i) %in% c("lm", "lme","pgls"))) rownames(attr(i$terms, "factors")) else
         if(any(class(i) %in% c("glm", "negbin", "glmmPQL"))) {
           message("Model is not gaussian: keeping response on original scale")
           rownames(attr(i$terms, "factors"))[-1] } else 
@@ -69,7 +69,7 @@ get.sem.coefs = function(modelList, data, standardized = "none", sig = 3, corr.e
             
             if(class(model) == "lmerMod") model = as(model, "merModLmerTest")
             
-            if(all(class(model) %in% c("lm", "glm", "negbin", "glmerMod"))) {
+            if(all(class(model) %in% c("lm", "glm", "negbin", "glmerMod","pgls"))) {
               tab = summary(model)$coefficients
               data.frame(response = Reduce(paste, deparse(formula(model)[[2]])),
                          predictor = rownames(tab)[-1],
