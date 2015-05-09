@@ -1,9 +1,9 @@
-get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
+sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Get DAG from model list
   dag = lapply(modelList, function(i) 
     
-    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "pgls"))) formula(i) else 
+    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls"))) formula(i) else 
     
         if(all(class(i) %in% c("lmer", "glmerMod", "lme4"))) nobars(formula(i))
     
@@ -42,7 +42,7 @@ get.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Generate basis set
   basis.set = basiSet(DAG(dag))
   
-  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent: model is satured.\n  Test of directed separation not possible!")
+  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!")
   
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("%%", collapse = ""), "\\:", i))
