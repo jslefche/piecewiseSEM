@@ -1,4 +1,4 @@
-missing.paths = function(
+sem.missing.paths = function(
  
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, filter.exog = TRUE,
   adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE

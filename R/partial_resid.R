@@ -1,4 +1,4 @@
-sem.partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = T, plotreg = T) {
+partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = T, plotreg = T) {
   
   if(class(modelList) != "list") modelList = list(modelList)
   

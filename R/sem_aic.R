@@ -6,18 +6,18 @@ sem.aic = function(
   
   ) {
   
-  if(is.null(basis.set)) basis.set = get.basis.set(modelList, corr.errors, add.vars)
+  if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
   
   if(filter.exog == T) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
   
-  if(is.null(pvalues.df)) pvalues.df = get.missing.paths(
+  if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, filter.exog,
     adjust.p, basis.set, model.control, .progressBar
     
   )
   
-  fisher.c = get.fisher.c(
+  fisher.c = sem.fisher.c(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
     filter.exog, adjust.p, basis.set, pvalues.df, model.control, .progressBar
