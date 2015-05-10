@@ -3,16 +3,18 @@
   Implementation of piecewise structural equation modeling (SEM) in R, including estimation of path coefficients and goodness-of-fit statistics. 
   
   For more information, see: 
-
+  
     Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context." Ecology 90.2 (2009): 
     363-368.
-
+    
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.4.4 (2015-03-01)
+Version: 0.9 (2015-05-10)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
+
+Supported model classes include: `lm`, `glm`, `glm.nb`, `gls`, `pgls`, `lme`, `glmmPQL`, and `merModLmerTest`.
 
 ##Examples
 
@@ -40,26 +42,32 @@ The model corresponds to the following hypothesis (Fig. 2, Shipley 2009);
 Models are constructed using a mix of the `nlme` and `lmerTest` packages, as in the supplements of Shipley 2009. 
 
 ```
-# Load required libraries
+# Load required libraries for linear mixed effects models
 library(lmerTest)
 library(nlme)
 
 # Create list of models 
 shipley2009.modlist = list(
+
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
   data = shipley2009),
+  
   lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
   data = shipley2009),
+  
   lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
   data = shipley2009),
+  
   glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = shipley2009) )
+  family=binomial(link = "logit"), data = shipley2009) 
+  
+  )
 ```
 
 
 ###Run Shipley tests
 
-`get.sem.fit` returns a list of the following:
+`sem.fit` returns a list of the following:
 (1) the missing paths, whether these paths are conditional on any other variables in the model, and associated p-values;
 (2) the Fisher's C statistic and p-value for the model (derived from a Chi-squared distribution);
 (3) the AIC, AICc (corrected for small sample size), and associated d.f. for the model.
@@ -71,17 +79,19 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 (See ["p-values and all that"](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
 ```
-get.sem.fit(shipley2009.modlist, shipley2009)
+sem.fit(shipley2009.modlist, shipley2009)
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
 
 ###Extract path coefficients
 
-Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean). Default is `FALSE`. The function returns a `data.frame` sorted by increasing p-value.
+Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean, or scaled by range). Default is `none`. The function returns a `data.frame` sorted by increasing p-value.
 
 ```
-get.sem.coefs(shipley2009.modlist, shipley2009, standardized="scaled")
+sem.coefs(shipley2009.modlist, shipley2009)
+
+sem.coefs(shipley2009.modlist, shipley2009, standardized = "scale")
 ```
 
 ###Generate variance-covariance SEM using `lavaan`
@@ -89,19 +99,44 @@ get.sem.coefs(shipley2009.modlist, shipley2009, standardized="scaled")
 Generate variance-covariance based SEM from the list of linear mixed models. The resulting object can be treated like any other model object constructed using the package `lavaan`.
 
 ```
-lavaan.model = get.lavaan.sem(shipley2009.modlist, shipley2009)
+lavaan.model = sem.lavaan(shipley2009.modlist, shipley2009)
 summary(lavaan.model)
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.
 
 ###Plot partial effect between two variables
 
-One might be interested in the partial effects of one variable on another given covariates in the SEM. The function `get.partial.resid` returns a `data.frame` of the partial residuals of `y ~ x` and plots the partial effect.
+One might be interested in the partial effects of one variable on another given covariates in the SEM. The function `partial.resid` returns a `data.frame` of the partial residuals of `y ~ x` and plots the partial effect (if `plotit = T`).
+
+```
+# Load model package
+library(nlme)
+
+# Load data from Shipley (2013)
+data(shipley2013) 
+
+
+shipley2013.modlist = list(
+
+  lme(x2~x1, random = ~x1 | species, data = shipley2013),
+  
+  lme(x3~x2, random = ~x2 | species, data = shipley2013),
+  
+  lme(x4~x2, random = ~x2 | species, data = shipley2013),
+  
+  lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
+  
+  )
+
+# Get partial residuals of x3 on x5 conditional on x4
+resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "optim")))
+```
+![partialplot][https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley2013_pplot.jpeg]
 
 ###Get R<sup>2</sup> for individual models 
 
 Return R<sup>2</sup> and AIC values for component models in the SEM.
 
 ```
-get.model.fits(shipley2009.modlist)
+sem.model.fits(shipley2009.modlist)
 ```
