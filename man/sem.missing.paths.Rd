@@ -12,7 +12,7 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 
 \usage{
 sem.missing.paths(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
-  filter.exog, adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
+  filter.exog, adjust.p, basis.set, model.control, .progressBar) 
 }
 
 \arguments{
@@ -33,7 +33,7 @@ a vector of variables with correlated errors (separated by "~~").
 a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 
-\item{grouping.var}{
+\item{grouping.vars}{
 an optional variable that represents the highest level of a hierarchical dataset.
 }
 
@@ -51,10 +51,6 @@ whether p-values degrees of freedom should be adjusted (see below). Default is \
 
 \item{basis.set}{
 provide an optional basis set.
-}
-
-\item{pvalues.df}{
-an optional \code{data.frame} corresponding to p-values for independence claims.
 }
 
 \item{model.control}{

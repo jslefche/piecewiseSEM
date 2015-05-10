@@ -11,7 +11,7 @@ Extracts partial residuals for \code{y ~ x | Z}, where \code{Z} represents all o
 }
 
 \usage{
-partial.resid(y ~ x, modelList, model.control, plot = T, regr = T)
+partial.resid(.formula = y ~ x, modelList, model.control, plotit = T, plotreg = T)
 }
 
 \arguments{
@@ -28,11 +28,11 @@ a single model or list of regressions representing the structural equation model
 a \code{list} of model control arguments to be passed to the partial models.
 }
 
-\item{plot}{
+\item{plotit}{
 whether the partial plot of \code{y ~ x | Z} should be returned. Default is \code{TRUE}.
 }
 
-\item{regr}{
+\item{plotreg}{
 whether the partial regression of \code{y ~ x | Z} should also be plotted. Default is \code{TRUE}.
 }
 

@@ -2,6 +2,8 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   
   names(modelList) = NULL
   
+  if(!standardize %in% c("none", "scale", "range")) stop("standardize must equal 'none', 'scale', or 'range'.")
+  
   # Scale variables, if indicated
   if(standardize != "none") {
     

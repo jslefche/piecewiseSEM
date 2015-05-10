@@ -33,7 +33,7 @@ a vector of variables with correlated errors (separated by "~~").
 a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 
-\item{grouping.var}{
+\item{grouping.vars}{
 an optional variable that represents the highest level of a hierarchical dataset.
 }
 

@@ -24,7 +24,7 @@ a list of regressions representing the structural equation model.
 a \code{data.frame} used to construct the structured equations.
 }
 
-  \item{standardized}{
+  \item{standardize}{
 species the type of standardization to perform: \code{"none"}, \code{"scale"}, \code{"range"}.
 }
 
@@ -93,9 +93,9 @@ shipley2009.modlist = list(
 sem.coefs(shipley2009.modlist, shipley2009)
 
 # Scale by mean and variance
-sem.coefs(shipley2009.modlist, shipley2009, standardized = "scaled")
+sem.coefs(shipley2009.modlist, shipley2009, standardize = "scale")
 
 # Scale by range
-sem.coefs(shipley2009.modlist, shipley2009, standardized = "range")
+sem.coefs(shipley2009.modlist, shipley2009, standardize = "range")
 
 }

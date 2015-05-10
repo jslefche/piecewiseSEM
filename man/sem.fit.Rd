@@ -33,7 +33,7 @@ a vector of variables with correlated errors (separated by "~~").
 a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 
-\item{grouping.var}{
+\item{grouping.vars}{
 an optional variable that represents the highest level of a hierarchical dataset.
 }
 
@@ -105,7 +105,7 @@ Jon Lefcheck
 }
 
 \seealso{
-\code{\link{dag.updated}}, \code{\link{missing.paths}}, \code{\link{fisher.c}}, \code{\link{aic}}
+\code{\link{dag.updated}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{aic}}
 }
 
 \examples{
@@ -157,12 +157,14 @@ shipley2009.modlist2 = append(
   
   shipley2009.modlist, list(
   
-  lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = shipley2009[,"site"]), mean, na.rm = T))) 
+  lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = shipley2009[,"site"]), 
+    mean, na.rm = TRUE))) 
   
   )
 
 # Test for independence
-sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), top.level.vars = c("site.var"))
+sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), 
+  top.level.vars = c("site.var"))
 
 ###
 

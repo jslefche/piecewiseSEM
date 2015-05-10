@@ -1,8 +1,8 @@
 
-sem.model.fits <- function(modlist) {
-  if( class(modlist) != "list" ) modlist = list(modlist) else modlist
+sem.model.fits <- function(modelList) {
+  if( class(modelList) != "list" ) modelList = list(modelList) else modelList
   # Iterate over each model in the list
-  do.call(rbind, lapply(modlist, r.squared))
+  do.call(rbind, lapply(modelList, r.squared))
 }
 
 r.squared <- function(mdl){

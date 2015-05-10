@@ -11,7 +11,7 @@ Returns (pseudo)-R^2 and AIC values for component models in structural equation 
 }
 
 \usage{
-sem.sem.fit(modelList)
+sem.model.fits(modelList)
 }
 
 \arguments{
