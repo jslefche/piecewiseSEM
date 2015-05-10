@@ -46,7 +46,10 @@ Models are constructed using a mix of the `nlme` and `lmerTest` packages, as in 
 library(lmerTest)
 library(nlme)
 
-# Create list of models 
+# Load example data
+data(shipley2009)
+
+# Create list of models corresponding to SEM
 shipley2009.modlist = list(
 
   lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
@@ -80,6 +83,23 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 
 ```
 sem.fit(shipley2009.modlist, shipley2009)
+
+# $missing.paths
+#    missing.path     estimate  std.error   DF  crit.value   p.value
+#     Date <- lat -0.009051378 0.11347661   18 -0.07976426 0.9373049
+#   Growth <- lat -0.098862826 0.11072020   18 -0.89290690 0.3836896
+#     Live <- lat  0.030497018 0.02966210       1.02814769 0.3038804
+#    Growth <- DD -0.010613707 0.03576722 1329 -0.29674399 0.7667083
+#      Live <- DD  0.027190386 0.02708834       1.00376730 0.3154908
+#    Live <- Date -0.046565402 0.02981190      -1.56197378 0.1182942
+# 
+# $Fisher.C
+#   Fisher.C k     P
+#      11.54 6 0.484
+# 
+# $AIC
+#     AIC   AICc  K    n
+#   49.54 50.079 19 1431
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
@@ -91,6 +111,12 @@ Path coefficients can be either unstandardized or standardized (in units of stan
 ```
 sem.coefs(shipley2009.modlist, shipley2009)
 
+#   response predictor   estimate   std.error      p.value
+#       Date        DD -0.4976475 0.004933274 0.000000e+00
+#     Growth      Date  0.3007147 0.026631405 2.670862e-28
+#       Live    Growth  0.3478541 0.058404201 2.585211e-09
+#         DD       lat -0.8354736 0.119422385 1.565614e-06
+
 sem.coefs(shipley2009.modlist, shipley2009, standardized = "scale")
 ```
 
@@ -99,8 +125,18 @@ sem.coefs(shipley2009.modlist, shipley2009, standardized = "scale")
 Generate variance-covariance based SEM from the list of linear mixed models. The resulting object can be treated like any other model object constructed using the package `lavaan`.
 
 ```
-lavaan.model = sem.lavaan(shipley2009.modlist, shipley2009)
-summary(lavaan.model)
+(lavaan.model = sem.lavaan(shipley2009.modlist, shipley2009))
+
+# lavaan (0.5-18) converged normally after  27 iterations
+# 
+#                                                   Used       Total
+#   Number of observations                          1431        1900
+# 
+#   Estimator                                         ML
+#   Minimum Function Test Statistic               38.433
+#   Degrees of freedom                                 6
+#   P-value (Chi-square)                           0.000
+
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.
 
@@ -139,4 +175,10 @@ Return R<sup>2</sup> and AIC values for component models in the SEM.
 
 ```
 sem.model.fits(shipley2009.modlist)
+
+#      Class   Family     Link  Marginal Conditional       AIC
+#        lme gaussian identity 0.4864825   0.6990231 9166.9738
+#        lme gaussian identity 0.4095855   0.9838829 4694.9821
+#        lme gaussian identity 0.1079098   0.8366353 7611.3338
+#   glmerMod binomial    logit 0.5589201   0.6291994  261.0824
 ```
