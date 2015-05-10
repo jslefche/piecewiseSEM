@@ -131,7 +131,7 @@ shipley2013.modlist = list(
 # Get partial residuals of x3 on x5 conditional on x4
 resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "optim")))
 ```
-![partialplot][https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley2013_pplot.jpeg]
+![partialplot](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley2013_pplot.jpeg)
 
 ###Get R<sup>2</sup> for individual models 
 
