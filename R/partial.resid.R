@@ -1,6 +1,6 @@
 partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = T, plotreg = T) {
   
-  if(class(modelList) != "list") modelList = list(modelList)
+  if(any(class(modelList) != "list")) modelList = list(modelList)
   
   # Separate variables
   vars = unlist(strsplit(deparse(.formula), "~"))
@@ -32,23 +32,50 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
   # Update model
   y.nox.model = suppressWarnings(if(is.null(random.formula)) 
     
-    update(y.model, fixed = formula(rhs)) else
+    update(y.model, formula = formula(rhs), control = control) else
       
       if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
         
         update(y.model, fixed = formula(rhs), random = formula(random.formula), control = control) else
           
-          update(y.model, formula = formula(y, " ~ ", rhs, " + ", random.formula, sep = ""), control = control) )
+          update(y.model, fixed = formula(y, " ~ ", rhs, " + ", random.formula, sep = ""), control = control) )
   
   # Replace x variable as response in y model
-  x.noy.model = suppressWarnings(if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
+  x.noy.model = suppressWarnings(if(is.null(random.formula)) {
     
-    update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), random = as.formula(random.formula), control = control) else
+    if(any(class(y.model) %in% c("glm"))) {
+    
+      # Try to update model
+      mod = try(suppressWarnings(suppressMessages(
+        update(y.model, 
+               formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+               control = control)
+        ) ), silent = TRUE)
       
-      update(y.model, formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x.sub), control = control)
+      if(class(mod) == "try-error")
+        
+        update(y.model, 
+               formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+               family = gaussian(), 
+               na.action = na.omit,
+               control = control) else mod 
+      
+    } else 
+      
+      update(y.model, 
+             formula = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+             control = control)
     
-  )
+  } else
+      
+      if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
+        
+        update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), random = formula(random.formula), control = control) else
+          
+          update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), control = control) 
   
+  )
+
   # Extract residuals from models and bind into data.frame
   y1 = data.frame(.id = 1:length(resid(y.nox.model)), resid(y.nox.model))
   
