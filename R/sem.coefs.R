@@ -1,8 +1,10 @@
 sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) {
   
-  names(modelList) = NULL
+  if(any(class(modelList) != "list")) modelList = list(modelList)
   
-  if(!standardize %in% c("none", "scale", "range")) stop("standardize must equal 'none', 'scale', or 'range'.")
+  names(modelList) = NULL
+
+  if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range'.")
   
   # Scale variables, if indicated
   if(standardize != "none") {
@@ -26,6 +28,10 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
     
     ) )
     
+    # Remove variables that are factors
+    vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, is.factor)]]
+    
+    # Remove duplicated variables
     vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
     
     # Scale those variables by mean and SD, or by range
