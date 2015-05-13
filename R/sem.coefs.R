@@ -91,7 +91,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Do significance tests for correlated errors
   if(!is.null(corr.errors)) 
     
-    ret = append(ret, lapply(corr.errors, function(j) {
+    ret = rbind(ret, do.call(cbind, lapply(corr.errors, function(j) {
       
       # Pull out correlated variables
       corr.vars = gsub(" ", "", unlist(strsplit(j, "~~")))
@@ -106,7 +106,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
                                  (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs")^2)), nrow(data)-2),
         row.names = NULL)
       
-    } ) )
+    } ) ) )
   
   # Order by p-value
   ret = ret[order(ret$p.value), ]
