@@ -21,15 +21,17 @@ sem.missing.paths = function(
     basis.mod = modelList[[match(basis.set[[i]][2], sapply(modelList, function(j) strsplit(paste(formula(j)), "~")[[2]]))]]
     
     # Get fixed formula
-    rhs = paste(basis.set[[i]][c(1,3:length(basis.set[[i]]))], collapse = " + ")
+    rhs = if(length(basis.set[[i]]) <= 2) paste(basis.set[[i]][1]) else
+      
+      paste(basis.set[[i]][c(1,3:length(basis.set[[i]]))], collapse = " + ")
     
     # Get random formula
     random.formula = get.random.formula(basis.mod, rhs, modelList)
     
     # Aggregate at the level of the grouping variable
     if(!is.null(grouping.vars) & any(top.level.vars %in% gsub(".*\\((.*)\\)", "\\1", unlist(as.character(formula(basis.mod)[2])))))
-     
-       data = suppressWarnings(aggregate(data, by = lapply(grouping.vars, function(i) data[ ,i]), mean, na.rm = T))
+      
+      data = suppressWarnings(aggregate(data, by = lapply(grouping.vars, function(i) data[ ,i]), mean, na.rm = T))
     
     # Get model controls
     control = get.model.control(basis.mod, model.control)
@@ -43,8 +45,9 @@ sem.missing.paths = function(
           
           update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = formula(random.formula), control = control, data = data) else
             
-            update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) )
-                                    
+            update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
+    )
+    
     if(any(class(basis.mod) %in% "lmerMod")) basis.mod = as(basis.mod, "merModLmerTest") 
     
     # Insert stop if lmerTest does not converge
