@@ -43,7 +43,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   mat = DAG(dag)
   
   # If intercept only model, add response variable to adjacency matrix
-  if(any(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))) {
+  if(any(unlist(lapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i))))))) {
     
     # Isolate intercept only model(s)
     responses = sapply(modelList[which(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))],
