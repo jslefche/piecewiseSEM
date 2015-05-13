@@ -10,7 +10,7 @@ sem.missing.paths = function(
 
   # Filter exogenous variables
   if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
-
+  
   # Add progress bar
   if(.progressBar == T) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   

@@ -32,7 +32,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   )
   
   # Get vector of variables that appear only as predictors and never as responses
-  filter.vars = pred.vars[!pred.vars %in% c(response.vars, add.vars)]
+  filter.vars = pred.vars[!pred.vars %in% response.vars]
   
   # Remove filtered variables when they appear as responses in the basis set
   basis.set = lapply(basis.set, function(i) 

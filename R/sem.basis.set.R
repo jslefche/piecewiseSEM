@@ -39,8 +39,31 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Modify DAG() function from ggm package to accept a list
   body(DAG)[[2]] = substitute(f <- dag) 
 
+  # Generate adjacency matrix
+  mat = DAG(dag)
+  
+  # If intercept only model, add response variable to adjacency matrix
+  if(any(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))) {
+    
+    # Isolate intercept only model(s)
+    responses = sapply(modelList[which(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))],
+           
+           function(j) strsplit(paste(formula(j)), "~")[[2]]
+           
+    )
+    
+    mat = cbind(
+      
+      rbind(mat, matrix(rep(0, dim(mat)[1]), nrow = 1, dimnames = list(responses))),
+      
+      matrix(rep(0, dim(mat)[1] + 1), ncol = 1, dimnames = list(NULL, responses))
+      
+    )
+
+  }
+  
   # Generate basis set
-  basis.set = basiSet(DAG(dag))
+  basis.set = basiSet(mat)
   
   if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!")
   
