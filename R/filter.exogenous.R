@@ -2,7 +2,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   
   # If not basis set, generate using sem.basis.set()
   if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
-   
+
   # Get vector of predictor variables
   pred.vars = unique(
     
@@ -41,6 +41,10 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
     
   )
   
-  basis.set[!sapply(basis.set, is.null)] 
+  basis.set = basis.set[!sapply(basis.set, is.null)] 
 
+  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!")
+  
+  return(basis.set)
+  
 }

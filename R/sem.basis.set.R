@@ -63,9 +63,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   }
   
   # Generate basis set
-  basis.set = basiSet(mat)
-  
-  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!")
+  if(all(mat == 0) & all(dim(mat) ==1 )) basis.set = NULL else basis.set = basiSet(mat)
   
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("%%", collapse = ""), "\\:", i))
@@ -122,6 +120,8 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Replace edit in DAG() function in the ggm package
   body(DAG)[[2]] = substitute(f <- list(...))
+  
+  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!")
   
   return(basis.set)
   
