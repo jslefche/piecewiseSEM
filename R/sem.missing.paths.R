@@ -61,7 +61,12 @@ sem.missing.paths = function(
     
     # Get row number from coefficient table for d-sep variable
     row.num = which(basis.set[[i]][1] == attr(terms(basis.mod), "term.labels")) + 1
-        
+    
+    # Get row number if interaction variables are switched
+    if(length(row.num) == 0 & grepl("\\:", basis.set[[i]][1]))
+      
+      row.num = which(paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":") == attr(terms(basis.mod), "term.labels")) + 1
+    
     # Return new coefficient table
     ret = if(any(class(basis.mod) %in% c("lm", "glm", "negbin", "gls", "pgls", "glmerMod", "merModLmerTest")))
       
