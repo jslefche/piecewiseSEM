@@ -5,7 +5,7 @@ get.random.formula = function(model, rhs, modelList, drop.terms = NULL) {
   # Get random formula from model
   random.formula = if(any(class(model) %in% c("lme", "glmmPQL")))
     
-    model$call$random else
+    deparse(model$call$random) else
       
       if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
         
@@ -18,7 +18,7 @@ get.random.formula = function(model, rhs, modelList, drop.terms = NULL) {
       
       if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
         
-        sapply(strsplit(deparse(random.formula), ".\\+.")[[1]], function(x)
+        sapply(strsplit(random.formula, ".\\+.")[[1]], function(x)
           
           gsub(".*\\|(.*)\\)", "\\1", x) 
           
