@@ -14,7 +14,7 @@ get.random.formula = function(model, rhs, modelList, drop.terms = NULL) {
   # Get random structure(s)
   random.structure = if(any(class(model) %in% c("lme", "glmmPQL")))
     
-    gsub(".*\\|(.*)?", "\\1", random.formula)[2] else 
+    gsub(".*\\|(.*)?", "\\1", random.formula) else 
       
       if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
         
