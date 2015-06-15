@@ -4,7 +4,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   
   names(modelList) = NULL
 
-  if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range'.")
+  if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range.'")
   
   # Scale variables, if indicated
   if(standardize != "none") {
@@ -51,9 +51,20 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
     if(standardize != "none") i = update(i, data = data)
     
     # Extract coefficients and return in a data.frame
-    if(any(class(i) %in% c("lm", "glm", "gls", "pgls", "negbin", "glmerMod"))) {
+    if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod"))) {
       
       tab = summary(i)$coefficients
+      
+      data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+                 predictor = rownames(tab)[-1],
+                 estimate = tab[-1, 1],
+                 std.error = tab[-1, 2],
+                 p.value = tab[-1, 4], 
+                 row.names = NULL)
+      
+    } else if(any(class(i) %in% c("gls"))) {
+      
+      tab = summary(i)$tTable
       
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                  predictor = rownames(tab)[-1],
