@@ -1,13 +1,13 @@
 get.model.control = function(model, model.control) {
   
-  if(length(model.control)>5) model.control = list(model.control)
+  if(length(model.control) > 5) model.control = list(model.control)
   
   # Match model control list with appropriate model class for basis model
   if(is.null(model.control)) {
     
     if(any(class(model) %in% "glm")) glm.control() else
       
-      if(any(class(model) %in% "gls")) gls.control() else
+      if(any(class(model) %in% "gls")) glsControl() else
       
         if(class(model) %in% c("lme", "glmmPQL")) lmeControl() else 
         

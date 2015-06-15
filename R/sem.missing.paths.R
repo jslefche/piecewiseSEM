@@ -39,7 +39,7 @@ sem.missing.paths = function(
     # Update basis model with new formula and random structure based on d-sep
     basis.mod = suppressWarnings(if(is.null(random.formula)) 
       
-      update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
+      update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
         
         if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
           
@@ -68,14 +68,14 @@ sem.missing.paths = function(
       row.num = which(paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":") == attr(terms(basis.mod), "term.labels")) + 1
     
     # Return new coefficient table
-    ret = if(any(class(basis.mod) %in% c("lm", "glm", "negbin", "gls", "pgls", "glmerMod", "merModLmerTest")))
+    ret = if(any(class(basis.mod) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "merModLmerTest")))
       
       as.data.frame(t(unname(summary(basis.mod)$coefficients[row.num, ]))) else
       
         as.data.frame(t(unname(summary(basis.mod)$tTable[row.num, ])))  
     
     # Add df if summary table does not return
-    if(length(ret) != 5 & any(class(basis.mod) %in% c("lm", "glm", "negbin", "gls", "pgls"))) 
+    if(length(ret) != 5 & any(class(basis.mod) %in% c("lm", "glm", "negbin", "pgls"))) 
       
       ret = cbind(ret[1:2], summary(basis.mod)$df[2], ret[3:4]) else
         
