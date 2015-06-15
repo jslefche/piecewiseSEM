@@ -28,7 +28,7 @@ Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
 }
 
-The primary functions in the package are \code{\link{get.sem.fit}} which performs goodness-of-fit tests, and \code{\link{get.sem.coefs}} which returns (standardized) path coefficients and standard errors.
+The primary functions in the package are \code{\link{sem.fit}} which performs goodness-of-fit tests, and \code{\link{sem.coefs}} which returns (standardized) path coefficients and standard errors.
 }
 
 \author{
