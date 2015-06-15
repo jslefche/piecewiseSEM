@@ -12,7 +12,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
       
         lapply(modelList, function(i) 
           
-          if(all(class(i) %in% c("gls", "pgls"))) attr(coef(i), "names",) else
+          if(all(class(i) %in% c("gls", "pgls"))) attr(coef(i), "names") else
             
             attr(terms(i), "term.labels")
         )
