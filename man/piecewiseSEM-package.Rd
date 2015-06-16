@@ -21,14 +21,14 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{gls
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 0.9\cr
-Date: \tab 2014-06-15\cr
+Version: \tab 0.9.1\cr
+Date: \tab 2014-06-16\cr
 Depends: \tab R (>=3.2.0), ggm, lavaan, lmerTest\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
 }
 
-The primary functions in the package are \code{\link{sem.fit}} which performs goodness-of-fit tests, and \code{\link{sem.coefs}} which returns (standardized) path coefficients and standard errors.
+The primary functions in the package are \code{\link{sem.fit}} which performs goodness-of-fit tests, and \code{\link{sem.coefs}} which returns path coefficients (standardized, if specified) and standard errors.
 }
 
 \author{
