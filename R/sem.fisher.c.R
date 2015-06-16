@@ -18,7 +18,7 @@ sem.fisher.c = function(
     )
   
   # Convert any p-values to a very small number as log(0) == -Inf
-  if(length(basis.set > 1) & any(pvalues.df$p.value == 0)) pvalues.df[pvalues.df$p.value == 0, "p.value"] = 2e-16
+  if(length(basis.set) > 1 & any(pvalues.df$p.value == 0)) pvalues.df[pvalues.df$p.value == 0, "p.value"] = 2e-16
   
   # Calculate Fisher's C statistic
   fisher.C = if(length(basis.set) > 1) -2 * sum(log(pvalues.df$p.value)) else 0
