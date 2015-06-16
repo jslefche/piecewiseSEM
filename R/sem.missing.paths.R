@@ -6,16 +6,18 @@ sem.missing.paths = function(
   ) {
   
   # Get basis set
-  if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)   
+  if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
 
   # Filter exogenous variables
   if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
 
   # Add progress bar
-  if(.progressBar == T) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+  if(.progressBar == T & length(basis.set) > 1) 
+    
+    pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
   # Perform d-sep tests
-  pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
+  if(length(basis.set) > 1) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
     
     # Get basis model from which to build the d-sep test
     basis.mod = modelList[[match(basis.set[[i]][2], sapply(modelList, function(j) strsplit(paste(formula(j)), "~")[[2]]))]]
@@ -108,7 +110,9 @@ sem.missing.paths = function(
     # Bind in d-sep metadata
     cbind(missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), ret)
     
-  } ) )
+  } ) ) else
+    
+    pvalues.df = data.frame(missing.path = NA, estimate = NA, std.error = NA, DF = NA, crit.value = NA, p.value = NA)
   
   if(!is.null(pb)) close(pb)  
   

@@ -6,7 +6,7 @@ sem.aic = function(
   
   ) {
   
-  if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
+  if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
   
   if(filter.exog == T) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
   

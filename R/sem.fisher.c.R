@@ -6,7 +6,7 @@ sem.fisher.c = function(
   
   ) {
   
-  if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
+  if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
     
   if(filter.exog == T) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
 
@@ -18,14 +18,14 @@ sem.fisher.c = function(
     )
   
   # Convert any p-values to a very small number as log(0) == -Inf
-  if(any(pvalues.df$p.value == 0)) pvalues.df[pvalues.df$p.value == 0, "p.value"] = 2e-16
+  if(length(basis.set > 1) & any(pvalues.df$p.value == 0)) pvalues.df[pvalues.df$p.value == 0, "p.value"] = 2e-16
   
   # Calculate Fisher's C statistic
-  fisherC = if(length(pvalues.df) > 0) -2 * sum(log(pvalues.df$p.value)) else 0
+  fisher.C = if(length(basis.set) > 1) -2 * sum(log(pvalues.df$p.value)) else 0
   # Calculate associated p-value from Chi-squared distribution
-  p.value = 1 - pchisq(fisherC, 2 * length(basis.set)) 
+  p.value = 1 - pchisq(fisher.C, 2 * length(basis.set)) 
   
   # Return output in a data.frame
-  data.frame(Fisher.C = round(fisherC, 2), k = round(length(basis.set), 1), P = round(p.value, 3))
+  data.frame(fisher.c = round(fisher.C, 2), k = round(length(basis.set), 1), p.value = round(p.value, 3))
   
 }

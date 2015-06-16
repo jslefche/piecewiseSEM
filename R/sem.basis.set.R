@@ -121,7 +121,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Replace edit in DAG() function in the ggm package
   body(DAG)[[2]] = substitute(f <- list(...))
   
-  if(length(basis.set) < 1) stop("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!")
+  if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
   
   return(basis.set)
   

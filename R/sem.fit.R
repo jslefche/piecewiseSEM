@@ -6,19 +6,21 @@ sem.fit = function(
   
   ) {
 
-  if(!all(sapply(modelList, function(i) all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) ) ) )
+  if(!all(sapply(modelList, function(i) 
     
-    stop("Model classes in model list are not supported")
+    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) 
+    
+    ) ) ) stop("Model classes in model list are not supported")
   
-  if(is.null(data)) stop("Must supply dataset to function")
+  if(is.null(data)) stop("Must supply dataset")
   
   if(!all(unlist(lapply(modelList, nobs)))) warning("All models do not have the same number of observations")
   
   # Get basis set
-  if(is.null(basis.set))  basis.set = sem.basis.set(modelList, corr.errors, add.vars)   
+  if(is.null(basis.set))  basis.set = sem.basis.set(modelList, corr.errors, add.vars)
   
   # Filter exogenous variables
-  if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
+  if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
   
   # Conduct d-sep tests
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
