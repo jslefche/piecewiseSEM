@@ -109,13 +109,17 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
       
       # Perform significance test and return in a data.frame
       data.frame(
-        response = unlist(strsplit(j, "~~"))[1],
-        predictor = unlist(strsplit(j, "~~"))[2],
-        estimate = cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs"),
-        std.error = "",
-        p.value = 1 - pt((cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs") * sqrt(nrow(data) - 2))/
-                                 (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs")^2)), nrow(data)-2),
-        row.names = NULL)
+        response = paste("~~", corr.vars[1]),
+        predictor = paste("~~", corr.vars[2]),
+        estimate = cor(data[, corr.vars[1]], 
+                       data[, corr.vars[2]], 
+                       use = "complete.obs"),
+        std.error = NA,
+        p.value = 1 - 
+          pt((cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs") * sqrt(nrow(data) - 2))/
+               (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs")^2)), nrow(data)-2),
+        row.names = NULL
+        )
       
     } ) ) )
   
