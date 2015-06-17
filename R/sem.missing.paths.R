@@ -114,6 +114,12 @@ sem.missing.paths = function(
     
     pvalues.df = data.frame(missing.path = NA, estimate = NA, std.error = NA, DF = NA, crit.value = NA, p.value = NA)
   
+  # Set degrees of freedom as numeric
+  pvalues.df$DF = as.numeric(pvalues.df$DF)
+  
+  # Round numeric values
+  pvalues.df[, 4:5] = apply(pvalues.df[, 4:5], 2, function(x) round(x, 3) )
+  
   if(!is.null(pb)) close(pb)  
   
   return(pvalues.df)
