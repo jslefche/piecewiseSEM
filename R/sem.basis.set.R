@@ -5,7 +5,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls"))) formula(i) else 
     
-        if(all(class(i) %in% c("lmer", "glmerMod", "lme4"))) nobars(formula(i))
+        if(all(class(i) %in% c("lmer", "merModLmerTest", "glmerMod"))) nobars(formula(i))
     
     )
       

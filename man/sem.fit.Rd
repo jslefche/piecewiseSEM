@@ -133,11 +133,33 @@ shipley2009.modlist = list(
   family=binomial(link = "logit"), data = shipley2009) 
   
   )
-
+  
 # Conduct goodness-of-fit tests
 sem.fit(shipley2009.modlist, shipley2009)
 
-###
+### NOT RUN ###
+
+# Repeat but use lme4 to construct all models
+
+# shipley2009.modlist.lme4 = list(
+#   
+#   lmer(DD~lat + (1|site/tree), na.action = na.omit, 
+#        data = shipley2009),
+#   
+#   lmer(Date~DD + (1|site/tree), na.action = na.omit, 
+#        data = shipley2009),
+#   
+#   lmer(Growth~Date + (1|site/tree), na.action = na.omit, 
+#        data = shipley2009),
+#   
+#   glmer(Live~Growth+(1|site)+(1|tree), 
+#         family=binomial(link = "logit"), data = shipley2009) 
+#   
+# )
+
+# sem.fit(shipley2009.modlist.lme4, shipley2009)
+
+### NOT RUN ###
 
 # Add new variable with no hypothesized links
 set.seed(1)
