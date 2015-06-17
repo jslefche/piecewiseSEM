@@ -102,7 +102,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Do significance tests for correlated errors
   if(!is.null(corr.errors)) 
     
-    ret = rbind(ret, do.call(cbind, lapply(corr.errors, function(j) {
+    ret = rbind(ret, do.call(rbind, lapply(corr.errors, function(j) {
       
       # Pull out correlated variables
       corr.vars = gsub(" ", "", unlist(strsplit(j, "~~")))
