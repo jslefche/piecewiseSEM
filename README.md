@@ -182,3 +182,32 @@ sem.model.fits(shipley2009.modlist)
 #        lme gaussian identity 0.1079098   0.8366353 7611.3338
 #   glmerMod binomial    logit 0.5589201   0.6291994  261.0824
 ```
+###Return model predictions
+
+Generate model predictions from new data.
+
+```
+# Create new data for predictions
+shipley2009.new = data.frame(
+  
+  lat = rnorm(length(shipley2009$lat), mean(shipley2009$lat, na.rm = T), sd(shipley2009$lat, na.rm = T)),
+  
+  DD = rnorm(length(shipley2009$DD), mean(shipley2009$DD, na.rm = T), sd(shipley2009$DD, na.rm = T)),
+    
+  Date = rnorm(length(shipley2009$Date), mean(shipley2009$Date, na.rm = T), sd(shipley2009$Date, na.rm = T)),
+    
+  Growth = rnorm(length(shipley2009$Growth), mean(shipley2009$Growth, na.rm = T), sd(shipley2009$Growth, na.rm = T))
+  
+)
+
+# Generate predictions
+head(predict.sem(shipley2009.modlist, shipley2009.new))
+
+#      lat       DD     Date   Growth   DD.fit Date.fit Growth.fit Live.fit
+# 63.74900 156.6662 118.6954 50.95160 143.3918 120.3736   46.48266 5.497643
+# 55.72110 134.5989 136.9055 51.32790 150.0989 131.3554   51.95870 5.628542
+# 46.47976 151.3796 136.1517 61.89734 157.8198 123.0045   51.73203 9.305165
+# 47.13647 133.6134 140.5558 50.41360 157.2712 131.8458   53.05642 5.310499
+# 63.57681 161.3186 117.1850 50.50880 143.5357 118.0584   46.02848 5.343615
+# 47.56635 137.4427 119.1214 49.35723 156.9120 129.9401   46.61076 4.943035
+```

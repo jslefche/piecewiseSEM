@@ -14,7 +14,7 @@ predict.sem = function(modelList, newdata, ...) {
              
              if(any(class(i) %in% c("lmerMod", "glmerMod", "merModTest")))
                
-               predict.df = predict(i, newdata, re.form = 0, ...)
+               predict.df = predict(i, newdata, re.form = NA, ...)
     
     # If predictions are stored in a list, bind columns
     if(class(predict.df) == "list") predict.df = do.call(data.frame, predict.df[1:2]) else

@@ -7,7 +7,7 @@ Returns model predictions for SEM
 }
 
 \description{
-Returns predictions for responses in the list of structured equiations.
+Returns predictions for responses in the list of structured equations.
 }
 
 \usage{
@@ -28,10 +28,12 @@ a \code{data.frame} of predictors used to generate the model predictions.
 additional arguments passed to \code{predict}.
 }
 
+}
 
 \details{
-
+Mixed model predictions includes only fixed effects and *not* random effects (default is \code{level = 0} or \code{re.form = 0}). This can be changed by passing additional arguments from \code{predict.lme} and \code{predict.merMod}.
 }
+
 \value{
 Returns a \code{data.frame} containing the new data and the predicted responses.
 }
@@ -47,7 +49,7 @@ Jon Lefcheck
 }
 
 \seealso{
-\code{predict}, \code{predict.lme}, \code{predict.merMod}
+\code{\link{predict}}, \code{\link{predict.lme}}, \code{\link{predict.merMod}}
 }
 
 \examples{
