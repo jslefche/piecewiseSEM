@@ -81,13 +81,17 @@ shipley2009.modlist = list(
 # Create new data for predictions
 shipley2009.new = data.frame(
   
-  lat = rnorm(length(shipley2009$lat), mean(shipley2009$lat, na.rm = T), sd(shipley2009$lat, na.rm = T)),
+  lat = rnorm(length(shipley2009$lat), mean(shipley2009$lat, na.rm = T), 
+    sd(shipley2009$lat, na.rm = T)),
   
-  DD = rnorm(length(shipley2009$DD), mean(shipley2009$DD, na.rm = T), sd(shipley2009$DD, na.rm = T)),
+  DD = rnorm(length(shipley2009$DD), mean(shipley2009$DD, na.rm = T), 
+    sd(shipley2009$DD, na.rm = T)),
     
-  Date = rnorm(length(shipley2009$Date), mean(shipley2009$Date, na.rm = T), sd(shipley2009$Date, na.rm = T)),
+  Date = rnorm(length(shipley2009$Date), mean(shipley2009$Date, na.rm = T), 
+    sd(shipley2009$Date, na.rm = T)),
     
-  Growth = rnorm(length(shipley2009$Growth), mean(shipley2009$Growth, na.rm = T), sd(shipley2009$Growth, na.rm = T))
+  Growth = rnorm(length(shipley2009$Growth), mean(shipley2009$Growth, na.rm = T), 
+    sd(shipley2009$Growth, na.rm = T))
   
 )
 
