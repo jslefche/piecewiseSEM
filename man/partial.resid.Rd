@@ -71,7 +71,6 @@ library(nlme)
 # Load data from Shipley (2013)
 data(shipley2013) 
 
-
 shipley2013.modlist = list(
 
   lme(x2~x1, random = ~x1 | species, data = shipley2013),

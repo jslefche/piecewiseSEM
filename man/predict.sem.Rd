@@ -1,0 +1,128 @@
+\name{predict.sem}
+
+\alias{predict.sem}
+
+\title{
+Returns model predictions for SEM
+}
+
+\description{
+Returns predictions for responses in the list of structured equiations.
+}
+
+\usage{
+predict.sem(modelList, newdata, ...)
+}
+
+\arguments{
+
+\item{modelList}{
+a single model or list of regressions representing the structural equation model. 
+}
+
+\item{newdata}{
+a \code{data.frame} of predictors used to generate the model predictions.
+}
+
+\item{...}{
+additional arguments passed to \code{predict}.
+}
+
+
+\details{
+
+}
+\value{
+Returns a \code{data.frame} containing the new data and the predicted responses.
+}
+
+\references{
+}
+
+\author{
+Jon Lefcheck
+}
+
+\note{
+}
+
+\seealso{
+\code{predict}, \code{predict.lme}, \code{predict.merMod}
+}
+
+\examples{
+
+# Load model packages
+library(lmerTest)
+library(nlme)
+
+# Load data from Shipley (2009)
+data(shipley2009) 
+
+# Create list of models 
+shipley2009.modlist = list(
+
+  lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
+  data = shipley2009),
+  
+  lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
+  data = shipley2009),
+  
+  lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
+  data = shipley2009),
+  
+  glmer(Live~Growth+(1|site)+(1|tree), 
+  family=binomial(link = "logit"), data = shipley2009) 
+  
+  )
+
+# Create new data for predictions
+shipley2009.new = data.frame(
+  
+  lat = rnorm(length(shipley2009$lat), mean(shipley2009$lat, na.rm = T), sd(shipley2009$lat, na.rm = T)),
+  
+  DD = rnorm(length(shipley2009$DD), mean(shipley2009$DD, na.rm = T), sd(shipley2009$DD, na.rm = T)),
+    
+  Date = rnorm(length(shipley2009$Date), mean(shipley2009$Date, na.rm = T), sd(shipley2009$Date, na.rm = T)),
+    
+  Growth = rnorm(length(shipley2009$Growth), mean(shipley2009$Growth, na.rm = T), sd(shipley2009$Growth, na.rm = T))
+  
+)
+
+# Generate predictions
+head(predict.sem(shipley2009.modlist, shipley2009.new))
+
+###
+
+# Load data from Shipley (2013)
+data(shipley2013) 
+
+shipley2013.modlist = list(
+
+  lme(x2~x1, random = ~x1 | species, data = shipley2013),
+  
+  lme(x3~x2, random = ~x2 | species, data = shipley2013),
+  
+  lme(x4~x2, random = ~x2 | species, data = shipley2013),
+  
+  lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
+  
+  )
+
+# Generate new data
+shipley2013.new = data.frame(
+
+  x1 = rnorm(length(shipley2013$x1), mean(shipley2013$x1), sd(shipley2013$x1)),
+  
+  x2 = rnorm(length(shipley2013$x2), mean(shipley2013$x2), sd(shipley2013$x2)),
+  
+  x3 = rnorm(length(shipley2013$x3), mean(shipley2013$x3), sd(shipley2013$x3)),
+  
+  x4 = rnorm(length(shipley2013$x4), mean(shipley2013$x4), sd(shipley2013$x4))
+  
+)
+
+# Generate predictions 
+head(predict.sem(shipley2013.modlist, shipley2013.new))
+
+}
