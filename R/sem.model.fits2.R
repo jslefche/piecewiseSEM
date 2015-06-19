@@ -1,4 +1,4 @@
-sem.model.fits = function(modelList) {
+sem.model.fits2 = function(modelList) {
 
   # If object is just an individual model, convert to a list
   if(class(modelList) != "list") modelList = list(modelList)
