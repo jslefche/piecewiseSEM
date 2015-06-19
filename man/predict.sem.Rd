@@ -24,6 +24,10 @@ a single model or list of regressions representing the structural equation model
 a \code{data.frame} of predictors used to generate the model predictions.
 }
 
+\item{se.fit}{
+whether standard errors of predictions should be returned. Default is \code{FALSE}.
+}
+
 \item{...}{
 additional arguments passed to \code{predict}.
 }
@@ -32,6 +36,8 @@ additional arguments passed to \code{predict}.
 
 \details{
 Mixed model predictions includes only fixed effects and *not* random effects (default is \code{level = 0} or \code{re.form = 0}). This can be changed by passing additional arguments from \code{predict.lme} and \code{predict.merMod}.
+
+If \code{se.fit = TRUE} for mixed models, then standard errors on predictions are estimated using fixed effects *only*. See explanation here: http://glmm.wikidot.com/faq.
 }
 
 \value{
@@ -81,22 +87,29 @@ shipley2009.modlist = list(
 # Create new data for predictions
 shipley2009.new = data.frame(
   
-  lat = rnorm(length(shipley2009$lat), mean(shipley2009$lat, na.rm = T), 
+  lat = rnorm(length(shipley2009$lat), 
+    mean(shipley2009$lat, na.rm = T), 
     sd(shipley2009$lat, na.rm = T)),
   
-  DD = rnorm(length(shipley2009$DD), mean(shipley2009$DD, na.rm = T), 
+  DD = rnorm(length(shipley2009$DD), 
+    mean(shipley2009$DD, na.rm = T), 
     sd(shipley2009$DD, na.rm = T)),
     
-  Date = rnorm(length(shipley2009$Date), mean(shipley2009$Date, na.rm = T), 
+  Date = rnorm(length(shipley2009$Date), 
+    mean(shipley2009$Date, na.rm = T), 
     sd(shipley2009$Date, na.rm = T)),
     
-  Growth = rnorm(length(shipley2009$Growth), mean(shipley2009$Growth, na.rm = T), 
+  Growth = rnorm(length(shipley2009$Growth), 
+    mean(shipley2009$Growth, na.rm = T), 
     sd(shipley2009$Growth, na.rm = T))
   
 )
 
 # Generate predictions
 head(predict.sem(shipley2009.modlist, shipley2009.new))
+
+# Generate predictions with standard errors (based on fixed effects only)
+head(predict.sem(shipley2009.modlist, shipley2009.new, se.fit = TRUE))
 
 ###
 
@@ -118,13 +131,21 @@ shipley2013.modlist = list(
 # Generate new data
 shipley2013.new = data.frame(
 
-  x1 = rnorm(length(shipley2013$x1), mean(shipley2013$x1), sd(shipley2013$x1)),
+  x1 = rnorm(length(shipley2013$x1), 
+    mean(shipley2013$x1), 
+    sd(shipley2013$x1)),
   
-  x2 = rnorm(length(shipley2013$x2), mean(shipley2013$x2), sd(shipley2013$x2)),
+  x2 = rnorm(length(shipley2013$x2), 
+    mean(shipley2013$x2), 
+    sd(shipley2013$x2)),
   
-  x3 = rnorm(length(shipley2013$x3), mean(shipley2013$x3), sd(shipley2013$x3)),
+  x3 = rnorm(length(shipley2013$x3), 
+    mean(shipley2013$x3), 
+    sd(shipley2013$x3)),
   
-  x4 = rnorm(length(shipley2013$x4), mean(shipley2013$x4), sd(shipley2013$x4))
+  x4 = rnorm(length(shipley2013$x4), 
+    mean(shipley2013$x4), 
+    sd(shipley2013$x4))
   
 )
 
