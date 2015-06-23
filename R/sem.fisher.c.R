@@ -26,6 +26,6 @@ sem.fisher.c = function(
   p.value = 1 - pchisq(fisher.C, 2 * length(basis.set)) 
   
   # Return output in a data.frame
-  data.frame(fisher.c = round(fisher.C, 2), k = round(length(basis.set), 1), p.value = round(p.value, 3))
+  data.frame(fisher.c = round(fisher.C, 2), k = round(2 * length(basis.set), 1), p.value = round(p.value, 3))
   
 }

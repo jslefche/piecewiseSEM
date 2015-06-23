@@ -10,7 +10,7 @@
     Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
     d-separation test." Ecology 94.3 (2013): 560-564.
 
-Version: 0.9.1 (2015-06-19)
+Version: 0.9.1 (2015-06-23)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -85,21 +85,21 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 sem.fit(shipley2009.modlist, shipley2009)
 
 # $missing.paths
-#    missing.path     estimate  std.error   DF  crit.value   p.value
-#     Date <- lat -0.009051378 0.11347661   18 -0.07976426 0.9373049
-#   Growth <- lat -0.098862826 0.11072020   18 -0.89290690 0.3836896
-#     Live <- lat  0.030497018 0.02966210       1.02814769 0.3038804
-#    Growth <- DD -0.010613707 0.03576722 1329 -0.29674399 0.7667083
-#      Live <- DD  0.027190386 0.02708834       1.00376730 0.3154908
-#    Live <- Date -0.046565402 0.02981190      -1.56197378 0.1182942
+#  missing.path     estimate  std.error   DF crit.value   p.value
+#   Date <- lat -0.009051378 0.11347661   18     -0.080 0.9373049
+# Growth <- lat -0.098862826 0.11072020   18     -0.893 0.3836896
+#   Live <- lat  0.030497018 0.02966210   NA      1.028 0.3038804
+#  Growth <- DD -0.010613707 0.03576722 1329     -0.297 0.7667083
+#    Live <- DD  0.027190386 0.02708834   NA      1.004 0.3154908
+#  Live <- Date -0.046565402 0.02981190   NA     -1.562 0.1182942
 # 
 # $Fisher.C
-#   Fisher.C k     P
-#      11.54 6 0.484
+# fisher.c  k p.value
+#    11.54 12   0.484
 # 
 # $AIC
-#     AIC   AICc  K    n
-#   49.54 50.079 19 1431
+#   AIC   AICc  K    n
+# 49.54 50.079 19 1431
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
