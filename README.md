@@ -71,9 +71,9 @@ shipley2009.modlist = list(
 ###Run Shipley tests
 
 `sem.fit` returns a list of the following:
-(1) the missing paths, whether these paths are conditional on any other variables in the model, and associated p-values;
-(2) the Fisher's C statistic and p-value for the model (derived from a Chi-squared distribution);
-(3) the AIC, AICc (corrected for small sample size), and associated d.f. for the model.
+(1) the missing paths (omitting conditional variables), the estimate, standard error, degrees of freedom, and associated p-values;
+(2) the Fisher's C statistic, degrees of freedom, and p-value for the model (derived from a Chi-squared distribution);
+(3) the AIC, AICc (corrected for small sample size), the likelihood degrees of freedom, and the model degrees of freedom.
 
 The argument `add.vars` allows you to specify a vector of additional variables whose causal independence you also wish to test. This is useful if you are comparing nested models. Default is `NULL`.
 
@@ -106,7 +106,7 @@ The missing paths output differs from Table 2 in Shipley 2009. However, running 
 
 ###Extract path coefficients
 
-Path coefficients can be either unstandardized or standardized (in units of standard deviation of the mean, or scaled by range). Default is `none`. The function returns a `data.frame` sorted by increasing p-value.
+Path coefficients can be either unstandardized or standardized (centered and scaled in units of standard deviation of the mean, or scaled by the range the data). Default is `none`. The function returns a `data.frame` sorted by increasing significance.
 
 ```
 sem.coefs(shipley2009.modlist, shipley2009)
@@ -138,7 +138,7 @@ Generate variance-covariance based SEM from the list of linear mixed models. The
 #   P-value (Chi-square)                           0.000
 
 ```
-The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified.
+The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified given the hierarchical structure of the data.
 
 ###Plot partial effect between two variables
 
@@ -151,7 +151,7 @@ library(nlme)
 # Load data from Shipley (2013)
 data(shipley2013) 
 
-
+# Create list of structured equations
 shipley2013.modlist = list(
 
   lme(x2~x1, random = ~x1 | species, data = shipley2013),
