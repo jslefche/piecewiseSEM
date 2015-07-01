@@ -65,6 +65,44 @@ Jon Lefcheck
 
 \examples{
 
+# Create example data
+set.seed(1)
+
+example.data = data.frame(
+  y = rnorm(100, 0, 1),
+  x1 = rnorm(100, 10, 50),
+  x2 = rnorm(100, 10, 50),
+  random = letters[1:5]
+)
+
+example.data$x3 = example.data$x1 + runif(100, 0, 5)
+
+# Run regular linear model using lm()
+lm.model = lm(y ~ x1 + x2 + x3, example.data)
+
+partial.resid(y ~ x1, lm.model)
+
+# Run generalized least squared regression
+library(nlme)
+
+gls.model = gls(y ~ x1 + x2 + x3, example.data)
+
+partial.resid(y ~ x1, gls.model)
+
+# Run mixed effects model using lme()
+lme.model = lme(y ~ x1 + x2 + x3, random = ~ 1 | random, example.data)
+
+partial.resid(y ~ x1, lme.model)
+
+# Run mixed effects model using lmer()
+library(lme4) 
+
+lmer.model = lmer(y ~ x1 + x2 + x3 + (1 | random), example.data)
+
+partial.resid(y ~ x1, lmer.model)
+
+###
+
 # Load model package
 library(nlme)
 

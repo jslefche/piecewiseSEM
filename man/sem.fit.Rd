@@ -105,7 +105,7 @@ Jon Lefcheck
 }
 
 \seealso{
-\code{\link{dag.updated}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{aic}}
+\code{\link{ggm::dag}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{aic}}
 }
 
 \examples{
@@ -212,5 +212,34 @@ shipley2013.modlist = list(
 
 # Specify model controls by switching to old optimizer
 sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))
+
+###
+
+## NOT RUN ##
+# Compare to output from ggm package
+# # Load library
+# library(ggm)
+# 
+# # Load data
+# data(marks)
+# # Generate direct acyclic graph (DAG)
+# dag = DAG(mechanics ~ vectors+algebra, 
+#           vectors ~ algebra,
+#           statistics ~ algebra+analysis, 
+#           analysis ~ algebra)
+# # Run test of directed separation
+# shipley.test(dag, cov(marks), n=88)
+# 
+# # Now create list of structured equations using lm()
+# modelList = list(
+#   lm(mechanics ~ vectors+algebra, data = marks),
+#   lm( vectors ~ algebra, data = marks),
+#   lm(statistics ~ algebra+analysis, data = marks),
+#   lm(analysis ~ algebra, data = marks)
+# )
+# 
+# # Test model fit
+# sem.fisher.c(modelList, marks)
+## NOT RUN ##
 
 }
