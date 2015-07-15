@@ -50,14 +50,14 @@ sem.missing.paths = function(
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
     )
     
-    if(any(class(basis.mod) %in% "lmerMod")) basis.mod = as(basis.mod, "merModLmerTest") 
-    
     # Insert stop if lmerTest does not converge
-    if(all(class(basis.mod) %in% c("lmerMod", "merModLmerTest"))) {
+    if(any(class(basis.mod) %in% c("lmerMod"))) {
+      
+      basis.mod = as(basis.mod, "merModLmerTest") 
       
       x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
       
-      if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying model.control or using nlme package") 
+      if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying model.control or using nlme package")
       
     }
     
@@ -83,7 +83,7 @@ sem.missing.paths = function(
         
         if(length(ret) != 5)
           
-          ret = cbind(ret[1:2], "", ret[3:4])
+          ret = cbind(ret[1:2], NA, ret[3:4])
       
     # Rename columns 
     names(ret) = c("estimate", "std.error", "DF", "crit.value", "p.value")

@@ -17,7 +17,7 @@ sem.fit = function(
   if(!all(unlist(lapply(modelList, nobs)))) warning("All models do not have the same number of observations")
   
   # Get basis set
-  if(is.null(basis.set))  basis.set = sem.basis.set(modelList, corr.errors, add.vars)
+  if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
   
   # Filter exogenous variables
   if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
