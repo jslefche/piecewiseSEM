@@ -1,7 +1,7 @@
 sem.missing.paths = function(
  
-  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, filter.exog = TRUE,
-  adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
+  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, 
+  filter.exog = TRUE, adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -50,14 +50,15 @@ sem.missing.paths = function(
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
     )
     
-    # Insert stop if lmerTest does not converge
+    # Convert lmerMod object into MerModLmerTest object
+    if(any(class(basis.mod) %in% c("lmerMod"))) basis.mod = as(basis.mod, "merModLmerTest") 
+    
+    # Stop if lmerTest does not return p-values
     if(any(class(basis.mod) %in% c("lmerMod"))) {
       
-      basis.mod = as(basis.mod, "merModLmerTest") 
+      x = try(suppressMessages(summary(basis.mod)$coefficients[1,5]), silent = T)
       
-      x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
-      
-      if(class(x) == "try-error") warning("lmerTest did not return p-values on the first iteration. Consider using nlme package")
+      if(class(x) == "try-error") stop("lmerTest did not return p-values. Consider using nlme package")
       
     }
     
