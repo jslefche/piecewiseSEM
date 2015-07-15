@@ -7,7 +7,7 @@ get.model.control = function(model, model.control) {
   model.class = ifelse(class(model) == "merModLmerTest", "lmerMod", class(model))
   
   # Match model control list with appropriate model class for basis model
-  if(is.null(model.control) | !any(classes %in% gsub("(.*)Mod", "\\1", model.class))) {
+  if(is.null(model.control) | !any(control.classes %in% gsub("(.*)Mod", "\\1", model.class))) {
     
     if(any(class(model) %in% "glm")) glm.control() else
       
@@ -25,9 +25,9 @@ get.model.control = function(model, model.control) {
     
     model.class = ifelse(class(model) == "merModLmerTest", "lmerMod", class(model))
     
-    if(any(classes %in% gsub("(.*)Mod", "\\1", model.class)))
+    if(any(control.classes %in% gsub("(.*)Mod", "\\1", model.class)))
       
-      model.control[[which(classes %in% gsub("(.*)Mod", "\\1", model.class))]] else
+      model.control[[which(control.classes %in% gsub("(.*)Mod", "\\1", model.class))]] else
         
         if(class(model) == "glm")
           
