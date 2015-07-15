@@ -50,15 +50,14 @@ sem.missing.paths = function(
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
     )
     
-    # Convert lmerMod object into MerModLmerTest object
-    if(any(class(basis.mod) %in% c("lmerMod"))) basis.mod = as(basis.mod, "merModLmerTest") 
-    
     # Stop if lmerTest does not return p-values
-    if(any(class(basis.mod) %in% c("lmerMod"))) {
+    if(class(basis.mod) == "lmerMod") {
+      
+      basis.mod = as(basis.mod, "merModLmerTest") 
       
       x = try(suppressMessages(summary(basis.mod)$coefficients[1,5]), silent = T)
       
-      if(class(x) == "try-error") stop("lmerTest did not return p-values. Consider using nlme package")
+      if(class(x) == "try-error") stop("lmerTest did not return p-values. Consider using functions in the nlme package.")
       
     }
     
