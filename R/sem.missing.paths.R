@@ -39,7 +39,7 @@ sem.missing.paths = function(
     control = get.model.control(basis.mod, model.control)
     
     # Update basis model with new formula and random structure based on d-sep
-    basis.mod = suppressWarnings(if(is.null(random.formula)) 
+    basis.mod.new = suppressWarnings(if(is.null(random.formula)) 
       
       update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
         
@@ -50,36 +50,40 @@ sem.missing.paths = function(
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
     )
     
+#     if(class(basis.mod.new) == "lmerMod") basis.mod.new = as(basis.mod.new, "merModLmerTest") 
+#     
+#     assign("basis.mod.new", basis.mod.new, envir=globalenv())
+    
     # Stop if lmerTest does not return p-values
-    if(class(basis.mod) == "lmerMod") {
+    if(class(basis.mod.new) == "lmerMod") {
       
-      basis.mod = as(basis.mod, "merModLmerTest") 
+      basis.mod.new = as(basis.mod.new, "merModLmerTest") 
       
-      x = try(suppressMessages(summary(basis.mod)$coefficients[1,5]), silent = T)
+      x = try(suppressMessages(summary(basis.mod.new)$coefficients[1,5]), silent = T)
       
       if(class(x) == "try-error") stop("lmerTest did not return p-values. Consider using functions in the nlme package.")
       
     }
     
     # Get row number from coefficient table for d-sep variable
-    row.num = which(basis.set[[i]][1] == attr(terms(basis.mod), "term.labels")) + 1
+    row.num = which(basis.set[[i]][1] == attr(terms(basis.mod.new), "term.labels")) + 1
     
     # Get row number if interaction variables are switched
     if(length(row.num) == 0 & grepl("\\:", basis.set[[i]][1]))
       
-      row.num = which(paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":") == attr(terms(basis.mod), "term.labels")) + 1
+      row.num = which(paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":") == attr(terms(basis.mod.new), "term.labels")) + 1
     
     # Return new coefficient table
-    ret = if(any(class(basis.mod) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "merModLmerTest")))
+    ret = if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "merModLmerTest")))
       
-      as.data.frame(t(unname(summary(basis.mod)$coefficients[row.num, ]))) else
+      as.data.frame(t(unname(summary(basis.mod.new)$coefficients[row.num, ]))) else
       
-        as.data.frame(t(unname(summary(basis.mod)$tTable[row.num, ])))  
+        as.data.frame(t(unname(summary(basis.mod.new)$tTable[row.num, ])))  
     
     # Add df if summary table does not return
-    if(length(ret) != 5 & any(class(basis.mod) %in% c("lm", "glm", "negbin", "pgls"))) 
+    if(length(ret) != 5 & any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls"))) 
       
-      ret = cbind(ret[1:2], summary(basis.mod)$df[2], ret[3:4]) else
+      ret = cbind(ret[1:2], summary(basis.mod.new)$df[2], ret[3:4]) else
         
         if(length(ret) != 5)
           
@@ -91,19 +95,21 @@ sem.missing.paths = function(
     # Adjust p-value based on Shipley 2013
     if(adjust.p == TRUE) {
       
-      if(all(class(basis.mod) %in% c("lme", "glmmPQL"))) {
+      if(all(class(basis.mod.new) %in% c("lme", "glmmPQL"))) {
         
-        t.value = summary(basis.mod)$tTable[row.num, 4] 
+        t.value = summary(basis.mod.new)$tTable[row.num, 4] 
         
-        ret[5] = 2*(1 - pt(abs(t.value), nobs(basis.mod) - sum(apply(basis.mod$groups, 2, function(x) length(unique(x))))))
+        ret[5] = 2*(1 - pt(abs(t.value), nobs(basis.mod.new) - sum(apply(basis.mod.new$groups, 2, function(x) length(unique(x))))))
         
-      } else if(all(class(basis.mod) %in% c("glmerMod", "merModLmerTest"))) {
+      } else if(all(class(basis.mod.new) %in% c("glmerMod", "merModLmerTest"))) {
         
-        z.value = summary(basis.mod)$coefficients[row.num, 4]
+        z.value = summary(basis.mod.new)$coefficients[row.num, 4]
         
-        ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod) - sum(summary(basis.mod)$ngrps))) } 
+        ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps))) } 
       
     }
+    
+    # rm(basis.mod.new)
     
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
