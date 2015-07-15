@@ -57,7 +57,7 @@ sem.missing.paths = function(
       
       x = try(suppressMessages(suppressWarnings(summary(basis.mod))$coefficients[1,5]), silent = T)
       
-      if(class(x) == "try-error") stop("lmerTest did not converge, no p-values to report. Consider specifying model.control or using nlme package")
+      if(class(x) == "try-error") warning("lmerTest did not return p-values on the first iteration. Consider using nlme package")
       
     }
     
