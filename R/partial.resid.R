@@ -91,10 +91,10 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
   if(plotit == TRUE)
     
     plot(resids.data[, 1] ~ resids.data[ ,2], 
-         xlab = ifelse(length(attr(terms(y.nox.model), "term.labels")) <= 3,
+         ylab = ifelse(length(attr(terms(y.nox.model), "term.labels")) <= 3,
                        ifelse(length(attr(terms(y.nox.model), "term.labels")[-1]) > 1, paste(y, paste(attr(terms(y.nox.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(y)),
                        paste(y, "| others") ),
-         ylab = ifelse(length(attr(terms(x.noy.model), "term.labels")) <= 3,
+         xlab = ifelse(length(attr(terms(x.noy.model), "term.labels")) <= 3,
                        ifelse(length(attr(terms(x.noy.model), "term.labels")[-1]) > 1, paste(x, paste(attr(terms(x.noy.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)),
                        paste(x, "| others") )) 
     
