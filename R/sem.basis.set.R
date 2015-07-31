@@ -24,13 +24,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       lhs = paste(rownames(attr(terms(i), "factors"))[1])
       
       rhs = attr(terms(i), "term.labels")
-      
-      # Order so that interaction comes first
-      rhs = rhs[c(
-        rev(grep(paste(unlist(strsplit(rhs[grep("\\*|\\:", rhs)], "\\:")), collapse = "|"), rhs)),
-        grep(paste(unlist(strsplit(rhs[grep("\\*|\\:", rhs)], "\\:")), collapse = "|"), rhs, invert = TRUE)
-      )]
-        
+
       # Collapse into formula
       rhs = paste(rhs, collapse = " + ")
       
@@ -70,6 +64,9 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     )
 
   }
+  
+  # Modify basiSet() function ggm to not sort the adjacency matrix
+  body(basiSet)[[2]] = NULL
   
   # Generate basis set
   if(all(mat == 0) & all(dim(mat) ==1 )) basis.set = NULL else basis.set = basiSet(mat)
