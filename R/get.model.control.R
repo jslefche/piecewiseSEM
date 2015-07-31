@@ -1,13 +1,11 @@
 get.model.control = function(model, model.control) {
   
-  if(length(model.control) > 5) model.control = list(model.control)
-  
   control.classes = lapply(model.control, function(i) gsub("(.*)Control", "\\1", class(i))[1] )
   
   model.class = ifelse(class(model) == "merModLmerTest", "lmerMod", class(model))
   
   # Match model control list with appropriate model class for basis model
-  if(is.null(model.control) | !any(control.classes %in% gsub("(.*)Mod", "\\1", model.class))) {
+  if(is.null(model.control)) {
     
     if(any(class(model) %in% "glm")) glm.control() else
       
@@ -20,10 +18,6 @@ get.model.control = function(model, model.control) {
             if(class(model) %in% c("glmerMod")) glmerControl()
           
   } else {
-    
-    control.classes = lapply(model.control, function(i) gsub("(.*)Control", "\\1", class(i))[1] )
-    
-    model.class = ifelse(class(model) == "merModLmerTest", "lmerMod", class(model))
     
     if(any(control.classes %in% gsub("(.*)Mod", "\\1", model.class)))
       
