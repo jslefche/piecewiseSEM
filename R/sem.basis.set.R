@@ -11,10 +11,10 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       
   if(any(unlist(lapply(dag, is.null)))) stop("At least one model class not yet supported")
   
-  # If additional variables are preesnt, add them to the basis set
-  if(!is.null(add.vars)) dag = 
-      
-      append(dag, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep="~")))))
+  # If additional variables are present, add them to the basis set
+  if(!is.null(add.vars)) 
+    
+    dag = append(dag, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
   
   # Expand interactions to include interaction and main effects
   dag = lapply(dag, function(i) 
@@ -23,7 +23,16 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       
       lhs = paste(rownames(attr(terms(i), "factors"))[1])
       
-      rhs = paste(attr(terms(i), "term.labels"), collapse = " + ")
+      rhs = attr(terms(i), "term.labels")
+      
+      # Order so that interaction comes first
+      rhs = rhs[c(
+        rev(grep(paste(unlist(strsplit(rhs[grep("\\*|\\:", rhs)], "\\:")), collapse = "|"), rhs)),
+        grep(paste(unlist(strsplit(rhs[grep("\\*|\\:", rhs)], "\\:")), collapse = "|"), rhs, invert = TRUE)
+      )]
+        
+      # Collapse into formula
+      rhs = paste(rhs, collapse = " + ")
       
       # Insert placeholder for interaction symbol :
       rhs = gsub("\\:", "%%", rhs)
@@ -40,7 +49,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   body(DAG)[[2]] = substitute(f <- dag) 
 
   # Generate adjacency matrix
-  mat = DAG(dag)
+  mat = DAG(dag, order = TRUE)
   
   # If intercept only model, add response variable to adjacency matrix
   if(any(unlist(lapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i))))))) {
