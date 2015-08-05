@@ -16,6 +16,9 @@ Author: Jon Lefcheck <jslefche@vims.edu>
 
 Supported model classes include: `lm`, `glm`, `glm.nb`, `gls`, `pgls`, `lme`, `glmmPQL`, and `merModLmerTest`.
 
+## WARNINGS
+  The package is currently experiencing an issue with interactions! If you include interactions in your model, please please them FIRST in the model formula!
+
 ##Examples
 
 ###Load package

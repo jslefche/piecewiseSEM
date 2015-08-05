@@ -1,80 +1,60 @@
 sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
-  # Get DAG from model list
-  dag = lapply(modelList, function(i) 
+  # Get list of formula from model list
+  formula.list = lapply(modelList, function(i) 
     
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls"))) formula(i) else 
-      
-      if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) 
-        
-        nobars(formula(i))
     
-  )
-  
-  if(any(unlist(lapply(dag, is.null)))) stop("At least one model class not yet supported")
+        if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) nobars(formula(i))
+    
+    )
+      
+  if(any(unlist(lapply(formula.list, is.null)))) stop("At least one model class not yet supported")
   
   # If additional variables are present, add them to the basis set
   if(!is.null(add.vars)) 
     
-    dag = append(dag, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
-  
-  # Expand interactions to include interaction and main effects
-  dag = lapply(dag, function(i) 
-    
-    if(grepl("\\*|\\:", paste(format(formula(i)), collapse = ""))) {
-      
-      lhs = paste(rownames(attr(terms(i), "factors"))[1])
-      
-      rhs = attr(terms(i), "term.labels")
-      
-      # Collapse into formula
-      rhs = paste(rhs, collapse = " + ")
-      
-      # Insert placeholder for interaction symbol :
-      rhs = gsub("\\:", "%%", rhs)
-      
-      formula(paste(lhs, " ~ ", rhs))
-      
-    }
-    
-    else i
-    
-  )
-  
-  # Modify DAG() function from ggm package to accept a list
-  body(DAG)[[2]] = substitute(f <- dag) 
-  
+    formula.list = append(formula.list, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
+
+#   # Generate adjacency matrix
+#   body(DAG)[[2]] = substitute(f <- formula.list)
+#   
+#   amat = DAG(formula.list)
+#   
   # Generate adjacency matrix
-  mat = DAG(dag, order = TRUE)
+  amat = get.dag(formula.list)
   
   # If intercept only model, add response variable to adjacency matrix
   if(any(unlist(lapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i))))))) {
     
     # Isolate intercept only model(s)
     responses = sapply(modelList[which(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))],
-                       
-                       function(j) strsplit(paste(formula(j)), "~")[[2]]
-                       
+           
+           function(j) strsplit(paste(formula(j)), "~")[[2]]
+           
     )
     
-    mat = cbind(
+    amat = cbind(
       
-      rbind(mat, matrix(rep(0, dim(mat)[1]), nrow = 1, dimnames = list(responses))),
+      rbind(amat, matrix(rep(0, dim(amat)[1]), nrow = 1, dimnames = list(responses))),
       
-      matrix(rep(0, dim(mat)[1] + 1), ncol = 1, dimnames = list(NULL, responses))
+      matrix(rep(0, dim(amat)[1] + 1), ncol = 1, dimnames = list(NULL, responses))
       
     )
-    
+
   }
+  
+  # Generate basis set
+  # if(all(amat == 0) & all(dim(amat) == 1)) basis.set = NULL else basis.set = get.basis.set(amat)
   
   # Modify basiSet() function ggm to not sort the adjacency matrix
   body(basiSet)[[2]] = NULL
   
   # Generate basis set
-  if(all(mat == 0) & all(dim(mat) ==1 )) basis.set = NULL else basis.set = basiSet(mat)
+  if(all(amat == 0) & all(dim(amat) == 1)) basis.set = NULL else basis.set = basiSet(amat)
   
   # Replace placeholder for interaction symbol with :
-  basis.set = lapply(basis.set, function(i) gsub(paste("%%", collapse = ""), "\\:", i))
+  basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))
   
   # If correlated errors are present, remove them from the basis set
   if(!is.null(corr.errors)) {
@@ -93,12 +73,12 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
               
               grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) 
               
+              ) 
             ) 
           ) 
-        ) 
         
-      } ) )
-      
+        } ) )
+        
       if(any(inset == TRUE)) NULL else basis.set[[i]]  
       
     } )
@@ -115,7 +95,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
         
         if(any(int %in% i[2])) NULL else i 
         
-      } 
+        } 
       
       else i
       
