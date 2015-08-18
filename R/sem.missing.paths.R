@@ -1,7 +1,7 @@
 sem.missing.paths = function(
  
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, 
-  filter.exog = TRUE, adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
+  adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -9,7 +9,7 @@ sem.missing.paths = function(
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
 
   # Filter exogenous variables
-  if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
 
   # Add progress bar
   if(.progressBar == T & length(basis.set) > 0) 

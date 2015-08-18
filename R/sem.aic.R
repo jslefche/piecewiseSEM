@@ -1,18 +1,17 @@
 sem.aic = function(
   
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, 
-  filter.exog = TRUE, adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, 
-  .progressBar = TRUE
+  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
   
-  if(filter.exog == T) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
   
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     
-    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, filter.exog,
+    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars,
     adjust.p, basis.set, model.control, .progressBar
     
   )
@@ -20,7 +19,7 @@ sem.aic = function(
   fisher.c = sem.fisher.c(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
-    filter.exog, adjust.p, basis.set, pvalues.df, model.control, .progressBar
+    adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
     

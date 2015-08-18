@@ -1,8 +1,7 @@
 sem.fit = function(
   
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, 
-  filter.exog = TRUE, adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, 
-  .progressBar = TRUE
+  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
 
@@ -20,12 +19,12 @@ sem.fit = function(
   if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
   
   # Filter exogenous variables
-  if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
   
   # Conduct d-sep tests
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     
-    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, filter.exog,
+    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars,
     adjust.p, basis.set, model.control, .progressBar
     
   )
@@ -34,7 +33,7 @@ sem.fit = function(
   fisher.c = sem.fisher.c(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
-    filter.exog, adjust.p, basis.set, pvalues.df, model.control, .progressBar
+    adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
   
@@ -42,7 +41,7 @@ sem.fit = function(
   AIC.c = sem.aic(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
-    filter.exog, adjust.p, basis.set, pvalues.df, model.control, .progressBar
+    adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
   
