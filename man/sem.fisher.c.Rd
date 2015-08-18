@@ -12,7 +12,7 @@ Evaluates independence claims for a piecewise structural equation model (SEM), a
 
 \usage{
 sem.fisher.c(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
-  filter.exog, adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
+  adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
 }
 
 \arguments{
@@ -39,10 +39,6 @@ an optional variable that represents the highest level of a hierarchical dataset
 
 \item{top.level.vars}{
 an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
-}
-
-\item{filter.exog}{
-filters relationships between exogenous variables from the basis set. Default is \code{TRUE}.
 }
 
 \item{adjust.p}{
