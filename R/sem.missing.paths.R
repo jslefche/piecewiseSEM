@@ -12,12 +12,12 @@ sem.missing.paths = function(
   if(filter.exog == TRUE) basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
 
   # Add progress bar
-  if(.progressBar == T & length(basis.set) > 1) 
+  if(.progressBar == T & length(basis.set) > 0) 
     
     pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
   # Perform d-sep tests
-  if(length(basis.set) > 1) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
+  if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
     
     # Get basis model from which to build the d-sep test
     basis.mod = modelList[[match(basis.set[[i]][2], sapply(modelList, function(j) strsplit(paste(formula(j)), "~")[[2]]))]]
