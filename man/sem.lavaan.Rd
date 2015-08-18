@@ -61,30 +61,26 @@ Jon Lefcheck
 }
 
 \examples{
-
 # Load model packages
 library(lmerTest)
 library(nlme)
 
-# Load data from Shipley (2009)
-data(shipley2009) 
-
 # Create list of models 
 shipley2009.modlist = list(
-
-  lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
   
-  lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = shipley2009) 
+  lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  )
+  glmer(Live ~ Growth+(1|site)+(1|tree), 
+        family=binomial(link = "logit"), data = shipley2009) 
+  
+)
   
 # Get variance-covariance based SEM
 (lavaan.model = sem.lavaan(shipley2009.modlist, shipley2009))
@@ -114,5 +110,4 @@ shipley2013.modlist = list(
   
 # Get variance-covariance based SEM
 summary(sem.lavaan(shipley2013.modlist, shipley2013))
-
 }

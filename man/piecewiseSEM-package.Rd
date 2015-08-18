@@ -52,30 +52,26 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 }
 
 \examples{
-
 # Load model packages
 library(lmerTest)
 library(nlme)
 
-# Load data from Shipley (2009)
-data(shipley2009) 
-
 # Create list of models 
 shipley2009.modlist = list(
-
-  lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
   
-  lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = shipley2009) 
+  lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  )
+  glmer(Live ~ Growth+(1|site)+(1|tree), 
+        family=binomial(link = "logit"), data = shipley2009) 
+  
+)
   
 # Get goodness-of-fit and AIC
 sem.fit(shipley2009.modlist, shipley2009)
@@ -85,5 +81,4 @@ sem.coefs(shipley2009.modlist, shipley2009)
 
 # Run variance-covariance SEM (calls on package::lavaan)
 summary(sem.lavaan(shipley2009.modlist, shipley2009))
-
 }

@@ -64,7 +64,6 @@ Jon Lefcheck
 }
 
 \examples{
-
 # Create example data
 set.seed(1)
 
@@ -101,7 +100,7 @@ lmer.model = lmer(y ~ x1 + x2 + x3 + (1 | random), example.data)
 
 partial.resid(y ~ x1, lmer.model)
 
-###
+### SEM EXAMPLE
 
 # Load model package
 library(nlme)
@@ -126,5 +125,4 @@ resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "o
 
 # Also returns raw residuals values for plotting in other packages
 head(resids.df)
-
 }

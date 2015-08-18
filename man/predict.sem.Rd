@@ -59,49 +59,45 @@ Jon Lefcheck
 }
 
 \examples{
-
 # Load model packages
 library(lmerTest)
 library(nlme)
 
-# Load data from Shipley (2009)
-data(shipley2009) 
-
 # Create list of models 
 shipley2009.modlist = list(
-
-  lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
   
-  lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = shipley2009) 
+  lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  )
+  glmer(Live ~ Growth+(1|site)+(1|tree), 
+        family=binomial(link = "logit"), data = shipley2009) 
+  
+)
 
 # Create new data for predictions
 shipley2009.new = data.frame(
   
   lat = rnorm(length(shipley2009$lat), 
-    mean(shipley2009$lat, na.rm = T), 
-    sd(shipley2009$lat, na.rm = T)),
+    mean(shipley2009$lat, na.rm = TRUE), 
+    sd(shipley2009$lat, na.rm = TRUE)),
   
   DD = rnorm(length(shipley2009$DD), 
-    mean(shipley2009$DD, na.rm = T), 
-    sd(shipley2009$DD, na.rm = T)),
+    mean(shipley2009$DD, na.rm = TRUE), 
+    sd(shipley2009$DD, na.rm = TRUE)),
     
   Date = rnorm(length(shipley2009$Date), 
-    mean(shipley2009$Date, na.rm = T), 
-    sd(shipley2009$Date, na.rm = T)),
+    mean(shipley2009$Date, na.rm = TRUE), 
+    sd(shipley2009$Date, na.rm = TRUE)),
     
   Growth = rnorm(length(shipley2009$Growth), 
-    mean(shipley2009$Growth, na.rm = T), 
-    sd(shipley2009$Growth, na.rm = T))
+    mean(shipley2009$Growth, na.rm = TRUE), 
+    sd(shipley2009$Growth, na.rm = TRUE))
   
 )
 
@@ -151,5 +147,4 @@ shipley2013.new = data.frame(
 
 # Generate predictions 
 head(predict.sem(shipley2013.modlist, shipley2013.new))
-
 }
