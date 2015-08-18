@@ -1,8 +1,15 @@
-sem.model.fits2 = function(modelList) {
+sem.model.fits = function(modelList) {
 
   # If object is just an individual model, convert to a list
-  if(class(modelList) != "list") modelList = list(modelList)
+  if(all(class(modelList) != "list")) modelList = list(modelList)
 
+  # Check to see if classes are supported
+  if(!all(sapply(modelList, function(i) 
+    
+    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) 
+    
+  ) ) ) warning("Pseudo-R2s are not yet supported for some model classes!")
+  
   # Apply functions across all models in the model list
   do.call(rbind, lapply(modelList, function(model) {
     
@@ -17,20 +24,22 @@ sem.model.fits2 = function(modelList) {
     )
   
     # Get R2 for class == lm
-    if(any(class(model) == "lm")) ret$Marginal = summary(model)$r.squared
+    if(all(class(model) == "lm")) ret$Marginal = summary(model)$r.squared
       
     # Get R2 for class == glm
     if(any(class(model) %in% c("glm", "gls", "pgls"))) {
       
       # Classify model family
-      if(class(model) == "glm") ret$Family = summary(model)$family[[1]]
+      if("glm" %in% class(model)) ret$Family = summary(model)$family[[1]]
       
       # Classify link function
-      if(class(model) == "glm")ret$Link = summary(model)$family[[2]]
+      if("glm" %in% class(model)) ret$Link = summary(model)$family[[2]]
       
       # Calculate McFadden R2 values
       ret$Marginal = 1 - (as.numeric(logLik(model)) / as.numeric(logLik(update(model, ". ~ 1"))))
-                            
+
+      ret$Conditional = NA
+                    
       # Calculate model AIC
       ret$AIC = AIC(model)
       
@@ -218,127 +227,118 @@ sem.model.fits2 = function(modelList) {
       
     }
     
-    # Get R2 for class == "glmmPQL"
-    if(any(class(model) == "glmmPQL")) {
-      
-      # Classify model family
-      ret$Family = summary(model)$family[1]
-      
-      # Classify link function
-      ret$Link = summary(model)$family[2]
-      
-      # Get design matrix of fixed effects from model
-      Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
-      
-      # Get variance of fixed effects by multiplying coefficients by design matrix
-      varF = var(as.vector(fixef(model) %*% t(Fmat)))
-      
-      
-      
-      
-      
-      # Get random effects design matrix
-      rand.mat = ranef(model)
-      
-      # If not in a list, convert and name levels
-      if(!any(class(rand.mat) %in% "list")) {
-        
-        rand.mat = list(rand.mat)
-        
-        names(rand.mat) = attr(unclass(getVarCov(model)), "group.levels")
-        
-      }
-      
-      # Separate observation variance from variance of random effects
-      n.obs = names(rand.mat)[!sapply(rand.mat, nrow) == nrow(Fmat)]
-      
-      Sigma = if(length(n.obs) == 1) as.numeric(VarCorr(model)[1]) else
-        
-        as.numeric(VarCorr(model)[match(paste(n.obs, "="), rownames(VarCorr(model))) + 1, 1])
-      
-      names(Sigma) = if(length(n.obs) == 1) rownames(VarCorr(model))[1] else 
-        
-        rownames(VarCorr(model))[which(rownames(VarCorr(model)) %in% paste(n.obs, "=")) + 1]
-
-      # Get variance of random effects, excluding observation variance
-      varRand = sum(
-        
-        sapply(Sigma, function(Sigma1) { 
-          
-          X = model.matrix(model)  
-          
-          Z = Fmat[, names(Sigma1), drop = FALSE]
-          
-          sum(diag(Z %*% Sigma1 %*% t(Z))) / nrow(Fmat)
-          
-        } )
-        
-      )
-      
-      
-      
-      
-      
-  
-      # Get overdispersion variance
-      obs = names(rand.mat)[sapply(rand.mat, nrow) == nrow(Fmat)]
-
-      if(length(obs) == 0) varDisp = 0 else {
-        
-        varDisp =  sum(
-          
-          sapply(VarCorr(model)[obs], function(Sigma) {
-            
-            Z = Fmat[, rownames(Sigma), drop = FALSE]
-            
-            sum(diag(Z %*% Sigma %*% t(Z))) / nrow(Fmat)
-            
-          } )
-          
-        )
-        
-      }
-      
-      # Get distribution-specific variance
-      if(ret$Family == "binomial") {
-        
-        if(ret$Link == "logit") varDist = (pi^2)/3
-        
-        else if(ret$Link == "probit") varDist = 1 else {
-
-          warning(paste("Model link '", summary(model)$family[2], "' is not yet supported for the ", summary(model)$family[1], "distribution"))
-          
-          varDist = NA
-          
-        }
-        
-      } else if(ret$Family == "poisson") {
-        
-        # Generate null model (intercept and random effects only, no fixed effects)
-        null.model = update(model, fixed = ". ~ 1")
-        
-        # Get the fixed effects of the null model
-        null.fixef = as.numeric(fixef(null.model))
-        
-        if(ret$Link == "log") varDist = log(1 + 1/exp(null.fixef))
-        
-      } else if(ret$Link == "sqrt") varDist = 0.25 else {
-        
-        warning(paste("Model link '", summary(model)$family[2], "' is not yet supported for the ", summary(model)$family[1], "distribution"))
-        
-        varDist = NA
-        
-      }
-      
-      # Calculate R2 values
-      ret$Marginal = varF / (varF + varRand + varDisp + varDist)
-      
-      ret$Conditional = (varF + varRand) / (varF + varRand + varDisp + varDist)
-      
-      # Calculate model AIC
-      ret$AIC = NA
-      
-    }
+#     # Get R2 for class == "glmmPQL"
+#     if(any(class(model) == "glmmPQL")) {
+#       
+#       # Classify model family
+#       ret$Family = summary(model)$family[1]
+#       
+#       # Classify link function
+#       ret$Link = summary(model)$family[2]
+#       
+#       # Get design matrix of fixed effects from model
+#       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
+#       
+#       # Get variance of fixed effects by multiplying coefficients by design matrix
+#       varF = var(as.vector(fixef(model) %*% t(Fmat)))
+#       
+#       # Get random effects design matrix
+#       rand.mat = ranef(model)
+#       
+#       # If not in a list, convert and name levels
+#       if(!any(class(rand.mat) %in% "list")) {
+#         
+#         rand.mat = list(rand.mat)
+#         
+#         names(rand.mat) = attr(unclass(getVarCov(model)), "group.levels")
+#         
+#       }
+#       
+#       # Separate observation variance from variance of random effects
+#       n.obs = names(rand.mat)[!sapply(rand.mat, nrow) == nrow(Fmat)]
+#       
+#       Sigma = if(length(n.obs) == 1) as.numeric(VarCorr(model)[1]) else
+#         
+#         as.numeric(VarCorr(model)[match(paste(n.obs, "="), rownames(VarCorr(model))) + 1, 1])
+#       
+#       names(Sigma) = if(length(n.obs) == 1) rownames(VarCorr(model))[1] else 
+#         
+#         rownames(VarCorr(model))[which(rownames(VarCorr(model)) %in% paste(n.obs, "=")) + 1]
+# 
+#       # Get variance of random effects, excluding observation variance
+#       varRand = sum(
+#         
+#         sapply(Sigma, function(Sigma1) { 
+#           
+#           X = model.matrix(model)  
+#           
+#           Z = Fmat[, names(Sigma1), drop = FALSE]
+#           
+#           sum(diag(Z %*% Sigma1 %*% t(Z))) / nrow(Fmat)
+#           
+#         } )
+#         
+#       )
+#     
+#       # Get overdispersion variance
+#       obs = names(rand.mat)[sapply(rand.mat, nrow) == nrow(Fmat)]
+# 
+#       if(length(obs) == 0) varDisp = 0 else {
+#         
+#         varDisp =  sum(
+#           
+#           sapply(VarCorr(model)[obs], function(Sigma) {
+#             
+#             Z = Fmat[, rownames(Sigma), drop = FALSE]
+#             
+#             sum(diag(Z %*% Sigma %*% t(Z))) / nrow(Fmat)
+#             
+#           } )
+#           
+#         )
+#         
+#       }
+#       
+#       # Get distribution-specific variance
+#       if(ret$Family == "binomial") {
+#         
+#         if(ret$Link == "logit") varDist = (pi^2)/3
+#         
+#         else if(ret$Link == "probit") varDist = 1 else {
+# 
+#           warning(paste("Model link '", summary(model)$family[2], "' is not yet supported for the ", summary(model)$family[1], "distribution"))
+#           
+#           varDist = NA
+#           
+#         }
+#         
+#       } else if(ret$Family == "poisson") {
+#         
+#         # Generate null model (intercept and random effects only, no fixed effects)
+#         null.model = update(model, fixed = ". ~ 1")
+#         
+#         # Get the fixed effects of the null model
+#         null.fixef = as.numeric(fixef(null.model))
+#         
+#         if(ret$Link == "log") varDist = log(1 + 1/exp(null.fixef))
+#         
+#       } else if(ret$Link == "sqrt") varDist = 0.25 else {
+#         
+#         warning(paste("Model link '", summary(model)$family[2], "' is not yet supported for the ", summary(model)$family[1], "distribution"))
+#         
+#         varDist = NA
+#         
+#       }
+#       
+#       # Calculate R2 values
+#       ret$Marginal = varF / (varF + varRand + varDisp + varDist)
+#       
+#       ret$Conditional = (varF + varRand) / (varF + varRand + varDisp + varDist)
+#       
+#       # Calculate model AIC
+#       ret$AIC = NA
+#       
+#     }
     
     # Return results
     return(ret)

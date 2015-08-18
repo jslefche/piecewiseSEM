@@ -48,32 +48,63 @@ This function sources the \code{rsquared.glmm} function found here: https://gith
 }
 
 \examples{
+# Load data from Shipley (2009)
+data(shipley2009) 
+
+# Get R2 for linear model
+lm.mod = lm(DD ~ lat, data = shipley2009)
+sem.model.fits(lm.mod)
+
+# Get R2 for generalized linear model
+glm.mod = glm(Live ~ Growth, family = "binomial", data = shipley2009)
+sem.model.fits(glm.mod)
+
+# Get R2 for generalized least-squares model
+gls.mod = gls(DD ~ lat, na.action = na.omit, data = shipley2009)
+sem.model.fits(gls.mod)
+
+# Get R2 for linear mixed effects model (lme4)
+lmer.mod = lmer(DD ~ lat + (1|site/tree), data = shipley2009)
+sem.model.fits(lmer.mod)
+
+# Get R2 for linear mixed effects model (nlme)
+lme.mod = lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, data = shipley2009)
+sem.model.fits(lme.mod)
+
+# Get R2 for generalized linear mixed effects model (lme4)
+glmer.mod = glmer(Live ~ Growth + (1|site/tree), family = "binomial", data = shipley2009)
+sem.model.fits(glmer.mod)
+
+### NOT RUN ###
+# library(MASS)
+# Get R2 for generalized linear mixed effects model (quasi-likelihood) (MASS)
+# PQL.mod = glmmPQL(Live ~ Growth, random = ~1|site/tree, family = "binomial", na.action = na.omit, data = shipley2009)
+# sem.model.fits(PQL.mod)
+### NOT RUN ###
+
+### SEM EXAMPLE ###
 
 # Load model packages
 library(lmerTest)
 library(nlme)
 
-# Load data from Shipley (2009)
-data(shipley2009) 
-
 # Create list of models 
 shipley2009.modlist = list(
-
-  lme(DD~lat, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
   
-  lme(Date~DD, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  lme(Growth~Date, random = ~1|site/tree, na.action = na.omit, 
-  data = shipley2009),
+  lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  glmer(Live~Growth+(1|site)+(1|tree), 
-  family=binomial(link = "logit"), data = shipley2009) 
+  lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+      data = shipley2009),
   
-  )
+  glmer(Live ~ Growth+(1|site)+(1|tree), 
+        family=binomial(link = "logit"), data = shipley2009) 
+  
+)
 
 # Return model fit statistics
 sem.model.fits(shipley2009.modlist)
-
 }
