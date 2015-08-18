@@ -46,6 +46,9 @@ sem.fit = function(
     
   )
   
+  # Round values in output table
+  pvalues.df[, c(2:3, 5:6)] = apply(pvalues.df[, c(2:3, 5:6)], 2, function(x) round(x, 4) )
+  
   # Return d-sep tests, Fisher's C, and AIC values in a list
   l = list(pvalues.df, fisher.c, AIC.c)
   

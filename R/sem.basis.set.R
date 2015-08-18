@@ -15,15 +15,10 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   if(!is.null(add.vars)) 
     
     formula.list = append(formula.list, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
-
-#   # Generate adjacency matrix
-#   body(DAG)[[2]] = substitute(f <- formula.list)
-#   
-#   amat = DAG(formula.list)
-#   
+  
   # Generate adjacency matrix
   amat = get.dag(formula.list)
-  
+
   # If intercept only model, add response variable to adjacency matrix
   if(any(unlist(lapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i))))))) {
     
@@ -45,13 +40,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   }
   
   # Generate basis set
-  # if(all(amat == 0) & all(dim(amat) == 1)) basis.set = NULL else basis.set = get.basis.set(amat)
-  
-  # Modify basiSet() function ggm to not sort the adjacency matrix
-  body(basiSet)[[2]] = NULL
-  
-  # Generate basis set
-  if(all(amat == 0) & all(dim(amat) == 1)) basis.set = NULL else basis.set = basiSet(amat)
+  if(all(amat == 0) & all(dim(amat) == 1)) basis.set = NULL else basis.set = get.basis.set(amat)
   
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))

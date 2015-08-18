@@ -7,7 +7,7 @@ Recovers random structure from a mixed model
 }
 
 \description{
-A helper function for \code{get.missing.paths} and \code{sem.partial.resid} that retrives (and modifies) the proper random structure for a mixed model to be passed to \code{update}.
+A helper function for \code{sem.missing.paths} and \code{sem.partial.resid} that retrives (and modifies) the proper random structure for a mixed model to be passed to \code{update}.
 }
 
 \usage{

@@ -48,11 +48,8 @@ sem.missing.paths = function(
           update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = formula(random.formula), control = control, data = data) else
             
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
+      
     )
-    
-#     if(class(basis.mod.new) == "lmerMod") basis.mod.new = as(basis.mod.new, "merModLmerTest") 
-#     
-#     assign("basis.mod.new", basis.mod.new, envir=globalenv())
     
     # Stop if lmerTest does not return p-values
     if(class(basis.mod.new) == "lmerMod") {
@@ -114,7 +111,7 @@ sem.missing.paths = function(
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
     # Bind in d-sep metadata
-    cbind(missing.path = paste(basis.set[[i]][2], "<-", paste(basis.set[[i]][1], collapse = "+")), ret)
+    data.frame(missing.path = paste(basis.set[[i]][2], " ~ ", rhs, sep = ""), ret)
     
   } ) ) else
     
@@ -122,9 +119,6 @@ sem.missing.paths = function(
   
   # Set degrees of freedom as numeric
   pvalues.df$DF = as.numeric(pvalues.df$DF)
-  
-  # Round numeric values
-  pvalues.df[, 4:5] = apply(pvalues.df[, 4:5], 2, function(x) round(x, 3) )
   
   if(!is.null(pb)) close(pb)  
   

@@ -44,7 +44,8 @@ get.dag = function(formulaList) {
   
   dimnames(amat) = list(vars, vars)
   
-  if(!isAcyclic(amat)) warning("The graph contains directed cycles!")
+ # Determine if graph is acylic
+  
   
   return(amat)
   

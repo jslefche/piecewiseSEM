@@ -7,7 +7,7 @@ Formats model control arguments
 }
 
 \description{
-A helper function for \code{get.missing.paths} and \code{sem.partial.resid} that formats a \code{list} of model control arguments to pass to \code{update}.
+A helper function for \code{sem.missing.paths} and \code{sem.partial.resid} that formats a \code{list} of model control arguments to pass to \code{update}.
 }
 
 \usage{

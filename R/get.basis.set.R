@@ -9,25 +9,35 @@ get.basis.set = function(amat) {
         
         # Get directed relationship
         dsep = unlist(dimnames(amat[j, i, drop = FALSE]))
+    
+        # Determine if direct relationship is cylical
+        resp = names(amat[, dsep[1]][amat[, dsep[1]] > 0])
         
+        A = FALSE
         
-        
-        
-        # Determine if direct relationship is cylic
-        if(all(rowSums(amat[, dsep, drop = FALSE]) > 0)) NULL else {
-        
+        while(A == FALSE) {
+
+          nm = names(amat[, resp[length(resp)]][amat[, resp[length(resp)]] > 0])
           
+          if(length(nm) ==0) A = TRUE else resp = c(resp, nm)
           
+        }
           
+        # If relationship is cyclical then return NULL
+        if(any(resp %in% dsep[-1])) NULL else {
           
           # Get vector of conditional variables
-          cond.var = rownames(amat[, i, drop = FALSE])[which(amat[, i, drop= FALSE] == 1)]
-          
+          cond.var = c(
+            rownames(amat)[which(amat[, dsep[1], drop = FALSE] == 1)],
+            rownames(amat)[which(amat[, dsep[2], drop = FALSE] == 1)]
+          )
+       
+          # Return full independence claim
           c(
-            unlist(dimnames(amat[j, i, drop = FALSE])),
+            dsep,
             cond.var[!cond.var %in% rownames(amat[j, , drop = FALSE])]
           )
-          
+            
         }
         
       }
