@@ -6,7 +6,7 @@ sem.model.fits = function(modelList) {
   # Check to see if classes are supported
   if(!all(sapply(modelList, function(i) 
     
-    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) 
+    all(class(i) %in% c("lm", "glm", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod")) 
     
   ) ) ) warning("Pseudo-R2s are not yet supported for some model classes!")
   
