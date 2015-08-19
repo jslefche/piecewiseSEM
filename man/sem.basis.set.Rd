@@ -61,6 +61,9 @@ Unlike the functions \code{DAG} and \code{basiSet} in the \code{ggm} package, th
 }
 
 \examples{
+# Load example data
+data(shipley2009)
+
 # Load model packages
 library(lmerTest)
 library(nlme)

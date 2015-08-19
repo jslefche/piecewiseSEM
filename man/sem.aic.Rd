@@ -87,6 +87,9 @@ Jon Lefcheck
 }
 
 \examples{
+# Load example data
+data(shipley2009)
+
 # Load model packages
 library(lmerTest)
 library(nlme)
