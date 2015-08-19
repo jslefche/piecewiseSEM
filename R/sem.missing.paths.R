@@ -105,10 +105,11 @@ sem.missing.paths = function(
         ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps))) } 
       
     }
-    
-    # rm(basis.mod.new)
-    
+  
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
+    
+    # Modify rhs if number of characters exceeds 20
+    if(nchar(rhs) > 30) rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
     
     # Bind in d-sep metadata
     data.frame(missing.path = paste(basis.set[[i]][2], " ~ ", rhs, sep = ""), ret)
@@ -119,6 +120,9 @@ sem.missing.paths = function(
   
   # Set degrees of freedom as numeric
   pvalues.df$DF = as.numeric(pvalues.df$DF)
+  
+  # Output warning if missing.paths contains ...
+  if(any(grepl("\\.\\.\\.", pvalues.df$missing.path))) warning("Conditional variables have been omitted from output table for clarity")
   
   if(!is.null(pb)) close(pb)  
   
