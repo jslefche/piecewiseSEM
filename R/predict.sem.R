@@ -1,4 +1,4 @@
-predict.sem = function(modelList, newdata, se.fit = FALSE, ...) {
+predict.sem = function(modelList, newdata, sefit = FALSE, ...) {
   
   # Send newdata to each model in the model list and return output as a data.frame 
   predict.df = do.call(cbind, lapply(modelList, function(i) {
@@ -6,7 +6,7 @@ predict.sem = function(modelList, newdata, se.fit = FALSE, ...) {
     # Get model predictions
     if(any(class(i) %in% c("lm", "glm", "neg.bin", "gls", "pgls")) )
        
-       predict.df = predict(i, newdata, se.fit = se.fit, ...) else
+       predict.df = predict(i, newdata, se.fit = sefit, ...) else
          
          if(any(class(i) %in% c("lme", "glmmPQL"))) 
            
@@ -18,7 +18,7 @@ predict.sem = function(modelList, newdata, se.fit = FALSE, ...) {
     
              
   # If se.fit = TRUE for mixed models, calculate standard errors based on fixed-effects only
-  if(se.fit == TRUE & any(class(i) %in% c("lme", "glmmPQL", "lmerMod", "glmerMod", "merModTest"))) {
+  if(sefit == TRUE & any(class(i) %in% c("lme", "glmmPQL", "lmerMod", "glmerMod", "merModTest"))) {
     
     # Bind in predictions to new data
     newdata = data.frame(newdata, predict.df)
@@ -48,7 +48,8 @@ predict.sem = function(modelList, newdata, se.fit = FALSE, ...) {
   if(class(predict.df) == "list") predict.df = do.call(data.frame, predict.df[1:2]) else
     
     predict.df = data.frame(predict.df)
-      # Name columns
+  
+  # Name columns
   if(ncol(predict.df) == 1)
     
     colnames(predict.df) = paste(all.vars(formula(i))[1], "fit", sep = ".") else 

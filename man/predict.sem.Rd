@@ -24,7 +24,7 @@ a single model or list of regressions representing the structural equation model
 a \code{data.frame} of predictors used to generate the model predictions.
 }
 
-\item{se.fit}{
+\item{sefit}{
 whether standard errors of predictions should be returned. Default is \code{FALSE}.
 }
 
@@ -37,7 +37,7 @@ additional arguments passed to \code{predict}.
 \details{
 Mixed model predictions includes only fixed effects and *not* random effects (default is \code{level = 0} or \code{re.form = 0}). This can be changed by passing additional arguments from \code{predict.lme} and \code{predict.merMod}.
 
-If \code{se.fit = TRUE} for mixed models, then standard errors on predictions are estimated using fixed effects *only*. See explanation here: http://glmm.wikidot.com/faq.
+If \code{sefit = TRUE} for mixed models, then standard errors on predictions are estimated using fixed effects *only*. See explanation here: http://glmm.wikidot.com/faq.
 }
 
 \value{
@@ -108,7 +108,7 @@ shipley2009.new = data.frame(
 head(predict.sem(shipley2009.modlist, shipley2009.new))
 
 # Generate predictions with standard errors (based on fixed effects only)
-head(predict.sem(shipley2009.modlist, shipley2009.new, se.fit = TRUE))
+head(predict.sem(shipley2009.modlist, shipley2009.new, sefit = TRUE))
 
 ###
 
