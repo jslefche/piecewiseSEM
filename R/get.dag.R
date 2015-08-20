@@ -42,10 +42,14 @@ get.dag = function(formulaList) {
     
   } ) )
   
+  # Ensure diagonal is zero
+  diag(amat) = 0
+  
+  # Name rows and columns
   dimnames(amat) = list(vars, vars)
   
- # Determine if graph is acylic
-  
+  # Determine if graph is acylic
+  if(!isAcyclic(amat)) warning("The graph contains directed cycles!")
   
   return(amat)
   

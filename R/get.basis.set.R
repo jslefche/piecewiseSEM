@@ -19,7 +19,7 @@ get.basis.set = function(amat) {
 
           nm = names(amat[, resp[length(resp)]][amat[, resp[length(resp)]] > 0])
           
-          if(length(nm) ==0) A = TRUE else resp = c(resp, nm)
+          if(length(nm) == 0) A = TRUE else resp = c(resp, nm)
           
         }
           
