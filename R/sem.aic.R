@@ -9,12 +9,12 @@ sem.aic = function(
   
   basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
   
-  if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
+  if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars,
     adjust.p, basis.set, model.control, .progressBar
     
-  )
+  ) )
   
   fisher.c = sem.fisher.c(
     

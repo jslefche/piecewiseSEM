@@ -9,12 +9,12 @@ sem.fisher.c = function(
     
   basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
 
-  if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
+  if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
     
     modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
     adjust.p, basis.set, model.control, .progressBar
     
-    )
+    ) )
   
   # Convert any p-values to a very small number as log(0) == -Inf
   if(length(basis.set) > 0 & any(pvalues.df$p.value == 0)) pvalues.df[pvalues.df$p.value == 0, "p.value"] = 2e-16
