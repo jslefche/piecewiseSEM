@@ -52,7 +52,7 @@ sem.model.fits = function(modelList) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
    
       # Separate observation variance from variance of random effects
-      n.obs = names(unlist(lapply(ranef(model), nrow))[!unlist(lapply(ranef(model), nrow)) == nrow(Fmat)])
+      n.obs = names(unlist(lapply(ranef(model), nrow))[!unlist(lapply(ranef(model), nrow)) == nrow(model@pp$X)])
       
       # Get variance of random effects 
       varRand = sum(
@@ -148,7 +148,7 @@ sem.model.fits = function(modelList) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Separate observation variance from variance of random effects
-      n.obs = names(unlist(lapply(ranef(model), nrow))[!unlist(lapply(ranef(model), nrow)) == nrow(Fmat)])
+      n.obs = names(unlist(lapply(ranef(model), nrow))[!unlist(lapply(ranef(model), nrow)) == nrow(model@pp$X)])
       
       # Get variance of random effects 
       varRand = sum(
@@ -166,7 +166,7 @@ sem.model.fits = function(modelList) {
       )
       
       # Get overdispersion variance
-      obs = names(unlist(lapply(ranef(model), nrow))[unlist(lapply(ranef(model), nrow)) == nrow(Fmat)])
+      obs = names(unlist(lapply(ranef(model), nrow))[unlist(lapply(ranef(model), nrow)) == nrow(model@pp$X)])
       
       if(length(obs) == 0) varDisp = 0 else {
         
