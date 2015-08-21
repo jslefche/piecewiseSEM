@@ -4,7 +4,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   
   names(modelList) = NULL
 
-  if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range.'")
+  if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range'")
   
   # Scale variables, if indicated
   if(standardize != "none") {
@@ -16,9 +16,9 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
       
       if(grepl("Error", err[1]) | grepl("gaussian", err[1]))
         
-        rownames(attr(terms(i), "factors")) else {
+        all.vars(formula(i)) else {
           
-          print(
+          warning(
             paste("Reponse '", formula(i)[2], "' is not modeled to a gaussian distribution: keeping response on original scale")
           )
           
