@@ -52,7 +52,7 @@ sem.missing.paths = function(
     )
     
     # Stop if lmerTest does not return p-values
-    if(class(basis.mod.new) == "lmerMod") {
+    if("lmerMod" %in% class(basis.mod.new)) {
       
       basis.mod.new = as(basis.mod.new, "merModLmerTest") 
       

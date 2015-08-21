@@ -2,7 +2,7 @@ get.model.control = function(model, model.control) {
   
   control.classes = lapply(model.control, function(i) gsub("(.*)Control", "\\1", class(i))[1] )
   
-  model.class = ifelse(class(model) == "merModLmerTest", "lmerMod", class(model))
+  model.class = ifelse("merModLmerTest" %in% class(model), "lmerMod", class(model))
   
   # Match model control list with appropriate model class for basis model
   if(is.null(model.control)) {
@@ -11,9 +11,9 @@ get.model.control = function(model, model.control) {
       
       if(any(class(model) %in% "gls")) glsControl() else
       
-        if(class(model) %in% c("lme", "glmmPQL")) lmeControl() else 
+        if(any(class(model) %in% c("lme", "glmmPQL"))) lmeControl() else 
         
-          if(class(model) %in% c("lmerMod", "merModLmerTest")) lmerControl() else
+          if(any(class(model) %in% c("lmerMod", "merModLmerTest"))) lmerControl() else
             
             if(class(model) %in% c("glmerMod")) glmerControl()
           
@@ -31,7 +31,7 @@ get.model.control = function(model, model.control) {
               
               model.control[[which(sapply(model.control, length) == 13)]] else
                 
-                if(class(model) %in% c("lme", "glmmPQL"))
+                if(any(class(model) %in% c("lme", "glmmPQL")))
                   
                   model.control[[which(sapply(model.control, length) == 15)]]
             
