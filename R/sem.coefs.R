@@ -9,6 +9,11 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Scale variables, if indicated
   if(standardize != "none") {
     
+    # Remove variables that are transformed
+    if(any(sapply(modelList, function(i) grepl("log|sqrt", deparse(formula(i))))))
+      
+      stop("Some variables are transformed in the formula and may return invalid values if scaled then transformed again.\n Please transform outside of the formula!")
+    
     # Get variables to scale, ignoring variables that are modeled to non-normal distributions
     vars.to.scale = unlist(lapply(modelList, function(i) {
      
@@ -35,7 +40,9 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
     vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
     
     # Scale those variables by mean and SD, or by range
-    data[, vars.to.scale] = apply(data[, vars.to.scale], 2, function(x) 
+    newdata = data
+    
+    newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) 
       
       if(standardize == "scale") scale(x) else
         
@@ -48,7 +55,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Return coefficients
   ret = do.call(rbind, lapply(modelList, function(i) {
     
-    if(standardize != "none") i = update(i, data = data)
+    if(standardize != "none") i = update(i, data = newdata)
     
     # Extract coefficients and return in a data.frame
     if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod"))) {
