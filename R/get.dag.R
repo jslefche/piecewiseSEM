@@ -34,7 +34,7 @@ get.dag = function(formulaList) {
   amat = do.call(cbind, lapply(vars, function(i) {
  
     # Isolate variable from formula list
-    form = formulaList[sapply(formulaList, function(j) all.vars(j)[1] == i)]
+    form = formulaList[sapply(formulaList, function(j) rownames(attr(terms(j), "factors"))[1] == i)]
     
     if(length(form) == 0) rep(0, length(vars)) else 
       
