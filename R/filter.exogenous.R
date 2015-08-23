@@ -21,7 +21,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   )
   
   # Get vector of response variables
-  response.vars = unlist(
+  response.vars = unique(unlist(
     
     lapply(modelList, function(i)
     
@@ -29,7 +29,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
       
             rownames(attr(terms(i), "factors"))[1]
     )
-  )
+  ) )
   
   # Get vector of variables that appear only as predictors and never as responses
   filter.vars = pred.vars[!pred.vars %in% response.vars]

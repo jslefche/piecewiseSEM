@@ -5,7 +5,7 @@ get.basis.set = function(amat) {
     lapply(1:nrow(amat), function(j) {
       
       # If any relationship is directional or the variable predicts itself, return NULL
-      if(amat[j, i] != 0 | amat[i, j] != 0 | i == j) NULL else {
+      if(amat[j, i] != 0 | amat[i, j] != 0 | i == j | sum(amat[j, ]) == 0) NULL else {
         
         # Get directed relationship
         dsep = unlist(dimnames(amat[j, i, drop = FALSE]))
