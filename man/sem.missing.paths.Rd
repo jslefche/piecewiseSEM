@@ -66,7 +66,7 @@ Models are constructed based on how the variables are treated as in the model li
 }
 
 \value{
-Returns a \code{data.frame} where the first column is the independence claim, and the second through sixth columns the model estimates corresponding to the response variable in the independence claim.
+Returns a \code{data.frame} where the first column is the independence claim (with the first variable being the variable of interest, followed by the conditional variables, unless truncated), and the second through sixth columns the model estimates corresponding to the response variable in the independence claim.
 }
 
 \references{
