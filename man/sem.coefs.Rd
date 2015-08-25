@@ -25,7 +25,7 @@ a \code{data.frame} used to construct the structured equations.
 }
 
   \item{standardize}{
-species the type of standardization to perform: \code{"none"}, \code{"scale"}, \code{"range"}.
+specifies the type of standardization to perform: \code{"none"}, \code{"scale"}, \code{"range"}.
 }
 
   \item{corr.errors}{
