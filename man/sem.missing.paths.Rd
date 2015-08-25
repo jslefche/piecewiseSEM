@@ -25,6 +25,10 @@ a \code{list} of regressions representing the structural equation model.
 a \code{data.frame} used to construct the structured equations.
 }
 
+\item{conditional}{
+whether conditional variables should be shown in the independence claim (unless the formula is fewer than 30 characters). Default is \code{FALSE}.
+}
+
   \item{corr.errors}{
 a vector of variables with correlated errors (separated by "~~").
 }

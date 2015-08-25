@@ -1,7 +1,7 @@
 sem.missing.paths = function(
  
-  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, 
-  adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
+  modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, 
+  top.level.vars = NULL, adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -109,7 +109,7 @@ sem.missing.paths = function(
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
     # Modify rhs if number of characters exceeds 20
-    if(nchar(rhs) > 30) rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
+    if(conditional == FALSE) if(nchar(rhs) > 30) rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
     
     # Bind in d-sep metadata
     data.frame(missing.path = paste(basis.set[[i]][2], " ~ ", rhs, sep = ""), ret)
