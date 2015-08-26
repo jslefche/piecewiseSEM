@@ -9,10 +9,10 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Scale variables, if indicated
   if(standardize != "none") {
     
-#     # Remove variables that are transformed
-#     if(any(unlist(lapply(modelList, function(i) grepl("log\\(|log10\\(|sqrt\\(", deparse(formula(i)))))))
-#       
-#       stop("Some variables are transformed in the formula and may return invalid values if scaled then transformed again.\n Please transform outside of the formula!")
+    # Remove variables that are transformed
+    if(any(unlist(lapply(modelList, function(i) grepl("log\\(|log10\\(|sqrt\\(|I\\(", deparse(formula(i)))))))
+      
+      stop("Transformations detected in the formula! This may produce invalid scaled values\nStore transformations as new variables, and re-specify the models")
      
     # Get variables to scale, ignoring variables that are modeled to non-normal distributions
     vars.to.scale = unlist(lapply(modelList, function(i) {
