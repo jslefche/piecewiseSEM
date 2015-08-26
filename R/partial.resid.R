@@ -1,4 +1,4 @@
-partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = T, plotreg = T) {
+partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = TRUE, plotreg = TRUE) {
   
   if(any(class(modelList) != "list")) modelList = list(modelList)
   
@@ -10,7 +10,6 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
   x = gsub(" ", "", vars[2])
   
   # Extract model from modelList regressing the y variable
-  
   y.model = modelList[[which(sapply(modelList, function(i) all.vars(formula(i))[1]) == y)]]
   
   if(is.null(y.model)) 
@@ -78,12 +77,13 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
   
   )
 
-  # Extract residuals from models and bind into data.frame
-  y1 = data.frame(.id = 1:length(resid(y.nox.model)), resid(y.nox.model))
+  # Extract residuals from models
+  y1 = data.frame(.id = names(resid(y.nox.model)), resid(y.nox.model))
   
-  x1 = data.frame(.id = 1:length(resid(x.noy.model)), resid(x.noy.model))
+  x1 = data.frame(.id = names(resid(x.noy.model)), resid(x.noy.model))
   
-  resids.data = merge(y1, x1, by = ".id")[, -1]
+  # Merge residuals and store in a data.frame
+  resids.data = merge(y1, x1, by = ".id", all = TRUE)[, -1]
   
   colnames(resids.data) = gsub(" ", "", c(y, x))
     
