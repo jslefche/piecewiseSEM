@@ -88,7 +88,7 @@ shipley2009.modlist = list(
 # Get variance-covariance based SEM
 (lavaan.model = sem.lavaan(shipley2009.modlist, shipley2009))
 
-summary(lavaan.model)
+lavaan::summary(lavaan.model)
 
 ### 
 
@@ -112,5 +112,5 @@ shipley2013.modlist = list(
   )
   
 # Get variance-covariance based SEM
-summary(sem.lavaan(shipley2013.modlist, shipley2013))
+lavaan::summary(sem.lavaan(shipley2013.modlist, shipley2013))
 }
