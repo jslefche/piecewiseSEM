@@ -11,8 +11,8 @@ sem.fisher.c = function(
 
   if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
     
-    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
-    adjust.p, basis.set, model.control, .progressBar
+    modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars, 
+    top.level.vars, adjust.p, basis.set, model.control, .progressBar
     
     ) )
   
