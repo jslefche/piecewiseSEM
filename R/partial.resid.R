@@ -78,9 +78,22 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
   )
 
   # Extract residuals from models
-  y1 = data.frame(.id = names(resid(y.nox.model)), resid(y.nox.model))
+  if(any(class(y.nox.model) %in% c("lme", "glmmPQL"))) 
+    
+    y.resids = resid(y.nox.model, level = 0:1)[, "fixed"] else
+      
+      y.resids = resid(y.nox.model)
   
-  x1 = data.frame(.id = names(resid(x.noy.model)), resid(x.noy.model))
+  if(any(class(x.noy.model) %in% c("lme", "glmmPQL"))) 
+    
+    x.resids = resid(x.noy.model, level = 0:1)[, "fixed"] else
+      
+      x.resids = resid(x.noy.model)
+  
+  # Bind together in data.frame
+  y1 = data.frame(.id = names(y.resids), y.resids)
+  
+  x1 = data.frame(.id = names(x.resids), x.resids)
   
   # Merge residuals and store in a data.frame
   resids.data = merge(y1, x1, by = ".id", all = TRUE)[, -1]

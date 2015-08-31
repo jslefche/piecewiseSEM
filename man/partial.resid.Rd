@@ -70,37 +70,46 @@ set.seed(1)
 example.data = data.frame(
   y = rnorm(100, 0, 1),
   x1 = rnorm(100, 10, 50),
-  x2 = rnorm(100, 10, 50),
   random = letters[1:5]
 )
 
-example.data$x3 = example.data$x1 + runif(100, 0, 5)
+example.data$x2 = example.data$y + runif(100, 0, 5)
+
+example.data$x3 = example.data$x2 + runif(100, 0, 5)
 
 # Run regular linear model using lm()
 lm.model = lm(y ~ x1 + x2 + x3, example.data)
 
-partial.resid(y ~ x1, lm.model)
+partial.resid(y ~ x3, lm.model)
 
 # Run generalized least squared regression
 library(nlme)
 
 gls.model = gls(y ~ x1 + x2 + x3, example.data)
 
-partial.resid(y ~ x1, gls.model)
+partial.resid(y ~ x3, gls.model)
 
 # Run mixed effects model using lme()
 lme.model = lme(y ~ x1 + x2 + x3, random = ~ 1 | random, example.data)
 
-partial.resid(y ~ x1, lme.model)
+partial.resid(y ~ x3, lme.model)
 
 # Run mixed effects model using lmer()
 library(lme4) 
 
 lmer.model = lmer(y ~ x1 + x2 + x3 + (1 | random), example.data)
 
-partial.resid(y ~ x1, lmer.model)
+partial.resid(y ~ x3, lmer.model)
 
-### SEM EXAMPLE
+# Remove some values of x3 from data.frame
+example.data[c(12, 23, 45), "x3"] = NA
+
+# Run regular linear model using lm()
+lm.model = lm(y ~ x1 + x2 + x3, example.data)
+
+sum(!is.na(partial.resid(y ~ x3, lm.model)$x3)) # Should be 97
+
+### SEM EXAMPLE ###
 
 # Load model package
 library(nlme)
@@ -109,7 +118,7 @@ library(nlme)
 data(shipley2013) 
 
 shipley2013.modlist = list(
-
+  
   lme(x2~x1, random = ~x1 | species, data = shipley2013),
   
   lme(x3~x2, random = ~x2 | species, data = shipley2013),
@@ -118,7 +127,7 @@ shipley2013.modlist = list(
   
   lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
   
-  )
+)
 
 # Get partial residuals of x3 on x5 conditional on x4
 resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "optim")))
