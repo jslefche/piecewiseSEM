@@ -27,35 +27,40 @@ get.random.formula = function(model, rhs, modelList, drop.terms = NULL) {
   # Get random slopes in the model list, otherwise return vector of terms to drop
   random.slopes = if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest"))) 
     
-    if(is.null(drop.terms)) 
+    if(is.null(drop.terms)) {
       
-      suppressWarnings(unlist(lapply(
+      sapply(1:length(modelList), function(j) {
         
-        modelList[sapply(modelList, class) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest")], 
-        
-        function(i) 
+        if(any(class(modelList[[j]]) %in% c("glmmPQL")))
           
-          colnames(do.call(cbind, ranef(i)))[!colnames(do.call(cbind, ranef(i))) %in% "(Intercept)"]
+          sapply(model$coefficients$random, function(k) colnames(k)[!colnames(k) %in% c("(Intercept)")])
         
-        ) ) ) else drop.terms 
+        else if(any(class(modelList[[j]]) %in% c("lme", "glmerMod", "merModLmerTest")))
+          
+          colnames(ranef(modelList[[j]]))[!colnames(ranef(modelList[[j]])) %in% "(Intercept)"]
+        
+      } )
+      
+    } else drop.terms 
 
-  random.slopes = random.slopes[!duplicated(random.slopes)]
+  random.slopes = unname(random.slopes[!duplicated(random.slopes)])
   
   # Define new random slopes 
   new.random.slopes = random.slopes[which(random.slopes %in% unlist(strsplit(rhs, ".\\+.")))]
+  
   if(length(new.random.slopes) == 0) new.random.slopes = 1
   
   # Replace random slopes if any variables in model formula appear in random slopes  
   if(!length(random.slopes) == 0 & is.null(drop.terms)) {
 
-    if(class(model) %in% c("lme", "glmmPQL"))
+    if(any(class(model) %in% c("lme", "glmmPQL")))
       
       paste("~ ", 
             paste(new.random.slopes, collapse = " + "),
             " | ",
             random.structure) 
     
-    else if(class(model) %in% c("glmerMod", "merModLmerTest"))
+    else if(any(class(model) %in% c("glmerMod", "merModLmerTest")))
       
       paste(
         sapply(random.structure, function(x)
@@ -66,14 +71,14 @@ get.random.formula = function(model, rhs, modelList, drop.terms = NULL) {
     
   } else if(!length(random.slopes) == 0 & !is.null(drop.terms)) {
     
-    if(class(model) %in% c("lme", "glmmPQL"))
+    if(any(class(model) %in% c("lme", "glmmPQL")))
       
       paste("~ ",
             paste(new.random.slopes, collapse = " + "),
             " | ",
             random.structure) 
     
-    else if(class(model) %in% c("glmerMod", "merModLmerTest"))
+    else if(any(class(model) %in% c("glmerMod", "merModLmerTest")))
       
       paste(
       sapply(random.structure, function(x)
