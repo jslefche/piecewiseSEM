@@ -1,4 +1,4 @@
-partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = TRUE, plotreg = TRUE) {
+partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = TRUE, plotreg = TRUE, plotCI = TRUE) {
   
   if(any(class(modelList) != "list")) modelList = list(modelList)
   
@@ -111,7 +111,43 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
                        ifelse(length(attr(terms(x.noy.model), "term.labels")[-1]) > 1, paste(x, paste(attr(terms(x.noy.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)),
                        paste(x, "| others") )) 
     
-  if(plotit == TRUE & plotreg == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
+  # if(plotit == TRUE & plotreg == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
+  
+
+  if(plotit == TRUE & plotreg == TRUE | plotCI == TRUE) {
+    
+    # Get names of resids.data
+    resids.y = names(resids.data)[1]
+    resids.x = names(resids.data)[2]
+    
+    # Regression y ~ x
+    new.mod = lm(formula(paste(resids.y, " ~ ", resids.x, sep = "")), resids.data)
+    
+    # Create new data.frame
+    newdata = data.frame(
+      seq(min(resids.data[, 2], na.rm = TRUE) - min(resids.data[, 2], na.rm = TRUE) * 0.1, 
+          max(resids.data[, 2], na.rm = TRUE) + max(resids.data[, 2], na.rm = TRUE) * 0.1, 
+          length.out = nrow(resids.data) * 2)
+    )
+    
+    colnames(newdata) = resids.x
+    
+    # Generate predictions
+    pred = predict(new.mod, newdata, interval = "confidence", level = 0.95)
+    
+    # Plot fitted curve
+    if(plotit == TRUE) abline(new.mod, col = "red", lwd = 2)
+    
+    # Plot confidence intervals
+    if(plotCI == TRUE) { 
+      
+      lines(newdata[, 1], pred[, 2], col = "red", lwd = 1.8, lty = 2)
+      
+      lines(newdata[, 1], pred[, 3], col = "red", lwd = 1.8, lty = 2)
+    
+    }
+    
+  }
   
   return(resids.data)
     

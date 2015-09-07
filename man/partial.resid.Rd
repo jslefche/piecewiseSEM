@@ -36,6 +36,10 @@ whether the partial plot of \code{y ~ x | Z} should be returned. Default is \cod
 whether the partial regression of \code{y ~ x | Z} should also be plotted. Default is \code{TRUE}.
 }
 
+\item{plotCI}{
+whether the confidence intervals of the partial regression of \code{y ~ x | Z} should also be plotted. Default is \code{TRUE}.
+}
+
 }
 
 \details{
