@@ -2,15 +2,12 @@
 
   Implementation of piecewise structural equation modeling (SEM) in R, including estimation of path coefficients and goodness-of-fit statistics. 
   
-  For more information, see: 
+  A formal description of this package can be found at:
   
-    Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context." Ecology 90.2 (2009): 
-    363-368.
-    
-    Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a 
-    d-separation test." Ecology 94.3 (2013): 560-564.
+    Lefcheck, J.S. "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." 
+    arXiv:1509.01845. http://arxiv.org/abs/1509.01845
 
-Version: 0.9.8 (2015-09-01)
+Version: 0.9.8 (2015-09-08)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 

@@ -1,10 +1,12 @@
 citEntry(
   entry="Article",
-  title="Multitrophic functional diversity predicts ecosystem functioning in experimental assemblages of estuarine consumers",
-  journal="PeerJ Preprints",
-  volume= "2",
+  title="piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics",
+  journal="arXiv",
+  volume= "",
   number="",
-  pages="e540v2",
+  pages="1509.01845",
   year="2015",
-  author="J.S. Lefcheck, J.E. Duffy.",
-  textVersion="Lefcheck JS, Duffy JE. (2014) Multitrophic functional diversity predicts ecosystem functioning in experimental assemblages of estuarine consumers. PeerJ PrePrints 2:e540v1 http://dx.doi.org/10.7287/peerj.preprints.540v1" )
+  author="J.S. Lefcheck",
+  URL="http://arxiv.org/abs/1509.01845",
+  textVersion="Lefcheck, J.S. piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics. 
+arXiv Pre-prints: arXiv:1509.01845. http://arxiv.org/abs/1509.01845" )
