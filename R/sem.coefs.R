@@ -130,8 +130,11 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
       
     } ) ) )
   
-  # Order by p-value
-  ret = ret[order(ret$p.value), ]
+  # Order by response and p-value
+  ret = ret[with(ret, order(response, p.value)),]
+  
+  # Round p-values
+  ret$p.value = round(ret$p.value, 4)
   
   return(ret)
 
