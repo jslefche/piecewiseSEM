@@ -45,7 +45,7 @@ sem.missing.paths = function(
         
         if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
           
-          update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = formula(random.formula), control = control, data = data) else
+          update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
             
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
       
@@ -122,7 +122,7 @@ sem.missing.paths = function(
   pvalues.df$DF = as.numeric(pvalues.df$DF)
   
   # Output warning if missing.paths contains ...
-  if(any(grepl("\\.\\.\\.", pvalues.df$missing.path))) warning("Conditional variables have been omitted from output table for clarity")
+  if(any(grepl("\\.\\.\\.", pvalues.df$missing.path))) print("Conditional variables have been omitted from output table for clarity")
   
   if(!is.null(pb)) close(pb)  
   

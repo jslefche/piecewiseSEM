@@ -11,7 +11,7 @@ A helper function for \code{sem.missing.paths} and \code{sem.partial.resid} that
 }
 
 \usage{
-get.random.formula(model, rhs,  modelList, drop.terms)
+get.random.formula(model, rhs,  modelList, dropterms)
 }
 
 \arguments{
@@ -24,7 +24,7 @@ the fixed effects formula.
   \item{modelList}{
 a \code{list} of regressions representing the structural equation model.
 }
-  \item{drop.terms}{
+  \item{dropterms}{
 terms to be dropped from the random structure (optional).
 }
 }
