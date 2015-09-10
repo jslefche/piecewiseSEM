@@ -40,7 +40,9 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
     vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
     
     # Scale those variables by mean and SD, or by range
-    newdata = data
+    if(class(data) == "comparative.data")
+      
+      newdata = data$data else newdata = data
     
     newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) 
       
@@ -49,6 +51,14 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
         if(standardize == "range") (x-min(x, na.rm = T)) / diff(range(x, na.rm = T))
       
       )
+    
+    if(class(data) == "comparative.data") {
+      
+      data$data = newdata
+      
+      newdata = data
+    
+      }
     
     }
   
