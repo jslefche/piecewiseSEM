@@ -28,6 +28,10 @@ a single model or list of regressions representing the structural equation model
 a \code{list} of model control arguments to be passed to the partial models.
 }
 
+\item{return.data.frame}{
+whether a \code{data.frame} of the partial residuals should be returned. Default is \code{TRUE}.
+}
+
 \item{plotit}{
 whether the partial plot of \code{y ~ x | Z} should be returned. Default is \code{TRUE}.
 }

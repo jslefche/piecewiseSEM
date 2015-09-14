@@ -1,4 +1,8 @@
-partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plotit = TRUE, plotreg = TRUE, plotCI = TRUE) {
+partial.resid = function(
+  
+  .formula = y ~ x, modelList, model.control = NULL, return.data.frame = TRUE, plotit = TRUE, plotreg = TRUE, plotCI = TRUE
+  
+  ) {
   
   if(any(class(modelList) != "list")) modelList = list(modelList)
   
@@ -35,7 +39,7 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
       
       if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
         
-        update(y.model, fixed = formula(rhs), random = formula(random.formula), control = control) else
+        update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
           
           update(y.model, paste(deparse(rhs), " + ", random.formula, collapse = ""), control = control) 
     
@@ -71,7 +75,7 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
       
       if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
         
-        update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), random = formula(random.formula), control = control) else
+        update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), random = random.formula, control = control) else
           
           update(y.model, reformulate(deparse(formula(y.nox.model)[[3]]), response = x), control = control) 
   
@@ -149,6 +153,6 @@ partial.resid = function(.formula = y ~ x, modelList, model.control = NULL, plot
     
   }
   
-  return(resids.data)
+  if(return.data.frame == TRUE) return(resids.data)
     
 }
