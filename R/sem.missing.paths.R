@@ -63,7 +63,7 @@ sem.missing.paths = function(
     }
     
     # Get row number from coefficient table for d-sep variable
-    if(class(basis.mod.new) != "pgls") {
+    if(!class(basis.mod.new) %in% "pgls") {
       
       row.num = which(basis.set[[i]][1] == attr(terms(basis.mod.new), "term.labels")) + 1 
       
