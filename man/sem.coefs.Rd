@@ -42,6 +42,8 @@ When \code{standardize = "scale"}, variables are scaled by mean and variance usi
 If predictors are factors or dummy variables, then they are left in their original units. If the response is not normally distributed, then it is left untransformed even when \code{standardize = "scale"} or \code{standardize = "range"}. Predictors in these models are transformed, unless they meet the previous criteria.
 
 Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow in a path diagram). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. If two exogenous variables are listed, then the  Spearman correlation between the two is given, otherwise the correlation between the partial residuals is returned. Significance tests (i.e., P-values) for correlated errors are derived from a t-distribution using the transformation in Shipley, 2000 (p.76).
+
+Standardized variables involved in an interaction will throw a warning and ask the user to interpret significance using the unstandardized variables. However, the standardized coefficients are still interpretable because they have been standardized before their product is calculated (as opposed to standardization of the product, which is incorrect, see Bollen 1989).
 }
 
 \value{
@@ -50,6 +52,8 @@ Returns a \code{data.frame} with the causal path (response, predictor), the coef
 
 \references{
 Shipley, Bill. Cause and correlation in biology: a user's guide to path analysis, structural equations and causal inference. Cambridge University Press, 2002.
+
+Bollen, K. A. Structural equations with latent variables. New York: John Wiley & Sons, 1989.
 }
 
 \author{
