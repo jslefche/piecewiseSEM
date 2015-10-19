@@ -41,7 +41,7 @@ If \code{sefit = TRUE} for mixed models, then standard errors on predictions are
 }
 
 \value{
-Returns a \code{data.frame} containing the new data and the predicted responses.
+Returns a \code{data.frame} containing the new data and the predicted responses based on fixed effects only for the innermost level of grouping (i.e., population residuals) corresponding to \code{re.form = NA} for \code{lme4} models and \code{level = Q} for \code{nlme} models.
 }
 
 \references{

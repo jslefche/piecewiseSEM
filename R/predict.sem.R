@@ -8,14 +8,19 @@ predict.sem = function(modelList, newdata, sefit = FALSE, ...) {
        
        predict.df = predict(i, newdata, se.fit = sefit, ...) else
          
-         if(any(class(i) %in% c("lme", "glmmPQL"))) 
+         if(any(class(i) %in% c("lme", "glmmPQL"))) {
            
-           predict.df = predict(i, newdata, level = 0, ...) else
+           # Get innermost level of grouping
+           
+           Q = length(summary(i)$modelStruct$reStruct)
+           
+           predict.df = predict(i, newdata, level = Q, ...) 
+           
+           } else
              
              if(any(class(i) %in% c("lmerMod", "glmerMod", "merModTest")))
                
                predict.df = predict(i, newdata, re.form = NA, ...)
-    
              
   # If se.fit = TRUE for mixed models, calculate standard errors based on fixed-effects only
   if(sefit == TRUE & any(class(i) %in% c("lme", "glmmPQL", "lmerMod", "glmerMod", "merModTest"))) {
@@ -27,15 +32,15 @@ predict.sem = function(modelList, newdata, sefit = FALSE, ...) {
     
     if(any(class(i) %in% c("lme", "glmmPQL"))) {
       
-      Dmat = model.matrix(formula(i)[-2], newdata) 
+      Dmat.lme = model.matrix(formula(i)[-2], newdata) 
       
-      pvar = sqrt(diag(Dmat %*% vcov(i) %*% t(Dmat)))
+      pvar = sqrt(diag(Dmat.lme %*% vcov(i) %*% t(Dmat.lme)))
       
     } else {
       
-      Dmat = model.matrix(terms(i), newdata)
+      Dmat.lmer = model.matrix(terms(i), newdata)
       
-      pvar = diag(Dmat %*% tcrossprod(vcov(i), Dmat))
+      pvar = sqrt(diag(Dmat.lmer %*% tcrossprod(vcov(i), Dmat.lmer)))
       
     }
     

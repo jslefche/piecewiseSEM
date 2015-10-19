@@ -82,17 +82,27 @@ partial.resid = function(
   )
 
   # Extract residuals from models
-  if(any(class(y.nox.model) %in% c("lme", "glmmPQL"))) 
+  if(any(class(y.nox.model) %in% c("lme", "glmmPQL"))) {
     
-    y.resids = resid(y.nox.model, level = 0:1)[, "fixed"] else
-      
-      y.resids = resid(y.nox.model)
+    # Get innermost level of grouping
+    Q = length(summary(y.nox.model)$modelStruct$reStruct)
+    
+    y.resids = resid(y.nox.model, level = 0:Q)
+    
+    y.resids = y.resids[, ncol(y.resids)]
+    
+    } else y.resids = resid(y.nox.model)
   
-  if(any(class(x.noy.model) %in% c("lme", "glmmPQL"))) 
+  if(any(class(x.noy.model) %in% c("lme", "glmmPQL"))) {
     
-    x.resids = resid(x.noy.model, level = 0:1)[, "fixed"] else
-      
-      x.resids = resid(x.noy.model)
+    # Get innermost level of grouping
+    Q = length(summary(x.noy.model)$modelStruct$reStruct)
+    
+    x.resids = resid(x.noy.model, level = 0:Q) 
+    
+    x.resids = x.resids[, ncol(x.resids)]
+    
+    } else x.resids = resid(x.noy.model)
   
   # Bind together in data.frame
   y1 = data.frame(.id = names(y.resids), y.resids)
@@ -114,9 +124,6 @@ partial.resid = function(
          xlab = ifelse(length(attr(terms(x.noy.model), "term.labels")) <= 3,
                        ifelse(length(attr(terms(x.noy.model), "term.labels")[-1]) > 1, paste(x, paste(attr(terms(x.noy.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)),
                        paste(x, "| others") )) 
-    
-  # if(plotit == TRUE & plotreg == TRUE) abline(lm(resids.data[ ,1] ~ resids.data[ ,2]), col = "red", lwd = 2)
-  
 
   if(plotit == TRUE & plotreg == TRUE | plotCI == TRUE) {
     
