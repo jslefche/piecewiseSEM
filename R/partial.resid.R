@@ -1,6 +1,6 @@
 partial.resid = function(
   
-  .formula = y ~ x, modelList, model.control = NULL, return.data.frame = TRUE, plotit = TRUE, plotreg = TRUE, plotCI = TRUE
+  .formula = y ~ x, modelList, data, model.control = NULL, return.data.frame = TRUE, plotit = TRUE, plotreg = TRUE, plotCI = TRUE
   
   ) {
   
@@ -25,7 +25,7 @@ partial.resid = function(
     stop("Y is a direct function of X, no partial residuals obtainable")
 
   # Get model formula 
-  rhs = formula(drop.terms(terms(y.model), grep(x, attr(terms(y.model), "term.labels")), keep.response = TRUE))
+  rhs = formula(drop.terms(terms(y.model), grep(gsub("\\*", "\\:", x), attr(terms(y.model), "term.labels")), keep.response = TRUE))
 
   random.formula = get.random.formula(y.model, rhs, modelList, drop = x)
   
@@ -45,6 +45,15 @@ partial.resid = function(
     
     )
   
+  # If x is an interaction, calculate and replace in dataset
+  if(grepl("\\:|\\*", x)) { 
+    
+    data[, gsub("\\:|\\*", "_", x)] = apply(data[, strsplit(x, "\\:|\\*")[[1]]], 1, prod)
+    
+    x = gsub("\\:|\\*", "_", x)
+    
+  }
+  
   # Replace x variable as response in y model
   x.noy.model = suppressWarnings(if(is.null(random.formula)) {
     
@@ -54,7 +63,8 @@ partial.resid = function(
       mod = try(suppressWarnings(suppressMessages(
         update(y.model, 
                reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
-               control = control)
+               control = control, 
+               data = data)
         ) ), silent = TRUE)
       
       if(class(mod) == "try-error")
@@ -63,21 +73,31 @@ partial.resid = function(
                reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
                family = gaussian(), 
                na.action = na.omit,
-               control = control) else mod 
+               control = control,
+               data = data) else 
+                 
+                 mod 
       
     } else 
       
       update(y.model, 
              reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
-             control = control)
+             control = control,
+             data = data)
     
   } else
       
       if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
         
-        update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), random = random.formula, control = control) else
+        update(y.model, fixed = reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+               random = random.formula, 
+               control = control,
+               data = data) else
           
-          update(y.model, reformulate(deparse(formula(y.nox.model)[[3]]), response = x), control = control) 
+          update(y.model, 
+                 reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+                 control = control,
+                 data = data) 
   
   )
 
@@ -122,8 +142,8 @@ partial.resid = function(
                        ifelse(length(attr(terms(y.nox.model), "term.labels")[-1]) > 1, paste(y, paste(attr(terms(y.nox.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(y)),
                        paste(y, "| others") ),
          xlab = ifelse(length(attr(terms(x.noy.model), "term.labels")) <= 3,
-                       ifelse(length(attr(terms(x.noy.model), "term.labels")[-1]) > 1, paste(x, paste(attr(terms(x.noy.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(x)),
-                       paste(x, "| others") )) 
+                       ifelse(length(attr(terms(x.noy.model), "term.labels")[-1]) > 1, paste(gsub("_", "\\*", x), paste(attr(terms(x.noy.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(gsub("_", "\\*", x))),
+                       paste(gsub("_", "\\*", x), "| others") )) 
 
   if(plotit == TRUE & plotreg == TRUE | plotCI == TRUE) {
     

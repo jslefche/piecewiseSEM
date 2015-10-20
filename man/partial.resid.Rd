@@ -24,8 +24,12 @@ a \code{formula} specifying the partial residuals to investigate.
 a single model or list of regressions representing the structural equation model. 
 }
 
+\item{data}{
+a \code{data.frame} used to construct the model.
+}
+
 \item{model.control}{
-a \code{list} of model control arguments to be passed to the partial models.
+a \code{list} of model control arguments to be passed to the partial residual models.
 }
 
 \item{return.data.frame}{
@@ -88,26 +92,31 @@ example.data$x3 = example.data$x2 + runif(100, 0, 5)
 # Run regular linear model using lm()
 lm.model = lm(y ~ x1 + x2 + x3, example.data)
 
-partial.resid(y ~ x3, lm.model)
+partial.resid(y ~ x3, lm.model, example.data)
+
+# Works with interactions too
+lm.model2 = lm(y ~ x1 * x2 + x3, example.data)
+
+partial.resid(y ~ x1 * x2, lm.model2, example.data, return.data.frame = FALSE)
 
 # Run generalized least squared regression
 library(nlme)
 
 gls.model = gls(y ~ x1 + x2 + x3, example.data)
 
-partial.resid(y ~ x3, gls.model)
+partial.resid(y ~ x3, gls.model, example.data, return.data.frame = FALSE)
 
 # Run mixed effects model using lme()
 lme.model = lme(y ~ x1 + x2 + x3, random = ~ 1 | random, example.data)
 
-partial.resid(y ~ x3, lme.model)
+partial.resid(y ~ x3, lme.model, example.data, return.data.frame = FALSE)
 
 # Run mixed effects model using lmer()
 library(lme4) 
 
 lmer.model = lmer(y ~ x1 + x2 + x3 + (1 | random), example.data)
 
-partial.resid(y ~ x3, lmer.model)
+partial.resid(y ~ x3, lmer.model, example.data, return.data.frame = FALSE)
 
 # Remove some values of x3 from data.frame
 example.data[c(12, 23, 45), "x3"] = NA
@@ -115,7 +124,7 @@ example.data[c(12, 23, 45), "x3"] = NA
 # Run regular linear model using lm()
 lm.model = lm(y ~ x1 + x2 + x3, example.data)
 
-sum(!is.na(partial.resid(y ~ x3, lm.model)$x3)) # Should be 97
+sum(!is.na(partial.resid(y ~ x3, lm.model, example.data)$x3)) # Should be 97
 
 ### SEM EXAMPLE ###
 
@@ -138,7 +147,7 @@ shipley2013.modlist = list(
 )
 
 # Get partial residuals of x3 on x5 conditional on x4
-resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "optim")))
+resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, shipley2013, list(lmeControl(opt = "optim")))
 
 # Also returns raw residuals values for plotting in other packages
 head(resids.df)
