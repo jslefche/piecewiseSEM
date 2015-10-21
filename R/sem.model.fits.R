@@ -35,9 +35,9 @@ sem.model.fits = function(modelList) {
       # Classify link function
       if("glm" %in% class(model)) ret$Link = summary(model)$family[[2]]
       
-      # Calculate McFadden R2 values
-      ret$Marginal = 1 - (as.numeric(logLik(model)) / as.numeric(logLik(update(model, ". ~ 1"))))
-
+      # Calculate R2 values
+      ret$Marginal = 1 - (model$deviance / model$null.deviance)
+      
       ret$Conditional = NA
                     
       # Calculate model AIC
