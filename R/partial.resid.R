@@ -43,7 +43,7 @@ partial.resid = function(
         
         update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
           
-          update(y.model, paste(deparse(rhs), " + ", random.formula, collapse = ""), control = control) 
+          update(y.model, formula(paste(rhs, " + ", random.formula, collapse = "")), control = control) 
     
     )
   
