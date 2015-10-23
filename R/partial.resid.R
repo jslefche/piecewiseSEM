@@ -16,7 +16,7 @@ partial.resid = function(
   # Extract model from modelList regressing the y variable
   y.vars = suppressWarnings(sapply(modelList, function(i) all.vars(formula(i))[1]) == y)
   
-  if(!all(y.vars)) 
+  if(!any(y.vars)) 
     
     stop("Check spelling of correlated variables - must match exactly response in model formula!") else
       
@@ -29,7 +29,7 @@ partial.resid = function(
   # Get model formula 
   rhs = formula(drop.terms(terms(y.model), grep(gsub("\\*", "\\:", x), attr(terms(y.model), "term.labels")), keep.response = TRUE))
 
-  random.formula = get.random.formula(y.model, rhs, modelList, drop = x)
+  random.formula = get.random.formula(y.model, rhs, modelList, dropterms = x)
   
   # Get model control
   control = get.model.control(y.model, model.control)
@@ -111,7 +111,7 @@ partial.resid = function(
     
     y.resids = resid(y.nox.model, level = 0:Q)
     
-    y.resids = y.resids[, ncol(y.resids)]
+    y.resids = y.resids[, 0, drop = FALSE]
     
     } else y.resids = resid(y.nox.model)
   
@@ -122,7 +122,7 @@ partial.resid = function(
     
     x.resids = resid(x.noy.model, level = 0:Q) 
     
-    x.resids = x.resids[, ncol(x.resids)]
+    x.resids = x.resids[, 0, drop = FALSE]
     
     } else x.resids = resid(x.noy.model)
   
@@ -140,12 +140,13 @@ partial.resid = function(
   if(plotit == TRUE)
     
     plot(resids.data[, 1] ~ resids.data[ ,2], 
-         ylab = ifelse(length(attr(terms(y.nox.model), "term.labels")) <= 3,
-                       ifelse(length(attr(terms(y.nox.model), "term.labels")) > 1, paste(y, paste(attr(terms(y.nox.model), "term.labels"), collapse=" + "), sep = " | "), paste(y)),
+         ylab = ifelse(nchar(paste(attr(terms(y.nox.model), "term.labels"), y,  collapse = " + ")) <= 20,
+                       paste(y, paste(attr(terms(y.nox.model), "term.labels"), collapse=" + "), sep = " | "), 
                        paste(y, "| others") ),
-         xlab = ifelse(length(attr(terms(x.noy.model), "term.labels")) <= 3,
-                       ifelse(length(attr(terms(x.noy.model), "term.labels")) > 1, paste(gsub("_", "\\*", x), paste(attr(terms(x.noy.model), "term.labels"), collapse=" + "), sep = " | "), paste(gsub("_", "\\*", x))),
-                       paste(gsub("_", "\\*", x), "| others") )) 
+         xlab = ifelse(nchar(paste(attr(terms(x.noy.model), "term.labels"), x,  collapse = " + ")) <= 20,
+                       paste(gsub("_", "\\*", x), paste(attr(terms(x.noy.model), "term.labels"), collapse=" + "), sep = " | "),
+                       paste(gsub("_", "\\*", x), "| others") )
+    )
 
   if(plotit == TRUE & plotreg == TRUE | plotCI == TRUE) {
     
