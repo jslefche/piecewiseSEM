@@ -11,7 +11,7 @@ Returns predictions for responses in the list of structured equations.
 }
 
 \usage{
-predict(object, newdata, sefit = FALSE, ...)
+predict.sem(object, newdata, sefit = FALSE, ...)
 }
 
 \arguments{
