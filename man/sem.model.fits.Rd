@@ -57,34 +57,26 @@ glm.mod = glm(Live ~ Growth, family = "binomial", data = shipley2009)
 sem.model.fits(glm.mod)
 
 # Get R2 for generalized least-squares model
+library(nlme) 
+
 gls.mod = gls(DD ~ lat, na.action = na.omit, data = shipley2009)
 sem.model.fits(gls.mod)
-
-# Get R2 for linear mixed effects model (lme4)
-lmer.mod = lmer(DD ~ lat + (1|site/tree), data = shipley2009)
-sem.model.fits(lmer.mod)
 
 # Get R2 for linear mixed effects model (nlme)
 lme.mod = lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, data = shipley2009)
 sem.model.fits(lme.mod)
 
+# Get R2 for linear mixed effects model (lme4)
+library(lme4)
+
+lmer.mod = lmer(DD ~ lat + (1|site/tree), data = shipley2009)
+sem.model.fits(lmer.mod)
+
 # Get R2 for generalized linear mixed effects model (lme4)
 glmer.mod = glmer(Live ~ Growth + (1|site/tree), family = "binomial", data = shipley2009)
 sem.model.fits(glmer.mod)
 
-### NOT RUN ###
-# library(MASS)
-# Get R2 for generalized linear mixed effects model (quasi-likelihood) (MASS)
-# PQL.mod = glmmPQL(Live ~ Growth, random = ~1|site/tree, family = "binomial", na.action = na.omit,
-#    data = shipley2009)
-# sem.model.fits(PQL.mod)
-### NOT RUN ###
-
 ### SEM EXAMPLE ###
-
-# Load model packages
-library(lmerTest)
-library(nlme)
 
 # Create list of models 
 shipley2009.modlist = list(
