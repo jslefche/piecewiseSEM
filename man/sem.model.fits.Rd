@@ -44,9 +44,6 @@ Jon Lefcheck & Juan Casallas
 This function sources the \code{rsquared.glmm} function found here: https://github.com/jslefche/rsquared.glmm, and thus may be periodically updated independently of this package.
 }
 
-\seealso{
-}
-
 \examples{
 # Load data from Shipley (2009)
 data(shipley2009) 
@@ -78,7 +75,8 @@ sem.model.fits(glmer.mod)
 ### NOT RUN ###
 # library(MASS)
 # Get R2 for generalized linear mixed effects model (quasi-likelihood) (MASS)
-# PQL.mod = glmmPQL(Live ~ Growth, random = ~1|site/tree, family = "binomial", na.action = na.omit, data = shipley2009)
+# PQL.mod = glmmPQL(Live ~ Growth, random = ~1|site/tree, family = "binomial", na.action = na.omit,
+#    data = shipley2009)
 # sem.model.fits(PQL.mod)
 ### NOT RUN ###
 

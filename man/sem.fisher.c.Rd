@@ -63,9 +63,6 @@ enable optional text progress bar. Default is \code{TRUE}.
 
 }
 
-\details{
-}
-
 \value{
 Returns a \code{data.frame} with the first entry corresponding to Fisher's C statistic, the second corresponding to the Chi-squared test degrees of freedom, and the third corresponding to the outcome (p-value) of the significance test derived from a Chi-squared distribution.
 
@@ -78,12 +75,6 @@ Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context."
 
 \author{
 Jon Lefcheck
-}
-
-\note{
-}
-
-\seealso{
 }
 
 \examples{

@@ -71,9 +71,6 @@ The argument \code{add.vars} requires a vector of character strings correspondin
 For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
 
 \code{top.level.vars} allows the user to optionally specify one or more top level variables for a hierarchical dataset, which will be summarized based on one or more grouping variables specified by \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
-
-The model controls in \code{model.control} will be assigned to any subsequent d-sep models derived from that model class. 
-
 }
 
 \value{
@@ -98,10 +95,11 @@ Jon Lefcheck
 }
 
 \note{
+The model controls in \code{model.control} will be assigned to any subsequent d-sep models derived from that model class. 
 }
 
 \seealso{
-\code{\link{ggm::dag}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{aic}}
+\code{\link[ggm]{DAG}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{AIC}}
 }
 
 \examples{

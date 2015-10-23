@@ -24,15 +24,6 @@ Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context."
 Jon Lefcheck
 }
 
-\note{
-}
-
-\seealso{
-}
-
-\examples{
-}
-
 \keyword{ data }
 
 \keyword{ datasets }

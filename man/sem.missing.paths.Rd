@@ -11,8 +11,9 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 }
 
 \usage{
-sem.missing.paths(modelList, data, corr.errors, add.vars, grouping.vars, 
-  top.level.vars, adjust.p, basis.set, model.control, .progressBar) 
+sem.missing.paths(modelList, data, conditional = FALSE, corr.errors = NULL, 
+add.vars = NULL, grouping.vars = NULL, top.level.vars, adjust.p = FALSE, 
+basis.set, model.control = NULL, .progressBar = TRUE) 
 }
 
 \arguments{
@@ -65,8 +66,6 @@ enable optional text progress bar. Default is \code{TRUE}.
 
 \details{
 This function takes a model list (and optional basis set) and evaluates all conditional independence claims by constructing regressions, returning the claims, the variables upon which they are conditional, and associated p-values in a \code{data.frame}.
-
-Models are constructed based on how the variables are treated as in the model list. For example, if the indepedence claim includes a binary variable that is fit to a binomial distribution using an identity link, the function will evaluate the any claims using the same parameters. Similarly, for linear mixed effects models construted in lme4 or nlme, varying slopes and intercepts are treated as in the model list. For example, if a variable is modeled with both a random slope and intercept in any model in the model list, that variable will be modeled with a random slope and intercept when evaluating all independence claims in which it appears. If slopes and intercepts vary for multiple variables, they will appear as such, even if they are conditional.
 }
 
 \value{
@@ -84,9 +83,7 @@ Jon Lefcheck
 }
 
 \note{
-}
-
-\seealso{
+Models are constructed based on how the variables are treated as in the model list. For example, if the indepedence claim includes a binary variable that is fit to a binomial distribution using an identity link, the function will evaluate the any claims using the same parameters. Similarly, for linear mixed effects models construted in lme4 or nlme, varying slopes and intercepts are treated as in the model list. For example, if a variable is modeled with both a random slope and intercept in any model in the model list, that variable will be modeled with a random slope and intercept when evaluating all independence claims in which it appears. If slopes and intercepts vary for multiple variables, they will appear as such, even if they are conditional.
 }
 
 \examples{

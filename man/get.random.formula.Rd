@@ -29,26 +29,13 @@ terms to be dropped from the random structure (optional).
 }
 }
 
-\details{
-}
-
 \value{
 Returns a character vector corresponding to the updated random structure.
 }
-
-\references{
-}
-
 \author{
 Jon Lefcheck
 }
 
-\note{
-}
-
 \seealso{
-\code{\link{findbars}}
-}
-
-\examples{
+\code{\link[lme4]{findbars}}
 }

@@ -23,26 +23,15 @@ a \code{list} of control parameters corresponding to the model classes found in 
 }
 }
 
-\details{
-}
-
 \value{
 Returns a \code{list} of model controls.
 }
 
-\references{
-}
 
 \author{
 Jon Lefcheck
 }
 
-\note{
-}
-
 \seealso{
-\code{\link{glm.control}}, \code{\link{glsControl}}, \code{\link{lmeControl}}, \code{\link{lmerControl}}, \code{\link{glmerControl}}
-}
-
-\examples{
+\code{\link{glm.control}}, \code{\link[nlme]{glsControl}}, \code{\link[nlme]{lmeControl}}, \code{\link[lme4]{lmerControl}}, \code{\link[lme4]{glmerControl}}
 }

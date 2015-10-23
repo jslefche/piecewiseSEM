@@ -80,12 +80,6 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 Jon Lefcheck
 }
 
-\note{
-}
-
-\seealso{
-}
-
 \examples{
 # Load example data
 data(shipley2009)

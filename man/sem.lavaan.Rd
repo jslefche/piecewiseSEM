@@ -38,9 +38,6 @@ additional arguments passed to \code{lavaan}.
 
 }
 
-\details{
-}
-
 \value{
 Returns a model object of class \code{lavaan}.
 }
@@ -54,6 +51,7 @@ Jon Lefcheck
 }
 
 \note{
+Models fit with \code{lm} should return identical coefficients to those generated using \code{sem.lavaan}.
 }
 
 \seealso{

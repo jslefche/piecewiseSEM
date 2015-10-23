@@ -195,4 +195,5 @@ model = lm(y ~ x1 + x2 + x3, dat)
 # Look at effect of X1 on Y given X2 and X3
 partial.resid(y ~ x1, model, dat, return.data.frame = FALSE)
 ```
+
 Because we have designed this example such that `x1` is only a slight variation on `y`, the partial residual plot after removing the effects of `x2` and `x3` shows a strong dependence between the two.

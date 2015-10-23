@@ -11,12 +11,12 @@ Returns predictions for responses in the list of structured equations.
 }
 
 \usage{
-predict.sem(modelList, newdata, ...)
+predict(object, newdata, sefit = FALSE, ...)
 }
 
 \arguments{
 
-\item{modelList}{
+\item{object}{
 a single model or list of regressions representing the structural equation model. 
 }
 
@@ -44,18 +44,12 @@ If \code{sefit = TRUE} for mixed models, then standard errors on predictions are
 Returns a \code{data.frame} containing the new data and the predicted responses based on fixed effects only for the innermost level of grouping (i.e., population residuals) corresponding to \code{re.form = NA} for \code{lme4} models and \code{level = Q} for \code{nlme} models.
 }
 
-\references{
-}
-
 \author{
 Jon Lefcheck
 }
 
-\note{
-}
-
 \seealso{
-\code{\link{predict}}, \code{\link{predict.lme}}, \code{\link{predict.merMod}}
+\code{\link{predict}}, \code{\link[nlme]{predict.lme}}, \code{\link[lme4]{predict.merMod}}
 }
 
 \examples{
@@ -85,69 +79,28 @@ shipley2009.modlist = list(
 
 # Create new data for predictions
 shipley2009.new = data.frame(
-  
-  lat = rnorm(length(shipley2009$lat), 
-    mean(shipley2009$lat, na.rm = TRUE), 
-    sd(shipley2009$lat, na.rm = TRUE)),
-  
-  DD = rnorm(length(shipley2009$DD), 
-    mean(shipley2009$DD, na.rm = TRUE), 
-    sd(shipley2009$DD, na.rm = TRUE)),
-    
-  Date = rnorm(length(shipley2009$Date), 
-    mean(shipley2009$Date, na.rm = TRUE), 
-    sd(shipley2009$Date, na.rm = TRUE)),
-    
-  Growth = rnorm(length(shipley2009$Growth), 
-    mean(shipley2009$Growth, na.rm = TRUE), 
-    sd(shipley2009$Growth, na.rm = TRUE))
-  
+  DD = seq(min(shipley2009$DD, na.rm = TRUE), 
+           max(shipley2009$DD, na.rm = TRUE), 
+           by = 0.01)
 )
 
 # Generate predictions
-head(predict.sem(shipley2009.modlist, shipley2009.new))
+shipley2009.new.pred = predict.sem(shipley2009.modlist, shipley2009.new)
+head(shipley2009.new.pred)
+
+# Plot predicted fit
+plot(shipley2009$Date ~ shipley2009$DD, col = "grey60")
+lines(shipley2009.new.pred$Date.fit ~ shipley2009.new.pred$DD, lwd = 2, col = "red")
 
 # Generate predictions with standard errors (based on fixed effects only)
-head(predict.sem(shipley2009.modlist, shipley2009.new, sefit = TRUE))
+shipley2009.new.pred = predict.sem(shipley2009.modlist, shipley2009.new, sefit = TRUE)
 
-###
+# Add 95% confidence intervals
+lines(shipley2009.new.pred$DD, 
+      shipley2009.new.pred$Date.fit + 2 * shipley2009.new.pred$Date.se.fit, 
+      lwd = 1.5, lty = 2, col = "red")
 
-# Load data from Shipley (2013)
-data(shipley2013) 
-
-shipley2013.modlist = list(
-
-  lme(x2~x1, random = ~x1 | species, data = shipley2013),
-  
-  lme(x3~x2, random = ~x2 | species, data = shipley2013),
-  
-  lme(x4~x2, random = ~x2 | species, data = shipley2013),
-  
-  lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
-  
-  )
-
-# Generate new data
-shipley2013.new = data.frame(
-
-  x1 = rnorm(length(shipley2013$x1), 
-    mean(shipley2013$x1), 
-    sd(shipley2013$x1)),
-  
-  x2 = rnorm(length(shipley2013$x2), 
-    mean(shipley2013$x2), 
-    sd(shipley2013$x2)),
-  
-  x3 = rnorm(length(shipley2013$x3), 
-    mean(shipley2013$x3), 
-    sd(shipley2013$x3)),
-  
-  x4 = rnorm(length(shipley2013$x4), 
-    mean(shipley2013$x4), 
-    sd(shipley2013$x4))
-  
-)
-
-# Generate predictions 
-head(predict.sem(shipley2013.modlist, shipley2013.new))
+lines(shipley2009.new.pred$DD, 
+      shipley2009.new.pred$Date.fit - 2 * shipley2009.new.pred$Date.se.fit,
+      lwd = 1.5, lty = 2, col = "red")
 }

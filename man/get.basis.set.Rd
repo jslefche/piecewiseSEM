@@ -20,25 +20,10 @@ an adjacency matrix.
 }
 }
 
-\details{
-}
-
 \value{
 Returns a list of independence claims. For each entry, the first argument is the variable whose partial regression slope should be zero, the second argument is the response, and the final entries are the variable(s) upon which the first argument is conditional.
 }
 
-\references{
-}
-
 \author{
 Jon Lefcheck
-}
-
-\note{
-}
-
-\seealso{
-}
-
-\examples{
 }

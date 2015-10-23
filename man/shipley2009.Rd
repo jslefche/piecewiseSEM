@@ -26,15 +26,6 @@ http://www.esapubs.org/archive/ecol/E090/028/Shipley.dat
 Jon Lefcheck
 }
 
-\note{
-}
-
-\seealso{
-}
-
-\examples{
-}
-
 \keyword{ data }
 
 \keyword{ datasets }

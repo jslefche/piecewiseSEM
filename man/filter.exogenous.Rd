@@ -50,9 +50,6 @@ Shipley, Bill. "A new inferential test for path models based on directed acyclic
 Jon Lefcheck
 }
 
-\note{
-}
-
 \examples{
 # Load example data
 data(shipley2009)

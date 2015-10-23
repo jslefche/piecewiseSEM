@@ -11,8 +11,8 @@ Extracts partial residuals for \code{y ~ x | Z}, where \code{Z} represents all o
 }
 
 \usage{
-partial.resid(.formula = y ~ x, modelList, data, model.control, return.data.frame = FALSE,
-plotit = TRUE, plotreg = TRUE, plotCI = TRUE)
+partial.resid(.formula = y ~ x, modelList, data, model.control = NULL, 
+return.data.frame = TRUE, plotit = TRUE, plotreg = TRUE, plotCI = TRUE)
 }
 
 \arguments{
@@ -48,12 +48,8 @@ whether the partial regression of \code{y ~ x | Z} should also be plotted. Defau
 \item{plotCI}{
 whether the confidence intervals of the partial regression of \code{y ~ x | Z} should also be plotted. Default is \code{TRUE}.
 }
-
 }
 
-\details{
-
-}
 \value{
 Returns a \code{data.frame} where the first column are the partial residuals of \code{y ~ x | Z}, and the second column is the partial residuals of \code{x ~ Z | y}. 
 
@@ -68,12 +64,6 @@ Shipley, Bill. Cause and correlation in biology: a user's guide to path analysis
 
 \author{
 Jon Lefcheck
-}
-
-\note{
-}
-
-\seealso{
 }
 
 \examples{
@@ -148,7 +138,8 @@ shipley2013.modlist = list(
 )
 
 # Get partial residuals of x3 on x5 conditional on x4
-resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, shipley2013, list(lmeControl(opt = "optim")))
+resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, shipley2013, 
+  list(lmeControl(opt = "optim")))
 
 # Also returns raw residuals values for plotting in other packages
 head(resids.df)
