@@ -11,7 +11,8 @@ Extracts partial residuals for \code{y ~ x | Z}, where \code{Z} represents all o
 }
 
 \usage{
-partial.resid(.formula = y ~ x, modelList, model.control, plotit = T, plotreg = T)
+partial.resid(.formula = y ~ x, modelList, data, model.control, return.data.frame = FALSE,
+plotit = TRUE, plotreg = TRUE, plotCI = TRUE)
 }
 
 \arguments{

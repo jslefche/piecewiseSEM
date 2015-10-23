@@ -14,11 +14,13 @@ partial.resid = function(
   x = gsub(" ", "", vars[2])
   
   # Extract model from modelList regressing the y variable
-  y.model = modelList[[which(sapply(modelList, function(i) all.vars(formula(i))[1]) == y)]]
+  y.vars = suppressWarnings(sapply(modelList, function(i) all.vars(formula(i))[1]) == y)
   
-  if(is.null(y.model)) 
+  if(!all(y.vars)) 
     
-    stop("Check spelling of correlated variables - must match exactly response in model formula!")
+    stop("Check spelling of correlated variables - must match exactly response in model formula!") else
+      
+      y.model = modelList[[which(y.vars)]]
   
   if(all(strsplit(deparse(formula(y.model)[[3]]), ".\\+.")[[1]] %in% x)) 
     
@@ -139,10 +141,10 @@ partial.resid = function(
     
     plot(resids.data[, 1] ~ resids.data[ ,2], 
          ylab = ifelse(length(attr(terms(y.nox.model), "term.labels")) <= 3,
-                       ifelse(length(attr(terms(y.nox.model), "term.labels")[-1]) > 1, paste(y, paste(attr(terms(y.nox.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(y)),
+                       ifelse(length(attr(terms(y.nox.model), "term.labels")) > 1, paste(y, paste(attr(terms(y.nox.model), "term.labels"), collapse=" + "), sep = " | "), paste(y)),
                        paste(y, "| others") ),
          xlab = ifelse(length(attr(terms(x.noy.model), "term.labels")) <= 3,
-                       ifelse(length(attr(terms(x.noy.model), "term.labels")[-1]) > 1, paste(gsub("_", "\\*", x), paste(attr(terms(x.noy.model), "term.labels")[-1], collapse=" + "), sep = " | "), paste(gsub("_", "\\*", x))),
+                       ifelse(length(attr(terms(x.noy.model), "term.labels")) > 1, paste(gsub("_", "\\*", x), paste(attr(terms(x.noy.model), "term.labels"), collapse=" + "), sep = " | "), paste(gsub("_", "\\*", x))),
                        paste(gsub("_", "\\*", x), "| others") )) 
 
   if(plotit == TRUE & plotreg == TRUE | plotCI == TRUE) {
