@@ -10,7 +10,7 @@ predict.sem = function(object, newdata, sefit = FALSE, ...) {
   
   x.vars = suppressWarnings(sapply(object, function(i) any(all.vars(formula(i))[-1] %in% new.x)))
   
-  if(!any(y.vars)) 
+  if(!any(x.vars)) 
     
     stop("No variables in new data are found in model(s)!") else
       
