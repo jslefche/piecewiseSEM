@@ -1,30 +1,39 @@
-predict.sem = function(modelList, newdata, sefit = FALSE, ...) {
+# predict = function(object, ...) UseMethod("generic")
+
+predict.sem = function(object, newdata, sefit = FALSE, ...) {
+  
+  # If not a model object, then coerce to a list
+  if(class(object) != "list") object = list(object)
+  
+  # Isolate model(s) in the model list that contain the predictors in newdata
+  new.x = colnames(newdata)
+  
+  x.vars = suppressWarnings(sapply(object, function(i) any(all.vars(formula(i))[-1] %in% new.x)))
+  
+  if(!any(y.vars)) 
+    
+    stop("No variables in new data are found in model(s)!") else
+      
+      x.modelList = object[x.vars]
   
   # Send newdata to each model in the model list and return output as a data.frame 
-  predict.df = do.call(cbind, lapply(modelList, function(i) {
+  predict.df = do.call(cbind, lapply(x.modelList, function(i) {
     
     # Get model predictions
-    if(any(class(i) %in% c("lm", "glm", "neg.bin", "gls", "pgls")) )
+    if(any(class(i) %in% c("lm", "glm", "neg.bin", "gls", "pgls")))
        
        predict.df = predict(i, newdata, se.fit = sefit, ...) else
          
-         if(any(class(i) %in% c("lme", "glmmPQL"))) {
+         if(any(class(i) %in% c("lme", "glmmPQL"))) 
            
-           # Get innermost level of grouping
-           
-           Q = length(summary(i)$modelStruct$reStruct)
-           
-           predict.df = predict(i, newdata, level = Q, ...) 
-           
-           } else
+           predict.df = predict(i, newdata, level = 0, ...) else
              
              if(any(class(i) %in% c("lmerMod", "glmerMod", "merModTest")))
                
                predict.df = predict(i, newdata, re.form = NA, ...)
-             
+
   # If se.fit = TRUE for mixed models, calculate standard errors based on fixed-effects only
   if(sefit == TRUE & any(class(i) %in% c("lme", "glmmPQL", "lmerMod", "glmerMod", "merModTest"))) {
-    
     # Bind in predictions to new data
     newdata = data.frame(newdata, predict.df)
     
