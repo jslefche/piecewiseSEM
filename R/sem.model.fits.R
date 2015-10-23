@@ -88,6 +88,9 @@ sem.model.fits = function(modelList) {
       # Get design matrix of fixed effects from model
       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
       
+      # Remove omitted observations and unused factor levels
+      Fmat = Fmat[-model$na.action, match(names(fixef(model)), colnames(Fmat))]
+      
       # Get variance of fixed effects by multiplying coefficients by design matrix
       varF = var(as.vector(fixef(model) %*% t(Fmat)))
  
@@ -239,6 +242,9 @@ sem.model.fits = function(modelList) {
 #       # Get design matrix of fixed effects from model
 #       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
 #       
+#       # Remove omitted observations and unused factor levels
+#       Fmat = Fmat[-model$na.action, match(names(fixef(model)), colnames(Fmat))]
+#    
 #       # Get variance of fixed effects by multiplying coefficients by design matrix
 #       varF = var(as.vector(fixef(model) %*% t(Fmat)))
 #       
