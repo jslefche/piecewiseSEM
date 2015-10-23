@@ -201,7 +201,7 @@ shipley2009.new = data.frame(
 )
 
 # Generate predictions
-head(predict.sem(shipley2009.modlist, shipley2009.new))
+head(sem.predict(shipley2009.modlist, shipley2009.new))
 
 #      lat       DD     Date   Growth   DD.fit Date.fit Growth.fit Live.fit
 # 63.74900 156.6662 118.6954 50.95160 143.3918 120.3736   46.48266 5.497643

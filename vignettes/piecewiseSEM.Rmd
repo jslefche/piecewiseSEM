@@ -148,7 +148,7 @@ shipley2009.new = data.frame(
 )
 
 # Generate predictions
-shipley2009.new.pred = predict.sem(shipley2009.modlist, shipley2009.new)
+shipley2009.new.pred = sem.predict(shipley2009.modlist, shipley2009.new)
 head(shipley2009.new.pred)
 
 # Plot predicted fit
@@ -156,7 +156,7 @@ with(shipley2009, plot(Date ~ DD, col = "grey60"))
 lines(shipley2009.new.pred$Date.fit ~ shipley2009.new.pred$DD, lwd = 2, col = "red")
 
 # Generate predictions with standard errors (based on fixed effects only)
-shipley2009.new.pred = predict.sem(shipley2009.modlist, shipley2009.new, sefit = TRUE)
+shipley2009.new.pred = sem.predict(shipley2009.modlist, shipley2009.new, sefit = TRUE)
 
 # Add 95% confidence bands (roughly 2 * SE)
 lines(shipley2009.new.pred$DD, 

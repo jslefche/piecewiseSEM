@@ -111,7 +111,7 @@ partial.resid = function(
     
     y.resids = resid(y.nox.model, level = 0:Q)
     
-    y.resids = y.resids[, 0, drop = FALSE]
+    y.resids = y.resids[, 1]
     
     } else y.resids = resid(y.nox.model)
   
@@ -122,7 +122,7 @@ partial.resid = function(
     
     x.resids = resid(x.noy.model, level = 0:Q) 
     
-    x.resids = x.resids[, 0, drop = FALSE]
+    x.resids = x.resids[, 1]
     
     } else x.resids = resid(x.noy.model)
   
