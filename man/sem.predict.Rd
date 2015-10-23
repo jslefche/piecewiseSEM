@@ -1,6 +1,6 @@
-\name{predict.sem}
+\name{sem.predict}
 
-\alias{predict.sem}
+\alias{sem.predict}
 
 \title{
 Returns model predictions for SEM
@@ -11,7 +11,7 @@ Returns predictions for responses in the list of structured equations.
 }
 
 \usage{
-predict.sem(object, newdata, sefit = FALSE, ...)
+sem.predict(object, newdata, sefit = FALSE, ...)
 }
 
 \arguments{
@@ -85,7 +85,7 @@ shipley2009.new = data.frame(
 )
 
 # Generate predictions
-shipley2009.new.pred = predict.sem(shipley2009.modlist, shipley2009.new)
+shipley2009.new.pred = sem.predict(shipley2009.modlist, shipley2009.new)
 head(shipley2009.new.pred)
 
 # Plot predicted fit
@@ -93,7 +93,7 @@ plot(shipley2009$Date ~ shipley2009$DD, col = "grey60")
 lines(shipley2009.new.pred$Date.fit ~ shipley2009.new.pred$DD, lwd = 2, col = "red")
 
 # Generate predictions with standard errors (based on fixed effects only)
-shipley2009.new.pred = predict.sem(shipley2009.modlist, shipley2009.new, sefit = TRUE)
+shipley2009.new.pred = sem.predict(shipley2009.modlist, shipley2009.new, sefit = TRUE)
 
 # Add 95% confidence intervals
 lines(shipley2009.new.pred$DD, 

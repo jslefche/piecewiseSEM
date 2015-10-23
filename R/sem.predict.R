@@ -1,6 +1,6 @@
 # predict = function(object, ...) UseMethod("generic")
 
-predict.sem = function(object, newdata, sefit = FALSE, ...) {
+sem.predict = function(object, newdata, sefit = FALSE, ...) {
   
   # If not a model object, then coerce to a list
   if(class(object) != "list") object = list(object)
