@@ -64,7 +64,6 @@ shipley2009.modlist = list(
   )
 ```
 
-
 ###Run Shipley tests
 
 `sem.fit` returns a list of the following:
@@ -114,7 +113,7 @@ sem.coefs(shipley2009.modlist, shipley2009)
 #       Live    Growth  0.3478541 0.058404201 2.585211e-09
 #         DD       lat -0.8354736 0.119422385 1.565614e-06
 
-sem.coefs(shipley2009.modlist, shipley2009, standardized = "scale")
+sem.coefs(shipley2009.modlist, shipley2009, standardize = "scale")
 ```
 
 ###Generate variance-covariance SEM using `lavaan`
