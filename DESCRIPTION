@@ -6,7 +6,7 @@ Date: 2015-10-23
 Author: Jon Lefcheck
 Maintainer: Jon Lefcheck <jselfche@vims.edu>
 Description: Implements piecewise structural equation models.
-License: MIT
+License: GPL-3
 Imports: ggm, lavaan, lmerTest, nlme
 Suggests: knitr,
     rmarkdown
