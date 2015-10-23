@@ -77,12 +77,12 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
         
       } else {
         
-        # formula(
+        formula(
           paste("~ ", 
                 paste(new.random.slopes, collapse = " + "),
                 " | ",
                 random.structure) 
-        # )
+        )
     
     } else if(any(class(model) %in% c("glmerMod", "merModLmerTest")))
       
