@@ -8,7 +8,7 @@ sem.model.fits = function(modelList) {
     
     all(class(i) %in% c("lm", "glm", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod")) 
     
-  ) ) ) warning("Pseudo-R2s are not yet supported for some model classes!")
+  ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
   
   # Apply functions across all models in the model list
   do.call(rbind, lapply(modelList, function(model) {
@@ -36,10 +36,14 @@ sem.model.fits = function(modelList) {
       if("glm" %in% class(model)) ret$Link = summary(model)$family[[2]]
       
       # Calculate R2 values
-      ret$Marginal = 1 - (model$deviance / model$null.deviance)
+      if(any(class(model) %in% c("glm"))) ret$Marginal = (1 - (model$deviance / model$null.deviance)) else {
+        
+        null.mod = update(model, . ~ 1)
+        
+        ret$Marginal = 1 - (model$sigma / null.mod$sigma)^2
       
-      ret$Conditional = NA
-                    
+        }
+  
       # Calculate model AIC
       ret$AIC = AIC(model)
       
