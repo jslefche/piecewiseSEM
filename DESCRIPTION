@@ -4,7 +4,7 @@ Title: Piecewise Structural Equation Modeling
 Version: 1.0.0
 Date: 2015-10-26
 Author: Jon Lefcheck
-Maintainer: Jon Lefcheck <jselfche@vims.edu>
+Maintainer: Jon Lefcheck <jslefche@vims.edu>
 Description: Implements piecewise structural equation models.
 License: GPL-3
 Imports: ggm, lavaan, lme4, lmerTest, nlme
