@@ -36,13 +36,15 @@ sem.model.fits = function(modelList) {
       if("glm" %in% class(model)) ret$Link = summary(model)$family[[2]]
       
       # Calculate R2 values
-      if(any(class(model) %in% c("glm"))) ret$Marginal = (1 - (model$deviance / model$null.deviance)) else {
+      if(any(class(model) %in% c("glm"))) ret$Marginal = (1 - (model$deviance / model$null.deviance)) else 
         
-        null.mod = update(model, . ~ 1)
-        
-        ret$Marginal = 1 - (model$sigma / null.mod$sigma)^2
-      
-        }
+        if(any(class(model) %in% c("pgls"))) ret$Marginal = 1 - (model$RSSQ / model$NSSQ) else {
+          
+          null.mod = update(model, . ~ 1)
+          
+          ret$Marginal = 1 - (model$sigma / null.mod$sigma)^2
+          
+          }
   
       # Calculate model AIC
       ret$AIC = AIC(model)
@@ -93,7 +95,7 @@ sem.model.fits = function(modelList) {
       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
       
       # Remove omitted observations and unused factor levels
-      Fmat = Fmat[-model$na.action, match(names(fixef(model)), colnames(Fmat))]
+      if(!is.null(model$na.action)) Fmat = Fmat[-model$na.action, match(names(fixef(model)), colnames(Fmat))]
       
       # Get variance of fixed effects by multiplying coefficients by design matrix
       varF = var(as.vector(fixef(model) %*% t(Fmat)))
@@ -247,7 +249,7 @@ sem.model.fits = function(modelList) {
 #       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
 #       
 #       # Remove omitted observations and unused factor levels
-#       Fmat = Fmat[-model$na.action, match(names(fixef(model)), colnames(Fmat))]
+#       if(!is.null(model$na.action)) Fmat = Fmat[-model$na.action, match(names(fixef(model)), colnames(Fmat))]
 #    
 #       # Get variance of fixed effects by multiplying coefficients by design matrix
 #       varF = var(as.vector(fixef(model) %*% t(Fmat)))
