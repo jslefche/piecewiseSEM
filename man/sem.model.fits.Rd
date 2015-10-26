@@ -62,6 +62,10 @@ library(nlme)
 gls.mod = gls(DD ~ lat, na.action = na.omit, data = shipley2009)
 sem.model.fits(gls.mod)
 
+# Can supply the models as a list
+# Use lm and gls -- should produce very similar R2s
+sem.model.fits(list(lm.mod, gls.mod))
+
 # Get R2 for linear mixed effects model (nlme)
 lme.mod = lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, data = shipley2009)
 sem.model.fits(lme.mod)
