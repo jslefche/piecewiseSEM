@@ -81,7 +81,4 @@ sem.fit(shipley2009.modlist, shipley2009)
 
 # Extract path coefficients
 sem.coefs(shipley2009.modlist, shipley2009)
-
-# Run variance-covariance SEM (calls on package::lavaan)
-summary(sem.lavaan(shipley2009.modlist, shipley2009))
 }

@@ -1,9 +1,13 @@
 exportPattern("^[[:alpha:]]+")
 import(ggm)
 import(lavaan)
-importFrom(lme4, lmerControl)
-importFrom(lme4, glmerControl)
-importFrom(lme4, findbars)
-importFrom(lme4, nobars)
 import(lmerTest)
 import(nlme)
+importFrom("lme4", "lmerControl", "glmerControl", "findbars", "nobars")
+importFrom("graphics", "abline", "lines", "plot")
+importFrom("methods", "as")
+importFrom("stats", "AIC", "aggregate", "as.formula", "cor",
+           "drop.terms", "family", "formula", "gaussian",
+           "glm.control", "lm", "model.matrix", "na.omit", "pchisq",
+           "pt", "reformulate", "terms", "var")
+importFrom("utils", "setTxtProgressBar", "txtProgressBar")

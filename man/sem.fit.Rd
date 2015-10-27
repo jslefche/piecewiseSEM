@@ -152,63 +152,57 @@ sem.fit(shipley2009.modlist, shipley2009)
 
 # sem.fit(shipley2009.modlist.lme4, shipley2009)
 
-### NOT RUN ###
-
 # Add new variable with no hypothesized links
-set.seed(1)
-add.var = rnorm(nrow(shipley2009), 50, 20)
+# set.seed(1)
+# add.var = rnorm(nrow(shipley2009), 50, 20)
 
 # Test for independence
-sem.fit(shipley2009.modlist, shipley2009, add.vars = c("add.var"))
+# sem.fit(shipley2009.modlist, shipley2009, add.vars = c("add.var"))
 
 ###
 
 # Add new variable grouped at site level
-set.seed(2)
-shipley2009$site.var = rep(rnorm(20, 10, 5), each = 95)
+# set.seed(2)
+# shipley2009$site.var = rep(rnorm(20, 10, 5), each = 95)
 
 # Add a final model regressing at the level of the grouping variable
-shipley2009.modlist2 = append(
-  
-  shipley2009.modlist, list(
-  
-  lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = shipley2009[,"site"]), 
-    mean, na.rm = TRUE))) 
-  
-  )
+# shipley2009.modlist2 = append(
+#   
+#   shipley2009.modlist, list(
+#     
+#     lm(site.var~Growth, data = aggregate(shipley2009, by = list(site = shipley2009[,"site"]), 
+#                                          mean, na.rm = TRUE))) 
+#   
+# )
 
 # Test for independence
-sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), 
-  top.level.vars = c("site.var"))
+# sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), 
+#         top.level.vars = c("site.var"))
 
 ###
 
 # Fit model from Shipley (2013)
-data(shipley2013)
+# data(shipley2013)
+# 
+# shipley2013.modlist = list(
+#   
+#   lme(x2~x1, random = ~x1 | species, data = shipley2013),
+#   
+#   lme(x3~x2, random = ~x2 | species, data = shipley2013),
+#   
+#   lme(x4~x2, random = ~x2 | species, data = shipley2013),
+#   
+#   lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
+#   
+# )
 
-shipley2013.modlist = list(
-
-  lme(x2~x1, random = ~x1 | species, data = shipley2013),
-  
-  lme(x3~x2, random = ~x2 | species, data = shipley2013),
-  
-  lme(x4~x2, random = ~x2 | species, data = shipley2013),
-  
-  lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
-  
-  )
-
-## NOT RUN ##
-# sem.fit(shipley2013.modlist, shipley2013) 
-# Convergence error!
-## NOT RUN ##
+# sem.fit(shipley2013.modlist, shipley2013) # Convergence error!
 
 # Specify model controls by switching to old optimizer
-sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))
+# sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))
 
 ###
 
-## NOT RUN ##
 # Compare to output from ggm package
 # # Load library
 # library(ggm)
@@ -233,5 +227,6 @@ sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = 
 # 
 # # Test model fit
 # sem.fisher.c(modelList, marks)
-## NOT RUN ##
+
+## END NOT RUN ##
 }
