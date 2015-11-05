@@ -31,7 +31,9 @@ get.basis.set = function(amat) {
   } )
   
   ret = unlist(ret, recursive = FALSE)
-  
+
+  ret = lapply(ret, function(i) i[!duplicated(i)])
+    
   ret = ret[!sapply(ret, is.null)]
   
   return(ret)

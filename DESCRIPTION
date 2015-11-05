@@ -1,8 +1,8 @@
 Package: piecewiseSEM
 Type: Package
 Title: Piecewise Structural Equation Modeling
-Version: 1.0.0
-Date: 2015-10-26
+Version: 1.0.1
+Date: 2015-11-05
 Author: Jon Lefcheck
 Maintainer: Jon Lefcheck <jslefche@vims.edu>
 Description: Implements piecewise structural equation models.

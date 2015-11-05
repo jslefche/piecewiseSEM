@@ -1,5 +1,8 @@
 # piecewiseSEM Change Log
 
+### 2015-11-04 Version 1.0.1
+  * Bug fix: duplicated values in basis set (function DAG in ggm package)
+
 ### 2015-10-26 Version 1.0.0
   * First release to CRAN
 

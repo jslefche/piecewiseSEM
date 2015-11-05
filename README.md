@@ -7,7 +7,7 @@
     Lefcheck, J.S. "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." 
     arXiv:1509.01845. http://arxiv.org/abs/1509.01845
 
-Version: 1.0.0 (2015-10-26)
+Version: 1.0.1 (2015-11-05)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -18,8 +18,13 @@ Supported model classes include: `lm`, `glm`, `glm.nb`, `gls`, `pgls`, `lme`, `g
 ###Load package
 
 ```
+# Install latest version from CRAN
+install.packages("piecewiseSEM")
+
+# Install dev version from GitHub
 # library(devtools)
 # install_github("jslefche/piecewiseSEM")
+
 library(piecewiseSEM)
 ```
 
