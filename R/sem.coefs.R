@@ -10,7 +10,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   if(standardize != "none") {
     
     # Remove variables that are transformed
-    if(any(unlist(lapply(modelList, function(i) grepl("log\\(|log10\\(|sqrt\\(|I\\(", deparse(formula(i)))))))
+    if(any(unlist(lapply(modelList, function(i) grepl("log\\(|log10\\(|sqrt\\(|I\\(|offset\\(", deparse(formula(i)))))))
       
       stop("Transformations detected in the formula! This may produce invalid scaled values\nStore transformations as new variables, and re-specify the models")
      

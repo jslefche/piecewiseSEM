@@ -63,9 +63,9 @@ sem.missing.paths = function(
     }
     
     # Get row number from coefficient table for d-sep variable
-    if(!class(basis.mod.new) %in% "pgls") {
+    if(any(!class(basis.mod.new) %in% "pgls")) {
       
-      row.num = which(basis.set[[i]][1] == attr(terms(basis.mod.new), "term.labels")) + 1 
+      row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1 
       
       # Get row number if interaction variables are switched
       if(length(row.num) == 0 & grepl("\\:", basis.set[[i]][1])) {
