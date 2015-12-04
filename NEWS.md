@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2015-11-09 Version 1.0.1
+### 2015-12-04 Version 1.0.1
+  * Bug fix: fixed issue with offset() variables in sem.missing.paths
   * Bug fix: fixed transformed responses for partial residuals
   * Bug fix: duplicated values in basis set (function DAG in ggm package)
 

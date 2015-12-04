@@ -4,10 +4,9 @@
   
   A formal description of this package can be found at:
   
-    Lefcheck, J.S. "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." 
-    arXiv:1509.01845. http://arxiv.org/abs/1509.01845
+    Lefcheck, Jonathan S. (2015) "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." Methods in Ecology and Evolution. In press. DOI: 10.1111/2041-210X.12512
 
-Version: 1.0.1 (2015-11-05)
+Version: 1.0.1 (2015-12-04)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 

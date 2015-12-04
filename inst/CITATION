@@ -1,12 +1,12 @@
 citEntry(
   entry="Article",
   title="piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics",
-  journal="arXiv",
-  volume= "",
+  journal="Methods in Ecology and Evolution",
+  volume= "In press",
   number="",
-  pages="1509.01845",
+  pages="",
   year="2015",
-  author="J.S. Lefcheck",
-  URL="http://arxiv.org/abs/1509.01845",
-  textVersion="Lefcheck, J.S. piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics. 
-arXiv Pre-prints: arXiv:1509.01845. http://arxiv.org/abs/1509.01845" )
+  author="Jonathan S. Lefcheck",
+  DOI="10.1111/2041-210X.12512",
+  URL="http://dx.doi.org/10.1111/2041-210X.12512",
+  textVersion= Lefcheck, Jonathan S. (2015) "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." Methods in Ecology and Evolution. In press. DOI: 10.1111/2041-210X.12512" )
