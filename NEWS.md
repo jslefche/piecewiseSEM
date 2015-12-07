@@ -1,8 +1,9 @@
 # piecewiseSEM Change Log
 
-### 2015-12-04 Version 1.0.1
-  * Bug fix: fixed issue with offset() variables in sem.missing.paths
-  * Bug fix: fixed transformed responses for partial residuals
+### 2015-12-07 Version 1.0.1
+  * Bug fix: issue with fixed intercept models and calculating the basis set
+  * Bug fix: issue with offset() variables in sem.missing.paths
+  * Bug fix: transformed responses for partial residuals
   * Bug fix: duplicated values in basis set (function DAG in ggm package)
 
 ### 2015-10-26 Version 1.0.0
