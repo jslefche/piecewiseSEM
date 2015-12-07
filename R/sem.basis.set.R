@@ -20,7 +20,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   amat = get.dag(formula.list)
 
   # If intercept only model, add response variable to adjacency matrix
-  if(any(unlist(lapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i))))))) {
+  if(any(unlist(lapply(modelList, function(i) deparse(formula(i)[2]) %in% c("~1", "~ 1"))))) {
     
     # Isolate intercept only model(s)
     responses = sapply(modelList[which(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))],
@@ -96,7 +96,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
   # Replace edit in DAG() function in the ggm package
-  body(DAG)[[2]] = substitute(f <- list(...))
+  # body(DAG)[[2]] = substitute(f <- list(...))
   
   if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
   
