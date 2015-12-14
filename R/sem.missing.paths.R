@@ -70,12 +70,20 @@ sem.missing.paths = function(
       # Get row number if interaction variables are switched
       if(length(row.num) == 0 & grepl("\\:", basis.set[[i]][1])) {
         
-        # Get both kinds of interactions
-        int.fwd = paste(strsplit(basis.set[[i]][1], ":")[[1]], collapse = ":")
+        # Get all combinations of interactions
+        ints = strsplit(basis.set[[i]][1], ":")
         
-        int.bwd = paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":")
+        all.ints = sapply(ints, function(x) { 
+          
+          datf = expand.grid(x, x, x, stringsAsFactors = FALSE)
+          
+          datf = datf[apply(datf, 1, function(x) !any(duplicated(x))), ]
+          
+          apply(datf, 1, function(x) paste(x, collapse = ":"))
+          
+        } )
         
-        row.num = which(attr(terms(basis.mod.new), "term.labels") %in% c(int.fwd, int.bwd)) + 1
+        row.num = which(attr(terms(basis.mod.new), "term.labels") %in% all.ints) + 1
           
         }
       
