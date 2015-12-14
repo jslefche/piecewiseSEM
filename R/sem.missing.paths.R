@@ -75,7 +75,7 @@ sem.missing.paths = function(
         
         all.ints = sapply(ints, function(x) { 
           
-          datf = expand.grid(x, x, x, stringsAsFactors = FALSE)
+          datf = expand.grid(rep(list(x), length(x)), stringsAsFactors = FALSE)
           
           datf = datf[apply(datf, 1, function(x) !any(duplicated(x))), ]
           
