@@ -70,8 +70,13 @@ sem.missing.paths = function(
       # Get row number if interaction variables are switched
       if(length(row.num) == 0 & grepl("\\:", basis.set[[i]][1])) {
         
-        row.num = which(paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":") == attr(terms(basis.mod.new), "term.labels")) + 1
+        # Get both kinds of interactions
+        int.fwd = paste(strsplit(basis.set[[i]][1], ":")[[1]], collapse = ":")
         
+        int.bwd = paste(rev(strsplit(basis.set[[i]][1], ":")[[1]]), collapse = ":")
+        
+        row.num = which(attr(terms(basis.mod.new), "term.labels") %in% c(int.fwd, int.bwd)) + 1
+          
         }
       
       } else {
