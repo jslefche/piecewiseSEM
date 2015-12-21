@@ -146,17 +146,17 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Round p-values
   ret$p.value = round(ret$p.value, 4)
   
-  # If standardize != "none" and interactions present, set SEs and P-values to NA
-  if(standardize != "none" & any(sapply(modelList, function(x) any(grepl("\\:|\\*", formula(x)))))) {
-    
-    # Return warning
-    print("It is not correct to interpret significance of standardized variables involved in interactions!")
-    print("Refer to unstandardized P-values to assess significance.") 
-  
-    # Remove SEs and P=values for rows with interactions
-    ret[grepl("\\:|\\*", ret$predictor), 4:5] = NA
-    
-  }
+#   # If standardize != "none" and interactions present, set SEs and P-values to NA
+#   if(standardize != "none" & any(sapply(modelList, function(x) any(grepl("\\:|\\*", formula(x)))))) {
+#     
+#     # Return warning
+#     print("It is not correct to interpret significance of standardized variables involved in interactions!")
+#     print("Refer to unstandardized P-values to assess significance.") 
+#   
+#     # Remove SEs and P=values for rows with interactions
+#     ret[grepl("\\:|\\*", ret$predictor), 4:5] = NA
+#     
+#   }
     
   return(ret)
 
