@@ -19,13 +19,17 @@ sem.model.fits(modelList)
 a \code{list} of regressions representing the structural equation model. 
 }
 
+\item{aicc}{
+whether AIC corrected for small sample size (AICc) should be returned. Default is \code{FALSE}. 
+}
+
 }
 \details{
-Returns goodness-of-fit statistics for generalized linear (mixed) models, including (marginal and condition) R^2 and Akaike Information Criterion (AIC) values. 
+Returns goodness-of-fit statistics for generalized linear (mixed) models, including (marginal and condition) R^2 and Akaike Information Criterion (AIC(c)) values. 
 }
 
 \value{
-Returns a \code{data.frame} with the model class, the family, the link function,  the marginal R^2 (based on fixed effects only) and/or conditional R^2 (based on fixed and random effects, if present), and the AIC score (based on ML).
+Returns a \code{data.frame} with the model class, the family, the link function,  the marginal R^2 (based on fixed effects only) and/or conditional R^2 (based on fixed and random effects, if present), and the AIC(c) score (based on ML).
 }
 
 \references{

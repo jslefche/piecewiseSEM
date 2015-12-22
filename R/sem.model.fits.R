@@ -1,4 +1,4 @@
-sem.model.fits = function(modelList) {
+sem.model.fits = function(modelList, aicc == FALSE) {
 
   # If object is just an individual model, convert to a list
   if(all(class(modelList) != "list")) modelList = list(modelList)
@@ -11,16 +11,16 @@ sem.model.fits = function(modelList) {
   ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
   
   # Apply functions across all models in the model list
-  do.call(rbind, lapply(modelList, function(model) {
+  ret = do.call(rbind, lapply(modelList, function(model) {
     
     # Create return data.frame
     ret = data.frame(
       Class = class(model)[1],
       Family = "gaussian",
       Link = "identity",
+      N = nobs(model),
       Marginal = NA,
-      Conditional = NA,
-      AIC = AIC(model) 
+      Conditional = NA
     )
   
     # Get R2 for class == lm
@@ -47,7 +47,11 @@ sem.model.fits = function(modelList) {
           }
   
       # Calculate model AIC
-      ret$AIC = AIC(model)
+      if(aicc == FALSE) 
+        
+        ret$AIC = AIC(model) else
+          
+          ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
       
     }
     
@@ -84,7 +88,13 @@ sem.model.fits = function(modelList) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varResid)
       
       # Calculate model AIC
-      ret$AIC = AIC(update(model, REML = FALSE))
+      model.ml = update(model, REML = FALSE)
+      
+      if(aicc == FALSE) 
+        
+        ret$AIC = AIC(model.ml) else
+          
+          ret$AICc = AIC(model.ml) + (2 * (attr(logLik(model.ml), "df")) * (attr(logLik(model.ml), "df") + 1)) / (nobs(model.ml) - attr(logLik(model.ml), "df") - 1)
       
     }
     
@@ -140,8 +150,14 @@ sem.model.fits = function(modelList) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varResid)
       
       # Calculate model AIC
-      ret$AIC = AIC(update(model, method = "ML"))
+      model.ml = update(model, method = "ML")
       
+      if(aicc == FALSE) 
+        
+        ret$AIC = AIC(model.ml) else
+          
+          ret$AICc = AIC(model.ml) + (2 * (attr(logLik(model.ml), "df")) * (attr(logLik(model.ml), "df") + 1)) / (nobs(model.ml) - attr(logLik(model.ml), "df") - 1)
+
     }
     
     # Get R2 for class == "glmerMod"
@@ -232,7 +248,7 @@ sem.model.fits = function(modelList) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varDisp + varDist)
       
       # Calculate model AIC
-      ret$AIC = AIC(model)
+      ret$AIC = NA
       
     }
     
@@ -356,5 +372,21 @@ sem.model.fits = function(modelList) {
     return(ret)
     
   } ) )
-      
+  
+  if(any(ret$N <= 40) & colnames(ret)[ncol(ret)] != "AICc") warning("N < 40, consider using aicc = TRUE")
+  
+  # Calculate delta AIC
+  if(any(!is.na(ret[, ncol(ret)]))) {
+    
+    ret = cbind(
+      ret, 
+      ret[, ncol(ret)] - min(ret[, ncol(ret)])
+    )
+    
+    colnames(ret)[ncol(ret)] = paste0("d", colnames(ret)[ncol(ret) - 1]) #intToUtf8(0x0394), colnames(ret)[ncol(ret) - 1])
+    
+  }
+  
+  return(ret)
+  
 }
