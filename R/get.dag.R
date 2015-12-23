@@ -30,6 +30,9 @@ get.dag = function(formulaList) {
   
     ) ) ) 
   
+  # Remove offsets from vars
+  vars = vars[!grepl("offset", vars)]
+  
   # Create adjacency matrix
   amat = do.call(cbind, lapply(vars, function(i) {
  

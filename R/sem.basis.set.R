@@ -92,6 +92,35 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
   } )
   
+  # Add offsets back in for given response
+  # Identify responses for which offset is present
+  rpl = do.call(rbind, lapply(formula.list, function(i) {
+    
+    lhs = paste(rownames(attr(terms(i), "factors"))[1])
+    
+    rhs = rownames(attr(terms(i), "factors"))[-1]
+    
+    if(any(grepl("offset", rhs)))
+      
+      data.frame(response = lhs, offset = rhs[grepl("offset", rhs)]) else
+        
+        NULL
+    
+  } ) )
+  
+  # Add offset to basis set
+  if(!is.null(rpl)) 
+    
+    basis.set = lapply(basis.set, function(i) {
+      
+      if(any(i[2] == rpl$response)) {
+        
+        c(i, as.character(rpl[rpl$response == i[2], "offset"]))
+        
+      } else i 
+      
+    } )
+  
   # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
