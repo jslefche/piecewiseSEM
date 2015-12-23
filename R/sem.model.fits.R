@@ -248,7 +248,11 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varDisp + varDist)
       
       # Calculate model AIC
-      ret$AIC = NA
+      if(aicc == FALSE) 
+        
+        ret$AIC = AIC(model) else
+          
+          ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
       
     }
     
