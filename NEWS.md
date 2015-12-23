@@ -1,6 +1,10 @@
 # piecewiseSEM Change Log
 
-### 2015-12-22 Version 1.0.1
+### 2015-12-22 Version 1.0.2
+  * Feature addition: AICc and delta AIC to sem.model.fits
+  * Bug fix: Offsets in model formula treated as predictors in d-sep tests
+
+### 2015-12-13 Version 1.0.1
   * Feature addition: AICc and delta AIC to sem.model.fits
   * Bug fix: issue with interactions in basis set and d-sep tests in sem.missing.paths
   * Bug fix: issue with fixed intercept models and calculating the basis set
