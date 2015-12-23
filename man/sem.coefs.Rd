@@ -59,7 +59,7 @@ Jon Lefcheck
 }
 
 \note{
-Standardized variables involved in an interaction will throw a warning and ask the user to interpret significance using the unstandardized variables. However, the standardized coefficients are still interpretable because they have been standardized before their product is calculated (as opposed to standardization of the product, which is incorrect, see Bollen 1989).
+Caution: There is some debate over whether coefficients and significance tests for interactions containing standardized variables are valid (see Bollen 1989). This usually refers to the fact that some programs standardize the product, instead of the component variables. piecewiseSEM standardizes variables before calculating their product and thus should produce valid coefficients. The standard errors on the coefficients are still a grey area: if you are concerned at all, refer to the SEs and P-values of the /un/standardized variables.
 }
 
 \seealso{
