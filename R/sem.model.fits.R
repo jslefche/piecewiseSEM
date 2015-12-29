@@ -150,7 +150,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varResid)
       
       # Calculate model AIC
-      model.ml = update(model, method = "ML")
+      model.ml = update(model, data = model$data, method = "ML")
       
       if(aicc == FALSE) 
         
