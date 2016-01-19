@@ -1,40 +1,45 @@
+# Fixes issues with nlme updated; thanks to Martin Maechler, 2016-01-19
+
 get.model.control = function(model, model.control) {
   
-  control.classes = lapply(model.control, function(i) gsub("(.*)Control", "\\1", class(i))[1] )
-  
-  model.class = ifelse("merModLmerTest" %in% class(model), "lmerMod", class(model))
+  model.class = if(inherits(model, "merModLmerTest")) "lmerMod" else class(model)
   
   # Match model control list with appropriate model class for basis model
   if(is.null(model.control)) {
     
-    if(any(class(model) %in% "glm")) glm.control() else
-      
-      if(any(class(model) %in% "gls")) glsControl() else
-      
-        if(any(class(model) %in% c("lme", "glmmPQL"))) lmeControl() else 
-        
-          if(any(class(model) %in% c("lmerMod", "merModLmerTest"))) lmerControl() else
-            
-            if(class(model) %in% c("glmerMod")) glmerControl()
-          
+    if(inherits(model, "glm")) glm.control()
+    
+    else if(inherits(model, "gls")) glsControl()
+    
+    else if(any(class(model) %in% c("lme", "glmmPQL"))) lmeControl()
+    
+    else if(any(class(model) %in% c("lmerMod", "merModLmerTest"))) lmerControl()
+    
+    else if(inherits(model, "glmerMod")) glmerControl()
+    
   } else {
     
-    if(any(control.classes %in% gsub("(.*)Mod", "\\1", model.class)))
+    ## assume model.control = a *list* of control lists
+    control.classes = lapply(model.control, function(i)
       
-      model.control[[which(control.classes %in% gsub("(.*)Mod", "\\1", model.class))]] else
+      gsub("(.*)Control", "\\1", class(i))[1] )
+    
+    if(any(control.classes %in% (M.cl <- gsub("(.*)Mod", "\\1", model.class))))
+      
+      model.control[[control.classes %in% M.cl]] else
         
-        if(class(model) == "glm")
+        if(inherits(model, "glm"))
           
-          model.control[[which(sapply(model.control, length) == 3)]] else
+          model.control[[sapply(model.control, length) >= 3]] else
             
-            if(class(model) == "gls")
+            if(inherits(model, "gls")) 
               
-              model.control[[which(sapply(model.control, length) == 13)]] else
+              model.control[[sapply(model.control, length) >= 13]] else
                 
-                if(any(class(model) %in% c("lme", "glmmPQL")))
+                if(any(class(model) %in% c("lme", "glmmPQL"))) 
                   
-                  model.control[[which(sapply(model.control, length) == 15)]]
-            
+                  model.control[[sapply(model.control, length) >= 15]]
+    
   }
-
+  
 }
