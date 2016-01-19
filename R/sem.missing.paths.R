@@ -68,12 +68,13 @@ sem.missing.paths = function(
       row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1 
       
       # Get row number if interaction variables are switched
-      if(length(row.num) == 0 & grepl("\\:", basis.set[[i]][1])) {
+      if(length(row.num) == 0 & grepl("\\:|\\*", basis.set[[i]][1])) {
+        
+        # If interaction is reported as asterisk, convert to semicolon
+        int = gsub(" \\* ", "\\:", basis.set[[i]][1])
         
         # Get all combinations of interactions
-        ints = strsplit(basis.set[[i]][1], ":")
-        
-        all.ints = sapply(ints, function(x) { 
+        all.ints = sapply(strsplit(int, ":"), function(x) { 
           
           datf = expand.grid(rep(list(x), length(x)), stringsAsFactors = FALSE)
           

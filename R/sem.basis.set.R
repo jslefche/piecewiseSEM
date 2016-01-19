@@ -12,9 +12,13 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   if(any(unlist(lapply(formula.list, is.null)))) stop("At least one model class not yet supported")
   
   # If additional variables are present, add them to the basis set
-  if(!is.null(add.vars)) 
+  if(!is.null(add.vars)) {
+    
+    # If interactions are specified with an asterisk, replace with semicolon
+    add.vars = sapply(add.vars, function(x) gsub(" \\* ", "\\:", x))
     
     formula.list = append(formula.list, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
+  }
   
   # Generate adjacency matrix
   amat = get.dag(formula.list)
