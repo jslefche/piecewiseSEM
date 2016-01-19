@@ -18,7 +18,8 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     add.vars = sapply(add.vars, function(x) gsub(" \\* ", "\\:", x))
     
     formula.list = append(formula.list, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
-  }
+ 
+    }
   
   # Generate adjacency matrix
   amat = get.dag(formula.list)

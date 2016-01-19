@@ -11,7 +11,7 @@ Estimates variance-covariance based (traditional) structural equation model (SEM
 }
 
 \usage{
-sem.lavaan(modelList, data, corr.errors, add.vars, ...)
+sem.lavaan(modelList, data, compute.int = TRUE, corr.errors, add.vars, ...)
 }
 
 \arguments{
@@ -22,6 +22,10 @@ a list of regressions representing the structural equation model.
 
 \item{data}{
 a \code{data.frame} containing the full dataset for the SEM.
+}
+
+\item{compute.int}{
+a logical argument whether the interactions should be computed by hand. Default is \code{TRUE}.
 }
 
 \item{corr.errors}{
@@ -36,6 +40,10 @@ a vector of additional variables whose independence claims should be evaluated, 
 additional arguments passed to \code{lavaan}.
 }
 
+}
+
+\details{
+Interactions among numeric variables are computed by hand, appended to the original \code{data.frame}, and modified in the formulae passed to \code{lavaan::sem}. 
 }
 
 \value{

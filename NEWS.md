@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
 ### 2016-01-20 Version 1.0.3
+  * Bug fix: hand compute interactions in `sem.lavaan` using argument `compute.int = TRUE`
   * Feature addition: function `scale.data` to handle transformed variables in `sem.coefs` when standardize = "scale"
 
 ### 2016-01-15 Version 1.0.2
