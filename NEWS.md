@@ -1,6 +1,10 @@
 # piecewiseSEM Change Log
 
-### 2015-12-22 Version 1.0.2
+### 2016-01-20 Version 1.0.3
+  * Feature addition: function `scale.data` to handle transformed variables in `sem.coefs` when standardize = "scale"
+
+### 2016-01-15 Version 1.0.2
+  * Feature addition: added additional plotting arguments for partial.residuals
   * Feature addition: AICc and delta AIC to sem.model.fits
   * Bug fix: Offsets in model formula treated as predictors in d-sep tests
 

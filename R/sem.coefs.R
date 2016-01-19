@@ -7,60 +7,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range'")
   
   # Scale variables, if indicated
-  if(standardize != "none") {
-    
-    # Remove variables that are transformed
-    if(any(unlist(lapply(modelList, function(i) grepl("log\\(|log10\\(|sqrt\\(|I\\(|offset\\(", deparse(formula(i)))))))
-      
-      stop("Transformations detected in the formula! This may produce invalid scaled values\nStore transformations as new variables, and re-specify the models")
-     
-    # Get variables to scale, ignoring variables that are modeled to non-normal distributions
-    vars.to.scale = unlist(lapply(modelList, function(i) {
-     
-      err = try(family(i), TRUE)
-      
-      if(grepl("Error", err[1]) | grepl("gaussian", err[1]))
-        
-        all.vars(formula(i)) else {
-          
-          warning(
-            paste("Reponse '", formula(i)[2], "' is not modeled to a gaussian distribution: keeping response on original scale")
-          )
-          
-          NULL }
-
-      }
-    
-    ) )
-    
-    # Remove variables that are factors
-    vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, is.factor)]]
-    
-    # Remove duplicated variables
-    vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
-    
-    # Scale those variables by mean and SD, or by range
-    if(class(data) == "comparative.data")
-      
-      newdata = data$data else newdata = data
-    
-    newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) 
-      
-      if(standardize == "scale") scale(x) else
-        
-        if(standardize == "range") (x-min(x, na.rm = T)) / diff(range(x, na.rm = T))
-      
-      )
-    
-    if(class(data) == "comparative.data") {
-      
-      data$data = newdata
-      
-      newdata = data
-    
-      }
-    
-    }
+  if(standardize != "none") newdata = scale.data(modelList, data)
   
   # Return coefficients
   ret = do.call(rbind, lapply(modelList, function(i) {
