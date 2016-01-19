@@ -7,7 +7,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range'")
   
   # Scale variables, if indicated
-  if(standardize != "none") newdata = scale.data(modelList, data)
+  if(standardize != "none") newdata = scale.data(modelList, data, standardize)
   
   # Return coefficients
   ret = do.call(rbind, lapply(modelList, function(i) {
