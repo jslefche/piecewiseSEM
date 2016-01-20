@@ -37,19 +37,10 @@ Automatically calculates and scales variables that are transformed in the model 
 Returns a \code{data.frame} with the scaled (transformed) variables.
 }
 
-\references{
-}
-
 \author{
 Jon Lefcheck
 }
 
-\note{
-}
-
 \seealso{
 \code{\link{scale}}
-}
-
-\examples{
 }
