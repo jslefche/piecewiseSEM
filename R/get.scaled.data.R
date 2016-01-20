@@ -41,7 +41,7 @@ get.scaled.data = function(modelList, data, standardize) {
           paste("Reponse '", formula(i)[2], "' is not modeled to a gaussian distribution: keeping response on original scale")
         )
         
-        NULL }
+        all.vars(formula(i))[-1] }
     
   } ) )
   
@@ -56,13 +56,15 @@ get.scaled.data = function(modelList, data, standardize) {
     
     newdata = data$data else newdata = data
   
-  newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) 
+  newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) {
     
     if(standardize == "scale") scale(x) else
       
-      if(standardize == "range") (x-min(x, na.rm = T)) / diff(range(x, na.rm = T))
+      if(standardize == "range") (x-min(x, na.rm = T)) / diff(range(x, na.rm = T)) else
+        
+        x
     
-  )
+  } )
   
   if(class(data) == "comparative.data") {
     
