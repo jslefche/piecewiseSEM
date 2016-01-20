@@ -2,7 +2,7 @@ partial.resid = function(
   
   .formula = y ~ x, modelList, data, model.control = NULL, return.data.frame = TRUE, plotit = TRUE, plotreg = TRUE, plotCI = TRUE
   
-  ) {
+) {
   
   if(any(class(modelList) != "list")) modelList = list(modelList)
   
@@ -14,26 +14,26 @@ partial.resid = function(
   x = gsub(" ", "", vars[2])
   
   # Extract model from modelList regressing the y variable
-  y.vars = suppressWarnings(sapply(modelList, function(i) pmatch(all.vars(formula(i))[1], y)))
+  y.var = which(sapply(modelList, function(i) all.vars(formula(i))[1]) == y)
   
-  if(!any(y.vars)) 
+  if(!any(y.var)) 
     
     stop("Check spelling of correlated variables - must match exactly response in model formula!") else
       
-      y.model = modelList[[y.vars]]
+      y.model = modelList[[y.var]]
   
   if(all(strsplit(deparse(formula(y.model)[[3]]), ".\\+.")[[1]] %in% x)) 
     
     stop("Y is a direct function of X, no partial residuals obtainable")
-
+  
   # Get model formula 
   rhs = formula(drop.terms(terms(y.model), grep(gsub("\\*", "\\:", x), attr(terms(y.model), "term.labels")), keep.response = TRUE))
-
+  
   random.formula = get.random.formula(y.model, rhs, modelList, dropterms = x)
   
   # Get model control
   control = get.model.control(y.model, model.control)
-
+  
   # Update model
   y.nox.model = suppressWarnings(if(is.null(random.formula)) 
     
@@ -45,7 +45,7 @@ partial.resid = function(
           
           update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control) 
     
-    )
+  )
   
   # If x is an interaction, calculate and replace in dataset
   if(grepl("\\:|\\*", x)) { 
@@ -60,19 +60,19 @@ partial.resid = function(
   x.noy.model = suppressWarnings(
     
     if(is.null(random.formula)) {
-    
-    if(any(class(y.model) %in% c("glm"))) {
-    
-      # Try to update model
-      mod = try(suppressWarnings(suppressMessages(
-        update(y.model, 
-               reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
-               control = control, 
-               data = data)
-        ) ), silent = TRUE)
       
-      if(class(mod) == "try-error") 
-
+      if(any(class(y.model) %in% c("glm"))) {
+        
+        # Try to update model
+        mod = try(suppressWarnings(suppressMessages(
+          update(y.model, 
+                 reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+                 control = control, 
+                 data = data)
+        ) ), silent = TRUE)
+        
+        if(class(mod) == "try-error") 
+          
           update(y.model, 
                  reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
                  family = gaussian(link = "identity"), 
@@ -87,7 +87,7 @@ partial.resid = function(
              control = control,
              data = data)
       
-      } else
+    } else
       
       if(any(class(y.model) %in% c("lme", "glmmPQL")))
         
@@ -108,9 +108,9 @@ partial.resid = function(
                                  reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
                                  control = control,
                                  data = data) 
-  
+    
   )
-
+  
   # Extract residuals from models
   if(any(class(y.nox.model) %in% c("lme", "glmmPQL"))) {
     
@@ -121,7 +121,7 @@ partial.resid = function(
     
     y.resids = y.resids[, 1]
     
-    } else y.resids = resid(y.nox.model)
+  } else y.resids = resid(y.nox.model)
   
   if(any(class(x.noy.model) %in% c("lme", "glmmPQL"))) {
     
@@ -132,7 +132,7 @@ partial.resid = function(
     
     x.resids = x.resids[, 1]
     
-    } else x.resids = resid(x.noy.model)
+  } else x.resids = resid(x.noy.model)
   
   # Bind together in data.frame
   y1 = data.frame(.id = names(y.resids), y.resids)
@@ -141,7 +141,7 @@ partial.resid = function(
   
   # Merge residuals and store in a data.frame
   resids.data = merge(y1, x1, by = ".id", all = TRUE)[, -1]
-    
+  
   # Plot results and regression line
   if(plotit == TRUE)
     
@@ -153,9 +153,9 @@ partial.resid = function(
                        paste(gsub("_", "\\*", x), paste(attr(terms(x.noy.model), "term.labels"), collapse=" + "), sep = " | "),
                        paste(gsub("_", "\\*", x), "| others") )
     )
-
+  
   if(plotit == TRUE & plotreg == TRUE | plotCI == TRUE) {
-
+    
     # Regress residuals(y) ~ residuals(x)
     new.mod = lm(y.resids ~ x.resids, resids.data)
     
@@ -180,11 +180,11 @@ partial.resid = function(
       lines(newdata[, 1], pred[, 2], col = "red", lwd = 1.8, lty = 2)
       
       lines(newdata[, 1], pred[, 3], col = "red", lwd = 1.8, lty = 2)
-    
+      
     }
     
   }
   
   if(return.data.frame == TRUE) return(resids.data)
-    
+  
 }

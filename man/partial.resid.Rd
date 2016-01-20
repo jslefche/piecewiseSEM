@@ -48,6 +48,7 @@ whether the partial regression of \code{y ~ x | Z} should also be plotted. Defau
 \item{plotCI}{
 whether the confidence intervals of the partial regression of \code{y ~ x | Z} should also be plotted. Default is \code{TRUE}.
 }
+
 }
 
 \value{
@@ -115,7 +116,7 @@ example.data[c(12, 23, 45), "x3"] = NA
 # Run regular linear model using lm()
 lm.model = lm(y ~ x1 + x2 + x3, example.data)
 
-sum(!is.na(partial.resid(y ~ x3, lm.model, example.data)$x3)) # Should be 97
+sum(!is.na(partial.resid(y ~ x3, lm.model, example.data)$x.resids)) # Should be 97
 
 ### SEM EXAMPLE ###
 
