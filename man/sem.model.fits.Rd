@@ -51,8 +51,12 @@ This function sources the \code{rsquared.glmm} function found here: https://gith
 }
 
 \examples{
-# Load data from Shipley (2009)
-data(shipley2009) 
+# Load example data
+data(shipley2009)
+
+# Load model packages
+library(lmerTest)
+library(nlme)
 
 # Create list of models 
 shipley2009.modlist = list(

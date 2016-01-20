@@ -23,7 +23,7 @@ The following example comes from Shipley (2009)^[Shipley, B. (2009). Confirmator
 This dataset incorporates hierarchical observations (individual within site within year) and non-independence (repeated measures), and therefore violates some of the basic assumptions of traditional linear modeling and variance-covariance SEM, making it a perfect candidate for a piecewise approach.
 
 The hypothesized casual structure of the network is specified by Shipley as:
-![Shipley 2009 Fig. 2](http://www.esajournals.org/na101/home/literatum/publisher/esa/journals/content/ecol/2009/00129658-90.2/08-1034.1/production/images/large/i0012-9658-90-2-363-f02.jpeg)
+![Shipley 2009 Fig. 2](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley_2009.jpg)
 and will be the structure we will evaluate in this example.
 
 ###Load package
