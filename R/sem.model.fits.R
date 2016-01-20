@@ -24,7 +24,19 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     )
   
     # Get R2 for class == lm
-    if(all(class(model) == "lm")) ret$Marginal = summary(model)$r.squared
+    if(all(class(model) == "lm")) {
+      
+      # Extract r-squared from model summary
+      ret$Marginal = summary(model)$r.squared
+      
+      # Retrieve AIC(c)
+      if(aicc == FALSE) 
+        
+        ret$AIC = AIC(model) else
+          
+          ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
+        
+    }
       
     # Get R2 for class == glm
     if(any(class(model) %in% c("glm", "gls", "pgls"))) {
@@ -379,9 +391,12 @@ sem.model.fits = function(modelList, aicc = FALSE) {
   
   if(any(ret$N <= 40) & colnames(ret)[ncol(ret)] != "AICc") warning("N < 40, consider using aicc = TRUE")
   
+  # Get list of response vectors
+  resp = sapply(modelList, function(x) all.vars(formula(x))[1])
+  
   # Calculate delta AIC
-  if(any(!is.na(ret[, ncol(ret)]))) {
-    
+  if(length(resp) > 1 & all(resp[1] == resp) & any(!is.na(ret[, ncol(ret)]))) {
+     
     ret = cbind(
       ret, 
       ret[, ncol(ret)] - min(ret[, ncol(ret)])

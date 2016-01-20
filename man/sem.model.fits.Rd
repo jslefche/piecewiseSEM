@@ -45,46 +45,14 @@ Jon Lefcheck & Juan Casallas
 }
 
 \note{
+If the models in \code{modelList} are all fit the same response, the function automatically returns the delta AIC(c) as the final column.
+
 This function sources the \code{rsquared.glmm} function found here: https://github.com/jslefche/rsquared.glmm, and thus may be periodically updated independently of this package.
 }
 
 \examples{
 # Load data from Shipley (2009)
 data(shipley2009) 
-
-# Get R2 for linear model
-lm.mod = lm(DD ~ lat, data = shipley2009)
-sem.model.fits(lm.mod)
-
-# Get R2 for generalized linear model
-glm.mod = glm(Live ~ Growth, family = "binomial", data = shipley2009)
-sem.model.fits(glm.mod)
-
-# Get R2 for generalized least-squares model
-library(nlme) 
-
-gls.mod = gls(DD ~ lat, na.action = na.omit, data = shipley2009)
-sem.model.fits(gls.mod)
-
-# Can supply the models as a list
-# Use lm and gls -- should produce very similar R2s
-sem.model.fits(list(lm.mod, gls.mod))
-
-# Get R2 for linear mixed effects model (nlme)
-lme.mod = lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, data = shipley2009)
-sem.model.fits(lme.mod)
-
-# Get R2 for linear mixed effects model (lme4)
-library(lme4)
-
-lmer.mod = lmer(DD ~ lat + (1|site/tree), data = shipley2009)
-sem.model.fits(lmer.mod)
-
-# Get R2 for generalized linear mixed effects model (lme4)
-glmer.mod = glmer(Live ~ Growth + (1|site/tree), family = "binomial", data = shipley2009)
-sem.model.fits(glmer.mod)
-
-### SEM EXAMPLE ###
 
 # Create list of models 
 shipley2009.modlist = list(
@@ -105,4 +73,40 @@ shipley2009.modlist = list(
 
 # Return model fit statistics
 sem.model.fits(shipley2009.modlist)
+
+## NOT RUN ##
+
+# # Get R2 for linear model
+# lm.mod = lm(DD ~ lat, data = shipley2009)
+# sem.model.fits(lm.mod)
+# 
+# # Get R2 for generalized linear model
+# glm.mod = glm(Live ~ Growth, family = "binomial", data = shipley2009)
+# sem.model.fits(glm.mod)
+# 
+# # Get R2 for generalized least-squares model
+# library(nlme) 
+# 
+# gls.mod = gls(DD ~ lat, na.action = na.omit, data = shipley2009)
+# sem.model.fits(gls.mod)
+# 
+# # Can supply the models as a list
+# # Use lm and gls -- should produce very similar R2s, will also produce delta AIC
+# sem.model.fits(list(lm.mod, gls.mod))
+# 
+# # Get R2 for linear mixed effects model (nlme)
+# lme.mod = lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, data = shipley2009)
+# sem.model.fits(lme.mod)
+# 
+# # Get R2 for linear mixed effects model (lme4)
+# library(lme4)
+# 
+# lmer.mod = lmer(DD ~ lat + (1|site/tree), data = shipley2009)
+# sem.model.fits(lmer.mod)
+# 
+# # Get R2 for generalized linear mixed effects model (lme4)
+# glmer.mod = glmer(Live ~ Growth + (1|site/tree), family = "binomial", data = shipley2009)
+# sem.model.fits(glmer.mod)
+
+## NOT RUN ##
 }
