@@ -1,6 +1,6 @@
-\name{scale.data}
+\name{get.scaled.data}
 
-\alias{scale.data}
+\alias{get.scaled.data}
 
 \title{
 Scales data frame
@@ -11,7 +11,7 @@ A helper function for \code{sem.coefs} that provides a scaled data frame (by mea
 }
 
 \usage{
-scale.data(modelList, data, standardize)
+get.scaled.data(modelList, data, standardize)
 }
 
 \arguments{

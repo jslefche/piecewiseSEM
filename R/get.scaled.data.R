@@ -1,4 +1,4 @@
-scale.data = function(modelList, data, standardize) {
+get.scaled.data = function(modelList, data, standardize) {
 
   # Identify variables that are transformed in the model formula
   transform.vars = unlist(lapply(modelList, function(i) {
