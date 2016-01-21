@@ -46,9 +46,9 @@ get.scaled.data = function(modelList, data, standardize) {
   } ) )
   
   # Remove variables that are factors
-  vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, is.factor)]]
+  vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, function(x) any(is.factor(x) | is.character(x)))] ]
   
-  # Remove duplicated variables
+  # Remove duplicateds variables
   vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
   
   # Scale those variables by mean and SD, or by range
