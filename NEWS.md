@@ -1,6 +1,10 @@
 # piecewiseSEM Change Log
 
+### 2016-02-03 Version 1.0.4
+  * Bug fix: standardized coefficients for variables transformed in model formula
+
 ### 2016-01-20 Version 1.0.3
+  * Bug fix: get.model.control updated for latest versions of lme4 and nlme
   * Bug fix: hand compute interactions in `sem.lavaan` using argument `compute.int = TRUE`
   * Feature addition: function `get.scaled.data` to handle transformed variables in `sem.coefs` when standardize = "scale"
 
