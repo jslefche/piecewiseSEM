@@ -11,6 +11,9 @@ get.scaled.data = function(modelList, data, standardize) {
   
   } ) )
   
+  # Remove duplicates
+  transform.vars = transform.vars[!duplicated(transform.vars)]
+  
   # For each variables in transform.vars, perform transformation and store as original variable
   for(i in transform.vars) {
     
