@@ -12,8 +12,40 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Return coefficients
   ret = do.call(rbind, lapply(modelList, function(i) {
     
-    if(standardize != "none") i = update(i, data = newdata)
-    
+    if(standardize != "none") {
+      
+      if(any(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) {
+        
+        # Get random effects
+        rand.effs = gsub(" ", "", sapply(findbars(formula(i)), function(x) gsub(".*\\|(.*)", "\\1", deparse(x))))
+      
+        # Get fixed effects
+        fixed.effs = all.vars(formula(i))[!all.vars(formula(i)) %in% rand.effs]
+        
+        # Get fixed formula stripped of transformations
+        fixed.form = paste0(fixed.effs[1], " ~ ", paste0(fixed.effs[-1], collapse = " + "))
+        
+        # Bind back in random structure
+        random.form = get.random.formula(i, rhs = paste0(fixed.effs[-1], collapse = " + "), modelList)
+      
+        # Get updated formula
+        new.form = paste0(fixed.form, " + ", random.form)
+        
+      } else {
+        
+        new.form = paste0(all.vars(formula(i))[1], " ~ ", paste0(all.vars(formula(i))[-1], collapse = " + "))
+        
+      }
+      
+      # Update model
+      if(any(class(i) %in% c("lme", "glmmPQL")))
+        
+        i = update(i, fixed = as.formula(new.form), newdata) else
+          
+          i = update(i, formula = new.form, data = newdata)
+        
+    }
+
     # Extract coefficients and return in a data.frame
     if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod"))) {
       
