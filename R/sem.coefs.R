@@ -40,7 +40,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
       # Update model
       if(any(class(i) %in% c("lme", "glmmPQL")))
         
-        i = update(i, fixed = as.formula(new.form), newdata) else
+        i = update(i, fixed = as.formula(new.form), data = newdata) else
           
           i = update(i, formula = new.form, data = newdata)
         
