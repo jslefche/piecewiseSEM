@@ -46,14 +46,14 @@ sem.lavaan = function(modelList, data, compute.int = TRUE, corr.errors = NULL, a
   # Convert model formula to lavaan syntax
   sem.model = paste(formula.list, collapse = "\n")
   
-  if(!is.null(corr.errors)) sem.model = paste(sem.model, paste(corr.errors, collapse = "\n"), collapse = "\n")
+  if(!is.null(corr.errors)) sem.model = paste(sem.model, paste(corr.errors, collapse = "\n"), sep = "\n", collapse = "\n")
 
   if(!is.null(add.vars))
     
     sem.model = 
     paste(sem.model, 
           paste0(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~"))), collapse = "\n"),
-          collapse = "\n")
+          sep = "\n", collapse = "\n")
 
   # Run lavaan SEM
   model = sem(sem.model, data, ...)
