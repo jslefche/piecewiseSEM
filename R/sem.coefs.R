@@ -103,17 +103,28 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
       # Pull out correlated variables
       corr.vars = gsub(" ", "", unlist(strsplit(j, "~~")))
       
+      # Final model with response
+      corr.mod = modelList[[match(corr.vars[1], sapply(modelList, function(k) paste(formula(k)[2])))]]
+      
+      # Update model to include correlated error
+      if(any(class(corr.mod) %in% c("lme", "glmmPQL")))
+        
+        corr.mod = update(corr.mod, fixed = formula(paste0(". ~ . + ", corr.vars[2]))) else
+          
+          corr.mod = update(corr.mod, formula(paste0(". ~ . + ", corr.vars[2])))
+      
+      # Get partial residuals
+      corr.mod.resids = partial.resid(formula(paste0(corr.vars, collapse = " ~ ")), corr.mod, data, plotit = FALSE)
+      
       # Perform significance test and return in a data.frame
       data.frame(
         response = paste("~~", corr.vars[1]),
         predictor = paste("~~", corr.vars[2]),
-        estimate = cor(data[, corr.vars[1]], 
-                       data[, corr.vars[2]], 
-                       use = "complete.obs"),
+        estimate = cor(corr.mod.resids[, 1], corr.mod.resids[, 2]),
         std.error = NA,
-        p.value = 1 - 
-          pt((cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs") * sqrt(nrow(data) - 2))/
-               (sqrt(1 - cor(data[, corr.vars[1]], data[, corr.vars[2]], use = "complete.obs")^2)), nrow(data)-2),
+        p.value =  1 - pt(
+          (cor(corr.mod.resids[, 1], corr.mod.resids[, 2], use = "complete.obs") * sqrt(nrow(data) - 2))/
+               (sqrt(1 - cor(corr.mod.resids[, 1], corr.mod.resids[, 2], use = "complete.obs")^2)), nrow(data)-2),
         row.names = NULL
         )
       
