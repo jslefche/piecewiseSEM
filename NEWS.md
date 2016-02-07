@@ -1,6 +1,8 @@
 # piecewiseSEM Change Log
 
 ### 2016-02-03 Version 1.0.4
+  * Feature addition: (partial) correlations in sem.coefs
+  * Bug fix: passing of correlated errors to lavaan
   * Bug fix: standardized coefficients for variables transformed in model formula
 
 ### 2016-01-20 Version 1.0.3
