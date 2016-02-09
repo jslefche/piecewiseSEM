@@ -1,6 +1,10 @@
 # piecewiseSEM Change Log
 
-### 2016-02-03 Version 1.0.4
+### 2016-02-09 Version 1.0.4
+  * Bug fix: correlated errors among exogenous variables in `sem.coefs`
+  * Bug fix: correctly scale data from `pgls` models using `get.scaled.data`
+  * Bug fix: corrected basis set for models created with `gls`
+  * Feature addition: helper function `get.scaled.model` to get model from scaled coefficients
   * Feature addition: (partial) correlations in sem.coefs
   * Bug fix: passing of correlated errors to lavaan
   * Bug fix: standardized coefficients for variables transformed in model formula
