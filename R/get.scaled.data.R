@@ -1,10 +1,23 @@
 get.scaled.data = function(modelList, data, standardize) {
 
+  if(any(sapply(modelList, class) == "pgls") | class(data) == "comparative.data") {
+    
+    # Extract data.frame
+    newdata = data$data
+  
+  } else {
+    
+    newdata = data
+    
+  }
+  
   # Identify variables that are transformed in the model formula
   transform.vars = unlist(lapply(modelList, function(i) {
     
     # Break apart formula
-    vars = rownames(attr(terms(i), "factors"))
+    if(class(i) == "pgls") vars = i$varNames else
+      
+      vars = rownames(attr(terms(i), "factors"))
     
     # Identify transformed vars
     vars[grepl("log\\(|log10\\(|sqrt\\(|I\\(", vars)]
@@ -21,13 +34,13 @@ get.scaled.data = function(modelList, data, standardize) {
     col.nm = gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\)", "\\1", i))
     
     # Get column number
-    col.no = which(colnames(data) == gsub(" ", "", col.nm))
+    col.no = which(colnames(newdata) == gsub(" ", "", col.nm))
     
     # Get actual transformation
     trsf = gsub("(.*)\\(.*\\)", "\\1", i)
     
     # Perform transformation
-    data[, col.no] = eval(parse(text = gsub(col.nm, paste0("data[, ", col.no, "]"), i)))
+    newdata[, col.no] = eval(parse(text = gsub(col.nm, paste0("newdata[, ", col.no, "]"), i)))
     
   }
       
@@ -55,10 +68,6 @@ get.scaled.data = function(modelList, data, standardize) {
   vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
   
   # Scale those variables by mean and SD, or by range
-  if(class(data) == "comparative.data")
-    
-    newdata = data$data else newdata = data
-  
   newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) {
     
     if(standardize == "scale") scale(x) else
