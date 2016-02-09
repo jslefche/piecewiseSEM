@@ -25,7 +25,7 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
     
     lapply(modelList, function(i)
     
-        if(all(class(i) %in% c("gls", "pgls"))) i$namey else
+        if(any(class(i) %in% c("pgls"))) i$namey else
       
             rownames(attr(terms(i), "factors"))[1]
     )
