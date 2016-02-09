@@ -17,7 +17,9 @@ sem.predict = function(object, newdata, sefit = FALSE, ...) {
       x.modelList = object[x.vars]
   
   # Send newdata to each model in the model list and return output as a data.frame 
-  predict.df = do.call(cbind, lapply(x.modelList, function(i) {
+  predict.df = do.call(
+    
+    cbind, lapply(x.modelList, function(i) {
     
     # Get model predictions
     if(any(class(i) %in% c("lm", "glm", "neg.bin", "gls", "pgls")))
@@ -34,6 +36,7 @@ sem.predict = function(object, newdata, sefit = FALSE, ...) {
 
   # If se.fit = TRUE for mixed models, calculate standard errors based on fixed-effects only
   if(sefit == TRUE & any(class(i) %in% c("lme", "glmmPQL", "lmerMod", "glmerMod", "merModTest"))) {
+    
     # Bind in predictions to new data
     newdata = data.frame(newdata, predict.df)
     
@@ -41,15 +44,15 @@ sem.predict = function(object, newdata, sefit = FALSE, ...) {
     
     if(any(class(i) %in% c("lme", "glmmPQL"))) {
       
-      Dmat.lme = model.matrix(formula(i)[-2], newdata) 
+      # Dmat.lme = model.matrix(formula(i)[-2], newdata) 
       
-      pvar = sqrt(diag(Dmat.lme %*% vcov(i) %*% t(Dmat.lme)))
+      pvar = sqrt(diag(model.matrix(formula(i)[-2], newdata)  %*% vcov(i) %*% t(model.matrix(formula(i)[-2], newdata) )))
       
     } else {
       
-      Dmat.lmer = model.matrix(terms(i), newdata)
+      # Dmat.lmer = model.matrix(terms(i), newdata)
       
-      pvar = sqrt(diag(Dmat.lmer %*% tcrossprod(vcov(i), Dmat.lmer)))
+      pvar = sqrt(diag(model.matrix(terms(i), newdata) %*% tcrossprod(vcov(i), model.matrix(terms(i), newdata))))
       
     }
     

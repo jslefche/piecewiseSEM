@@ -28,7 +28,7 @@ get.scaled.model = function(model, newdata) {
     
     model = update(model, fixed = as.formula(new.form), data = newdata) else
       
-      model = update(model, formula = new.form, data = newdata)
+      model = update(model, as.formula(new.form), data = newdata)
     
   # Return model
   return(model)
