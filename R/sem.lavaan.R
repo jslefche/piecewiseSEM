@@ -2,6 +2,8 @@ sem.lavaan = function(modelList, data, compute.int = TRUE, corr.errors = NULL, a
 
   if(is.null(data)) stop("Must supply dataset to function")
   
+  if(class(data) == "comparative.data") data = data$data
+  
   # Get list of formula from model list
   formula.list = lapply(modelList, function(i) 
     
