@@ -37,7 +37,9 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   # Remove filtered variables when they appear as responses in the basis set
   basis.set = lapply(basis.set, function(i) 
     
-    if(i[2] %in% filter.vars | any(i[1] %in% gsub(".*\\((.*)\\).*", "\\1", i[2:length(i)]))) NULL else i
+    if(
+      all(c(i[1], gsub(".*\\((.*)\\).*", "\\1", i[2])) %in% filter.vars) |
+       any(i[1] %in% gsub(".*\\((.*)\\).*", "\\1", i[2:length(i)]))) NULL else i
     
   )
   
