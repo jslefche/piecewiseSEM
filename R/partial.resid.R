@@ -65,10 +65,12 @@ partial.resid = function(
         
         # Try to update model
         mod = try(suppressWarnings(suppressMessages(
+          
           update(y.model, 
-                 reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
-                 control = control, 
-                 data = data)
+                 reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
+                 control = control,
+                 data = data) 
+          
         ) ), silent = TRUE)
         
         if(class(mod) == "try-error") 
@@ -83,9 +85,9 @@ partial.resid = function(
                    mod }
       
       update(y.model, 
-             reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+             reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
              control = control,
-             data = data)
+             data = data) 
       
     } else
       
@@ -99,13 +101,14 @@ partial.resid = function(
                  
                  if(class(y.model) %in% "glmerMod")
                    
-                   lmer(reformulate(deparse(formula(y.nox.model)[[3]]), response = x),
-                        na.action = na.omit,
-                        # control = control, 
-                        data = data) else 
+                   update(y.model, 
+                          reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
+                          na.action = na.omit,
+                          control = control,
+                          data = data)  else 
                           
                           update(y.model, 
-                                 reformulate(deparse(formula(y.nox.model)[[3]]), response = x), 
+                                 reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
                                  control = control,
                                  data = data) 
     
