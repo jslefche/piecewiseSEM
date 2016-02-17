@@ -90,7 +90,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
         data.frame(
           response = paste("~~", corr.vars[1]),
           predictor = paste("~~", corr.vars[2]),
-          estimate = cor(corr.mod.resids[, 1], corr.mod.resids[, 2]),
+          estimate = cor(corr.mod.resids[, 1], corr.mod.resids[, 2], use = "complete.obs"),
           std.error = NA,
           p.value =  1 - pt(
             (cor(corr.mod.resids[, 1], corr.mod.resids[, 2], use = "complete.obs") * sqrt(nrow(data) - 2))/
