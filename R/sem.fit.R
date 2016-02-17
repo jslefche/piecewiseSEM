@@ -1,7 +1,8 @@
 sem.fit = function(
   
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, top.level.vars = NULL, 
-  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
+  adjust.p = FALSE, basis.set = NULL, conditional = FALSE, pvalues.df = NULL, model.control = NULL, 
+  .progressBar = TRUE
   
   ) {
 
@@ -24,7 +25,7 @@ sem.fit = function(
   # Conduct d-sep tests
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     
-    modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars,
+    modelList, data, conditional, corr.errors, add.vars, grouping.vars,
     top.level.vars, adjust.p, basis.set, model.control, .progressBar
     
   )

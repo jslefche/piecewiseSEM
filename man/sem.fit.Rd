@@ -12,7 +12,7 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 
 \usage{
 sem.fit(modelList, data, corr.errors, add.vars, grouping.vars, 
-  top.level.vars, adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
+  top.level.vars, conditional, adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
 }
 
 \arguments{
@@ -47,6 +47,10 @@ whether p-values degrees of freedom should be adjusted (see below). Default is \
 
 \item{basis.set}{
 provide an optional basis set.
+}
+
+\item{conditional}{
+whether conditional variables should be shown in the independence claim (unless the formula is fewer than 30 characters). Default is FALSE.
 }
 
 \item{pvalues.df}{
