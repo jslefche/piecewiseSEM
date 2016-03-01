@@ -1,9 +1,9 @@
 get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
   
-  if(class(rhs) == "formula") rhs = deparse(rhs)
+  if(class(rhs) == "formula") rhs = Reduce(paste, deparse(rhs))
   
   # Get random formula from model
-  random.formula = if(any(class(model) %in% c("lme", "glmmPQL")))
+  random.formula = if(any(class(model) %in% c("lme", "glmmPQL", "glmmadmb")))
     
     deparse(model$call$random) else
       
@@ -12,7 +12,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
         paste("(", findbars(formula(model)), ")", collapse = " + ")
   
   # Get random structure(s)
-  random.structure = if(any(class(model) %in% c("lme", "glmmPQL"))) {
+  random.structure = if(any(class(model) %in% c("lme", "glmmPQL", "glmmadmb"))) {
     
     # If crossed random effects, extract random effects and store in a list
     if(grepl("list\\(", as.character(random.formula))) 
@@ -37,7 +37,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
           )
   
   # Get random slopes in the model list, otherwise return vector of terms to drop
-  random.slopes = if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest"))) 
+  random.slopes = if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest", "glmmadmb"))) 
     
     if(is.null(dropterms)) {
       
@@ -45,9 +45,9 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
         
         if(any(class(modelList[[j]]) %in% c("glmmPQL")))
           
-          unlist(lapply(model$coefficients$random, function(k) colnames(k)))
+          unlist(lapply(modelList[[j]]$coefficients$random, function(k) colnames(k)))
         
-        else if(any(class(modelList[[j]]) %in% c("lme", "glmerMod", "merModLmerTest"))) 
+        else if(any(class(modelList[[j]]) %in% c("lme", "glmerMod", "merModLmerTest", "glmmadmb"))) 
           
           unlist(lapply(ranef(modelList[[j]]), function(k) colnames(k)))
         
@@ -65,7 +65,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
   # Replace random slopes if any variables in model formula appear in random slopes  
   if(length(random.slopes) != 0) {
 
-    if(any(class(model) %in% c("lme", "glmmPQL")))
+    if(any(class(model) %in% c("lme", "glmmPQL", "glmmadmb")))
       
       if(is.list(random.structure)) {
         

@@ -11,7 +11,7 @@ get.model.control = function(model, model.control) {
     
     else if(inherits(model, "gls")) glsControl()
     
-    else if(any(class(model) %in% c("lme", "glmmPQL"))) lmeControl()
+    else if(any(class(model) %in% c("lme", "glmmPQL", "glmmadmb"))) lmeControl()
     
     else if(any(class(model) %in% c("lmerMod", "merModLmerTest"))) lmerControl()
     
@@ -36,7 +36,7 @@ get.model.control = function(model, model.control) {
               
               model.control[[sapply(model.control, length) >= 13]] else
                 
-                if(any(class(model) %in% c("lme", "glmmPQL"))) 
+                if(any(class(model) %in% c("lme", "glmmPQL", "glmmadmb"))) 
                   
                   model.control[[sapply(model.control, length) >= 15]]
     

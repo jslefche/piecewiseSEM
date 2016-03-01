@@ -15,7 +15,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
     if(standardize != "none") i = get.scaled.model(i, newdata)
 
     # Extract coefficients and return in a data.frame
-    if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod"))) {
+    if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod", "glmmadmb"))) {
       
       tab = summary(i)$coefficients
       

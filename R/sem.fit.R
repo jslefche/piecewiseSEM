@@ -5,12 +5,6 @@ sem.fit = function(
   .progressBar = TRUE
   
   ) {
-
-  if(!all(sapply(modelList, function(i) 
-    
-    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmPQL")) 
-    
-    ) ) ) stop("Model classes in model list are not supported")
   
   if(is.null(data)) stop("Must supply dataset")
   

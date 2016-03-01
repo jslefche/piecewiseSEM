@@ -45,21 +45,27 @@ get.scaled.data = function(modelList, data, standardize) {
   }
       
   # Get variables to scale, ignoring variables that are modeled to non-normal distributions
-  vars.to.scale = unlist(lapply(modelList, function(i) {
+  vars = unlist(lapply(modelList, function(x) all.vars(formula(x))))
+  
+  vars = vars[!duplicated(vars)]
+  
+  non.normal.vars = unlist(lapply(modelList, function(i) {
     
-    err = try(family(i), TRUE)
-    
-    if(grepl("Error", err[1]) | grepl("gaussian", err[1]))
+    family = if(any(class(i) %in% c("glmmadmb"))) i$family else 
       
-      all.vars(formula(i)) else {
+      if(any(class(i) %in% c("glm", "glmerMod", "negbin"))) family(i) else
         
-        warning(
-          paste("Reponse '", formula(i)[2], "' is not modeled to a gaussian distribution: keeping response on original scale")
-        )
-        
-        all.vars(formula(i))[-1] }
+        NULL
     
+    if(!is.null(family)) all.vars(formula(i))[1]
+      
   } ) )
+  
+  vars.to.scale = vars[!vars %in% non.normal.vars]
+  
+  if(length(modelList) != length(vars))
+    
+    warning("One or more responses not modeled to a normal distribution: keeping response(s) on original scale!")
   
   # Remove variables that are factors
   vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, function(x) any(is.factor(x) | is.character(x)))] ]

@@ -39,7 +39,7 @@ sem.missing.paths = function(
     control = get.model.control(basis.mod, model.control)
     
     # Update basis model with new formula and random structure based on d-sep
-    basis.mod.new = suppressWarnings(if(is.null(random.formula)) 
+    basis.mod.new = suppressWarnings(if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
       
       update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
         
@@ -95,7 +95,7 @@ sem.missing.paths = function(
       }
     
     # Return new coefficient table
-    ret = if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "merModLmerTest")))
+    ret = if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "merModLmerTest", "glmmadmb")))
       
       as.data.frame(t(unname(summary(basis.mod.new)$coefficients[row.num, ]))) else
       
@@ -106,34 +106,52 @@ sem.missing.paths = function(
       
       ret = cbind(ret[1:2], summary(basis.mod.new)$df[2], ret[3:4]) else
         
-        if(length(ret) != 5)
+        if(length(ret) != 5 & any(class(basis.mod.new) %in% c("glmmadmb"))) 
           
-          ret = cbind(ret[1:2], NA, ret[3:4])
+          ret = cbind(ret[1:2], summary(basis.mod.new)$n, ret[3:4]) else
+            
+            if(length(ret) != 5)
+              
+              ret = cbind(ret[1:2], NA, ret[3:4])
       
     # Rename columns 
-    names(ret) = c("estimate", "std.error", "DF", "crit.value", "p.value")
+    names(ret) = c("estimate", "std.error", "df", "crit.value", "p.value")
     
     # Adjust p-value based on Shipley 2013
     if(adjust.p == TRUE) {
       
-      if(all(class(basis.mod.new) %in% c("lme", "glmmPQL"))) {
+      if(any(class(basis.mod.new) %in% c("lme", "glmmPQL"))) {
         
         t.value = summary(basis.mod.new)$tTable[row.num, 4] 
         
         ret[5] = 2*(1 - pt(abs(t.value), nobs(basis.mod.new) - sum(apply(basis.mod.new$groups, 2, function(x) length(unique(x))))))
         
-      } else if(all(class(basis.mod.new) %in% c("glmerMod", "merModLmerTest"))) {
+      } else if(any(class(basis.mod.new) %in% c("glmerMod", "merModLmerTest"))) {
         
         z.value = summary(basis.mod.new)$coefficients[row.num, 4]
         
-        ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps))) } 
+        ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps))) 
+        
+        } else if(any(class(basis.mod.new) %in% c("glmmadmb"))) {
+          
+          z.value = summary(basis.mod.new)$coefficients[row.num, 3]
+          
+          ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$npar))) 
+      
+        }
       
     }
   
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
     # Modify rhs if number of characters exceeds 20
-    if(conditional == FALSE) if(nchar(rhs) > 30) rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
+    if(conditional == FALSE & nchar(rhs) > 30) {
+      
+      rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
+      
+      print("Conditional variables have been omitted from output table for clarity (or use argument conditional = T)")
+      
+    }
     
     # Bind in d-sep metadata
     data.frame(missing.path = paste(basis.set[[i]][2], " ~ ", rhs, sep = ""), ret)
@@ -143,10 +161,7 @@ sem.missing.paths = function(
     pvalues.df = data.frame(missing.path = NA, estimate = NA, std.error = NA, DF = NA, crit.value = NA, p.value = NA)
   
   # Set degrees of freedom as numeric
-  pvalues.df$DF = as.numeric(pvalues.df$DF)
-  
-  # Output warning if missing.paths contains ...
-  if(any(grepl("\\.\\.\\.", pvalues.df$missing.path))) print("Conditional variables have been omitted from output table for clarity")
+  pvalues.df$df = as.numeric(pvalues.df$df)
   
   if(!is.null(pb)) close(pb)  
   

@@ -3,7 +3,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Get list of formula from model list
   formula.list = lapply(modelList, function(i) 
     
-    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls"))) formula(i) else 
+    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls", "glmmadmb"))) formula(i) else 
     
         if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) nobars(formula(i))
     
@@ -98,6 +98,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   } )
   
   # Add offsets back in for given response
+  
   # Identify responses for which offset is present
   rpl = do.call(rbind, lapply(formula.list, function(i) {
     
@@ -128,9 +129,6 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
-  
-  # Replace edit in DAG() function in the ggm package
-  # body(DAG)[[2]] = substitute(f <- list(...))
   
   if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
   

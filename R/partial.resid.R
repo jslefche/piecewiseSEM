@@ -39,11 +39,15 @@ partial.resid = function(
     
     update(y.model, formula(rhs), control = control) else
       
-      if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
-        
-        update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
-          
-          update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control) 
+      if(any(class(y.model) %in% c("glmmadmb")))
+         
+         update(y.model, formula(rhs)) else
+           
+           if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
+             
+             update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
+               
+               update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control) 
     
   )
   
@@ -105,12 +109,18 @@ partial.resid = function(
                           reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
                           na.action = na.omit,
                           control = control,
-                          data = data)  else 
-                          
-                          update(y.model, 
-                                 reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
-                                 control = control,
-                                 data = data) 
+                          data = data) else 
+                            
+                            if(class(y.model) %in% "glmmadmb")
+                              
+                              update(y.model, 
+                                     reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
+                                     data = data) else
+                                       
+                                       update(y.model, 
+                                              reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
+                                              control = control,
+                                              data = data) 
     
   )
   
@@ -137,6 +147,11 @@ partial.resid = function(
     
   } else x.resids = resid(x.noy.model)
   
+  # Assign names if empty
+  if(is.null(names(y.resids))) names(y.resids) = 1:length(y.resids)
+  
+  if(is.null(names(x.resids))) names(x.resids) = 1:length(x.resids)
+     
   # Bind together in data.frame
   y1 = data.frame(.id = names(y.resids), y.resids)
   
@@ -148,7 +163,7 @@ partial.resid = function(
   # Plot results and regression line
   if(plotit == TRUE) {
     
-    plot.new()
+    # plot.new()
     
     plot(resids.data[, 1] ~ resids.data[ ,2], 
          ylab = ifelse(nchar(paste(attr(terms(y.nox.model), "term.labels"), y,  collapse = " + ")) <= 20,
