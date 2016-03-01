@@ -33,6 +33,25 @@ get.dag = function(formulaList) {
   # Remove offsets from vars
   vars = vars[!grepl("offset", vars)]
   
+  # Indentify reversed but identical interactions and fix
+  if(any(grepl("_____", vars))) {
+    
+    # Indentify interactions
+    vars.int = vars[grepl("_____", vars)]
+    
+    # Split interactions and sort alphabetically
+    vars.int.list = lapply(strsplit(vars.int, "_____"), sort)
+    
+    # Recombine 
+    vars.int.fix = sapply(vars.int.list, function(x) paste(x, collapse = "_____"))
+  
+    # Re-insert into vars
+    vars.int.sub = vars.int.fix[duplicated(vars.int.fix)]
+    
+    vars = c(vars[!grepl("_____", vars)], vars.int.sub)
+    
+  }
+    
   # Create adjacency matrix
   amat = do.call(cbind, lapply(vars, function(i) {
  
