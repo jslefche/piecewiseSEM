@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-03-01 Version 1.0.5
+### 2016-03-01 Version 1.1
+  * Bug fix: fixed long standing bug with `lmer` models not returning p-values
   * Feature addition: support for `glmmadmb` models
   * Bug fix: switched interactions in `get.dag`
   

@@ -10,7 +10,7 @@ License: GPL-3
 Imports:
     ggm,
     lavaan,
-    lmerTest,
+    pbkrtest,
     nlme,
     lme4,
     methods

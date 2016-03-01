@@ -4,6 +4,7 @@ import(lavaan)
 import(lmerTest)
 import(nlme)
 importFrom("lme4", "lmerControl", "glmerControl", "findbars", "nobars")
+importFrom("pbkrtest", "get_ddf_Lb")
 importFrom("graphics", "abline", "lines", "plot")
 importFrom("methods", "as")
 importFrom("stats", "AIC", "aggregate", "as.formula", "cor",
