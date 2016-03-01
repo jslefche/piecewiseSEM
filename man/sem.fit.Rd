@@ -68,11 +68,17 @@ enable optional text progress bar. Default is \code{TRUE}.
 }
 
 \details{
+Independence claims are constructed based on how the variables are treated as in the model list. For example, if the indepedence claim includes a binary variable that is fit to a binomial distribution using an identity link, the function will evaluate the any claims using the same parameters. 
+
+Similarly, for linear mixed effects models construted in \code{lme4} or \code{nlme}, varying slopes and intercepts are treated as in the model list. For example, if a variable is modeled with both a random slope and intercept in any model in the model list, that variable will be modeled with a random slope and intercept when evaluating all independence claims in which it appears. If slopes and intercepts vary for multiple variables, they will appear as such, even if they are conditional.
+
+For models constructed with \code{lme4}, p-values are derived from a t-distribution with degrees of freedom approximated by the Kenward-Rogers correction, as implemented in the \code{pbkrtest} package.
+
+For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
+
 Variables with correlated errors have no direct relationship but rather are hypothesized to be driven by the same underlying factor. This covariance should be reflected as correlated errors (double-headed arrow). Correlated errors are specified using the syntax from the \code{lavaan} package: \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the assumption that their correlations will be quantified later using the function \code{sem.coefs}.
 
 The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default assumes there is no additional independence claims that do not appear in the model list.
-
-For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
 
 \code{top.level.vars} allows the user to optionally specify one or more top level variables for a hierarchical dataset, which will be summarized based on one or more grouping variables specified by \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
 }
@@ -103,7 +109,7 @@ The model controls in \code{model.control} will be assigned to any subsequent d-
 }
 
 \seealso{
-\code{\link[ggm]{DAG}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{AIC}}
+\code{\link[ggm]{DAG}}, \code{\link{sem.missing.paths}}, \code{\link{sem.fisher.c}}, \code{\link{AIC}}, \code{\link{get_ddf_Lb}}
 }
 
 \examples{

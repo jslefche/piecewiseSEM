@@ -50,21 +50,11 @@ sem.missing.paths = function(
             update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
       
     )
-    
-    # Stop if lmerTest does not return p-values
-    if("lmerMod" %in% class(basis.mod.new)) {
-      
-      basis.mod.new = as(basis.mod.new, "merModLmerTest") 
-      
-      x = try(suppressMessages(summary(basis.mod.new)$coefficients[1,5]), silent = T)
-      
-      if(class(x) == "try-error") stop("lmerTest did not return p-values. Consider using functions in the nlme package.")
-      
-    }
-    
+
     # Get row number from coefficient table for d-sep variable
-    if(any(!class(basis.mod.new) %in% "pgls")) {
+    if(any(!class(basis.mod.new) %in% c("pgls"))) {
       
+      # Get row number of d-sep claim
       row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1 
       
       # Get row number if interaction variables are switched
@@ -95,7 +85,26 @@ sem.missing.paths = function(
       }
     
     # Return new coefficient table
-    ret = if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "merModLmerTest", "glmmadmb")))
+    ret = if(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest")) {
+      
+      coef.table = suppressMessages(summary(basis.mod.new)$coefficients)
+      
+      # Get Kenward-Rogers approximation of denominator degrees of freedom
+      kr.ddf = suppressMessages(get_ddf_Lb(basis.mod.new, fixef(basis.mod.new)))
+      
+      # Compute p-values based on t-distribution and ddf
+      kr.p = 2 * (1 - pt(abs(coef.table[, "t value"]), kr.ddf))[row.num]
+      
+      # Combine with coefficients from regular ouput
+      data.frame(
+        t(coef.table[row.num, 1:2]),
+        kr.ddf,
+        coef.table[row.num, 3],
+        kr.p,
+        row.names = NULL
+      )
+      
+    } else if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "glmmadmb")))
       
       as.data.frame(t(unname(summary(basis.mod.new)$coefficients[row.num, ]))) else
       
@@ -126,9 +135,9 @@ sem.missing.paths = function(
         
         ret[5] = 2*(1 - pt(abs(t.value), nobs(basis.mod.new) - sum(apply(basis.mod.new$groups, 2, function(x) length(unique(x))))))
         
-      } else if(any(class(basis.mod.new) %in% c("glmerMod", "merModLmerTest"))) {
+      } else if(any(class(basis.mod.new) %in% c("lmerMod", "glmerMod", "merModLmerTest"))) {
         
-        z.value = summary(basis.mod.new)$coefficients[row.num, 4]
+        z.value = coef.table[row.num, "t value"]
         
         ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps))) 
         

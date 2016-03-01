@@ -83,7 +83,17 @@ Jon Lefcheck
 }
 
 \note{
-Models are constructed based on how the variables are treated as in the model list. For example, if the indepedence claim includes a binary variable that is fit to a binomial distribution using an identity link, the function will evaluate the any claims using the same parameters. Similarly, for linear mixed effects models construted in lme4 or nlme, varying slopes and intercepts are treated as in the model list. For example, if a variable is modeled with both a random slope and intercept in any model in the model list, that variable will be modeled with a random slope and intercept when evaluating all independence claims in which it appears. If slopes and intercepts vary for multiple variables, they will appear as such, even if they are conditional.
+Independence claims are constructed based on how the variables are treated as in the model list. For example, if the indepedence claim includes a binary variable that is fit to a binomial distribution using an identity link, the function will evaluate the any claims using the same parameters. 
+
+Similarly, for linear mixed effects models construted in \code{lme4} or \code{nlme}, varying slopes and intercepts are treated as in the model list. For example, if a variable is modeled with both a random slope and intercept in any model in the model list, that variable will be modeled with a random slope and intercept when evaluating all independence claims in which it appears. If slopes and intercepts vary for multiple variables, they will appear as such, even if they are conditional.
+
+For models constructed with \code{lme4}, p-values are derived from a t-distribution with degrees of freedom approximated by the Kenward-Rogers correction, as implemented in the \code{pbkrtest} package.
+
+For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
+}
+
+\seealso{
+\code{\link[ggm]{DAG}}, \code{\link{get_ddf_Lb}}
 }
 
 \examples{
