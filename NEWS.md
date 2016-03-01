@@ -1,5 +1,9 @@
 # piecewiseSEM Change Log
 
+### 2016-03-01 Version 1.0.5
+  * Feature addition: support for `glmmadmb` models
+  * Bug fix: switched interactions in `get.dag`
+  
 ### 2016-02-09 Version 1.0.4
   * Bug fix: correlated errors among exogenous variables in `sem.coefs`
   * Bug fix: correctly scale data from `pgls` models using `get.scaled.data`

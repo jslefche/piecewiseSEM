@@ -21,8 +21,8 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{gls
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 1.0.4\cr
-Date: \tab 2016-02-09\cr
+Version: \tab 1.0.5\cr
+Date: \tab 2016-03-01\cr
 Depends: \tab R (3.2.X), ggm, lavaan\cr
 Suggests: \tab MASS, lmerTest, nlme\cr
 License: \tab MIT\cr
