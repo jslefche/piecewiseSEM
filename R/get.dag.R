@@ -46,9 +46,9 @@ get.dag = function(formulaList) {
     vars.int.fix = sapply(vars.int.list, function(x) paste(x, collapse = "_____"))
   
     # Re-insert into vars
-    vars.int.sub = vars.int.fix[duplicated(vars.int.fix)]
+    if(length(vars.int.fix) > 1) vars.int.fix = vars.int.fix[duplicated(vars.int.fix)]
     
-    vars = c(vars[!grepl("_____", vars)], vars.int.sub)
+    vars = c(vars[!grepl("_____", vars)], vars.int.fix)
     
   }
     
