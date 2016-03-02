@@ -77,7 +77,7 @@ Variables with correlated errors have no direct relationship but rather are hypo
 
 The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default assumes there is no additional independence claims that do not appear in the model list.
 
-\code{top.level.vars} allows the user to optionally specify one or more top level variables for a hierarchical dataset, which will be summarized based on one or more grouping variables specified by \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
+If the data is hierarchical dataset and one or more responses are identical for each level of a grouping factors -- artificially inflating the df -- users can summarize the dataset for each grouping factor(s) specified in the argument \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
 }
 
 \value{
@@ -183,8 +183,7 @@ sem.fit(shipley2009.modlist, shipley2009)
 # )
 
 # Test for independence
-# sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"), 
-#         top.level.vars = c("site.var"))
+# sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"))
 
 ###
 

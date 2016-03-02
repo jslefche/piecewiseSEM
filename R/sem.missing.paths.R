@@ -40,15 +40,25 @@ sem.missing.paths = function(
        
       response.test = na.omit(vapply(response.test, unlist, unlist(response.test[[1]])))
        
-      if(all(response.test == TRUE)) 
+      # If so, aggregate by grouping.vars
+      if(all(response.test == TRUE)) {
         
-        data = 
+        # Get named list
+        groups = lapply(grouping.vars, function(j) data[ ,j])
+        
+        names(groups) = grouping.vars
+        
+        # Aggregate and replace data
+        data = suppressWarnings(
           
-          suppressWarnings(
-            
-            aggregate(data, by = lapply(grouping.vars, function(j) data[ ,j]), mean, na.rm = T)
-            
-            )
+          aggregate(data, by = groups, mean, na.rm = T)
+          
+          )
+        
+        # Remove duplicated colnames (keep first instance, from above)
+        data = data[, !duplicated(colnames(data))]
+        
+      }
     
     }
     
@@ -56,15 +66,17 @@ sem.missing.paths = function(
     control = get.model.control(basis.mod, model.control)
     
     # Update basis model with new formula and random structure based on d-sep
-    basis.mod.new = suppressWarnings(if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
+    basis.mod.new = suppressWarnings(
       
-      update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
+      if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
+      
+        update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
         
-        if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
+          if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
           
-          update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
+            update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
             
-            update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
+              update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
       
     )
 
