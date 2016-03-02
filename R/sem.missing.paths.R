@@ -1,7 +1,7 @@
 sem.missing.paths = function(
  
   modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, 
-  top.level.vars = NULL, adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
+  adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -31,9 +31,26 @@ sem.missing.paths = function(
     random.formula = get.random.formula(basis.mod, rhs, modelList)
     
     # Aggregate at the level of the grouping variable
-    if(!is.null(grouping.vars) & any(top.level.vars %in% gsub(".*\\((.*)\\)", "\\1", unlist(as.character(formula(basis.mod)[2])))))
+    if(!is.null(grouping.vars)) {
       
-      data = suppressWarnings(aggregate(data, by = lapply(grouping.vars, function(i) data[ ,i]), mean, na.rm = T))
+      # Test to see if response is identical for levels of grouping factor
+      response = as.character(formula(basis.mod)[2])
+      
+      response.test = by(data, lapply(grouping.vars, function(j) data[ ,j]), function(x) length(unique(x[, response])) == 1)
+       
+      response.test = na.omit(vapply(response.test, unlist, unlist(response.test[[1]])))
+       
+      if(all(response.test == TRUE)) 
+        
+        data = 
+          
+          suppressWarnings(
+            
+            aggregate(data, by = lapply(grouping.vars, function(j) data[ ,j]), mean, na.rm = T)
+            
+            )
+    
+    }
     
     # Get model controls
     control = get.model.control(basis.mod, model.control)

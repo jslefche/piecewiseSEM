@@ -20,14 +20,14 @@ sem.fit = function(
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     
     modelList, data, conditional, corr.errors, add.vars, grouping.vars,
-    top.level.vars, adjust.p, basis.set, model.control, .progressBar
+    adjust.p, basis.set, model.control, .progressBar
     
   )
   
   # Derive Fisher's C statistic and compare to Chi-squared distribution
   fisher.c = sem.fisher.c(
     
-    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
+    modelList, data, corr.errors, add.vars, grouping.vars, 
     adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
@@ -35,7 +35,7 @@ sem.fit = function(
   # Use Fisher's C to derive AIC values
   AIC.c = sem.aic(
     
-    modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
+    modelList, data, corr.errors, add.vars, grouping.vars,
     adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )

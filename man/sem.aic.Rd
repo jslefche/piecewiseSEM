@@ -12,7 +12,7 @@ Extracts the AIC and AICc (corrected for small sample size) values from a piecew
 
 \usage{
 sem.aic(modelList, data, corr.errors, add.vars, grouping.vars, 
-  top.level.vars, adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
+  adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
 }
 
 \arguments{
@@ -35,10 +35,6 @@ a vector of additional variables whose independence claims should be evaluated, 
 
 \item{grouping.vars}{
 an optional variable that represents the highest level of a hierarchical dataset.
-}
-
-\item{top.level.vars}{
-an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
 
 \item{adjust.p}{

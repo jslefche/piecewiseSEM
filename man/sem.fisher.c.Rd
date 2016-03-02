@@ -11,7 +11,7 @@ Evaluates independence claims for a piecewise structural equation model (SEM), a
 }
 
 \usage{
-sem.fisher.c(modelList, data, corr.errors, add.vars, grouping.vars, top.level.vars, 
+sem.fisher.c(modelList, data, corr.errors, add.vars, grouping.vars, 
   adjust.p, basis.set, pvalues.df, model.control, .progressBar) 
 }
 
@@ -35,10 +35,6 @@ a vector of additional variables whose independence claims should be evaluated, 
 
 \item{grouping.vars}{
 an optional variable that represents the highest level of a hierarchical dataset.
-}
-
-\item{top.level.vars}{
-an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
 
 \item{adjust.p}{

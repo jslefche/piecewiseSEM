@@ -12,8 +12,8 @@ Identifies missing paths from a piecewise SEM, fits models, extracts path p-valu
 
 \usage{
 sem.missing.paths(modelList, data, conditional = FALSE, corr.errors = NULL, 
-add.vars = NULL, grouping.vars = NULL, top.level.vars, adjust.p = FALSE, 
-basis.set, model.control = NULL, .progressBar = TRUE) 
+add.vars = NULL, grouping.vars = NULL, adjust.p = FALSE, basis.set, 
+model.control = NULL, .progressBar = TRUE) 
 }
 
 \arguments{
@@ -40,10 +40,6 @@ a vector of additional variables whose independence claims should be evaluated, 
 
 \item{grouping.vars}{
 an optional variable that represents the highest level of a hierarchical dataset.
-}
-
-\item{top.level.vars}{
-an optional \code{vector} of variables that are identical at the highest level of the hierarchy.
 }
 
 \item{adjust.p}{
