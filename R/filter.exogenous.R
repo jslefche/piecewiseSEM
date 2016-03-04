@@ -3,48 +3,25 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   # If not basis set, generate using sem.basis.set()
   if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
 
-  # Get vector of predictor variables
-  pred.vars = unique(
-    
-    c(add.vars,
-      
-      unlist(
-      
-        lapply(modelList, function(i) 
-          
-          if(all(class(i) %in% c("gls", "pgls"))) attr(coef(i), "names") else
-            
-            attr(terms(i), "term.labels")
-        )
-      )
-    )
-  )
+  # Convert basis.set into list of formulae
+  formulaList = lapply(basis.set, function(i) formula(paste0(i[2], " ~ ", paste0(i[-2], collapse = " + "))))
   
+  # Get vector of predictor variables
+  pred.vars = c(add.vars, unlist(lapply(modelList, function(x) all.vars(formula(x))[-1])))
+  
+  pred.vars = pred.vars[!duplicated(pred.vars)]
+
   # Get vector of response variables
-  response.vars = unique(unlist(
-    
-    lapply(modelList, function(i)
-    
-        if(any(class(i) %in% c("pgls"))) i$namey else
-      
-            rownames(attr(terms(i), "factors"))[1]
-    )
-  ) )
+  response.vars = unlist(lapply(modelList, function(x) all.vars(formula(x))[1]))
+  
+  response.vars = response.vars[!duplicated(response.vars)]
   
   # Get vector of variables that appear only as predictors and never as responses
   filter.vars = pred.vars[!pred.vars %in% response.vars]
   
   # Remove filtered variables when they appear as responses in the basis set
-  basis.set = lapply(basis.set, function(i) 
+  basis.set = basis.set[!sapply(formulaList, function(i) any(all.vars(i)[1] %in% filter.vars))]
     
-    if(
-      all(c(i[1], gsub(".*\\((.*)\\).*", "\\1", i[2])) %in% filter.vars) |
-       any(i[1] %in% gsub(".*\\((.*)\\).*", "\\1", i[2:length(i)]))) NULL else i
-    
-  )
-  
-  basis.set = basis.set[!sapply(basis.set, is.null)] 
-
   if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
   
   return(basis.set)

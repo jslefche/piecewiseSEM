@@ -8,9 +8,6 @@ sem.missing.paths = function(
   # Get basis set
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
 
-  # Filter exogenous variables
-  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
-
   # Add progress bar
   if(.progressBar == T & length(basis.set) > 0) 
     
@@ -20,7 +17,7 @@ sem.missing.paths = function(
   if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
     
     # Get basis model from which to build the d-sep test
-    basis.mod = modelList[[match(basis.set[[i]][2], sapply(modelList, function(j) strsplit(paste(formula(j)), "~")[[2]]))]]
+    basis.mod = modelList[[match(basis.set[[i]][2], sapply(modelList, function(j) all.vars(formula(j))[1]))]]
     
     # Get fixed formula
     rhs = if(length(basis.set[[i]]) <= 2) paste(basis.set[[i]][1]) else
@@ -114,7 +111,7 @@ sem.missing.paths = function(
       }
     
     # Return new coefficient table
-    ret = if(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest")) {
+    ret = if(any(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest"))) {
       
       coef.table = suppressMessages(summary(basis.mod.new)$coefficients)
       
@@ -187,8 +184,6 @@ sem.missing.paths = function(
       
       rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
       
-      print("Conditional variables have been omitted from output table for clarity (or use argument conditional = T)")
-      
     }
     
     # Bind in d-sep metadata
@@ -202,6 +197,10 @@ sem.missing.paths = function(
   pvalues.df$df = as.numeric(pvalues.df$df)
   
   if(!is.null(pb)) close(pb)  
+  
+  if(any(grepl("...", pvalues.df$missing.path))) 
+    
+    message("Conditional variables have been omitted from output table for clarity (or use argument conditional = T)")
   
   return(pvalues.df)
   

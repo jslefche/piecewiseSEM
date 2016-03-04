@@ -4,11 +4,11 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   formula.list = lapply(modelList, function(i) 
     
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls", "glmmadmb"))) formula(i) else 
-    
-        if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) nobars(formula(i))
-    
-    )
       
+      if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) nobars(formula(i))
+    
+  )
+  
   if(any(unlist(lapply(formula.list, is.null)))) stop("At least one model class not yet supported")
   
   # If additional variables are present, add them to the basis set
@@ -18,20 +18,20 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     add.vars = sapply(add.vars, function(x) gsub(" \\* ", "\\:", x))
     
     formula.list = append(formula.list, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
- 
-    }
+    
+  }
   
   # Generate adjacency matrix
   amat = get.dag(formula.list)
-
+  
   # If intercept only model, add response variable to adjacency matrix
   if(any(unlist(lapply(modelList, function(i) deparse(formula(i)[2]) %in% c("~1", "~ 1"))))) {
     
     # Isolate intercept only model(s)
     responses = sapply(modelList[which(sapply(modelList, function(i) grepl("~ 1|~1", deparse(formula(i)))))],
-           
-           function(j) strsplit(paste(formula(j)), "~")[[2]]
-           
+                       
+                       function(j) strsplit(paste(formula(j)), "~")[[2]]
+                       
     )
     
     amat = cbind(
@@ -41,7 +41,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       matrix(rep(0, dim(amat)[1] + 1), ncol = 1, dimnames = list(NULL, responses))
       
     )
-
+    
   }
   
   # Generate basis set
@@ -67,12 +67,12 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
               
               grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) 
               
-              ) 
             ) 
           ) 
+        ) 
         
-        } ) )
-        
+      } ) )
+      
       if(any(inset == TRUE)) NULL else basis.set[[i]]  
       
     } )
@@ -89,7 +89,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
         
         if(any(int %in% i[2])) NULL else i 
         
-        } 
+      } 
       
       else i
       
@@ -131,6 +131,8 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
   if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
+  
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
   
   return(basis.set)
   
