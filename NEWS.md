@@ -1,9 +1,11 @@
 # piecewiseSEM Change Log
 
-### 2016-03-01 Version 1.1
-  * Bug fix: fixed long standing bug with `lmer` models not returning p-values
+### 2016-03-07 Version 1.1.0
   * Feature addition: support for `glmmadmb` models
-  * Bug fix: switched interactions in `get.dag`
+  * Feature addition: `pbkrtest` to reliably extract p-values from `lme4` models
+  * *Major Bug Fix:* `sem.basis.set` now treats transformed variables as untransformed, resolving duplicate vars in the basis set
+  * Bug fix: resolved switched interactions (e.g., x1:x2 vs x2:x1) leading to duplicate vars in the basis set using `get.dag`
+  * Bug fix: fixed long standing bug with `lmer` models not returning p-values
   
 ### 2016-02-09 Version 1.0.4
   * Bug fix: correlated errors among exogenous variables in `sem.coefs`
