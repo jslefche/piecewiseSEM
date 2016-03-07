@@ -43,7 +43,11 @@ get.dag = function(formulaList) {
     
     v = all.vars(i)
     
-    formula(paste0(v[1], " ~ ", paste0(v[-1], collapse = " + ")))
+    if(length(v) > 1) 
+      
+      formula(paste0(v[1], " ~ ", paste0(v[-1], collapse = " + "))) else
+        
+        formula(paste(v, " ~ ", v))
     
   } )
   
