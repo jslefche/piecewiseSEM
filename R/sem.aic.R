@@ -7,8 +7,6 @@ sem.aic = function(
   
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
   
-  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars) 
-  
   if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
     
     modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars,

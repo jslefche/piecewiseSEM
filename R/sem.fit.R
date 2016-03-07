@@ -13,9 +13,6 @@ sem.fit = function(
   # Get basis set
   if(is.null(basis.set)) basis.set = sem.basis.set(modelList, corr.errors, add.vars)
   
-  # Filter exogenous variables
-  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
-  
   # Conduct d-sep tests
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     

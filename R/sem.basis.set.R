@@ -1,7 +1,7 @@
 sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Get list of formula from model list
-  formula.list = lapply(modelList, function(i) 
+  formulaList = lapply(modelList, function(i) 
     
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls", "glmmadmb"))) formula(i) else 
       
@@ -9,7 +9,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
   )
   
-  if(any(unlist(lapply(formula.list, is.null)))) stop("At least one model class not yet supported")
+  if(any(unlist(lapply(formulaList, is.null)))) stop("At least one model class not yet supported")
   
   # If additional variables are present, add them to the basis set
   if(!is.null(add.vars)) {
@@ -17,12 +17,15 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     # If interactions are specified with an asterisk, replace with semicolon
     add.vars = sapply(add.vars, function(x) gsub(" \\* ", "\\:", x))
     
-    formula.list = append(formula.list, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
+    formulaList = append(formulaList, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
     
   }
   
   # Generate adjacency matrix
-  amat = get.dag(formula.list)
+  amat = get.dag(formulaList)
+  
+  # Sort adjacency matrix by parent to child nodes
+  amat = topSort(amat)
   
   # If intercept only model, add response variable to adjacency matrix
   if(any(unlist(lapply(modelList, function(i) deparse(formula(i)[2]) %in% c("~1", "~ 1"))))) {
@@ -49,6 +52,71 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))
+  
+  # Filter exogenous predictors from the basis set
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
+  
+  # Re-apply transformations
+  basis.set = lapply(basis.set, function(i) {
+    
+    i.new = i
+    
+    # Find response in original formula list
+    form = formulaList[[which(sapply(formulaList, function(x) all.vars(x)[1] == i[2]))]]
+    
+    # Get transformed vars for that response
+    transform.vars = rownames(attr(terms(form), "factors"))
+    
+    # Get stripped vars for that response
+    stripped.vars = all.vars(form)
+    
+    # Index over untransformed vars and replace
+    i.new[which(i %in% stripped.vars)] = transform.vars[which(stripped.vars %in% i)]
+    
+    # Extract vector of predictors from all models
+    preds.list = lapply(formulaList, all.vars)
+    
+    # Find formulae that contain untransformed variables
+    for(j in which(!i.new %in% transform.vars)) {
+      
+      # Get list of transformed variables
+      j.new = lapply(formulaList, function(k) {
+        
+        pred.vars = all.vars(k)[-1]
+        
+        # Sort interactions so always alphabetical
+        for(l in which(grepl("\\:", pred.vars))) {
+          
+          # Split interactions and sort alphabetically
+          int = unlist(lapply(strsplit(pred.vars[j], "\\:"), sort))
+          
+          # Recombine 
+          int.rec = paste(int, collapse = ":")
+          
+          # Re-insert into formula
+          pred.vars[l] = int.rec
+          
+        }
+        
+        colnames(attr(terms(k), "factors"))[pred.vars == i.new[j]]
+        
+      } )
+      
+      # Name and order transformed variables by adjacency matrix
+      names(j.new) = sapply(formulaList, function(x) all.vars(x)[1])
+      
+      j.new = j.new[colnames(amat)]
+      
+      # Choose first instance where variable is not null
+      new.var = unlist(j.new[sapply(j.new, function(x) length(x) > 0)])[1]
+      
+      if(!is.null(new.var)) i.new[j] = new.var
+      
+    }
+    
+    return(i.new)
+    
+  } )
   
   # If correlated errors are present, remove them from the basis set
   if(!is.null(corr.errors)) {
@@ -97,10 +165,8 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
   } )
   
-  # Add offsets back in for given response
-  
   # Identify responses for which offset is present
-  rpl = do.call(rbind, lapply(formula.list, function(i) {
+  rpl = do.call(rbind, lapply(formulaList, function(i) {
     
     lhs = paste(rownames(attr(terms(i), "factors"))[1])
     
@@ -131,8 +197,6 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
   if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
-  
-  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
   
   return(basis.set)
   

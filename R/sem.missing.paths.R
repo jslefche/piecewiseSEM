@@ -17,8 +17,14 @@ sem.missing.paths = function(
   if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
     
     # Get basis model from which to build the d-sep test
-    basis.mod = modelList[[match(basis.set[[i]][2], sapply(modelList, function(j) all.vars(formula(j))[1]))]]
+    basis.mod = modelList[[which(sapply(modelList, function(j) {
+      
+      if(class(j) == "pgls") j = j$formula
+      
+      rownames(attr(terms(j), "factors"))[1] == basis.set[[i]][2]
     
+    } ) ) ]]
+      
     # Get fixed formula
     rhs = if(length(basis.set[[i]]) <= 2) paste(basis.set[[i]][1]) else
       

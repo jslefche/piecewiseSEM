@@ -1,8 +1,5 @@
 get.basis.set = function(amat) {
   
-  # Sort adjacency matrix by parent to child nodes
-  amat = topSort(amat)
-  
   ret = lapply(1:ncol(amat), function(j) {
     
     lapply(j:nrow(amat), function(i) {
