@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-03-07 Version 1.1.0
+### 2016-03-08 Version 1.1.0
+  * Feature addition: rudimentary plotting using `sem.plot`
   * Feature addition: support for `glmmadmb` models
   * Feature addition: `pbkrtest` to reliably extract p-values from `lme4` models
   * *Major Bug Fix:* `sem.basis.set` now treats transformed variables as untransformed, resolving duplicate vars in the basis set

@@ -6,7 +6,7 @@
   
     Lefcheck, Jonathan S. (2015) "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." Methods in Ecology and Evolution. In press. DOI: 10.1111/2041-210X.12512
 
-Version: 1.1 (2016-03-07)
+Version: 1.1 (2016-03-08)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -121,6 +121,11 @@ sem.coefs(shipley2009.modlist, shipley2009)
 
 sem.coefs(shipley2009.modlist, shipley2009, standardize = "scale")
 ```
+We can plot a rudimentary path diagram of the SEM using `sem.plot` which reports the coefficients, above:
+```
+sem.plot(shipley2009.modlist, shipley2009)
+```
+![pathdiagram](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley2009_plot.png)
 
 ###Generate variance-covariance SEM using `lavaan`
 
