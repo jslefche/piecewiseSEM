@@ -76,6 +76,7 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
       y, 
       legend = names(row.n[row.n == i]), 
       cex = 0.8,
+      x.intersp = 0,
       xjust = xjust,
       yjust = yjust
       )
