@@ -11,9 +11,9 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 }
 
 \usage{
-sem.fit(modelList, data, conditional = FALSE, corr.errors = NULL, 
-add.vars = NULL, grouping.vars = NULL, adjust.p = FALSE, basis.set, 
-model.control = NULL, .progressBar = TRUE)
+sem.fit(modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, 
+  grouping.vars = NULL, adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, 
+  model.control = NULL, .progressBar = TRUE)
 }
 
 \arguments{
@@ -24,6 +24,10 @@ a \code{list} of regressions representing the structural equation model.
 
 \item{data}{
 a \code{data.frame} used to construct the structured equations.
+}
+
+\item{conditional}{
+whether conditional variables should be shown in the independence claim (unless the formula is fewer than 30 characters). Default is FALSE.
 }
 
   \item{corr.errors}{
@@ -44,10 +48,6 @@ whether p-values degrees of freedom should be adjusted (see below). Default is \
 
 \item{basis.set}{
 provide an optional basis set.
-}
-
-\item{conditional}{
-whether conditional variables should be shown in the independence claim (unless the formula is fewer than 30 characters). Default is FALSE.
 }
 
 \item{pvalues.df}{

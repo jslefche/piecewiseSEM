@@ -11,7 +11,7 @@ Generates mandala plot for piecewise structural equation models.
 }
 
 \usage{
-sem.fit(modelList, data, table, ...)
+sem.fit(modelList, data, table, show.nonsig = TRUE, scaling = 10, ...)
 }
 
 \arguments{

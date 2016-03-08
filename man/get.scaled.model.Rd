@@ -11,7 +11,7 @@ A helper function for \code{sem.coefs} that updates a model object with a scaled
 }
 
 \usage{
-get.scaled.model(model, newdata)
+get.scaled.model(model, newdata, modelList)
 }
 
 \arguments{
@@ -22,6 +22,10 @@ a linear model.
 
 \item{newdata}{
 a \code{data.frame} from \code{get.scaled.data}.
+}
+
+  \item{modelList}{
+a \code{list} of regressions representing the structural equation model. 
 }
 }
 
