@@ -15,7 +15,7 @@ get.scaled.data = function(modelList, data, standardize) {
   transform.vars = unlist(lapply(modelList, function(i) {
     
     # Break apart formula
-    if(class(i) == "pgls") vars = i$varNames else
+    if(any(class(i) == "pgls")) vars = i$varNames else
       
       vars = rownames(attr(terms(i), "factors"))
     
@@ -63,7 +63,7 @@ get.scaled.data = function(modelList, data, standardize) {
   
   vars.to.scale = vars[!vars %in% non.normal.vars]
   
-  if(length(modelList) != length(vars))
+  if(!is.null(non.normal.vars))
     
     warning("One or more responses not modeled to a normal distribution: keeping response(s) on original scale!")
   
@@ -72,6 +72,9 @@ get.scaled.data = function(modelList, data, standardize) {
   
   # Remove duplicateds variables
   vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
+  
+  # Run check to see if variables appear as columns
+  if(!all(vars.to.scale %in% colnames(newdata))) stop("Some predictors do not appear in the dataset!")
   
   # Scale those variables by mean and SD, or by range
   newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) {
