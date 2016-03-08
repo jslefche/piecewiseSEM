@@ -1,4 +1,4 @@
-get.scaled.model = function(model, newdata) {
+get.scaled.model = function(model, newdata, modelList) {
   
   if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) {
     

@@ -12,7 +12,7 @@ sem.coefs = function(modelList, data, standardize = "none", corr.errors = NULL) 
   # Return coefficients
   ret = do.call(rbind, lapply(modelList, function(i) {
     
-    if(standardize != "none") i = get.scaled.model(i, newdata)
+    if(standardize != "none") i = get.scaled.model(i, newdata, modelList)
 
     # Extract coefficients and return in a data.frame
     if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod", "glmmadmb"))) {
