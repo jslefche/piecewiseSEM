@@ -14,6 +14,19 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
   lbls = unlist(table[, 1:2])
   
   lbls = as.character(unname(lbls[!duplicated(lbls)]))
+  
+  # Shorten label names if necessary
+  if(any(sapply(lbls, function(x) nchar(x) > 10))) {
+    
+    new.lbls = gsub("a|e|i|o|u", "", lbls)
+    
+    } else if(any(sapply(lbls, function(x) nchar(x) > 10))) {
+      
+      new.lbls = sapply(lbls, function(x) ifelse(nchar(x) > 10, substr(x, 1, 10), x))
+      
+      } else new.lbls = lbls
+  
+  names(new.lbls) = lbls
 
   # Set graphical parameters
   par(mar = rep(3, 4), xpd = NA)
@@ -74,7 +87,7 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
     legend(
       x, 
       y, 
-      legend = names(row.n[row.n == i]), 
+      legend = new.lbls[names(new.lbls) == names(row.n[row.n == i])], 
       cex = 0.8,
       x.intersp = 0,
       xjust = xjust,
