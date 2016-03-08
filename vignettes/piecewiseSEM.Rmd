@@ -135,6 +135,12 @@ Here, we see the strongest relationship between growth and survival, implying th
 
 Its important to note that the standard errors around interactions for scaled variables (not in this example) are not valid, and therefore _P_-values are not reported. In every case, significance of relationships should always be assessed using the _un_standardized coefficients.
 
+Finally, we can construct a rudimentary path diagram of the results (with variables placed equidistantly around a circle) using `sem.plot`:
+
+```{r}
+sem.plot(shipley2009.modlist, shipley2009, standardize = "scale")
+```
+
 ### Predictions
 
 We can use the generic `predict` function to extract predicted fits based on the list of structured equations. I have slightly modified the function to return standard errors on predictions from mixed effects models using the variance of the fixed effects only (as here: ["GLMM Wiki - FAQ"](http://glmm.wikidot.com/faq)).
