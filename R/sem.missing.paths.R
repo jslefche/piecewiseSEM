@@ -19,7 +19,7 @@ sem.missing.paths = function(
     # Get basis model from which to build the d-sep test
     basis.mod = modelList[[which(sapply(modelList, function(j) {
       
-      if(class(j) == "pgls") j = j$formula
+      if(any(class(j) == "pgls")) j = j$formula
       
       rownames(attr(terms(j), "factors"))[1] == basis.set[[i]][2]
     
