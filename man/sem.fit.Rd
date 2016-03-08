@@ -114,7 +114,7 @@ The model controls in \code{model.control} will be assigned to any subsequent d-
 data(shipley2009)
 
 # Load model packages
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Create list of models 

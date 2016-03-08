@@ -46,7 +46,7 @@ Models are constructed using a mix of the `nlme` and `lmerTest` packages, as in 
 
 ```
 # Load required libraries for linear mixed effects models
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Load example data
@@ -87,21 +87,21 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 sem.fit(shipley2009.modlist, shipley2009)
 
 # $missing.paths
-#  missing.path     estimate  std.error   DF crit.value   p.value
-#   Date <- lat -0.009051378 0.11347661   18     -0.080 0.9373049
-# Growth <- lat -0.098862826 0.11072020   18     -0.893 0.3836896
-#   Live <- lat  0.030497018 0.02966210   NA      1.028 0.3038804
-#  Growth <- DD -0.010613707 0.03576722 1329     -0.297 0.7667083
-#    Live <- DD  0.027190386 0.02708834   NA      1.004 0.3154908
-#  Live <- Date -0.046565402 0.02981190   NA     -1.562 0.1182942
+#                missing.path estimate std.error   df crit.value p.value
+# 1           Date ~ lat + DD  -0.0091    0.1135   18    -0.0798  0.9373
+# 2       Growth ~ lat + Date  -0.0989    0.1107   18    -0.8929  0.3837
+# 3       Live ~ lat + Growth   0.0305    0.0297   NA     1.0281  0.3039
+# 4  Growth ~ DD + lat + Date  -0.0106    0.0358 1329    -0.2967  0.7667
+# 5  Live ~ DD + lat + Growth   0.0272    0.0271   NA     1.0038  0.3155
+# 6 Live ~ Date + DD + Growth  -0.0466    0.0298   NA    -1.5620  0.1183
 # 
 # $Fisher.C
-# fisher.c  k p.value
-#    11.54 12   0.484
+#   fisher.c df p.value
+# 1    11.54 12   0.484
 # 
 # $AIC
-#   AIC   AICc  K    n
-# 49.54 50.079 19 1431
+#     AIC   AICc  K    n
+# 1 49.54 50.079 19 1431
 ```
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
@@ -113,11 +113,11 @@ Path coefficients can be either unstandardized or standardized (centered and sca
 ```
 sem.coefs(shipley2009.modlist, shipley2009)
 
-#   response predictor   estimate   std.error      p.value
-#       Date        DD -0.4976475 0.004933274 0.000000e+00
-#     Growth      Date  0.3007147 0.026631405 2.670862e-28
-#       Live    Growth  0.3478541 0.058404201 2.585211e-09
-#         DD       lat -0.8354736 0.119422385 1.565614e-06
+#   response predictor   estimate   std.error p.value
+# 1       DD       lat -0.8354736 0.119422385       0
+# 2     Date        DD -0.4976475 0.004933274       0
+# 3   Growth      Date  0.3007147 0.026631405       0
+# 4     Live    Growth  0.3478541 0.058404201       0
 
 sem.coefs(shipley2009.modlist, shipley2009, standardize = "scale")
 ```
@@ -183,11 +183,11 @@ Return R<sup>2</sup> and AIC values for component models in the SEM.
 ```
 sem.model.fits(shipley2009.modlist)
 
-#      Class   Family     Link  Marginal Conditional       AIC
-#        lme gaussian identity 0.4864825   0.6990231 9166.9738
-#        lme gaussian identity 0.4095855   0.9838829 4694.9821
-#        lme gaussian identity 0.1079098   0.8366353 7611.3338
-#   glmerMod binomial    logit 0.5589201   0.6291994  261.0824
+#      Class   Family     Link    N  Marginal Conditional
+# 1      lme gaussian identity 1431 0.4766448   0.6932571
+# 2      lme gaussian identity 1431 0.4083328   0.9838487
+# 3      lme gaussian identity 1431 0.1070265   0.8364736
+# 4 glmerMod binomial    logit 1431 0.5589201   0.6291994
 ```
 ###Return model predictions
 
@@ -213,12 +213,4 @@ shipley2009.new = data.frame(
 
 # Generate predictions
 head(sem.predict(shipley2009.modlist, shipley2009.new))
-
-#      lat       DD     Date   Growth   DD.fit Date.fit Growth.fit Live.fit
-# 63.74900 156.6662 118.6954 50.95160 143.3918 120.3736   46.48266 5.497643
-# 55.72110 134.5989 136.9055 51.32790 150.0989 131.3554   51.95870 5.628542
-# 46.47976 151.3796 136.1517 61.89734 157.8198 123.0045   51.73203 9.305165
-# 47.13647 133.6134 140.5558 50.41360 157.2712 131.8458   53.05642 5.310499
-# 63.57681 161.3186 117.1850 50.50880 143.5357 118.0584   46.02848 5.343615
-# 47.56635 137.4427 119.1214 49.35723 156.9120 129.9401   46.61076 4.943035
 ```

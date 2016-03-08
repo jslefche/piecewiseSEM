@@ -56,7 +56,7 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 data(shipley2009)
 
 # Load model packages
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Create list of models 

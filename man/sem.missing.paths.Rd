@@ -97,7 +97,7 @@ For linear mixed effects models, p-values can be adjusted to accommodate the ful
 data(shipley2009)
 
 # Load model packages
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Create list of models 

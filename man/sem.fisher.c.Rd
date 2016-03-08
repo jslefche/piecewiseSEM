@@ -78,7 +78,7 @@ Jon Lefcheck
 data(shipley2009)
 
 # Load model packages
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Create list of models 

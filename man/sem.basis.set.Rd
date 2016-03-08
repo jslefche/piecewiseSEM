@@ -65,7 +65,7 @@ Unlike the functions \code{DAG} and \code{basiSet} in the \code{ggm} package, th
 data(shipley2009)
 
 # Load model packages
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Create list of models 

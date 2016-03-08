@@ -51,7 +51,7 @@ This particular model specification ignores the temporal autocorrelation among y
 
 ```{r, message = FALSE, results = "hide"}
 # Load required libraries for linear mixed effects models
-library(lmerTest)
+library(lme4)
 library(nlme)
 
 # Load example data from package
