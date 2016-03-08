@@ -10,6 +10,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     
   ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
   
+  # Check if all responses in the model list are the same
+  same = length(unique(unlist(sapply(modelList, function(x) all.vars(formula(x))[1])))) == 1
+  
   # Apply functions across all models in the model list
   ret = do.call(rbind, lapply(modelList, function(model) {
     
@@ -30,11 +33,15 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       ret$Marginal = summary(model)$r.squared
       
       # Retrieve AIC(c)
-      if(aicc == FALSE) 
+      if(same == TRUE) {
         
-        ret$AIC = AIC(model) else
+        if(aicc == FALSE) 
           
-          ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
+          ret$AIC = AIC(model) else
+            
+            ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
+          
+      }
         
     }
       
@@ -59,12 +66,16 @@ sem.model.fits = function(modelList, aicc = FALSE) {
           }
   
       # Calculate model AIC
-      if(aicc == FALSE) 
+      if(same == TRUE) {
         
-        ret$AIC = AIC(model) else
+        if(aicc == FALSE) 
           
-          ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
-      
+          ret$AIC = AIC(model) else
+            
+            ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
+          
+      }
+    
     }
     
     # Get R2 for class == merMod
@@ -102,11 +113,15 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       # Calculate model AIC
       model.ml = update(model, REML = FALSE)
       
-      if(aicc == FALSE) 
+      if(same == TRUE) {
         
-        ret$AIC = AIC(model.ml) else
+        if(aicc == FALSE) 
           
-          ret$AICc = AIC(model.ml) + (2 * (attr(logLik(model.ml), "df")) * (attr(logLik(model.ml), "df") + 1)) / (nobs(model.ml) - attr(logLik(model.ml), "df") - 1)
+          ret$AIC = AIC(model.ml) else
+            
+            ret$AICc = AIC(model.ml) + (2 * (attr(logLik(model.ml), "df")) * (attr(logLik(model.ml), "df") + 1)) / (nobs(model.ml) - attr(logLik(model.ml), "df") - 1)
+          
+      }
       
     }
     
@@ -164,11 +179,15 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       # Calculate model AIC
       model.ml = update(model, data = model$data, method = "ML")
       
-      if(aicc == FALSE) 
+      if(same == TRUE) {
         
-        ret$AIC = AIC(model.ml) else
+        if(aicc == FALSE) 
           
-          ret$AICc = AIC(model.ml) + (2 * (attr(logLik(model.ml), "df")) * (attr(logLik(model.ml), "df") + 1)) / (nobs(model.ml) - attr(logLik(model.ml), "df") - 1)
+          ret$AIC = AIC(model.ml) else
+            
+            ret$AICc = AIC(model.ml) + (2 * (attr(logLik(model.ml), "df")) * (attr(logLik(model.ml), "df") + 1)) / (nobs(model.ml) - attr(logLik(model.ml), "df") - 1)
+          
+      }
 
     }
     
@@ -260,11 +279,15 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varDisp + varDist)
       
       # Calculate model AIC
-      if(aicc == FALSE) 
+      if(same == TRUE) {
         
-        ret$AIC = AIC(model) else
+        if(aicc == FALSE) 
           
-          ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
+          ret$AIC = AIC(model) else
+            
+            ret$AICc = AIC(model) + (2 * (attr(logLik(model), "df")) * (attr(logLik(model), "df") + 1)) / (nobs(model) - attr(logLik(model), "df") - 1)
+          
+      }
       
     }
     
