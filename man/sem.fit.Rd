@@ -139,8 +139,7 @@ sem.fit(shipley2009.modlist, shipley2009)
 
 ### NOT RUN ###
 
-# Repeat but use lme4 to construct all models
-
+# # Repeat but use lme4 to construct all models
 # shipley2009.modlist.lme4 = list(
 #   
 #   lmer(DD~lat + (1|site/tree), na.action = na.omit, 
@@ -156,23 +155,23 @@ sem.fit(shipley2009.modlist, shipley2009)
 #         family=binomial(link = "logit"), data = shipley2009) 
 #   
 # )
-
+#
 # sem.fit(shipley2009.modlist.lme4, shipley2009)
-
-# Add new variable with no hypothesized links
+#
+# # Add new variable with no hypothesized links
 # set.seed(1)
 # add.var = rnorm(nrow(shipley2009), 50, 20)
-
-# Test for independence
+#
+# # Test for independence
 # sem.fit(shipley2009.modlist, shipley2009, add.vars = c("add.var"))
 
 ###
 
-# Add new variable grouped at site level
+# # Add new variable grouped at site level
 # set.seed(2)
 # shipley2009$site.var = rep(rnorm(20, 10, 5), each = 95)
-
-# Add a final model regressing at the level of the grouping variable
+# 
+# # Add a final model regressing at the level of the grouping variable
 # shipley2009.modlist2 = append(
 #   
 #   shipley2009.modlist, list(
@@ -181,44 +180,44 @@ sem.fit(shipley2009.modlist, shipley2009)
 #                                          mean, na.rm = TRUE))) 
 #   
 # )
-
-# Test for independence
+#
+# # Test for independence
 # sem.fit(shipley2009.modlist2, shipley2009, grouping.vars = c("site"))
 
 ###
 
-# Fit model from Shipley (2013)
+# # Fit model from Shipley (2013)
 # data(shipley2013)
 # 
 # shipley2013.modlist = list(
-#   
+# 
 #   lme(x2~x1, random = ~x1 | species, data = shipley2013),
-#   
+# 
 #   lme(x3~x2, random = ~x2 | species, data = shipley2013),
-#   
+# 
 #   lme(x4~x2, random = ~x2 | species, data = shipley2013),
-#   
+# 
 #   lme(x5~x3+x4, random = ~x3+x4 | species, data = shipley2013)
-#   
+# 
 # )
-
+# 
 # sem.fit(shipley2013.modlist, shipley2013) # Convergence error!
-
+# 
 # Specify model controls by switching to old optimizer
 # sem.fit(shipley2013.modlist, shipley2013, model.control = list(lmeControl(opt = "optim")))
 
 ###
 
-# Compare to output from ggm package
+# # Compare to output from ggm package
 # # Load library
 # library(ggm)
 # 
 # # Load data
 # data(marks)
 # # Generate direct acyclic graph (DAG)
-# dag = DAG(mechanics ~ vectors+algebra, 
+# dag = DAG(mechanics ~ vectors+algebra,
 #           vectors ~ algebra,
-#           statistics ~ algebra+analysis, 
+#           statistics ~ algebra+analysis,
 #           analysis ~ algebra)
 # # Run test of directed separation
 # shipley.test(dag, cov(marks), n=88)
@@ -234,5 +233,5 @@ sem.fit(shipley2009.modlist, shipley2009)
 # # Test model fit
 # sem.fisher.c(modelList, marks)
 
-## END NOT RUN ##
+### END NOT RUN ###
 }
