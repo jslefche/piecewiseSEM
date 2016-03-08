@@ -96,4 +96,7 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
     
   }
   
+  # Reset par
+  par(mar = c(5.1, 4.1, 4.1, 2.1), xpd = FALSE)
+  
 }
