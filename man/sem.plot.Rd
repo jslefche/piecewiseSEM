@@ -28,6 +28,14 @@ a \code{data.frame} used to construct the structured equations.
 a table of model coefficients obtained from \code{sem.coefs}.
 }
 
+\item{show.nonsig}{
+whether to show non-significant paths (P >= 0.05). Default is \code{TRUE}.
+}
+
+\item{scaling}{
+scaling coefficient for path thickness. Default is 10. If \code{NA} then all paths are equal width.
+}
+
 \item{...}{
 additional arguments to \code{sem.coefs}.
 }

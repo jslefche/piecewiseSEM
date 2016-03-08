@@ -1,4 +1,4 @@
-sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
+sem.plot = function(modelList = NULL, data = NULL, table = NULL, show.nonsig = TRUE, scaling = 10, ...) {
   
   # Get coefficients
   if(!is.null(modelList) & !is.null(data) & is.null(table))
@@ -49,9 +49,13 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
   names(row.n) = lbls
   
   # Get linewidth scale
-  scaling = 10 / diff(range(table[, "estimate"]))
-  
-  scl.fctr = abs(table[, "estimate"]) * scaling
+  if(is.na(scaling)) scl.fctr = rep(1, nrow(table)) else {
+    
+    scaling = scaling / diff(range(table[, "estimate"]))
+    
+    scl.fctr = abs(table[, "estimate"]) * scaling
+    
+  }
   
   # Add arrows
   for(i in 1:nrow(table)) {
@@ -60,16 +64,20 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, ...) {
     
     pred = row.n[names(row.n) == table[i, 2]]
     
-    arrows(
-      x0 = circle[pred, "x"],
-      y0 = circle[pred, "y"],
-      x1 = circle[resp, "x"],
-      y1 = circle[resp, "y"],
-      col = ifelse(table[i, "p.value"] < 0.05 & table[i, "estimate"] > 0, "black", 
-                   ifelse(table[i, "p.value"] < 0.05 & table[i, "estimate"] < 0, "red", "grey50")),
-      lwd = scl.fctr[i],
-      lty = ifelse(table[i, "p.value"] < 0.05, 1, 2)
-    )
+    if(show.nonsig == FALSE & table[i, "p.value"] >= 0.05) next else {
+    
+      arrows(
+        x0 = circle[pred, "x"],
+        y0 = circle[pred, "y"],
+        x1 = circle[resp, "x"],
+        y1 = circle[resp, "y"],
+        col = ifelse(table[i, "p.value"] < 0.05 & table[i, "estimate"] > 0, "black", 
+                     ifelse(table[i, "p.value"] < 0.05 & table[i, "estimate"] < 0, "red", "grey50")),
+        lwd = scl.fctr[i],
+        lty = ifelse(table[i, "p.value"] < 0.05, 1, 2)
+      )
+      
+    }
     
   }
   
