@@ -24,18 +24,16 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
   # Shorten label names if necessary
   if(any(sapply(lbls, function(x) nchar(x) > 10))) {
     
-    new.lbls = gsub("a|e|i|o|u", "", lbls)
-    
-    } else if(any(sapply(lbls, function(x) nchar(x) > 10))) {
+    new.lbls = gsub("a|e|i|o|u", "", lbls) } else new.lbls = lbls
+  
+  if(any(sapply(new.lbls, function(x) nchar(x) > 10))) 
       
       new.lbls = sapply(lbls, function(x) ifelse(nchar(x) > 10, substr(x, 1, 10), x))
-      
-      } else new.lbls = lbls
-  
+
   names(new.lbls) = lbls
 
   # Set graphical parameters
-  par(mar = rep(3, 4), xpd = NA)
+  par(mar = rep(5, 4), xpd = NA)
   
   # Initialize plot
   plot(c(-1.1, 1.1), c(-1.1, 1.1), type = "n", ann = FALSE, axes = FALSE)
@@ -95,7 +93,7 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
     
     y = circle[i, "y"]
   
-    xjust = ifelse(x > 0, -0.3, 1.3)
+    xjust = ifelse(x > 0, -0.2, 1.3)
     
     yjust = ifelse(y > 0 & x > 0, 0, 1)
     
