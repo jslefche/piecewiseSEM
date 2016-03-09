@@ -1,17 +1,23 @@
-sem.plot = function(modelList = NULL, data = NULL, table = NULL, show.nonsig = TRUE, scaling = 10, ...) {
+sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.errors = NULL, show.nonsig = TRUE, scaling = 10, ...) {
   
   # Get coefficients
-  if(!is.null(modelList) & !is.null(data) & is.null(table))
+  if(!is.null(modelList) & !is.null(data) & is.null(coef.table))
     
-    table = sem.coefs(modelList, data, ...) else
+    coef.table = sem.coefs(modelList, data, corr.errors = corr.errors, ...) else
 
-      if(is.null(modelList) & is.null(data) & is.null(table))
+      if(is.null(modelList) & is.null(data) & is.null(coef.table))
         
         stop("Please provide model list and data, or coefficient table!")
       
+  # Prepare coef.table
+  coef.table$corr.errors = grepl("~~", coef.table[, 1])
+  
+  coef.table[, 1] = gsub("~~ ", "", coef.table[, 1])
+  
+  coef.table[, 2] = gsub("~~ ", "", coef.table[, 2])
   
   # Get vector of labels
-  lbls = unlist(table[, 1:2])
+  lbls = unlist(coef.table[, 1:2])
   
   lbls = as.character(unname(lbls[!duplicated(lbls)]))
   
@@ -34,10 +40,10 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, show.nonsig = T
   # Initialize plot
   plot(c(-1.1, 1.1), c(-1.1, 1.1), type = "n", ann = FALSE, axes = FALSE)
   
-  # Prepare circle table
+  # Prepare circle coef.table
   theta = seq(0, 2 * pi, length = 200)
   
-  # Add to table.frame
+  # Add to coef.table.frame
   circle = data.frame(
     x = cos(theta),
     y = sin(theta)
@@ -49,32 +55,33 @@ sem.plot = function(modelList = NULL, data = NULL, table = NULL, show.nonsig = T
   names(row.n) = lbls
   
   # Get linewidth scale
-  if(is.na(scaling)) scl.fctr = rep(1, nrow(table)) else {
+  if(is.na(scaling)) scl.fctr = rep(1, nrow(coef.table)) else {
     
-    scaling = scaling / diff(range(table[, "estimate"]))
+    scaling = scaling / diff(range(coef.table[, "estimate"]))
     
-    scl.fctr = abs(table[, "estimate"]) * scaling
+    scl.fctr = abs(coef.table[, "estimate"]) * scaling
     
   }
   
   # Add arrows
-  for(i in 1:nrow(table)) {
+  for(i in 1:nrow(coef.table)) {
     
-    resp = row.n[names(row.n) == table[i, 1]]
+    resp = row.n[names(row.n) == coef.table[i, 1]]
     
-    pred = row.n[names(row.n) == table[i, 2]]
+    pred = row.n[names(row.n) == coef.table[i, 2]]
     
-    if(show.nonsig == FALSE & table[i, "p.value"] >= 0.05) next else {
+    if(show.nonsig == FALSE & coef.table[i, "p.value"] >= 0.05) next else {
     
       arrows(
         x0 = circle[pred, "x"],
         y0 = circle[pred, "y"],
         x1 = circle[resp, "x"],
         y1 = circle[resp, "y"],
-        col = ifelse(table[i, "p.value"] < 0.05 & table[i, "estimate"] > 0, "black", 
-                     ifelse(table[i, "p.value"] < 0.05 & table[i, "estimate"] < 0, "red", "grey50")),
+        code = ifelse(coef.table[i, "corr.errors"] == TRUE, 3, 2),
+        col = ifelse(coef.table[i, "p.value"] < 0.05 & coef.table[i, "estimate"] > 0, "black", 
+                     ifelse(coef.table[i, "p.value"] < 0.05 & coef.table[i, "estimate"] < 0, "red", "grey50")),
         lwd = scl.fctr[i],
-        lty = ifelse(table[i, "p.value"] < 0.05, 1, 2)
+        lty = ifelse(coef.table[i, "p.value"] < 0.05, 1, 2)
       )
       
     }
