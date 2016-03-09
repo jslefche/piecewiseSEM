@@ -25,7 +25,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   amat = get.dag(formulaList)
   
   # Sort adjacency matrix by parent to child nodes
-  amat = topSort(amat)
+  amat = sort.dag(amat)
   
   # If intercept only model, add response variable to adjacency matrix
   if(any(unlist(lapply(modelList, function(i) deparse(formula(i)[2]) %in% c("~1", "~ 1"))))) {
