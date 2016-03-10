@@ -1,10 +1,8 @@
 exportPattern("^[[:alpha:]]+")
-
 import(lavaan)
 import(nlme)
-
 importFrom("ggm", "isAcyclic")
-importFrom("graphics", "abline", "lines", "plot")
+importFrom("graphics", "abline", "lines", "plot", "arrows")
 importFrom("lme4", "lmer", "glmer", "lmerControl", "glmerControl")
 importFrom("methods", "as")
 importFrom("pbkrtest", "get_ddf_Lb")
