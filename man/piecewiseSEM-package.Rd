@@ -22,9 +22,9 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{gls
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
 Version: \tab 1.1\cr
-Date: \tab 2016-03-09\cr
-Depends: \tab R (3.2.X), ggm, lavaan\cr
-Suggests: \tab MASS, lmerTest, nlme\cr
+Date: \tab 2016-03-10\cr
+Depends: \tab R (3.2.3), ggm, lavaan, nlme, pbkrtest\cr
+Suggests: \tab MASS, lme4\cr
 License: \tab MIT\cr
 }
 

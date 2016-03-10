@@ -1,6 +1,6 @@
 # piecewiseSEM Change Log
 
-### 2016-03-09 Version 1.1.0
+### 2016-03-10 Version 1.1.0
   * Feature addition: rudimentary plotting using `sem.plot`
   * Feature addition: support for `glmmadmb` models
   * Feature addition: `pbkrtest` to reliably extract p-values from `lme4` models
