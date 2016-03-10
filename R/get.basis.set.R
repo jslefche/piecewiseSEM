@@ -1,13 +1,13 @@
 get.basis.set = function(amat) {
   
-  ret = lapply(1:ncol(amat), function(j) {
+  ret = lapply(1:ncol(amat), function(i) {
     
-    lapply(j:nrow(amat), function(i) {
+    lapply(i:nrow(amat), function(j) {
       
-      if(amat[j, i] != 0 | j == i) NULL else {  
+      if(amat[i, j] != 0 | i == j) NULL else {  
         
         # Get variables for independence test
-        dsep = unlist(dimnames(amat[j, i, drop = FALSE]))
+        dsep = unlist(dimnames(amat[i, j, drop = FALSE]))
         
         # Get vector of conditional variables
         cond.var = c(
@@ -29,7 +29,7 @@ get.basis.set = function(amat) {
   
   ret = unlist(ret, recursive = FALSE)
 
-  ret = lapply(ret, function(i) i[!duplicated(i)])
+  ret = lapply(ret, function(j) j[!duplicated(j)])
     
   ret = ret[!sapply(ret, is.null)]
   
