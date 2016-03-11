@@ -1,5 +1,5 @@
 ## Update package
-This is a bug-fix update to promote compatibility with the new version of `nlme` and address other minor issues.
+This is a feature and bug-fix update that adds new plotting capabilities, fixes long-standing issues with `lme4` models, and issues with construction of goodness-of-fit tests.
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 

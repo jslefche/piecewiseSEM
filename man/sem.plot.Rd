@@ -11,7 +11,7 @@ Generates mandala plot for piecewise structural equation models.
 }
 
 \usage{
-sem.fit(modelList, data, table, show.nonsig = TRUE, scaling = 10, ...)
+sem.plot(modelList, data, coef.table, corr.errors = NULL, show.nonsig = TRUE, scaling = 10, alpha = 0.05, ...)
 }
 
 \arguments{
@@ -24,8 +24,12 @@ a \code{list} of regressions representing the structural equation model.
 a \code{data.frame} used to construct the structured equations.
 }
 
-  \item{table}{
+  \item{coef.table}{
 a table of model coefficients obtained from \code{sem.coefs}.
+}
+
+  \item{corr.errors}{
+a vector of variables with correlated errors (separated by \code{~~}).
 }
 
 \item{show.nonsig}{
