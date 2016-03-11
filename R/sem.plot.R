@@ -1,4 +1,6 @@
-sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.errors = NULL, show.nonsig = TRUE, scaling = 10, ...) {
+sem.plot = function(
+  modelList = NULL, data = NULL, coef.table = NULL, corr.errors = NULL, 
+  show.nonsig = TRUE, scaling = 10, alpha = 0.05, ...) {
   
   # Get coefficients
   if(!is.null(modelList) & !is.null(data) & is.null(coef.table))
@@ -68,7 +70,7 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
     
     pred = row.n[names(row.n) == coef.table[i, 2]]
     
-    if(show.nonsig == FALSE & coef.table[i, "p.value"] >= 0.05) next else {
+    if(show.nonsig == FALSE & coef.table[i, "p.value"] >= alpha) next else {
     
       arrows(
         x0 = circle[pred, "x"],
@@ -76,10 +78,10 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
         x1 = circle[resp, "x"],
         y1 = circle[resp, "y"],
         code = ifelse(coef.table[i, "corr.errors"] == TRUE, 3, 2),
-        col = ifelse(coef.table[i, "p.value"] < 0.05 & coef.table[i, "estimate"] > 0, "black", 
-                     ifelse(coef.table[i, "p.value"] < 0.05 & coef.table[i, "estimate"] < 0, "red", "grey50")),
+        col = ifelse(coef.table[i, "p.value"] < alpha & coef.table[i, "estimate"] > 0, "black", 
+                     ifelse(coef.table[i, "p.value"] < alpha & coef.table[i, "estimate"] < 0, "red", "grey50")),
         lwd = scl.fctr[i],
-        lty = ifelse(coef.table[i, "p.value"] < 0.05, 1, 2)
+        lty = ifelse(coef.table[i, "p.value"] < alpha, 1, 2)
       )
       
     }
@@ -93,9 +95,9 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
     
     y = circle[i, "y"]
   
-    xjust = ifelse(x > 0, 0.5-(x/2),0.5+(-x/2))
+    xjust = ifelse(x > 0, 0.5 - (x / 2), 0.5 + (-x / 2))
     
-    yjust = ifelse(y > 0 & x > 0, 0, 1)
+    yjust = ifelse(y > 0, 0, 1)
     
     legend(
       x, 
