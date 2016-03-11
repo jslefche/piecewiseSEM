@@ -1,6 +1,6 @@
-\name{sort.dag}
+\name{get.sort.dag}
 
-\alias{sort.dag}
+\alias{get.sort.dag}
 
 \title{
 Sorts adjacency matrix from parents to children
@@ -11,7 +11,7 @@ A helper function for \code{sem.basis.set} that takes the adjacency matrix from 
 }
 
 \usage{
-sort.dag(amat)
+get.sort.dag(amat)
 }
 
 \arguments{
