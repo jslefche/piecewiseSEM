@@ -1,4 +1,4 @@
-sort.dag = function(amat) {
+get.sort.dag = function(amat) {
 
   # Get predictors where colSums == 0
   col.zero = colnames(amat)[colSums(amat) == 0]
