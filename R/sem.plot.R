@@ -95,7 +95,7 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
   
     xjust = ifelse(x > 0, 0.5-(x/2),0.5+(-x/2))
     
-    yjust = ifelse(y > 0 & x > 0, 0, 1)
+    yjust = ifelse(y > 0, 0,1)
     
     legend(
       x, 
