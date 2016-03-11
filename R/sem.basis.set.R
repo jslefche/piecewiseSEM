@@ -11,6 +11,9 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   if(any(unlist(lapply(formulaList, is.null)))) stop("At least one model class not yet supported")
   
+  # Check to see if any variables in the formula list appear in add.vars
+  if(any(unlist(lapply(formulaList, all.vars)) %in% add.vars)) stop("Variables in the model list appear in add.vars!")
+  
   # If additional variables are present, add them to the basis set
   if(!is.null(add.vars)) {
     
