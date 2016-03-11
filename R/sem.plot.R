@@ -93,7 +93,7 @@ sem.plot = function(modelList = NULL, data = NULL, coef.table = NULL, corr.error
     
     y = circle[i, "y"]
   
-    xjust = ifelse(x > 0, -0.2, 1.3)
+    xjust = ifelse(x > 0, 0.5-(x/2),0.5+(-x/2))
     
     yjust = ifelse(y > 0 & x > 0, 0, 1)
     
