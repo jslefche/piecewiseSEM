@@ -11,7 +11,8 @@ Generates mandala plot for piecewise structural equation models.
 }
 
 \usage{
-sem.plot(modelList, data, coef.table, corr.errors = NULL, show.nonsig = TRUE, scaling = 10, alpha = 0.05, ...)
+sem.plot(modelList, data, coef.table, corr.errors = NULL,
+show.nonsig = TRUE, scaling = 10, alpha = 0.05, ...)
 }
 
 \arguments{
