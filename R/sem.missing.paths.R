@@ -28,7 +28,7 @@ sem.missing.paths = function(
     # Get fixed formula
     rhs = if(length(basis.set[[i]]) <= 2) paste(basis.set[[i]][1]) else
       
-      paste(basis.set[[i]][c(1,3:length(basis.set[[i]]))], collapse = " + ")
+      paste(basis.set[[i]][c(3:length(basis.set[[i]]), 1)], collapse = " + ")
     
     # Get random formula
     random.formula = get.random.formula(basis.mod, rhs, modelList)
@@ -186,14 +186,20 @@ sem.missing.paths = function(
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
     # Modify rhs if number of characters exceeds 20
-    if(conditional == FALSE) {
+    rhs.new = 
       
-      rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
-      
-    }
+        if(length(basis.set[[i]]) < 3) rhs else {
+          
+          if(conditional == FALSE) 
+            
+            paste0(basis.set[[i]][1], " + ...") else 
+              
+              paste(basis.set[[i]][c(1, 3:length(basis.set[[i]]))], collapse = " + ")
+          
+        }
     
     # Bind in d-sep metadata
-    data.frame(missing.path = paste(basis.set[[i]][2], " ~ ", rhs, sep = ""), ret)
+    data.frame(missing.path = paste(basis.set[[i]][2], " ~ ", rhs.new, sep = ""), ret)
     
   } ) ) else
     
