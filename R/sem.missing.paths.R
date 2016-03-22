@@ -186,7 +186,7 @@ sem.missing.paths = function(
     if(.progressBar == TRUE) setTxtProgressBar(pb, i)
     
     # Modify rhs if number of characters exceeds 20
-    if(conditional == FALSE & nchar(rhs) > 30) {
+    if(conditional == FALSE) {
       
       rhs = paste(gsub(".\\+.*$", "", rhs), "+ ...")
       
