@@ -28,6 +28,12 @@ filter.exogenous = function(modelList, basis.set = NULL, corr.errors = NULL, add
   # Ensure that no entry in the basis set already exists in the formula list
   basis.set = lapply(basis.set, function(i) if(any(sapply(modelFormulaList, function(j) any(i[1:2] %in% j[1]) & all(i[1:2] %in% j)))) NULL else i)
   
+  # Replace interaction : with * when interaction is response in basis set
+  basis.set = lapply(basis.set, function(i) if(!i[2] %in% response.vars) gsub(":", "\\*", i) else i)
+  
+  # Remove entries attempting to predict interaction that does not occur in the model list
+  basis.set = lapply(basis.set, function(i) if(!i[2] %in% response.vars) NULL else i)
+  
   # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
   

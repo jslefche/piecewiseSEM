@@ -1,42 +1,7 @@
 get.dag = function(formulaList) {
   
-  # Expand interactions to include interaction and main effects
-  formulaList = lapply(formulaList, function(i) 
-    
-    if(grepl("\\*|\\:", paste(format(formula(i)), collapse = ""))) {
-      
-      lhs = paste(rownames(attr(terms(i), "factors"))[1])
-      
-      rhs = attr(terms(i), "term.labels")
-      
-      # Insert placeholder for interaction symbol :
-      rhs = gsub("\\:", "_____", rhs)
-      
-      # Sort interactions so always alphabetical
-      for(j in which(grepl("_____", rhs))) {
-        
-        # Split interactions and sort alphabetically
-        int = unlist(lapply(strsplit(rhs[j], "_____"), sort))
-          
-        # Recombine 
-        int.rec = paste(int, collapse = "_____")
-          
-        # Re-insert into formula
-        rhs[j] = int.rec
-          
-        }
- 
-      # Collapse into formula
-      rhs = paste(rhs, collapse = " + ")
-      
-      # And return full formula
-      formula(paste(lhs, " ~ ", rhs))
-      
-    }
-    
-    else i
-    
-  )
+  # Insert placeholder for interaction symbol
+  formulaList = lapply(formulaList, function(i) formula(gsub("\\:", "_____", Reduce(paste, deparse(i)))))
 
   # Strip transformations
   formulaList.new = lapply(formulaList, function(i) {

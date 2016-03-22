@@ -17,13 +17,45 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # If additional variables are present, add them to the basis set
   if(!is.null(add.vars)) {
     
-    # If interactions are specified with an asterisk, replace with semicolon
-    add.vars = sapply(add.vars, function(x) gsub(" \\* ", "\\:", x))
-    
     formulaList = append(formulaList, unname(sapply(add.vars, function(x) as.formula(paste(x, x, sep = "~")))))
     
   }
-  
+
+  # Expand interactions in formula list
+  formulaList = lapply(formulaList, function(i) 
+    
+    if(grepl("\\*|:", paste(format(formula(i)), collapse = ""))) {
+      
+      lhs = paste(rownames(attr(terms(i), "factors"))[1])
+      
+      rhs = attr(terms(i), "term.labels")
+      
+      # Sort interactions so always alphabetical
+      for(j in which(grepl(":", rhs))) {
+        
+        # Split interactions and sort alphabetically
+        int = unlist(lapply(strsplit(rhs[j], ":"), sort))
+        
+        # Recombine 
+        int.rec = paste(int, collapse = ":")
+        
+        # Re-insert into formula
+        rhs[j] = int.rec
+        
+      }
+      
+      # Collapse into formula
+      rhs = paste(rhs, collapse = " + ")
+      
+      # And return full formula
+      formula(paste(lhs, " ~ ", rhs))
+      
+    }
+    
+    else i
+    
+  )
+    
   # Generate adjacency matrix
   amat = get.dag(formulaList)
   
