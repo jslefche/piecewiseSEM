@@ -84,37 +84,40 @@ sem.missing.paths = function(
     )
 
     # Get row number from coefficient table for d-sep variable
-    if(any(!class(basis.mod.new) %in% c("pgls"))) {
-      
-      # Get row number of d-sep claim
-      row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1 
-      
-      # Get row number if interaction variables are switched
-      if(length(row.num) == 0 & grepl("\\:|\\*", basis.set[[i]][1])) {
-        
-        # If interaction is reported as asterisk, convert to semicolon
-        int = gsub(" \\* ", "\\:", basis.set[[i]][1])
-        
-        # Get all combinations of interactions
-        all.ints = sapply(strsplit(int, ":"), function(x) { 
-          
-          datf = expand.grid(rep(list(x), length(x)), stringsAsFactors = FALSE)
-          
-          datf = datf[apply(datf, 1, function(x) !any(duplicated(x))), ]
-          
-          apply(datf, 1, function(x) paste(x, collapse = ":"))
-          
-        } )
-        
-        row.num = which(attr(terms(basis.mod.new), "term.labels") %in% all.ints) + 1
-          
-        }
-      
-      } else {
-        
-        row.num = which(basis.set[[i]][1] == basis.mod.new$varNames)
-         
-      }
+    # if(any(!class(basis.mod.new) %in% c("pgls"))) {
+    #   
+    #   # Get row number of d-sep claim
+    #   row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1 
+    #   
+    #   # Get row number if interaction variables are switched
+    #   if(length(row.num) == 0 & grepl("\\:|\\*", basis.set[[i]][1])) {
+    #     
+    #     # If interaction is reported as asterisk, convert to semicolon
+    #     int = gsub(" \\* ", "\\:", basis.set[[i]][1])
+    #     
+    #     # Get all combinations of interactions
+    #     all.ints = sapply(strsplit(int, ":"), function(x) { 
+    #       
+    #       datf = expand.grid(rep(list(x), length(x)), stringsAsFactors = FALSE)
+    #       
+    #       datf = datf[apply(datf, 1, function(x) !any(duplicated(x))), ]
+    #       
+    #       apply(datf, 1, function(x) paste(x, collapse = ":"))
+    #       
+    #     } )
+    #     
+    #     row.num = which(attr(terms(basis.mod.new), "term.labels") %in% all.ints) + 1
+    #       
+    #     }
+    #   
+    #   } else {
+    #     
+    #     row.num = which(basis.set[[i]][1] == basis.mod.new$varNames)
+    #      
+    #   }
+    
+    # Get row number of coefficient table
+    row.num = length(attr(terms(basis.mod.new), "term.labels")) + 1
     
     # Return new coefficient table
     ret = if(any(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest"))) {
