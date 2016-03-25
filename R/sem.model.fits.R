@@ -81,6 +81,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     # Get R2 for class == merMod
     if(any(class(model) %in% c("lmerMod", "merModLmerTest"))) {
       
+      # Test for positive random effects
+      if(any(na.omit(suppressWarnings(as.numeric(VarCorr(model)))) <= 0)) stop("Some variance components equal zero. Consider removing random effects!")
+      
       # Get variance of fixed effects by multiplying coefficients by design matrix
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
    
@@ -127,6 +130,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     
     # Get R2 for class == lme
     if(all(class(model) == "lme")) {
+      
+      # Test for positive random effects
+      if(any(na.omit(suppressWarnings(as.numeric(VarCorr(model)))) <= 0)) stop("Some variance components equal zero. Consider removing random effects!")
       
       # Get design matrix of fixed effects from model
       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
@@ -194,6 +200,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     # Get R2 for class == "glmerMod"
     if(any(class(model) == "glmerMod")) {
       
+      # Test for positive random effects
+      if(any(na.omit(suppressWarnings(as.numeric(VarCorr(model)))) <= 0)) stop("Some variance components equal zero. Consider removing random effects!")
+      
       # Classify model family
       ret$Family = summary(model)$family
       
@@ -205,7 +214,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       
       # Separate observation variance from variance of random effects
       n.obs = names(unlist(lapply(ranef(model), nrow))[!unlist(lapply(ranef(model), nrow)) == nrow(model@pp$X)])
-      
+
       # Get variance of random effects 
       varRand = sum(
         
