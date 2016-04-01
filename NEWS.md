@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-03-23 Version 1.1.1
+### 2016-04-01 Version 1.1.1
+  * Temporary bug fix: returns lowest P-value for when d-sep tests include non-linear intermediate endogenous variables
   * Bug fix: reversed order of conditioning variables so they come first 
   * Bug fix: removed entries from the basis set that attempt to predict an interaction that does not appear in the model list
 

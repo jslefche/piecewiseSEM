@@ -6,13 +6,17 @@
   
     Lefcheck, Jonathan S. (2015) "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." Methods in Ecology and Evolution. In press. DOI: 10.1111/2041-210X.12512
 
-Version: 1.1.1 (2016-03-23)
+Version: 1.1.1 (2016-04-01)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
 Supported model classes include: 
 
   `lm`, `glm`, `glm.nb`, `gls`, `pgls`, `merMod`, `merModLmerTest`, `lme`, `glmmPQL`, and `glmmadmb`.
+  
+###WARNING
+
+***Some tests of directed separation are non-symmetrical -- the partial slope of a ~ b is not the same as b ~ a -- when the variables are non-linear (i.e., are transformed via a link function when fit to a non-linear distribution). We are currently investigating the phenomenon, but in the interim, the latest version of the package returns the lowest P-value. This the more conservative route. Stay tuned for more updates...***
 
 ##Examples
 
