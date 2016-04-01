@@ -9,9 +9,23 @@ sem.missing.paths = function(
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
 
   # Add progress bar
-  if(.progressBar == T & length(basis.set) > 0) 
+  if(.progressBar == T & length(basis.set) > 0) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+  
+  # Identify d-sep tests among endogenous variables and reverse
+  names(basis.set) = 1:length(basis.set)
+  
+  # Get sorted adjacency matrix
+  amat = get.sort.dag(get.formula.list(modelList))
+  
+  # Identify intermediate endogenous variables
+  idx = colnames(amat)[amat[colnames(amat)[colSums(amat) == 0], ] > 0]
+  
+  # Identify variables in the basis set where intermediate endogenous variables are the response
+  basis.set = append(basis.set, lapply(which(sapply(basis.set, function(i) i[2] %in% idx)), function(i) 
     
-    pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
+    c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
+    
+  ) )
   
   # Perform d-sep tests
   if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
@@ -207,6 +221,22 @@ sem.missing.paths = function(
   } ) ) else
     
     pvalues.df = data.frame(missing.path = NA, estimate = NA, std.error = NA, DF = NA, crit.value = NA, p.value = NA)
+  
+  # Identify duplicate tests from intermediate endogenous variables
+  pvalues.df$dup = names(basis.set)
+
+  # Return lowest P-value
+  pvalues.df = do.call(rbind, lapply(unique(pvalues.df$dup), function(x) {
+    
+    if(length(unique(subset(pvalues.df, dup == x)$p.value)) > 1) 
+      
+      warning("Some d-sep tests are non-symmetrical. The most conservative P-value has been returned. Stay tuned...")
+    
+    subset(pvalues.df, dup == x)[which.min(subset(pvalues.df, dup == x)$p.value), -7]
+    
+  }
+    
+  ) )
   
   # Set degrees of freedom as numeric
   pvalues.df$df = as.numeric(pvalues.df$df)
