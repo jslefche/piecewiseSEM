@@ -1,5 +1,8 @@
-get.sort.dag = function(amat) {
+get.sort.dag = function(formulaList) {
 
+  # Get adjaceny matrix
+  amat = get.dag(formulaList)
+  
   # Get predictors where colSums == 0
   col.zero = colnames(amat)[colSums(amat) == 0]
 
