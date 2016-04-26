@@ -11,7 +11,7 @@ sem.missing.paths = function(
   # Add progress bar
   if(.progressBar == T & length(basis.set) > 0) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
-  # Identify d-sep tests among endogenous variables and reverse
+  # Identify d-sep tests among endogenous variables and reverse if family != "gaussian"
   names(basis.set) = 1:length(basis.set)
   
   # Get sorted adjacency matrix
@@ -21,11 +21,18 @@ sem.missing.paths = function(
   idx = colnames(amat)[amat[colnames(amat)[colSums(amat) == 0], ] > 0]
   
   # Identify variables in the basis set where intermediate endogenous variables are the response
-  basis.set = append(basis.set, lapply(which(sapply(basis.set, function(i) i[2] %in% idx)), function(i) 
+  if(any(sapply(modelList[sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)], function(x) family(x)$family != "gaussian"))) {
     
-    c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
+    # Add flag
+    rev = TRUE
+  
+    basis.set = append(basis.set, lapply(which(sapply(basis.set, function(i) i[2] %in% idx)), function(i) 
+      
+      c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
+      
+    ) )
     
-  ) )
+  }
   
   # Perform d-sep tests
   if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
@@ -230,7 +237,7 @@ sem.missing.paths = function(
     
     if(length(unique(subset(pvalues.df, dup == x)$p.value)) > 1) 
       
-      warning("Some d-sep tests are non-symmetrical. The most conservative P-value has been returned. Stay tuned...")
+      warning("Some d-sep tests are non-symmetrical. The most conservative P-value has been returned. Stay tuned for future developments...")
     
     subset(pvalues.df, dup == x)[which.min(subset(pvalues.df, dup == x)$p.value), -7]
     
