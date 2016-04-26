@@ -1,8 +1,13 @@
 sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
-  
+
   # Get list of formula from model list
   formulaList = get.formula.list(modelList, add.vars)
+  
+  # Stop if any response in the model list is the same as any other response
+  if(any(duplicated(sapply(formulaList, function(x) all.vars(x)[1])))) 
     
+    stop("Duplicate responses detected in the model list. Collapse or re-specify models so that each response appears only once!")
+  
   # Get adjacency matrix and sort by parent to child nodes
   amat = get.sort.dag(formulaList)
   
