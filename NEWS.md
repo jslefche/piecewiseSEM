@@ -1,7 +1,8 @@
 # piecewiseSEM Change Log
 
-### 2016-04-01 Version 1.1.1
-  * Temporary bug fix: returns lowest P-value for when d-sep tests include non-linear intermediate endogenous variables
+### 2016-04-26 Version 1.1.1
+  * Stop: if duplicate responses are detected in the model list
+  * Temporary bug fix: returns lowest P-value for when d-sep tests include non-linear intermediate endogenous variables, only if family is not Gaussian
   * Bug fix: reversed order of conditioning variables so they come first 
   * Bug fix: removed entries from the basis set that attempt to predict an interaction that does not appear in the model list
 
