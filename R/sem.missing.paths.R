@@ -21,7 +21,11 @@ sem.missing.paths = function(
   idx = colnames(amat)[amat[colnames(amat)[colSums(amat) == 0], ] > 0]
   
   # Identify variables in the basis set where intermediate endogenous variables are the response
-  if(any(sapply(modelList[sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)], function(x) family(x)$family != "gaussian"))) {
+  if(any(sapply(modelList[sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)], function(x) 
+    
+    if(any(class(x) %in% c("glm", "negbin", "glmmPQL", "glmerMod"))) FALSE else class(x) != "gaussian"
+    
+    ))) {
     
     # Add flag
     rev = TRUE
