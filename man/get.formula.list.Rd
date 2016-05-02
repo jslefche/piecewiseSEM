@@ -11,12 +11,16 @@ A helper function for \code{sem.missing.paths} that retrieves a formula list fro
 } 
 
 \usage{
-get.formula.list(modelList)
+get.formula.list(modelList, add.vars)
 }
 
 \arguments{
   \item{modelList}{
 a \code{list} of regressions representing the structural equation model.
+}
+
+  \item{add.vars}{
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 }
 

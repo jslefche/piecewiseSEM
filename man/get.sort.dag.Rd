@@ -11,12 +11,12 @@ A helper function for \code{sem.basis.set} that takes the adjacency matrix from 
 }
 
 \usage{
-get.sort.dag(amat)
+get.sort.dag(formulaList)
 }
 
 \arguments{
-  \item{amat}{
-adjacency matrix from \code{get.dag}
+  \item{formulaList}{
+a list of model formula(e).
 }
 }
 

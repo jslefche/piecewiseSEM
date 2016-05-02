@@ -234,19 +234,19 @@ sem.missing.paths = function(
     pvalues.df = data.frame(missing.path = NA, estimate = NA, std.error = NA, DF = NA, crit.value = NA, p.value = NA)
   
   # Identify duplicate tests from intermediate endogenous variables
-  pvalues.df$dup = names(basis.set)
-
+  dup = names(basis.set)
+  
   # Return lowest P-value
-  pvalues.df = do.call(rbind, lapply(unique(pvalues.df$dup), function(x) {
+  pvalues.df = do.call(rbind, lapply(unique(dup), function(x) {
     
-    if(length(unique(subset(pvalues.df, dup == x)$p.value)) > 1) 
+    if(length(dup[dup == x]) > 1) 
       
       warning("Some d-sep tests are non-symmetrical. The most conservative P-value has been returned. Stay tuned for future developments...")
     
-    subset(pvalues.df, dup == x)[which.min(subset(pvalues.df, dup == x)$p.value), -7]
+    pvalues.df[as.numeric(x), ][which.min(pvalues.df[as.numeric(x), "p.value"]), ]
     
   }
-    
+  
   ) )
   
   # Set degrees of freedom as numeric
@@ -257,6 +257,8 @@ sem.missing.paths = function(
   if(any(grepl("...", pvalues.df$missing.path))) 
     
     message("Conditional variables have been omitted from output table for clarity (or use argument conditional = T)")
+  
+  rm(dup)
   
   return(pvalues.df)
   
