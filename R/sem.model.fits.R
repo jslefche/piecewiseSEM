@@ -90,7 +90,11 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Check to see if random slopes are present as fixed effects
-      if(any(!sapply(ranef(model), function(x) colnames(x)) %in% names(fixef(model))))
+      ref = ranef(model)
+      
+      ref.names = ifelse(length(ref) > 1, sapply(ref, names), names(ref))
+      
+      if(any(!ref.names %in% names(fixef(model))))
         
         stop("Random slopes not present as fixed effects. This artificially inflates calculations of conditional R2. Respecify fixed structure!")
       
@@ -151,9 +155,13 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       
       # Get variance of fixed effects by multiplying coefficients by design matrix
       varF = var(as.vector(fixef(model) %*% t(Fmat)))
- 
+
       # Check to see if random slopes are present as fixed effects
-      if(any(!sapply(ranef(model), function(x) colnames(x)) %in% names(fixef(model))))
+      ref = ranef(model)
+      
+      ref.names = ifelse(length(ref) > 1, sapply(ref, names), names(ref))
+      
+      if(any(!ref.names %in% names(fixef(model))))
         
         stop("Random slopes not present as fixed effects. This artificially inflates calculations of conditional R2. Respecify fixed structure!")
       
@@ -229,7 +237,11 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Check to see if random slopes are present as fixed effects
-      if(any(!sapply(ranef(model), function(x) colnames(x)) %in% names(fixef(model))))
+      ref = ranef(model)
+      
+      ref.names = ifelse(length(ref) > 1, sapply(ref, names), names(ref))
+      
+      if(any(!ref.names %in% names(fixef(model))))
         
         stop("Random slopes not present as fixed effects. This artificially inflates calculations of conditional R2. Respecify fixed structure!")
       
