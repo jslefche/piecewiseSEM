@@ -96,27 +96,54 @@ For linear mixed effects models, p-values can be adjusted to accommodate the ful
 # Load example data
 data(shipley2009)
 
+# Reduce dataset for example
+shipley2009.reduced = shipley2009[1:200, ]
+
 # Load model packages
 library(lme4)
 library(nlme)
 
 # Create list of models 
-shipley2009.modlist = list(
-  
-  lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
-      data = shipley2009),
-  
-  lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
-      data = shipley2009),
-  
-  lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
-      data = shipley2009),
-  
-  glmer(Live ~ Growth+(1|site)+(1|tree), 
-        family=binomial(link = "logit"), data = shipley2009) 
-  
-)
-  
+  shipley2009.reduced.modlist = list(
+    
+    lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009.reduced),
+    
+    lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009.reduced),
+    
+    lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009.reduced),
+    
+    glmer(Live ~ Growth+(1|site)+(1|tree), 
+          family=binomial(link = "logit"), data = shipley2009.reduced) 
+    
+  )
+
 # Evaluate independence claims
-sem.missing.paths(shipley2009.modlist, shipley2009)
+sem.missing.paths(shipley2009.reduced.modlist, shipley2009.reduced)
+
+\dontrun{
+  # Repeat with full dataset as in Shipley (2009)
+
+  # Create list of models 
+  shipley2009.modlist = list(
+    
+    lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009),
+    
+    lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009),
+    
+    lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009),
+    
+    glmer(Live ~ Growth+(1|site)+(1|tree), 
+          family=binomial(link = "logit"), data = shipley2009) 
+    
+  )
+
+  # Evaluate independence claims
+  sem.missing.paths(shipley2009.modlist, shipley2009)
+  }
 }

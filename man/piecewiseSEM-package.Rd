@@ -22,8 +22,8 @@ Supported model classes include: \code{lm}, \code{glm}, \code{glm.nb}, \code{gls
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
 Version: \tab 1.1.1\cr
-Date: \tab 2016-04-26\cr
-Depends: \tab R (3.2.4), ggm, lavaan, nlme, pbkrtest\cr
+Date: \tab 2016-05-28\cr
+Depends: \tab R (3.3), ggm, lavaan, nlme, pbkrtest\cr
 Suggests: \tab MASS, lme4\cr
 License: \tab MIT\cr
 }
@@ -55,30 +55,61 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 # Load example data
 data(shipley2009)
 
+# Reduce dataset for example
+shipley2009.reduced = shipley2009[1:200, ]
+
 # Load model packages
 library(lme4)
 library(nlme)
 
 # Create list of models 
-shipley2009.modlist = list(
-  
-  lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
-      data = shipley2009),
-  
-  lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
-      data = shipley2009),
-  
-  lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
-      data = shipley2009),
-  
-  glmer(Live ~ Growth+(1|site)+(1|tree), 
-        family=binomial(link = "logit"), data = shipley2009) 
-  
-)
+  shipley2009.reduced.modlist = list(
+    
+    lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009.reduced),
+    
+    lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009.reduced),
+    
+    lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009.reduced),
+    
+    glmer(Live ~ Growth+(1|site)+(1|tree), 
+          family=binomial(link = "logit"), data = shipley2009.reduced) 
+    
+  )
   
 # Get goodness-of-fit and AIC
-sem.fit(shipley2009.modlist, shipley2009)
+sem.fit(shipley2009.reduced.modlist, shipley2009.reduced)
 
 # Extract path coefficients
-sem.coefs(shipley2009.modlist, shipley2009)
+sem.coefs(shipley2009.reduced.modlist, shipley2009.reduced)
+
+\dontrun{
+
+  # Repeat with full dataset as in Shipley (2009)
+
+  # Create list of models 
+  shipley2009.modlist = list(
+    
+    lme(DD ~ lat, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009),
+    
+    lme(Date ~ DD, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009),
+    
+    lme(Growth ~ Date, random = ~1|site/tree, na.action = na.omit, 
+        data = shipley2009),
+    
+    glmer(Live ~ Growth+(1|site)+(1|tree), 
+          family=binomial(link = "logit"), data = shipley2009) 
+    
+  )
+  
+  # Get goodness-of-fit and AIC
+  sem.fit(shipley2009.modlist, shipley2009)
+  
+  # Extract path coefficients
+  sem.coefs(shipley2009.modlist, shipley2009)
+  }
 }

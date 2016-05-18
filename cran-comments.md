@@ -5,8 +5,8 @@ This is a bug fix update.
 There were no ERRORs or WARNINGs. 
 
 ## NOTES 
-* Several examples take longer >5 s to run on the test system but are crucial for reproducing the analyses in the primary literature. I have commented out several of the examples in an effort to reduce the run time
+* I have reduced the run time of several problematic examples to < 1 s
 
 ## Test environments
-* local OS X install, R 3.2.5
+* local OS X install, R 3.3
 * win-builder (R-devel and R-release)
