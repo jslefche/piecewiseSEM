@@ -95,12 +95,10 @@ shipley2009.modlist = list(
 # Plot output
 sem.plot(shipley2009.modlist, shipley2009)
 
-### NOT RUN ###
-
-# # Alternately get coefficient table and pass to sem.plot
-# coef.table = sem.coefs(shipley2009.modlist, shipley2009)
-#
-#sem.plot(coef.table)
-
-### END NOT RUN ###
+\dontrun{
+  # Alternately get coefficient table and pass to sem.plot
+  coef.table = sem.coefs(shipley2009.modlist, shipley2009)
+  
+  sem.plot(coef.table)
+  }
 }

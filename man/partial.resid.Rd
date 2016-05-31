@@ -93,57 +93,55 @@ resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, shipley2013,
 # Also returns raw residuals values for plotting in other packages
 head(resids.df)
 
-## NOT RUN ##
-
-# # Create example data
-# set.seed(1)
-# 
-# example.data = data.frame(
-#   y = rnorm(100, 0, 1),
-#   x1 = rnorm(100, 10, 50),
-#   random = letters[1:5]
-# )
-# 
-# example.data$x2 = example.data$y + runif(100, 0, 5)
-# 
-# example.data$x3 = example.data$x2 + runif(100, 0, 5)
-# 
-# # Run regular linear model using lm()
-# lm.model = lm(y ~ x1 + x2 + x3, example.data)
-# 
-# partial.resid(y ~ x3, lm.model, example.data)
-# 
-# # Works with interactions too
-# lm.model2 = lm(y ~ x1 * x2 + x3, example.data)
-# 
-# partial.resid(y ~ x1 * x2, lm.model2, example.data, return.data.frame = FALSE)
-# 
-# # Run generalized least squared regression
-# library(nlme)
-# 
-# gls.model = gls(y ~ x1 + x2 + x3, example.data)
-# 
-# partial.resid(y ~ x3, gls.model, example.data, return.data.frame = FALSE)
-# 
-# # Run mixed effects model using lme()
-# lme.model = lme(y ~ x1 + x2 + x3, random = ~ 1 | random, example.data)
-# 
-# partial.resid(y ~ x3, lme.model, example.data, return.data.frame = FALSE)
-# 
-# # Run mixed effects model using lmer()
-# library(lme4) 
-# 
-# lmer.model = lmer(y ~ x1 + x2 + x3 + (1 | random), example.data)
-# 
-# partial.resid(y ~ x3, lmer.model, example.data, return.data.frame = FALSE)
-# 
-# # Remove some values of x3 from data.frame
-# example.data[c(12, 23, 45), "x3"] = NA
-# 
-# # Run regular linear model using lm()
-# lm.model = lm(y ~ x1 + x2 + x3, example.data)
-# 
-# sum(!is.na(partial.resid(y ~ x3, lm.model, example.data)$x.resids)) # Should be 97
-
-## END NOT RUN ##
+\dontrun{
+  # Create example data
+  set.seed(1)
+  
+  example.data = data.frame(
+    y = rnorm(100, 0, 1),
+    x1 = rnorm(100, 10, 50),
+    random = letters[1:5]
+  )
+  
+  example.data$x2 = example.data$y + runif(100, 0, 5)
+  
+  example.data$x3 = example.data$x2 + runif(100, 0, 5)
+  
+  # Run regular linear model using lm()
+  lm.model = lm(y ~ x1 + x2 + x3, example.data)
+  
+  partial.resid(y ~ x3, lm.model, example.data)
+  
+  # Works with interactions too
+  lm.model2 = lm(y ~ x1 * x2 + x3, example.data)
+  
+  partial.resid(y ~ x1 * x2, lm.model2, example.data, return.data.frame = FALSE)
+  
+  # Run generalized least squared regression
+  library(nlme)
+  
+  gls.model = gls(y ~ x1 + x2 + x3, example.data)
+  
+  partial.resid(y ~ x3, gls.model, example.data, return.data.frame = FALSE)
+  
+  # Run mixed effects model using lme()
+  lme.model = lme(y ~ x1 + x2 + x3, random = ~ 1 | random, example.data)
+  
+  partial.resid(y ~ x3, lme.model, example.data, return.data.frame = FALSE)
+  
+  # Run mixed effects model using lmer()
+  library(lme4)
+  
+  lmer.model = lmer(y ~ x1 + x2 + x3 + (1 | random), example.data)
+  
+  partial.resid(y ~ x3, lmer.model, example.data, return.data.frame = FALSE)
+  
+  # Remove some values of x3 from data.frame
+  example.data[c(12, 23, 45), "x3"] = NA
+  
+  # Run regular linear model using lm()
+  lm.model = lm(y ~ x1 + x2 + x3, example.data)
+  
+  sum(!is.na(partial.resid(y ~ x3, lm.model, example.data)$x.resids)) # Should be 97
+  }
 }

@@ -235,7 +235,7 @@ sem.fit(shipley2009.reduced.modlist, shipley2009.reduced)
   
   ###
   
-  # Compare to output from ggm package
+  # Compare to output from `ggm` package
   
   # Load library
   library(ggm)

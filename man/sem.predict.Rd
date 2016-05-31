@@ -95,7 +95,7 @@ lines(shipley2009.new.pred$Date.fit ~ shipley2009.new.pred$DD, lwd = 2, col = "r
 # Generate predictions with standard errors (based on fixed effects only)
 shipley2009.new.pred = sem.predict(shipley2009.modlist, shipley2009.new, sefit = TRUE)
 
-# Add 95% confidence intervals
+# Add 95 percent confidence intervals
 lines(shipley2009.new.pred$DD, 
       shipley2009.new.pred$Date.fit + 2 * shipley2009.new.pred$Date.se.fit, 
       lwd = 1.5, lty = 2, col = "red")

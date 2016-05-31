@@ -92,7 +92,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       # Check to see if random slopes are present as fixed effects
       ref = ranef(model)
       
-      ref.names = ifelse(length(ref) > 1, sapply(ref, names), names(ref))
+      ref.names = ref.names = sapply(ref, names)
       
       if(any(!ref.names %in% names(fixef(model))))
         
