@@ -19,7 +19,7 @@ get.scaled.model = function(model, newdata, modelList) {
     
   } else {
     
-    new.form = paste0(all.vars(formula(model))[1], " ~ ", paste0(all.vars(formula(model))[-1], collapse = " + "))
+    new.form = paste(all.vars(formula(model))[1], paste(formula(model)[-2], collapse = ""))
     
   }
   
