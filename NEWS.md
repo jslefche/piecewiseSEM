@@ -1,6 +1,8 @@
 # piecewiseSEM Change Log
 
-### 2016-05-31 Version 1.1.2
+### 2016-06-01 Version 1.1.2
+  * Bug fix: transformations for scaled coefficients no longer fails in `sem.coefs`
+  * Bug fix: all interactions now show up in `sem.coefs` when scaled
   * Bug fix: random slopes as fixed effects not registering properly in `sem.model.fits`
   * Bug fix: added \dontrun{} to all help files
 
