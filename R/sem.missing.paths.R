@@ -250,7 +250,7 @@ sem.missing.paths = function(
   ) )
   
   # Set degrees of freedom as numeric
-  pvalues.df$df = as.numeric(pvalues.df$df)
+  pvalues.df$df = round(as.numeric(pvalues.df$df), 1)
   
   if(!is.null(pb)) close(pb)  
   
