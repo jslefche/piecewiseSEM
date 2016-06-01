@@ -27,14 +27,14 @@ get.scaled.data = function(modelList, data, standardize) {
   # Remove duplicates
   transform.vars = transform.vars[!duplicated(transform.vars)]
   
+  # Strip transformations
+  transform.vars = sapply(transform.vars, function(i) gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\).$", "\\1", i)))
+  
   # For each variables in transform.vars, perform transformation and store as original variable
   for(i in transform.vars) {
     
-    # Get column name to transform
-    col.nm = gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\)", "\\1", i))
-    
     # Get column number
-    col.no = which(colnames(newdata) == gsub(" ", "", col.nm))
+    col.no = which(colnames(newdata) == gsub(" ", "", i))
     
     # Get actual transformation
     trsf = gsub("(.*)\\(.*\\)", "\\1", i)
@@ -72,6 +72,9 @@ get.scaled.data = function(modelList, data, standardize) {
   
   # Remove duplicateds variables
   vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
+  
+  # Remove transformed variables already scaled 
+  vars.to.scale = vars.to.scale[!vars.to.scale %in% transform.vars]
   
   # Run check to see if variables appear as columns
   if(!all(vars.to.scale %in% colnames(newdata))) stop("Some predictors do not appear in the dataset!")
