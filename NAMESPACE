@@ -5,7 +5,7 @@ importFrom("ggm", "isAcyclic")
 importFrom("graphics", "abline", "lines", "plot", "arrows", "par", "legend")
 importFrom("lme4", "findbars", "nobars", "lmer", "glmer", "lmerControl", "glmerControl")
 importFrom("methods", "as")
-importFrom("pbkrtest", "get_ddf_Lb")
+importFrom("pbkrtest", "KRmodcomp")
 importFrom("stats", "AIC", "aggregate", "as.formula", "cor",
            "drop.terms", "family", "formula", "gaussian",
            "glm.control", "lm", "model.matrix", "na.omit", "pchisq",

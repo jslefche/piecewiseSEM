@@ -104,7 +104,7 @@ sem.missing.paths = function(
           
             update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
             
-              update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula, sep = "")), control = control, data = data) 
+              update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), control = control, data = data) 
       
     )
 
@@ -148,19 +148,18 @@ sem.missing.paths = function(
     ret = if(any(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest"))) {
       
       coef.table = suppressMessages(summary(basis.mod.new)$coefficients)
+
+      # Get P-values baesd on Kenward-Rogers approximation of denominator degrees of freedom
+      basis.mod.drop = update(basis.mod.new, as.formula(paste("~ . -", basis.set[[i]][1])))
       
-      # Get Kenward-Rogers approximation of denominator degrees of freedom
-      kr.ddf = suppressMessages(get_ddf_Lb(basis.mod.new, fixef(basis.mod.new)))
-      
-      # Compute p-values based on t-distribution and ddf
-      kr.p = 2 * (1 - pt(abs(coef.table[, "t value"]), kr.ddf))[row.num]
+      kr.p = KRmodcomp(basis.mod.new, basis.mod.drop)
       
       # Combine with coefficients from regular ouput
       data.frame(
         t(coef.table[row.num, 1:2]),
-        kr.ddf,
+        kr.p$test$ddf[1],
         coef.table[row.num, 3],
-        kr.p,
+        kr.p$test$p.value[1],
         row.names = NULL
       )
       
