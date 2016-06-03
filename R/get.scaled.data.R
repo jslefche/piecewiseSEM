@@ -70,7 +70,19 @@ get.scaled.data = function(modelList, data, standardize) {
   # Remove variables that are factors
   vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, function(x) any(is.factor(x) | is.character(x)))] ]
   
-  # Remove duplicateds variables
+  # Remove variables that appear as random effects
+  rand.mods = which(sapply(modelList, class) %in% c("lmerMod", "merModLmerTest", "glmerMod"))
+ 
+  rand.effs = c()
+  
+  for(i in rand.mods) rand.effs = c(rand.effs, names(ranef(modelList[[i]])))
+
+  # Unnest nested variables
+  rand.effs = unlist(strsplit(rand.effs, ":"))
+  
+  vars.to.scale = vars.to.scale[!vars.to.scale %in% rand.effs]
+  
+  # Remove duplicated variables
   vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
   
   # Remove transformed variables already scaled 

@@ -5,6 +5,9 @@ get.scaled.model = function(model, newdata, modelList) {
     # Get random effects
     rand.effs = gsub(" ", "", sapply(findbars(formula(model)), function(x) gsub(".*\\|(.*)", "\\1", deparse(x))))
     
+    # Unnest nested variables
+    rand.effs = unlist(strsplit(rand.effs, ":"))
+    
     # Get fixed effects
     fixed.effs = all.vars(formula(model))[!all.vars(formula(model)) %in% rand.effs]
     
