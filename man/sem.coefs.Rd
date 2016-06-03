@@ -35,7 +35,7 @@ a vector of variables with correlated errors (separated by \code{~~}).
 }
 
 \details{
-Unstandardized coefficients are extracted directly from model output. 
+Unstandardized coefficients are extracted directly from model output. For models of class \code{lmerMod}, denominator degrees of freedom and resulting P-values are calculated using the Kenward-Rogers approximation from the \code{pbkrtest} package.
 
 When \code{standardize = "scale"}, variables are scaled by mean and variance using the function \code{scale}. When \code{standardize = "range"}, variables are scaled by subtracting the minimum and dividing by the difference of the range.
 
