@@ -148,8 +148,6 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
 #     ret[grepl("\\:|\\*", ret$predictor), 4:5] = NA
 #     
 #   }
-    
-  rm(newdata)
   
   return(ret)
 
