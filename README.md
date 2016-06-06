@@ -4,9 +4,9 @@
   
   A formal description of this package can be found at:
   
-    Lefcheck, Jonathan S. (2015) "piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics." Methods in Ecology and Evolution. In press. DOI: 10.1111/2041-210X.12512
+    Lefcheck, Jonathan S. (2015) piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics. Methods in Ecology and Evolution. 7(5): 573-579. DOI: 10.1111/2041-210X.12512
 
-Version: 1.1.2 (2016-06-03)
+Version: 1.1.2 (2016-06-06)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
@@ -92,18 +92,19 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 ```
 sem.fit(shipley2009.modlist, shipley2009)
 
+# Conditional variables have been omitted from output table for clarity (or use argument conditional = T)
 # $missing.paths
-#                missing.path estimate std.error   df crit.value p.value
-# 1           Date ~ lat + DD  -0.0091    0.1135   18    -0.0798  0.9373
-# 2       Growth ~ lat + Date  -0.0989    0.1107   18    -0.8929  0.3837
-# 3       Live ~ lat + Growth   0.0305    0.0297   NA     1.0281  0.3039
-# 4  Growth ~ DD + lat + Date  -0.0106    0.0358 1329    -0.2967  0.7667
-# 5  Live ~ DD + lat + Growth   0.0272    0.0271   NA     1.0038  0.3155
-# 6 Live ~ Date + DD + Growth  -0.0466    0.0298   NA    -1.5620  0.1183
+#         missing.path estimate std.error   df crit.value p.value 
+# 1   Date ~ lat + ...  -0.0091    0.1135   18    -0.0798  0.9373 
+# 2 Growth ~ lat + ...  -0.0989    0.1107   18    -0.8929  0.3837 
+# 3   Live ~ lat + ...   0.0305    0.0297   NA     1.0279  0.3040 
+# 4  Growth ~ DD + ...  -0.0106    0.0358 1329    -0.2967  0.7667 
+# 5    Live ~ DD + ...   0.0272    0.0271   NA     1.0046  0.3151 
+# 6  Live ~ Date + ...  -0.0466    0.0298   NA    -1.5622  0.1182 
 # 
 # $Fisher.C
 #   fisher.c df p.value
-# 1    11.54 12   0.484
+# 1    11.54 12   0.483
 # 
 # $AIC
 #     AIC   AICc  K    n
@@ -119,14 +120,25 @@ Path coefficients can be either unstandardized or standardized (centered and sca
 ```
 sem.coefs(shipley2009.modlist, shipley2009)
 
-#   response predictor   estimate   std.error p.value
-# 1       DD       lat -0.8354736 0.119422385       0
-# 2     Date        DD -0.4976475 0.004933274       0
-# 3   Growth      Date  0.3007147 0.026631405       0
-# 4     Live    Growth  0.3478541 0.058404201       0
+#   response predictor   estimate   std.error p.value    
+# 1       DD       lat -0.8354736 0.119422385       0 ***
+# 2     Date        DD -0.4976475 0.004933274       0 ***
+# 3   Growth      Date  0.3007147 0.026631405       0 ***
+# 4     Live    Growth  0.3478536 0.058415948       0 ***
 
 sem.coefs(shipley2009.modlist, shipley2009, standardize = "scale")
+
+#   response predictor   estimate   std.error p.value    
+# 1       DD       lat -0.7014051 0.100258794       0 ***
+# 2     Date        DD -0.6281367 0.006226838       0 ***
+# 3   Growth      Date  0.3824224 0.033867469       0 ***
+# 4     Live    Growth  0.3478536 0.058415948       0 ***
+# Warning message:
+# In get.scaled.data(modelList, data, standardize) :
+#   One or more responses not modeled to a normal distribution: keeping response(s) on original scale!
 ```
+Note the error indicating that one of the responses (`Live`) cannot be scaled because it would violate the distributional assumptions, so only the predictors have been scaled.
+
 We can plot a rudimentary path diagram of the SEM using `sem.plot` which reports the coefficients, above:
 ```
 sem.plot(shipley2009.modlist, shipley2009)
@@ -193,7 +205,7 @@ sem.model.fits(shipley2009.modlist)
 # 1      lme gaussian identity 1431 0.4766448   0.6932571
 # 2      lme gaussian identity 1431 0.4083328   0.9838487
 # 3      lme gaussian identity 1431 0.1070265   0.8364736
-# 4 glmerMod binomial    logit 1431 0.5589201   0.6291994
+# 4 glmerMod binomial    logit 1431 0.5589205   0.6291980
 ```
 ###Return model predictions
 
