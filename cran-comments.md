@@ -5,7 +5,7 @@ This is a bug fix update.
 There were no ERRORs or WARNINGs. 
 
 ## NOTES 
-* I have reduced the run time of several problematic examples to < 1 s
+* There are no notes
 
 ## Test environments
 * local OS X install, R 3.3
