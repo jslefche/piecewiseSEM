@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-06-03 Version 1.1.2
+### 2016-06-06 Version 1.1.2
+  * Feature addition: significance indicators for P-value outputs
   * Bug fix: remove random effects from `get.scaled.data`
   * Feature addition: Use `KRmodcomp` from `pbkrtest` instead of `get_LB_dff` to calculate P-values for `lmer` models
   * Bug fix: transformations for scaled coefficients no longer fails in `sem.coefs`
