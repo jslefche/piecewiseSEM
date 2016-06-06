@@ -257,7 +257,22 @@ sem.missing.paths = function(
     
     message("Conditional variables have been omitted from output table for clarity (or use argument conditional = T)")
   
-  rm(dup)
+  # rm(dup)
+  
+  # Assign significance indicators
+  sig = sapply(pvalues.df$p.value, function(y) {
+    
+    ifelse(y > 0.01 & y < 0.05, "*", 
+           ifelse(y > 0.001 & y <= 0.01, "**",
+                  ifelse(y <= 0.001, "***", "")
+           )
+    )
+    
+  } )
+  
+  pvalues.df = cbind(pvalues.df, sig)
+  
+  colnames(pvalues.df)[ncol(pvalues.df)] = ""
   
   return(pvalues.df)
   

@@ -7,7 +7,7 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
   if(!standardize %in% c("none", "scale", "range")) stop("'standardize' must equal 'none', 'scale', or 'range'")
   
   # Scale variables, if indicated
-  if(standardize != "none") newdata <<- get.scaled.data(modelList, data, standardize)
+  if(standardize != "none") newdata = get.scaled.data(modelList, data, standardize)
   
   # Return coefficients
   ret = do.call(rbind, lapply(modelList, function(i) {
@@ -52,7 +52,7 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
   
       tab = suppressMessages(summary(i)$coefficients)
           
-      # Loop over variables
+      # Loop over variables and return P-values
       kr.p = sapply(names(fixef(i))[-1], function(x) {
         
         i.reduced = update(i, as.formula(paste("~ . -", x)))
@@ -140,8 +140,26 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
   # Order by response and p-value
   ret = ret[with(ret, order(response, p.value)),]
   
-  # Round p-values
+  # Round all numeric values
+  # ret[, sapply(ret, is.numeric)] = apply(ret[, sapply(ret, is.numeric)], 2, round, 4)
+  
+  # Round only P-values
   ret$p.value = round(ret$p.value, 4)
+  
+  # Assign significance indicators
+  sig = sapply(ret$p.value, function(y) {
+    
+    ifelse(y > 0.01 & y < 0.05, "*", 
+           ifelse(y > 0.001 & y <= 0.01, "**",
+                  ifelse(y <= 0.001, "***", "")
+           )
+    )
+    
+  } )
+  
+  ret = cbind(ret, sig)
+  
+  colnames(ret)[ncol(ret)] = ""
   
   # Remove rownames
   rownames(ret) = NULL
