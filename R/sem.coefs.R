@@ -52,25 +52,34 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
   
       tab = suppressMessages(summary(i)$coefficients)
           
+      # Loop over variables
+      kr.p = sapply(names(fixef(i))[-1], function(x) {
+        
+        i.reduced = update(i, as.formula(paste("~ . -", x)))
       
+        KRmodcomp(i, i.reduced)$test$p.value[1]
+        
+      } )
       
-      
-      
-      
-      
-      kr.p = drop1(i, test = "user", sumFun = KRSumFun)
-      
-      
-      
-      
-      
-      
-      
+      # KRSumFun <- function(object, objectDrop, ...) {
+      #   krnames <- c("ndf","ddf","Fstat","p.value","F.scaling")
+      #   r <- if (missing(objectDrop)) {
+      #     setNames(rep(NA,length(krnames)),krnames)
+      #   } else {
+      #     krtest <- KRmodcomp(object,objectDrop)
+      #     unlist(krtest$stats[krnames])
+      #   }
+      #   attr(r,"method") <- c("Kenward-Roger via pbkrtest package")
+      #   r
+      # }
+      # 
+      # kr.p = drop1(i, test = "user", sumFun = KRSumFun)
+
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                  predictor = rownames(tab)[-1],
                  estimate = tab[-1, 1],
                  std.error = tab[-1, 2],
-                 p.value = kr.p$p.value[-1]
+                 p.value = kr.p
                  ) 
       } 
     
