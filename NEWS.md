@@ -1,5 +1,8 @@
 # piecewiseSEM Change Log
 
+### 2016-06-09 Version 1.1.3
+  * Bug fix: intermediate endogenous variables not properly transformed in `sem.missing.paths`
+
 ### 2016-06-06 Version 1.1.2
   * Feature addition: significance indicators for P-value outputs
   * Bug fix: remove random effects from `get.scaled.data`
