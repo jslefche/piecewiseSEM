@@ -18,18 +18,16 @@ sem.missing.paths = function(
   amat = get.sort.dag(get.formula.list(modelList))
   
   # Identify intermediate endogenous variables
-  idx = colnames(amat)[amat[colnames(amat)[colSums(amat) == 0], ] > 0]
+  idx = colnames(amat)[which(colSums(amat[which(colSums(amat) == 0), ]) > 0)]
   
   # Identify variables in the basis set where intermediate endogenous variables are the response
   if(any(sapply(modelList[sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)], function(x) 
     
-    if(any(class(x) %in% c("glm", "negbin", "glmmPQL", "glmerMod"))) FALSE else class(x) != "gaussian"
-    
-    ))) {
+    if(any(class(x) %in% c("glm", "negbin", "glmmPQL", "glmerMod"))) FALSE else class(x) != "gaussian"))) {
     
     # Add flag
     rev = TRUE
-  
+    
     basis.set = append(basis.set, lapply(which(sapply(basis.set, function(i) i[2] %in% idx)), function(i) 
       
       c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
@@ -98,7 +96,7 @@ sem.missing.paths = function(
       
       if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
       
-        update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
+        update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
         
           if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
           

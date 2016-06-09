@@ -66,7 +66,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       # Get list of transformed variables
       j.new = lapply(formulaList, function(k) {
         
-        pred.vars = all.vars(k)[-1]
+        pred.vars = all.vars(k)
         
         # Sort interactions so always alphabetical
         for(l in which(grepl("\\:", pred.vars))) {
@@ -82,7 +82,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
           
         }
         
-        colnames(attr(terms(k), "factors"))[pred.vars == i.new[j]]
+        rownames(attr(terms(k), "factors"))[pred.vars == i.new[j]]
         
       } )
       
