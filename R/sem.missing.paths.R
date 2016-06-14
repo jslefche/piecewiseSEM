@@ -20,6 +20,8 @@ sem.missing.paths = function(
   # Identify intermediate endogenous variables
   idx = colnames(amat)[which(colSums(amat[which(colSums(amat) == 0), ]) > 0)]
   
+  idx = idx[!idx %in% names(which(colSums(amat[which(!colSums(amat) == 0), ]) > 0))]
+  
   # Identify variables in the basis set where intermediate endogenous variables are the response
   if(any(sapply(modelList[sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)], function(x) 
     
