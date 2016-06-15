@@ -11,7 +11,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
   ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
   
   # Check if all responses in the model list are the same
-  same = length(unique(unlist(sapply(modelList, function(x) all.vars(formula(x))[1])))) == 1
+  same = any(duplicated(unlist(sapply(modelList, function(x) all.vars(formula(x))[1]))))
   
   # Apply functions across all models in the model list
   ret = do.call(rbind, lapply(modelList, function(model) {
@@ -454,7 +454,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     
   } ) )
   
-  if(any(ret$N <= 40) & colnames(ret)[ncol(ret)] != "AICc") warning("N < 40, consider using aicc = TRUE")
+  if(any(grepl("AIC", colnames(ret))) & any(ret$N <= 40) & colnames(ret)[ncol(ret)] != "AICc") warning("N < 40, consider using aicc = TRUE")
   
   # Get list of response vectors
   resp = sapply(modelList, function(x) all.vars(formula(x))[1])
