@@ -18,9 +18,9 @@ sem.missing.paths = function(
   amat = get.sort.dag(get.formula.list(modelList))
   
   # Identify intermediate endogenous variables
-  idx = colnames(amat)[which(colSums(amat[which(colSums(amat) == 0), ]) > 0)]
+  idx = colnames(amat)[which(colSums(amat[which(colSums(amat) == 0), , drop = FALSE]) > 0)]
   
-  idx = idx[!idx %in% names(which(colSums(amat[which(!colSums(amat) == 0), ]) > 0))]
+  idx = idx[!idx %in% names(which(colSums(amat[which(!colSums(amat) == 0), , drop = FALSE]) > 0))]
   
   # Identify variables in the basis set where intermediate endogenous variables are the response
   if(any(sapply(modelList[sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)], function(x) 
@@ -141,9 +141,6 @@ sem.missing.paths = function(
     #      
     #   }
     
-    # Get row number of coefficient table
-    row.num = length(attr(terms(basis.mod.new), "term.labels")) + 1
-    
     # Return new coefficient table
     ret = if(any(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest"))) {
       
@@ -163,11 +160,19 @@ sem.missing.paths = function(
         row.names = NULL
       )
       
-    } else if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "glmmadmb")))
+    } else if(any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls", "glmerMod", "glmmadmb"))) {
       
-      as.data.frame(t(unname(summary(basis.mod.new)$coefficients[row.num, ]))) else
+      coef.table = summary(basis.mod.new)$coefficients
       
-        as.data.frame(t(unname(summary(basis.mod.new)$tTable[row.num, ])))  
+      as.data.frame(t(unname(coef.table[nrow(coef.table), ]))) 
+      
+      } else {
+      
+        coef.table = summary(basis.mod.new)$tTable
+        
+        as.data.frame(t(unname(coef.table[nrow(coef.table), ])))  
+        
+      }
     
     # Add df if summary table does not return
     if(length(ret) != 5 & any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls"))) 
