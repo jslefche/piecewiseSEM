@@ -11,16 +11,16 @@ A helper function for \code{sem.missing.paths} that reverses independence claims
 } 
 
 \usage{
-endogenous.reverse(basis.set)
+endogenous.reverse(basis.set, modelList)
 }
 
 \arguments{
-\item{modelList}{
-a \code{list} of regressions representing the structural equation model. 
-}
-
   \item{basis.set}{
 a \code{list} of tests of conditional independence claims obtained from \code{sem.basis.set}.
+}
+
+\item{modelList}{
+a \code{list} of regressions representing the structural equation model. 
 }
 }
 
@@ -35,20 +35,22 @@ Jon Lefcheck
 }
 
 \examples{
-data = data.frame(
-  a = runif(50),
-  b = runif(50, 0, 1),
-  c = runif(50, 0, 1),
-  d = runif(50)
-)
-
-modelList = list(
-  glm(b ~ a, family = "binomial", data),
-  glm(c ~ a, family = "binomial", data),
-  lm(d ~ b + c, data)
-)
-
-sem.basis.set(modelList)
-
-endogenous.reverse(sem.basis.set(modelList))
+\dontrun{
+  data = data.frame(
+    a = runif(50),
+    b = runif(50, 0, 1),
+    c = runif(50, 0, 1),
+    d = runif(50)
+  )
+  
+  modelList = list(
+    glm(b ~ a, family = "binomial", data),
+    glm(c ~ a, family = "binomial", data),
+    lm(d ~ b + c, data)
+  )
+  
+  (basis.set = sem.basis.set(modelList))
+  
+  endogenous.reverse(basis.set, modelList)
+}
 }
