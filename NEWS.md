@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
 ### 2016-06-16 Version 1.1.3
+  * Feature addition: new function `endogenous.reverse` to assist with independence claims among intermediate endogenous variables not fit to a normal distribution
   * Bug fix: negative binomial models fail to return R2s in `sem.model.fits`
   * Bug fix: Failed to index correct P-value in `sem.missing.paths` when categorical variables are present
   * Bug fix: intermediate endogenous variables not properly removed from the basis set in `sem.missing.paths`
