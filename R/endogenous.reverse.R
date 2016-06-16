@@ -1,4 +1,4 @@
-endogenous.reverse = function(basis.set) {
+endogenous.reverse = function(basis.set, modelList) {
   
   # Identify d-sep tests among endogenous variables and reverse if family != "gaussian"
   names(basis.set) = 1:length(basis.set)
@@ -19,7 +19,7 @@ endogenous.reverse = function(basis.set) {
     # Get index of models for which responses are in index
     idx.. = idx[sapply(modelList[idx.], function(x) any(class(x) %in% c("glm", "negbin", "glmmPQL", "glmerMod")))]
     
-    if(length(idx..) > 1) {
+    if(length(idx..) > 0) {
     
       # Add flag
       rev = TRUE

@@ -12,7 +12,7 @@ sem.missing.paths = function(
   if(.progressBar == T & length(basis.set) > 0) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
   # Reverse intermediate endogenous variables fitted to non-normal distributions
-  basis.set = endogenous.reverse(basis.set)
+  basis.set = endogenous.reverse(basis.set, modelList)
   
   # Perform d-sep tests
   if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {

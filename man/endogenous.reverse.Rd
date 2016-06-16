@@ -15,6 +15,10 @@ endogenous.reverse(basis.set)
 }
 
 \arguments{
+\item{modelList}{
+a \code{list} of regressions representing the structural equation model. 
+}
+
   \item{basis.set}{
 a \code{list} of tests of conditional independence claims obtained from \code{sem.basis.set}.
 }
