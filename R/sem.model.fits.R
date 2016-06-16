@@ -6,7 +6,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
   # Check to see if classes are supported
   if(!all(sapply(modelList, function(i) 
     
-    all(class(i) %in% c("lm", "glm", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod")) 
+    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod")) 
     
   ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
   
@@ -46,7 +46,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     }
       
     # Get R2 for class == glm
-    if(any(class(model) %in% c("glm", "gls", "pgls"))) {
+    if(any(class(model) %in% c("glm", "negbin", "gls", "pgls"))) {
       
       # Classify model family
       if("glm" %in% class(model)) ret$Family = summary(model)$family[[1]]
@@ -90,9 +90,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Check to see if random slopes are present as fixed effects
-      ref = ranef(model)
-      
-      ref.names = ref.names = sapply(ref, names)
+      ref.names = sapply(ranef(model), colnames)
       
       if(any(!ref.names %in% names(fixef(model))))
         
@@ -157,9 +155,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(Fmat)))
 
       # Check to see if random slopes are present as fixed effects
-      ref = ranef(model)
-      
-      ref.names = ifelse(length(ref) > 1, sapply(ref, names), names(ref))
+      ref.names = sapply(ranef(model), colnames)
       
       if(any(!ref.names %in% names(fixef(model))))
         
@@ -237,9 +233,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Check to see if random slopes are present as fixed effects
-      ref = ranef(model)
-      
-      ref.names = ifelse(length(ref) > 1, sapply(ref, names), names(ref))
+      ref.names = sapply(ranef(model), colnames)
       
       if(any(!ref.names %in% names(fixef(model))))
         
@@ -297,7 +291,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
           
         }
         
-      } else if(ret$Family == "poisson") {
+      } else if(ret$Family == "poisson" | grepl("Negative Binomial", ret$Family)) {
         
         # Generate null model (intercept and random effects only, no fixed effects)
         null.model = update(model, formula = paste(". ~ ", get.random.formula(model, "~1", modelList = NULL)))
@@ -470,6 +464,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     colnames(ret)[ncol(ret)] = paste0("d", colnames(ret)[ncol(ret) - 1]) #intToUtf8(0x0394), colnames(ret)[ncol(ret) - 1])
     
   }
+  
+  # Strip negative binomial theta
+  ret$Family = sapply(ret$Family, function(x) ifelse(grepl("Negative Binomial", x), "Negative Binomial", x))
   
   return(ret)
   
