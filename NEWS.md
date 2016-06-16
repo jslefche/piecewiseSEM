@@ -1,7 +1,8 @@
 # piecewiseSEM Change Log
 
-### 2016-06-09 Version 1.1.3
-  * Bug fix: intermediate endogenous variables not properly transformed in `sem.missing.paths`
+### 2016-06-16 Version 1.1.3
+  * Bug fix: Failed to index correct P-value in `sem.missing.paths` when categorical variables are present
+  * Bug fix: intermediate endogenous variables not properly removed from the basis set in `sem.missing.paths`
 
 ### 2016-06-06 Version 1.1.2
   * Feature addition: significance indicators for P-value outputs
