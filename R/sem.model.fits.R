@@ -90,7 +90,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Check to see if random slopes are present as fixed effects
-      ref.names = sapply(ranef(model), colnames)
+      ref.names = names(sapply(ranef(model), colnames))
       
       if(any(!ref.names %in% names(fixef(model))))
         
@@ -155,7 +155,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(Fmat)))
 
       # Check to see if random slopes are present as fixed effects
-      ref.names = sapply(ranef(model), colnames)
+      ref.names = names(sapply(ranef(model), colnames))
       
       if(any(!ref.names %in% names(fixef(model))))
         
@@ -233,7 +233,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
       
       # Check to see if random slopes are present as fixed effects
-      ref.names = sapply(ranef(model), colnames)
+      ref.names = names(sapply(ranef(model), colnames))
       
       if(any(!ref.names %in% names(fixef(model))))
         
