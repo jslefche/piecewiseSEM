@@ -1,4 +1,4 @@
-sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors = NULL) {
+sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors = NULL, intercept = FALSE) {
   
   if(any(class(modelList) != "list")) modelList = list(modelList)
   
@@ -14,16 +14,18 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
     
     if(standardize != "none") i = get.scaled.model(i, newdata, modelList)
 
+    if(intercept == TRUE) irow = 1:(length(colnames(attr(terms(i), "factors"))) + 1) else irow = -1
+    
     # Extract coefficients and return in a data.frame
     if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod", "glmmadmb"))) {
       
       tab = summary(i)$coefficients
       
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
-                 predictor = rownames(tab)[-1],
-                 estimate = tab[-1, 1],
-                 std.error = tab[-1, 2],
-                 p.value = tab[-1, 4]
+                 predictor = rownames(tab)[irow],
+                 estimate = tab[irow, 1],
+                 std.error = tab[irow, 2],
+                 p.value = tab[irow, 4]
                  )
       
     } else if(any(class(i) %in% c("gls"))) {
@@ -31,10 +33,10 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
       tab = summary(i)$tTable
       
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
-                 predictor = rownames(tab)[-1],
-                 estimate = tab[-1, 1],
-                 std.error = tab[-1, 2],
-                 p.value = tab[-1, 4]
+                 predictor = rownames(tab)[irow],
+                 estimate = tab[irow, 1],
+                 std.error = tab[irow, 2],
+                 p.value = tab[irow, 4]
                  )
       
     } else if(any(class(i) %in% c("lme", "glmmPQL"))) {
@@ -42,10 +44,10 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
       tab = summary(i)$tTable
       
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
-                 predictor = rownames(tab)[-1],
-                 estimate = tab[-1, 1],
-                 std.error = tab[-1, 2],
-                 p.value = tab[-1, 5]
+                 predictor = rownames(tab)[irow],
+                 estimate = tab[irow, 1],
+                 std.error = tab[irow, 2],
+                 p.value = tab[irow, 5]
                  )
       
     } else if(any(class(i) %in% c("lmerMod", "merModLmerTest"))) {
@@ -53,7 +55,7 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
       tab = suppressMessages(summary(i)$coefficients)
           
       # Loop over variables and return P-values
-      kr.p = sapply(names(fixef(i))[-1], function(x) {
+      kr.p = sapply(names(fixef(i))[irow], function(x) {
         
         i.reduced = update(i, as.formula(paste("~ . -", x)))
       
@@ -76,9 +78,9 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
       # kr.p = drop1(i, test = "user", sumFun = KRSumFun)
 
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
-                 predictor = rownames(tab)[-1],
-                 estimate = tab[-1, 1],
-                 std.error = tab[-1, 2],
+                 predictor = rownames(tab)[irow],
+                 estimate = tab[irow, 1],
+                 std.error = tab[irow, 2],
                  p.value = kr.p
                  ) 
       } 

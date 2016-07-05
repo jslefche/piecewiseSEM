@@ -32,6 +32,10 @@ specifies the type of standardization to perform: \code{"none"}, \code{"scale"},
 a vector of variables with correlated errors (separated by \code{~~}).
 }
 
+  \item{intercept}{
+whether values and significance tests for the intercept should be returned; default is \code{FALSE}.
+}
+
 }
 
 \details{
