@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-06-22 Version 1.1.3
+### 2016-07-05 Version 1.1.3
+  * Feature addition: report of intercepts in `sem.coefs`
   * Bug fix: warning with random slopes not present as fixed effects in `sem.model.fits`
   * Feature addition: new function `endogenous.reverse` to assist with independence claims among intermediate endogenous variables not fit to a normal distribution
   * Bug fix: negative binomial models fail to return R2s in `sem.model.fits`
