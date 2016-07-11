@@ -2,12 +2,14 @@ exportPattern("^[[:alpha:]]+")
 import(lavaan)
 import(nlme)
 importFrom("ggm", "isAcyclic")
-importFrom("graphics", "abline", "lines", "plot", "arrows", "par", "legend")
 importFrom("lme4", "findbars", "nobars", "lmer", "glmer", "lmerControl", "glmerControl")
 importFrom("methods", "as")
 importFrom("pbkrtest", "KRmodcomp")
+importFrom("graphics", "abline", "arrows", "legend", "lines", "par",
+           "plot")
 importFrom("stats", "AIC", "aggregate", "as.formula", "cor",
-           "drop.terms", "family", "formula", "gaussian",
-           "glm.control", "lm", "model.matrix", "na.omit", "pchisq",
-           "pt", "reformulate", "terms", "var")
+           "drop.terms", "formula", "gaussian", "glm.control", "lm",
+           "logLik", "model.matrix", "na.omit", "nobs", "pchisq",
+           "predict", "pt", "reformulate", "resid", "terms", "update",
+           "var", "vcov")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar")

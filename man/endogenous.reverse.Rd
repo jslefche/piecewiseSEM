@@ -22,6 +22,7 @@ a \code{list} of tests of conditional independence claims obtained from \code{se
 \item{modelList}{
 a \code{list} of regressions representing the structural equation model. 
 }
+
 }
 
 \value{

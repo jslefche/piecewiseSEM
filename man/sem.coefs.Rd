@@ -11,7 +11,7 @@ Extracts path coefficients for a piecewise structural equation model (SEM).
 }
 
 \usage{
-sem.coefs(modelList, data, standardize = "none", corr.errors)
+sem.coefs(modelList, data, standardize = "none", corr.errors, intercept = FALSE)
 }
 
 \arguments{

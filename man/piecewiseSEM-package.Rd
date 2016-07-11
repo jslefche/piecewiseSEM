@@ -46,10 +46,6 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 }
 
 \keyword{ package }
-\seealso{
-\code{\link{sem.fit}}
-\code{\link{sem.coefs}}
-}
 
 \examples{
 # Load example data
