@@ -8,5 +8,5 @@ There were no ERRORs or WARNINGs.
 * There were no notes.
 
 ## Test environments
-* local OS X install, R 3.3
+* local OS X install, R 3.3.1
 * win-builder (R-devel and R-release)

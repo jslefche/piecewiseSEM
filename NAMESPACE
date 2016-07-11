@@ -1,6 +1,4 @@
 exportPattern("^[[:alpha:]]+")
-import(lavaan)
-import(nlme)
 importFrom("ggm", "isAcyclic")
 importFrom("lme4", "findbars", "nobars", "lmer", "glmer", "lmerControl", "glmerControl")
 importFrom("methods", "as")
@@ -13,3 +11,5 @@ importFrom("stats", "AIC", "aggregate", "as.formula", "cor",
            "predict", "pt", "reformulate", "resid", "terms", "update",
            "var", "vcov")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar")
+import(lavaan)
+import(nlme)
