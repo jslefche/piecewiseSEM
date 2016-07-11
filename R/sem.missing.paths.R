@@ -86,35 +86,35 @@ sem.missing.paths = function(
 
     # Get row number from coefficient table for d-sep variable
     # if(any(!class(basis.mod.new) %in% c("pgls"))) {
-    #   
+    # 
     #   # Get row number of d-sep claim
-    #   row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1 
-    #   
+    #   row.num = which(basis.set[[i]][1] == rownames(attr(terms(basis.mod.new), "factors"))[-1]) + 1
+    # 
     #   # Get row number if interaction variables are switched
     #   if(length(row.num) == 0 & grepl("\\:|\\*", basis.set[[i]][1])) {
-    #     
+    # 
     #     # If interaction is reported as asterisk, convert to semicolon
     #     int = gsub(" \\* ", "\\:", basis.set[[i]][1])
-    #     
+    # 
     #     # Get all combinations of interactions
-    #     all.ints = sapply(strsplit(int, ":"), function(x) { 
-    #       
+    #     all.ints = sapply(strsplit(int, ":"), function(x) {
+    # 
     #       datf = expand.grid(rep(list(x), length(x)), stringsAsFactors = FALSE)
-    #       
+    # 
     #       datf = datf[apply(datf, 1, function(x) !any(duplicated(x))), ]
-    #       
+    # 
     #       apply(datf, 1, function(x) paste(x, collapse = ":"))
-    #       
+    # 
     #     } )
-    #     
+    # 
     #     row.num = which(attr(terms(basis.mod.new), "term.labels") %in% all.ints) + 1
-    #       
+    # 
     #     }
-    #   
+    # 
     #   } else {
-    #     
+    # 
     #     row.num = which(basis.set[[i]][1] == basis.mod.new$varNames)
-    #      
+    # 
     #   }
     
     # Return new coefficient table
@@ -129,9 +129,9 @@ sem.missing.paths = function(
       
       # Combine with coefficients from regular ouput
       data.frame(
-        t(coef.table[row.num, 1:2]),
+        t(coef.table[nrow(coef.table), 1:2]),
         kr.p$test$ddf[1],
-        coef.table[row.num, 3],
+        coef.table[nrow(coef.table), 3],
         kr.p$test$p.value[1],
         row.names = NULL
       )
@@ -171,19 +171,19 @@ sem.missing.paths = function(
       
       if(any(class(basis.mod.new) %in% c("lme", "glmmPQL"))) {
         
-        t.value = summary(basis.mod.new)$tTable[row.num, 4] 
+        t.value = coef.table[nrow(coef.table), 4] 
         
         ret[5] = 2*(1 - pt(abs(t.value), nobs(basis.mod.new) - sum(apply(basis.mod.new$groups, 2, function(x) length(unique(x))))))
         
-      } else if(any(class(basis.mod.new) %in% c("lmerMod", "glmerMod", "merModLmerTest"))) {
+      } else if(any(class(basis.mod.new) %in% c("lmerMod", "glmerMod"))) {
         
-        z.value = coef.table[row.num, "t value"]
+        z.value = coef.table[nrow(coef.table), 3]
         
         ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps))) 
         
         } else if(any(class(basis.mod.new) %in% c("glmmadmb"))) {
           
-          z.value = summary(basis.mod.new)$coefficients[row.num, 3]
+          z.value = coef.table[nrow(coef.table), 3]
           
           ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$npar))) 
       
