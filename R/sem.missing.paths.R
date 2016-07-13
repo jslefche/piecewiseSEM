@@ -74,7 +74,7 @@ sem.missing.paths = function(
       
       if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
       
-        update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
+        update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), control = control, data = data) else
         
           if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
           
