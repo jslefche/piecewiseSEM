@@ -23,7 +23,7 @@ The following example comes from Shipley (2009)^[Shipley, B. (2009). Confirmator
 This dataset incorporates hierarchical observations (individual within site within year) and non-independence (repeated measures), and therefore violates some of the basic assumptions of traditional linear modeling and variance-covariance SEM, making it a perfect candidate for a piecewise approach.
 
 The hypothesized casual structure of the network is specified by Shipley as:
-![Shipley 2009 Fig. 2](http://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley_2009.jpg)
+![Shipley 2009 Fig. 2](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley_2009.jpg)
 and will be the structure we will evaluate in this example.
 
 ###Load package
@@ -93,7 +93,7 @@ The argument `add.vars` allows you to specify a vector of additional variables w
 
 The argument `adjust.p` allows you to adjust the p-values returned by the function based on the the total degrees of freedom for the model (see supplementary material, Shipley 2013^[Shipley, B. (2013). The AIC model selection method applied to path analytic models compared using a d-separation test. Ecology, 94(3), 560-564.]). Default is `FALSE` (uses the degrees of freedom reported in the summary table).
 
-(See ["p-values and all that"](http://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
+(See [p-values and all that](http://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
 ```{r}
 sem.fit(shipley2009.modlist, shipley2009, .progressBar = FALSE)
@@ -143,7 +143,7 @@ sem.plot(shipley2009.modlist, shipley2009, standardize = "scale")
 
 ### Predictions
 
-We can use the generic `predict` function to extract predicted fits based on the list of structured equations. I have slightly modified the function to return standard errors on predictions from mixed effects models using the variance of the fixed effects only (as here: ["GLMM Wiki - FAQ"](http://glmm.wikidot.com/faq)).
+We can use the generic `predict` function to extract predicted fits based on the list of structured equations. I have slightly modified the function to return standard errors on predictions from mixed effects models using the variance of the fixed effects only (as here: [GLMM Wiki - FAQ](http://glmm.wikidot.com/faq)).
 
 ```{r, fig.width = 4, fig.height = 4}
 # Create new data for predictions
