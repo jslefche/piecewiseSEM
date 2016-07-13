@@ -1,5 +1,8 @@
 # piecewiseSEM Change Log
 
+### 2016-07-12 Version 1.1.4
+  * Bug fix: `gls` models in `sem.missing.paths` could not update basis model
+
 ### 2016-07-05 Version 1.1.3
   * Feature addition: report of intercepts in `sem.coefs`
   * Bug fix: warning with random slopes not present as fixed effects in `sem.model.fits`
