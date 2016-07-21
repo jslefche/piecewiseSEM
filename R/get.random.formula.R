@@ -60,7 +60,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
   # Define new random slopes 
   new.random.slopes = random.slopes[which(random.slopes %in% unlist(strsplit(rhs, ".\\+.")))]
   
-  if(length(new.random.slopes) == 0) new.random.slopes = 1
+  if(length(new.random.slopes) == 0) new.random.slopes = 1 else new.random.slopes = paste0(new.random.slopes, collapse = " + ")
   
   # Replace random slopes if any variables in model formula appear in random slopes  
   if(length(random.slopes) != 0) {
@@ -69,17 +69,13 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
       
       if(is.list(random.structure)) {
         
-        names(random.structure) = gsub(" ", "", unlist(random.structure))
+        lapply(random.structure, function(x) formula(gsub("(.*)\\|", paste("~", new.random.slopes, "|"), x)) ) 
         
-        for(i in 1:length(random.structure)) random.structure[[i]] = formula(paste("~ ", new.random.slopes))
-        
-        random.structure
-        
-      } else {
+        } else {
         
         formula(
           paste("~ ", 
-                paste(new.random.slopes, collapse = " + "),
+                new.random.slopes,
                 " | ",
                 random.structure) 
         )
@@ -89,7 +85,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
       # formula(
         paste(
           sapply(random.structure, function(x)
-            paste("(", paste(new.random.slopes, collapse = " + "), " | ", x, ")") ),
+            paste("(", new.random.slopes, " | ", x, ")") ),
           collapse = " + ")
       # )
     
@@ -97,11 +93,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
       
       if(is.list(random.structure)) {
         
-        names(random.structure) = gsub(" ", "", unlist(random.structure))
-        
-        for(i in 1:length(random.structure)) random.structure[[i]] = formula("~ 1")
-        
-        random.structure
+        lapply(random.structure, function(x) formula(gsub("(.*)\\|", paste("~", new.random.slopes, "|"), x)) ) 
         
       } else if(any(class(model) %in% c("lme", "glmmPQL"))) formula(random.formula)
     
