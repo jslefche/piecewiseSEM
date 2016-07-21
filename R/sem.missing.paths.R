@@ -70,7 +70,7 @@ sem.missing.paths = function(
     control = get.model.control(basis.mod, model.control)
     
     # Update basis model with new formula and random structure based on d-sep
-    basis.mod.new = suppressWarnings(
+    basis.mod.new = suppressMessages(suppressWarnings(
       
       if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
       
@@ -82,7 +82,7 @@ sem.missing.paths = function(
             
               update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), control = control, data = data) 
       
-    )
+    ) )
 
     # Get row number from coefficient table for d-sep variable
     # if(any(!class(basis.mod.new) %in% c("pgls"))) {
