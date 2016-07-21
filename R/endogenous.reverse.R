@@ -20,19 +20,29 @@ endogenous.reverse = function(basis.set, modelList) {
     idx.. = idx[sapply(modelList[idx.], function(x) any(class(x) %in% c("glm", "negbin", "glmmPQL", "glmerMod")))]
     
     if(length(idx..) > 0) {
-    
-      # Add flag
-      rev = TRUE
       
-      basis.set = append(basis.set, lapply(which(sapply(basis.set, function(i) i[2] %in% idx..)), function(i) 
+      basis.set = 
         
-        c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
-        
-      ) )
+        append(basis.set, 
+               
+               lapply(
+                 
+                 which(sapply(basis.set, function(i) i[2] %in% idx..)), 
+                 
+                 function(i) 
+                   
+                   c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
+                 
+               )
+               
+        )
         
     }
     
   }
+  
+  # Remove any entry in the basis set for which a model is not a priori specified
+  basis.set = filter.exogenous(modelList, basis.set)
   
   return(basis.set)
   
