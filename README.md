@@ -6,7 +6,7 @@
   
     Lefcheck, Jonathan S. (2015) piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics. Methods in Ecology and Evolution. 7(5): 573-579. DOI: 10.1111/2041-210X.12512
 
-Version: 1.1.4 (2016-07-21)
+Version: 1.1.4 (2016-08-02)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 

@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-07-21 Version 1.1.4
+### 2016-08-02 Version 1.1.4
+  * Bug fix: memory allocation error in `sem.model.fits`
   * Bug fix: inclusion of entries in the basis set without corresponding models in the model list in `endogenous.reverse`
   * Bug fix: crossed random effects in `get.random.formula` not returning correct random slopes
   * Bug fix: `gls` models in `sem.missing.paths` could not update basis model
