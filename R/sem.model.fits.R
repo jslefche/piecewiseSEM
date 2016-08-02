@@ -21,7 +21,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       Class = class(model)[1],
       Family = "gaussian",
       Link = "identity",
-      N = nobs(model),
+      n = nobs(model),
       Marginal = NA,
       Conditional = NA
     )
@@ -112,7 +112,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
           
           Z = X[, rownames(Sigma), drop = FALSE]
           
-          sum(diag(Z %*% Sigma %*% t(Z)))/nrow(X)
+          Z.m = Z %*% Sigma
+          
+          sum(diag(crossprod(Z.m, Z))) / nrow(X)
           
         } )
         
@@ -127,9 +129,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varResid)
       
       # Calculate model AIC
-      model.ml = update(model, REML = FALSE)
-      
       if(same == TRUE) {
+        
+        model.ml = update(model, REML = FALSE)
         
         if(aicc == FALSE) 
           
@@ -186,7 +188,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
             
             Z = Fmat[, colnames(Sigma1), drop = FALSE]
             
-            sum(diag(Z %*% Sigma1 %*% t(Z))) / nrow(Fmat)
+            Z.m = Z %*% Sigma1
+            
+            sum(diag(crossprod(Z.m, Z))) / nrow(Fmat)
             
           } )
           
@@ -196,7 +200,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
         
         Z = Fmat[, rownames(VarCorr(model))[which(rownames(VarCorr(model)) %in% colnames(Fmat))], drop = FALSE]
         
-        varRand = sum(diag(Z %*% getVarCov(model) %*% t(Z))) / nrow(Fmat)
+        Z.m = Z %*% getVarCov(model)
+        
+        varRand = sum(diag(crossprod(Z.m, Z))) / nrow(Fmat)
         
       }
       
@@ -209,9 +215,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       ret$Conditional = (varF + varRand) / (varF + varRand + varResid)
       
       # Calculate model AIC
-      model.ml = update(model, data = model$data, method = "ML")
-      
       if(same == TRUE) {
+        
+        model.ml = update(model, data = model$data, method = "ML")
         
         if(aicc == FALSE) 
           
@@ -263,7 +269,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
           
           Z = X[, rownames(Sigma), drop = FALSE]
           
-          sum(diag(Z %*% Sigma %*% t(Z)))/nrow(X)
+          Z.m = Z %*% Sigma
+          
+          sum(diag(crossprod(Z.m, Z))) / nrow(X)
           
         } )
         
@@ -282,7 +290,9 @@ sem.model.fits = function(modelList, aicc = FALSE) {
             
             Z = X[, rownames(Sigma)]
             
-            sum(diag(Z %*% Sigma %*% t(Z)))/nrow(X)
+            Z.m = Z %*% Sigma
+            
+            sum(diag(crossprod(Z.m, Z))) / nrow(X)
             
           } )
           
