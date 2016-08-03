@@ -14,7 +14,7 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
     
     if(standardize != "none") i = get.scaled.model(i, newdata, modelList)
 
-    if(intercept == TRUE) irow = 1:(length(colnames(attr(terms(i), "factors"))) + 1) else irow = -1
+    if(intercept == TRUE) irow = TRUE else irow = -1
     
     # Extract coefficients and return in a data.frame
     if(any(class(i) %in% c("lm", "glm", "pgls", "negbin", "glmerMod", "glmmadmb"))) {
