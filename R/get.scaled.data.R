@@ -1,5 +1,7 @@
 get.scaled.data = function(modelList, data, standardize) {
 
+  if(is.null(data)) stop("Must supply data if calculating standardized coefficients!")
+  
   if(any(sapply(modelList, class) == "pgls") | class(data) == "comparative.data") {
     
     # Extract data.frame
