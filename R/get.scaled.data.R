@@ -72,11 +72,6 @@ get.scaled.data = function(modelList, data, standardize) {
   # Remove variables that are factors
   vars.to.scale = vars.to.scale[!vars.to.scale %in% colnames(data)[sapply(data, function(x) any(is.factor(x) | is.character(x)))] ]
   
-  # Convert variables that are factors to numeric
-  # data[, sapply(data, function(x) any(is.factor(x) | is.character(x)))] = 
-  #   
-  #   apply(data[, sapply(data, function(x) any(is.factor(x) | is.character(x))), drop = FALSE], 2, function(x) as.numeric(as.factor(x)))
-  
   # Remove variables that appear as random effects
   rand.mods = which(sapply(modelList, class) %in% c("lme", "lmerMod", "merModLmerTest", "glmerMod"))
  

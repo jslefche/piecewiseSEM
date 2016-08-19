@@ -33,23 +33,6 @@ get.basis.set = function(amat) {
     
   ret = ret[!sapply(ret, is.null)]
   
-  # Add binding for binomial variables
-  for(i in 1:length(ret)) {
-    
-    if(any(grepl(",", ret[[i]]))) {
-      
-      idx = which(grepl(",", ret[[i]]))
-      
-      for(j in idx) {
-        
-        ret[[i]][j] = paste0("cbind(", ret[[i]][j], ")")
-        
-      }
-      
-    }
-    
-  }
-  
   return(ret)
   
 }
