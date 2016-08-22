@@ -8,11 +8,13 @@ get.dag = function(formulaList) {
     
     v = all.vars(i)
     
-    if(length(v) > 1) 
+    if(grepl("c.*\\(.*\\)", paste(formula(i)[2]))) {
       
-      formula(paste0(v[1], " ~ ", paste0(v[-1], collapse = " + "))) else
-        
-        formula(paste(v, " ~ ", v))
+      v = c(paste(v[1], v[2], sep = ","), v[-(1:2)])
+      
+    }
+    
+    return(v)
     
   } )
   
@@ -21,7 +23,16 @@ get.dag = function(formulaList) {
     
     drop.vars = all.vars(i)[grepl("offset", rownames(attr(terms(i), "factors")))]
     
-    all.vars(i)[!all.vars(i) %in% drop.vars]
+    vars. = all.vars(i)[!all.vars(i) %in% drop.vars]
+    
+    # Check to see whether response is vector
+    if(grepl("c.*\\(.*\\)", paste(formula(i)[2]))) {
+      
+      vars. = c(paste(vars.[1], vars.[2], sep = ","), vars.[-(1:2)])
+      
+    }
+    
+    return(vars.)
     
   } ) )
   
@@ -30,15 +41,15 @@ get.dag = function(formulaList) {
   # Create adjacency matrix
   amat = do.call(cbind, lapply(vars, function(i) {
  
-    # Indentify formula where variable is response
-    form.no = which(sapply(formulaList.new, function(j) all.vars(formula(j))[1] == i))
+    # Identify formula where variable is response
+    form.no = which(sapply(formulaList.new, function(j) j[1] == i))
     
     if(length(form.no) == 0) rep(0, length(vars)) else {
       
       # Isolate variable from formula list
-      form = formulaList.new[[which(sapply(formulaList.new, function(j) all.vars(formula(j))[1] == i))]]
+      form = formulaList.new[[which(sapply(formulaList.new, function(j)j[1] == i))]]
       
-      vars %in% all.vars(form) + 0
+      vars %in% form + 0
       
     }
     
