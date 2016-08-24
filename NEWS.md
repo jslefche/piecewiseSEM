@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-08-02 Version 1.1.4
+### 2016-08-23 Version 1.1.4
+  * Feature addition: implemented two-column binding as response in GLM(M)s
   * Bug fix: memory allocation error in `sem.model.fits`
   * Bug fix: inclusion of entries in the basis set without corresponding models in the model list in `endogenous.reverse`
   * Bug fix: crossed random effects in `get.random.formula` not returning correct random slopes
