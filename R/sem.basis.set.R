@@ -6,7 +6,8 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Stop if any response in the model list is the same as any other response
   if(any(duplicated(sapply(formulaList, function(x) all.vars(x)[1])))) 
     
-    stop("Duplicate responses detected in the model list. Collapse or re-specify models so that each response appears only once!")
+    stop("Duplicate responses detected in the model list.\n
+         Collapse multiple single regressions into a single multiple regression so that each response appears only once!")
   
   # Get adjacency matrix and sort by parent to child nodes
   amat = get.sort.dag(formulaList)
@@ -39,6 +40,12 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Filter exogenous predictors from the basis set
   basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
+  
+  
+  
+  
+  
+  
   
   # Re-apply transformations
   basis.set = lapply(basis.set, function(i) {

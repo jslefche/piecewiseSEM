@@ -39,7 +39,11 @@ Helper function for \code{sem.basis.set} that removes independence claims betwee
 }
 
 \value{
-A \code{list} of vectors representing conditional independence statements. The first string is the response, the second is the predictor, and the remaining strings are the variables (if any) upon which the indepedence claim are conditional.
+Returns a \code{list} of independence claims. Each entry in the \code{list} is a vector where the first entry is the predictor whose independence from the response is being evaluated, the second is the response, and remaining entries represent the variables on which the independence claim is conditional. E.g., 
+
+  [1] \code{"x1" "y" "x2"} 
+
+would be the missing path between \code{y ~ x1} conditional on \code{x2}. The basis set is constructed using the function \code{basiSet} in the \code{ggm} package.
 }
 
 \references{
