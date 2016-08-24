@@ -33,6 +33,10 @@ get.basis.set = function(amat) {
     
   ret = ret[!sapply(ret, is.null)]
   
+  if(length(ret) == 0) 
+    
+    stop("All endogenous variables are conditionally dependent.\nTests of directed separation not possible!", call. = FALSE)
+    
   # Add binding for binomial variables
   for(i in 1:length(ret)) {
     

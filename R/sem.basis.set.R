@@ -186,9 +186,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
-  
-  if(length(basis.set) < 1) warning("All endogenous variables are conditionally dependent.\nTest of directed separation not possible!", call. = FALSE)
-  
+
   return(basis.set)
   
 }
