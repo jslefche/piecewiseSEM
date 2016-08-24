@@ -53,19 +53,19 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     i.new = i
     
     # Find response in original formula list
-    form = formulaList[[which(sapply(formulaList, function(x) all.vars(x)[1] == i[2]))]]
+    form = formulaList[[which(sapply(formulaList, function(x) gsub(" ", "", paste(x[2])) == i[2]))]]
     
     # Get transformed vars for that response
     transform.vars = rownames(attr(terms(form), "factors"))
     
     # Get stripped vars for that response
-    stripped.vars = all.vars(form)
-    
+    stripped.vars = if(any(grepl(",", form))) c(paste(form[2]), all.vars(form[-2])) else all.vars(form)
+   
     # Index over untransformed vars and replace
     i.new[which(i %in% stripped.vars)] = transform.vars[which(stripped.vars %in% i)]
     
     # Extract vector of predictors from all models
-    preds.list = lapply(formulaList, all.vars)
+    preds.list = lapply(formulaList, function(x) colnames(attr(terms(x), "factors")))
     
     # Find formulae that contain untransformed variables
     for(j in which(!i.new %in% transform.vars)) {
@@ -73,7 +73,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       # Get list of transformed variables
       j.new = lapply(formulaList, function(k) {
         
-        pred.vars = all.vars(k)
+        pred.vars = colnames(attr(terms(k), "factors"))
         
         # Sort interactions so always alphabetical
         for(l in which(grepl("\\:", pred.vars))) {

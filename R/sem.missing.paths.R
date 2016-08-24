@@ -22,7 +22,7 @@ sem.missing.paths = function(
       
       if(any(class(j) == "pgls")) j = j$formula
       
-      rownames(attr(terms(j), "factors"))[1] == basis.set[[i]][2]
+      gsub(" ", "", rownames(attr(terms(j), "factors"))[1]) == basis.set[[i]][2]
     
     } ) ) ]]
       
