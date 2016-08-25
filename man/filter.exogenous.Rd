@@ -21,7 +21,7 @@ a \code{list} of regressions representing the structural equation model.
 }
 
   \item{basis.set}{
-an optional \code{list} of vectors representing conditional independence statements.
+an \code{list} of vectors representing conditional independence statements.
 }
 
   \item{corr.errors}{

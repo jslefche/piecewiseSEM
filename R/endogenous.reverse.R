@@ -41,9 +41,6 @@ endogenous.reverse = function(basis.set, modelList) {
     
   }
   
-  # Remove any entry in the basis set for which a model is not a priori specified
-  basis.set = filter.exogenous(modelList, basis.set)
-  
   return(basis.set)
   
 }

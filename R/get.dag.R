@@ -8,7 +8,7 @@ get.dag = function(formulaList) {
     
     v = all.vars(i)
     
-    if(grepl("c\\(.*\\)", paste(formula(i)[2]))) {
+    if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) {
       
       v = c(paste(v[1], v[2], sep = ","), v[-(1:2)])
       
@@ -26,7 +26,7 @@ get.dag = function(formulaList) {
     vars. = all.vars(i)[!all.vars(i) %in% drop.vars]
     
     # Check to see whether response is vector
-    if(grepl("c\\(.*\\)", paste(formula(i)[2]))) {
+    if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) {
       
       vars. = c(paste(vars.[1], vars.[2], sep = ","), vars.[-(1:2)])
       

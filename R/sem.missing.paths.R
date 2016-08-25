@@ -11,9 +11,6 @@ sem.missing.paths = function(
   # Add progress bar
   if(.progressBar == T & length(basis.set) > 0) pb = txtProgressBar(min = 0, max = length(basis.set), style = 3) else pb = NULL
   
-  # Reverse intermediate endogenous variables fitted to non-normal distributions
-  basis.set = endogenous.reverse(basis.set, modelList)
-  
   # Perform d-sep tests
   if(length(basis.set) > 0) pvalues.df = do.call(rbind, lapply(1:length(basis.set), function(i) {
     
@@ -234,7 +231,7 @@ sem.missing.paths = function(
   
   if(!is.null(pb)) close(pb)  
   
-  if(any(grepl("...", pvalues.df$missing.path))) 
+  if(any(grepl("...", pvalues.df$missing.path)) & conditional != TRUE) 
     
     message("Conditional variables have been omitted from output table for clarity (or use argument conditional = T)")
   

@@ -38,21 +38,46 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))
   
+  
+  ### TEMPORARY FIX ###
+  
+  # Reverse intermediate endogenous variables fitted to non-normal distributions
+  basis.set = endogenous.reverse(basis.set, modelList)
+  
+  ### TEMPORARY FIX ###
+  
+    
   # Filter exogenous predictors from the basis set
   basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
 
   # Re-apply transformations
   basis.set = lapply(basis.set, function(i) {
-    
-    # Get list of transformed predictors
+   
+     # Get list of transformed predictors
     t.pvars = lapply(formulaList, function(x) colnames(attr(terms(x), "factors")))
     
     # Get list of untransformed predictors
     pvars = lapply(formulaList, function(i) {
       
-      v = all.vars(i)[-1]
+      v = all.vars(i)
       
-      if(grepl("c\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[-(1:2)]
+      if(length(v) > 1) v = v[-1]
+      
+      if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[-(1:2)]
+      
+      return(v)
+      
+    } )
+    
+    # Get list of transformed responses
+    t.rvars = lapply(formulaList, function(x) rownames(attr(terms(x), "factors"))[1])
+    
+    # Get list of untransformed predictors
+    rvars = lapply(formulaList, function(i) {
+      
+      v = all.vars(i)[1]
+      
+      if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[(1:2)]
       
       return(v)
       
@@ -62,36 +87,44 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     for(j in (1:length(i))[-2]) {
       
       # Get variable index for lookup
-      idx = which(sapply(pvars, function(k) any(k %in% i[j])))
+      idx = cbind(
+        
+        which(sapply(pvars, function(k) any(k %in% i[j]))),
+        
+        unlist(sapply(pvars, function(l) which(l == i[j])))
+        
+      )
       
-      idx. = unlist(sapply(pvars, function(l) which(l == i[j])))
-      
-      # Extract from transformed predictors
-      i[j] = t.pvars[[idx]][idx.]
+      if(sum(idx) > 0) {
+        
+        # Conduct lookup
+        t.pvar = sapply(1:nrow(idx), function(m) t.pvars[[idx[m, 1]]][idx[m, 2]] )
+        
+        t.pvar = t.pvar[!duplicated(t.pvar)]
+        
+        # Replace predictors
+        if(length(t.pvar) > 0) i[j] = t.pvar[which.max(sapply(t.pvar, function(p) nchar(p)))]
+        
+      }
       
     }
     
-    # Repeat for responses
-    t.rvars = lapply(formulaList, function(x) rownames(attr(terms(x), "factors"))[1])
-    
-    # Get list of untransformed predictors
-    rvars = lapply(formulaList, function(i) {
+    # Get variable index for lookup
+    idx = cbind(
       
-      v = all.vars(i)[1]
+      which(sapply(rvars, function(k) any(k %in% i[2]))),
       
-      if(grepl("c\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[(1:2)]
+      unlist(sapply(rvars, function(l) which(l == i[2])))
       
-      return(v)
-      
-    } )
+    )
     
-    # Re-transform responses
-    idx = which(sapply(rvars, function(k) any(k %in% i[2])))
+    # Conduct lookup
+    t.rvar = sapply(1:nrow(idx), function(m) t.rvars[[idx[m, 1]]][idx[m, 2]] )
     
-    idx. = unlist(sapply(rvars, function(l) which(l == i[2])))
+    t.rvar = t.rvar[!duplicated(t.rvar)]
     
-    # Extract from transformed responses
-    i[2] = t.rvars[[idx]][idx.]
+    # Replace predictors
+    if(length(t.rvar) > 0) i[2] = t.rvar[which.max(sapply(t.rvar, function(p) nchar(p)))]
     
     return(i)
     
