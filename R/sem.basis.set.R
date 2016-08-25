@@ -40,72 +40,60 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Filter exogenous predictors from the basis set
   basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
-  
-  
-  
-  
-  
-  
-  
+
   # Re-apply transformations
   basis.set = lapply(basis.set, function(i) {
     
-    i.new = i
+    # Get list of transformed predictors
+    t.pvars = lapply(formulaList, function(x) colnames(attr(terms(x), "factors")))
     
-    # Find response in original formula list
-    form = formulaList[[which(sapply(formulaList, function(x) gsub(" ", "", paste(x[2])) == i[2]))]]
+    # Get list of untransformed predictors
+    pvars = lapply(formulaList, function(i) {
+      
+      v = all.vars(i)[-1]
+      
+      if(grepl("c\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[-(1:2)]
+      
+      return(v)
+      
+    } )
     
-    # Get transformed vars for that response
-    transform.vars = rownames(attr(terms(form), "factors"))
-    
-    # Get stripped vars for that response
-    stripped.vars = if(any(grepl(",", form))) c(paste(form[2]), all.vars(form[-2])) else all.vars(form)
-   
-    # Index over untransformed vars and replace
-    i.new[which(i %in% stripped.vars)] = transform.vars[which(stripped.vars %in% i)]
-    
-    # Extract vector of predictors from all models
-    preds.list = lapply(formulaList, function(x) colnames(attr(terms(x), "factors")))
-    
-    # Find formulae that contain untransformed variables
-    for(j in which(!i.new %in% transform.vars)) {
+    # Re-transform predictors
+    for(j in (1:length(i))[-2]) {
       
-      # Get list of transformed variables
-      j.new = lapply(formulaList, function(k) {
-        
-        pred.vars = colnames(attr(terms(k), "factors"))
-        
-        # Sort interactions so always alphabetical
-        for(l in which(grepl("\\:", pred.vars))) {
-          
-          # Split interactions and sort alphabetically
-          int = unlist(lapply(strsplit(pred.vars[j], "\\:"), sort))
-          
-          # Recombine 
-          int.rec = paste(int, collapse = ":")
-          
-          # Re-insert into formula
-          pred.vars[l] = int.rec
-          
-        }
-        
-        rownames(attr(terms(k), "factors"))[pred.vars == i.new[j]]
-        
-      } )
+      # Get variable index for lookup
+      idx = which(sapply(pvars, function(k) any(k %in% i[j])))
       
-      # Name and order transformed variables by adjacency matrix
-      names(j.new) = sapply(formulaList, function(x) all.vars(x)[1])
+      idx. = unlist(sapply(pvars, function(l) which(l == i[j])))
       
-      j.new = j.new[colnames(amat)]
-      
-      # Choose first instance where variable is not null
-      new.var = unlist(j.new[sapply(j.new, function(x) length(x) > 0)])[1]
-      
-      if(!is.null(new.var)) i.new[j] = new.var
+      # Extract from transformed predictors
+      i[j] = t.pvars[[idx]][idx.]
       
     }
     
-    return(i.new)
+    # Repeat for responses
+    t.rvars = lapply(formulaList, function(x) rownames(attr(terms(x), "factors"))[1])
+    
+    # Get list of untransformed predictors
+    rvars = lapply(formulaList, function(i) {
+      
+      v = all.vars(i)[1]
+      
+      if(grepl("c\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[(1:2)]
+      
+      return(v)
+      
+    } )
+    
+    # Re-transform responses
+    idx = which(sapply(rvars, function(k) any(k %in% i[2])))
+    
+    idx. = unlist(sapply(rvars, function(l) which(l == i[2])))
+    
+    # Extract from transformed responses
+    i[2] = t.rvars[[idx]][idx.]
+    
+    return(i)
     
   } )
   
