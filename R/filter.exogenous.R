@@ -5,9 +5,11 @@ filter.exogenous = function(modelList, basis.set, corr.errors = NULL, add.vars =
     
     i = formula(i)
     
-    v = all.vars(i)
-    
-    if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[-(1:2)]
+    if(grepl("cbind\\(.*\\)", paste(i[2]))) 
+      
+      v = c(paste(formula(i)[2]), all.vars(i)[-(1:2)]) else
+        
+        v = all.vars(i)
     
     return(v)
     

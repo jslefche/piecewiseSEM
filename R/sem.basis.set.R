@@ -1,5 +1,5 @@
 sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
-
+  
   # Get list of formula from model list
   formulaList = get.formula.list(modelList, add.vars)
   
@@ -38,6 +38,9 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))
   
+  # Filter exogenous predictors from the basis set
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
+
   
   ### TEMPORARY FIX ###
   
@@ -47,42 +50,41 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   ### TEMPORARY FIX ###
   
     
-  # Filter exogenous predictors from the basis set
-  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
-
   # Re-apply transformations
   basis.set = lapply(basis.set, function(i) {
-   
-     # Get list of transformed predictors
+    
+    # Get list of transformed predictors
     t.pvars = lapply(formulaList, function(x) colnames(attr(terms(x), "factors")))
     
     # Get list of untransformed predictors
     pvars = lapply(formulaList, function(i) {
       
-      v = all.vars(i)
-      
-      if(length(v) > 1) v = v[-1]
-      
-      if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[-(1:2)]
+      if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) 
+        
+        v = all.vars(i)[-(1:2)] else
+          
+          v = all.vars(i)[-1]
       
       return(v)
       
     } )
     
     # Get list of transformed responses
-    t.rvars = lapply(formulaList, function(x) rownames(attr(terms(x), "factors"))[1])
+    t.rvars = lapply(formulaList, function(x) gsub(" " , "", rownames(attr(terms(x), "factors"))[1]))
     
-    # Get list of untransformed predictors
+    # Get list of untransformed responses
     rvars = lapply(formulaList, function(i) {
+     
+      if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) 
+        
+        v = paste0("cbind(", paste(all.vars(i)[1:2], collapse = ","), ")") else
+          
+          v = all.vars(i)[1]
       
-      v = all.vars(i)[1]
-      
-      if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) v = all.vars(i)[(1:2)]
-      
-      return(v)
-      
+      return(gsub(" " , "", v))
+        
     } )
-    
+   
     # Re-transform predictors
     for(j in (1:length(i))[-2]) {
       
@@ -207,7 +209,10 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   
   # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
-
+  
+  # Re-assign names from dropped entries
+  names(basis.set) = as.numeric(as.factor(names(basis.set)))
+  
   return(basis.set)
   
 }
