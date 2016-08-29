@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-08-26 Version 1.1.4
+### 2016-08-29 Version 1.1.4
+  * Bug fix: specification of invalid models in `endogenous.reverse`
   * Feature addition: implemented two-column binding as response in GLM(M)s
   * Bug fix: memory allocation error in `sem.model.fits`
   * Bug fix: inclusion of entries in the basis set without corresponding models in the model list in `endogenous.reverse`

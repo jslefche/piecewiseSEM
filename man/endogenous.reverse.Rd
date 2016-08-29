@@ -11,7 +11,7 @@ A helper function for \code{sem.missing.paths} that reverses independence claims
 } 
 
 \usage{
-endogenous.reverse(basis.set, modelList)
+endogenous.reverse(basis.set, modelList, add.vars)
 }
 
 \arguments{
@@ -21,6 +21,10 @@ a \code{list} of tests of conditional independence claims obtained from \code{se
 
 \item{modelList}{
 a \code{list} of regressions representing the structural equation model. 
+}
+
+  \item{add.vars}{
+a vector of additional variables whose independence claims should be evaluated, but which do not appear in the model list.
 }
 
 }
