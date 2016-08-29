@@ -64,9 +64,9 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
         v = all.vars(i)[-(1:2)] else
           
           v = all.vars(i)[-1]
-      
-      return(v)
-      
+        
+        return(v)
+        
     } )
     
     # Get list of transformed responses
@@ -74,17 +74,17 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
     # Get list of untransformed responses
     rvars = lapply(formulaList, function(i) {
-     
+      
       if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) 
         
         v = paste0("cbind(", paste(all.vars(i)[1:2], collapse = ","), ")") else
           
           v = all.vars(i)[1]
-      
-      return(gsub(" " , "", v))
+        
+        return(gsub(" " , "", v))
         
     } )
-   
+    
     # Re-transform predictors
     for(j in (1:length(i))[-2]) {
       
@@ -120,13 +120,17 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
       
     )
     
-    # Conduct lookup
-    t.rvar = sapply(1:nrow(idx), function(m) t.rvars[[idx[m, 1]]][idx[m, 2]] )
-    
-    t.rvar = t.rvar[!duplicated(t.rvar)]
-    
-    # Replace predictors
-    if(length(t.rvar) > 0) i[2] = t.rvar[which.max(sapply(t.rvar, function(p) nchar(p)))]
+    if(sum(idx) != 0) {
+      
+      # Conduct lookup
+      t.rvar = sapply(1:nrow(idx), function(m) t.rvars[[idx[m, 1]]][idx[m, 2]] )
+      
+      t.rvar = t.rvar[!duplicated(t.rvar)]
+      
+      # Replace predictors
+      if(length(t.rvar) > 0) i[2] = t.rvar[which.max(sapply(t.rvar, function(p) nchar(p)))]
+      
+    }
     
     return(i)
     

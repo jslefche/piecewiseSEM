@@ -14,6 +14,7 @@ endogenous.reverse = function(basis.set, modelList) {
   # Identify variables in the basis set where intermediate endogenous variables are the response
   idx. = sapply(modelList, function(x) all.vars(formula(x))[1] %in% idx)
   
+  # Reverse independence claims
   if(any(idx.)) {
     
     # Get index of models for which responses are in index
@@ -21,25 +22,34 @@ endogenous.reverse = function(basis.set, modelList) {
     
     if(length(idx..) > 0) {
       
-      basis.set = 
-        
-        append(basis.set, 
-               
-               lapply(
-                 
-                 which(sapply(basis.set, function(i) i[2] %in% idx..)), 
-                 
-                 function(i) 
-                   
-                   c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
-                 
-               )
-               
-        )
-        
-    }
+      basis.set = append(basis.set, 
+                         
+                         lapply(which(sapply(basis.set, function(i) i[2] %in% idx..)), function(i)
+                           
+                           c(basis.set[[i]][2], basis.set[[i]][1], basis.set[[i]][-(1:2)])
+                           
+                           )
+                         
+      )
+      
+      }
     
   }
+               
+  # Ensure that reversal is not attempting to predict exogenous variable
+  rvars = lapply(formulaList, function(i) {
+    
+    if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) 
+      
+      v = paste0("cbind(", paste(all.vars(i)[1:2], collapse = ","), ")") else
+        
+        v = all.vars(i)[1]
+      
+      return(gsub(" " , "", v))
+      
+  } )
+  
+  basis.set = basis.set[sapply(basis.set, function(x) any(x[2] %in% rvars))]
   
   return(basis.set)
   
