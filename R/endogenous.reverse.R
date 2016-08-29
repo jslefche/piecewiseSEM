@@ -1,4 +1,4 @@
-endogenous.reverse = function(basis.set, modelList) {
+endogenous.reverse = function(basis.set, modelList, add.vars = NULL) {
   
   # Identify d-sep tests among endogenous variables and reverse if family != "gaussian"
   names(basis.set) = 1:length(basis.set)
@@ -37,6 +37,8 @@ endogenous.reverse = function(basis.set, modelList) {
   }
                
   # Ensure that reversal is not attempting to predict exogenous variable
+  formulaList = get.formula.list(modelList, add.vars)
+  
   rvars = lapply(formulaList, function(i) {
     
     if(grepl("cbind\\(.*\\)", paste(formula(i)[2]))) 

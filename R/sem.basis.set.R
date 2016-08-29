@@ -38,18 +38,18 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))
   
-  # Filter exogenous predictors from the basis set
-  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
 
-  
   ### TEMPORARY FIX ###
   
   # Reverse intermediate endogenous variables fitted to non-normal distributions
-  basis.set = endogenous.reverse(basis.set, modelList)
+  basis.set = endogenous.reverse(basis.set, modelList, add.vars)
   
   ### TEMPORARY FIX ###
   
-    
+  
+  # Filter exogenous predictors from the basis set
+  basis.set = filter.exogenous(modelList, basis.set, corr.errors, add.vars)
+  
   # Re-apply transformations
   basis.set = lapply(basis.set, function(i) {
     
