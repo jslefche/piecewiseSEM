@@ -74,12 +74,16 @@ sem.plot = function(
     pred = row.n[names(row.n) == coef.table[i, 2]]
     
     if(show.nonsig == FALSE & coef.table[i, "p.value"] >= alpha) next else {
+          lines(x=c(circle[pred, "x"],circle[resp, "x"]),y=c(circle[pred,"y"],circle[resp,"y"])
+             , col = ifelse(coef.table[i, "p.value"] <alpha & coef.table[i, "estimate"] > 0, "black", ifelse(coef.table[i, "p.value"] < alpha & coef.table[i, "estimate"] < 0, "red", "grey50"))
+             , lwd = scl.fctr[i]
+             , lty = ifelse(coef.table[i, "p.value"] < alpha, 1, 2))
     
       arrows(
         x0 = circle[pred, "x"],
         y0 = circle[pred, "y"],
-        x1 = circle[resp, "x"],
-        y1 = circle[resp, "y"],
+        x1 = circle[resp, "x"]-(circle[resp, "x"]-circle[pred, "x"])/2,
+        y1 = circle[resp, "y"]-(circle[resp,"y"]-circle[pred,"y"])/2,
         code = ifelse(coef.table[i, "corr.errors"] == TRUE, 3, 2),
         col = ifelse(coef.table[i, "p.value"] < alpha & coef.table[i, "estimate"] > 0, "black", 
                      ifelse(coef.table[i, "p.value"] < alpha & coef.table[i, "estimate"] < 0, "red", "grey50")),
