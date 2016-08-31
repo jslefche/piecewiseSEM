@@ -18,6 +18,9 @@ sem.plot = function(
   
   coef.table[, 2] = gsub("~~ ", "", coef.table[, 2])
   
+  # Strip transformations
+  for(i in 1:2) coef.table[, i] = gsub(".*\\((.*)\\).*", "\\1", coef.table[, i])
+  
   # Get vector of labels
   lbls = unlist(coef.table[, 1:2])
   
