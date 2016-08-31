@@ -1,6 +1,8 @@
 # piecewiseSEM Change Log
 
-### 2016-08-29 Version 1.1.4
+### 2016-08-31 Version 1.1.4
+  * Feature addition: model class `glmmTMB`
+  * Bug fix: inclusion of transformed variables as additional boxes in `sem.plot`
   * Bug fix: specification of invalid models in `endogenous.reverse`
   * Feature addition: implemented two-column binding as response in GLM(M)s
   * Bug fix: memory allocation error in `sem.model.fits`
