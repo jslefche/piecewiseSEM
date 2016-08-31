@@ -6,7 +6,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
   # Check to see if classes are supported
   if(!all(sapply(modelList, function(i) 
     
-    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod")) 
+    all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmTMB")) 
     
   ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
   
@@ -230,7 +230,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     }
     
     # Get R2 for class == "glmerMod"
-    if(any(class(model) == "glmerMod")) {
+    if(any(class(model) %in% c("glmerMod"))) {
       
       # Test for non-zero random effects
       if(any(sapply(VarCorr(model), function(x) !all(attr(x, "stddev") > 0))))

@@ -1,6 +1,6 @@
 get.scaled.model = function(model, newdata, modelList) {
   
-  if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) {
+  if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB"))) {
     
     # Get random effects
     rand.effs = gsub(" ", "", sapply(findbars(formula(model)), function(x) gsub(".*\\|(.*)", "\\1", deparse(x))))

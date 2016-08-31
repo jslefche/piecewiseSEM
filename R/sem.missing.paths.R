@@ -77,7 +77,9 @@ sem.missing.paths = function(
           
             update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
             
-              update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), control = control, data = data) 
+              if(any(class(basis.mod) %in% "glmmTMB")) update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), data = data) else
+                
+                update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), control = control, data = data)
       
     ) )
 
@@ -139,6 +141,12 @@ sem.missing.paths = function(
       
       as.data.frame(t(unname(coef.table[nrow(coef.table), ]))) 
       
+      } else if(any(class(basis.mod.new) == "glmmTMB")) {
+        
+        coef.table = summary(basis.mod.new)$coefficients$cond
+        
+        as.data.frame(t(unname(coef.table[nrow(coef.table), ])))  
+        
       } else {
       
         coef.table = summary(basis.mod.new)$tTable
@@ -184,7 +192,13 @@ sem.missing.paths = function(
           
           ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$npar))) 
       
-        }
+        } else if(any(class(basis.mod.new) %in% c("glmmTMB"))) {
+          
+          z.value = coef.table[nrow(coef.table), 3]
+          
+          ret[5] = 2*(1 - pt(abs(z.value), nobs(basis.mod.new) - sum(summary(basis.mod.new)$ngrps$cond))) 
+          
+        } 
       
     }
   

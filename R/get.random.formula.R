@@ -7,7 +7,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
     
     deparse(model$call$random) else
       
-      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
+      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB")))
         
         paste("(", findbars(formula(model)), ")", collapse = " + ")
   
@@ -28,7 +28,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
     
     } else 
       
-      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
+      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB")))
         
         sapply(strsplit(random.formula, ".\\+.")[[1]], function(x)
           
@@ -37,7 +37,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
           )
   
   # Get random slopes in the model list, otherwise return vector of terms to drop
-  random.slopes = if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest", "glmmadmb"))) 
+  random.slopes = if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest", "glmmadmb", "glmmTMB"))) 
     
     if(is.null(dropterms)) {
       
@@ -47,7 +47,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
           
           unlist(lapply(modelList[[j]]$coefficients$random, function(k) colnames(k)))
         
-        else if(any(class(modelList[[j]]) %in% c("lme", "glmerMod", "merModLmerTest", "glmmadmb"))) 
+        else if(any(class(modelList[[j]]) %in% c("lme", "glmerMod", "merModLmerTest", "glmmadmb", "glmmTMB"))) 
           
           unlist(lapply(ranef(modelList[[j]]), function(k) colnames(k)))
         
@@ -80,7 +80,7 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
                 random.structure) 
         )
     
-    } else if(any(class(model) %in% c("glmerMod", "merModLmerTest")))
+    } else if(any(class(model) %in% c("glmerMod", "merModLmerTest", "glmmTMB")))
       
       # formula(
         paste(

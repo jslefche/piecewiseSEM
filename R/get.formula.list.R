@@ -5,11 +5,11 @@ get.formula.list = function(modelList, add.vars = NULL) {
     
     if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls", "glmmadmb"))) formula(i) else 
       
-      if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) nobars(formula(i))
+      if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB"))) nobars(formula(i))
     
   )
   
-  if(any(unlist(lapply(formulaList, is.null)))) stop("At least one model class not yet supported")
+  if(any(unlist(lapply(formulaList, is.null)))) stop("At least one model class not yet supported", .call = FALSE)
   
   # Check to see if any variables in the formula list appear in add.vars
   if(any(unlist(lapply(formulaList, all.vars)) %in% add.vars)) stop("Variables in the model list appear in add.vars!")

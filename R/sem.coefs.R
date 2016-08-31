@@ -50,40 +50,51 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
                  p.value = tab[irow, 5]
                  )
       
-    } else if(any(class(i) %in% c("lmerMod", "merModLmerTest"))) {
-  
-      tab = suppressMessages(summary(i)$coefficients)
-          
-      # Loop over variables and return P-values
-      kr.p = sapply(names(fixef(i))[irow], function(x) {
-        
-        i.reduced = update(i, as.formula(paste("~ . -", x)))
+    } else if(any(class(i) %in% c("glmmTMB"))) {
       
-        KRmodcomp(i, i.reduced)$test$p.value[1]
-        
-      } )
+      tab = summary(i)$coefficients$cond
       
-      # KRSumFun <- function(object, objectDrop, ...) {
-      #   krnames <- c("ndf","ddf","Fstat","p.value","F.scaling")
-      #   r <- if (missing(objectDrop)) {
-      #     setNames(rep(NA,length(krnames)),krnames)
-      #   } else {
-      #     krtest <- KRmodcomp(object,objectDrop)
-      #     unlist(krtest$stats[krnames])
-      #   }
-      #   attr(r,"method") <- c("Kenward-Roger via pbkrtest package")
-      #   r
-      # }
-      # 
-      # kr.p = drop1(i, test = "user", sumFun = KRSumFun)
-
       data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
                  predictor = rownames(tab)[irow],
                  estimate = tab[irow, 1],
                  std.error = tab[irow, 2],
-                 p.value = kr.p
-                 ) 
-      } 
+                 p.value = tab[irow, 4]
+      )
+      
+      } else if(any(class(i) %in% c("lmerMod", "merModLmerTest"))) {
+        
+        tab = suppressMessages(summary(i)$coefficients)
+          
+        # Loop over variables and return P-values
+        kr.p = sapply(names(fixef(i))[irow], function(x) {
+          
+          i.reduced = update(i, as.formula(paste("~ . -", x)))
+        
+          KRmodcomp(i, i.reduced)$test$p.value[1]
+          
+        } )
+        
+        # KRSumFun <- function(object, objectDrop, ...) {
+        #   krnames <- c("ndf","ddf","Fstat","p.value","F.scaling")
+        #   r <- if (missing(objectDrop)) {
+        #     setNames(rep(NA,length(krnames)),krnames)
+        #   } else {
+        #     krtest <- KRmodcomp(object,objectDrop)
+        #     unlist(krtest$stats[krnames])
+        #   }
+        #   attr(r,"method") <- c("Kenward-Roger via pbkrtest package")
+        #   r
+        # }
+        # 
+        # kr.p = drop1(i, test = "user", sumFun = KRSumFun)
+  
+        data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+                   predictor = rownames(tab)[irow],
+                   estimate = tab[irow, 1],
+                   std.error = tab[irow, 2],
+                   p.value = kr.p
+                   ) 
+        } 
     
     } ) )
   
