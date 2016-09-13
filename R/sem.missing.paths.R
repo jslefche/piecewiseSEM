@@ -228,18 +228,22 @@ sem.missing.paths = function(
   dup = names(basis.set)
   
   # Return lowest P-value
-  pvalues.df = do.call(rbind, lapply(unique(dup), function(x) {
-    
-    if(length(dup[dup == as.numeric(x)]) > 1) 
+  if(any(duplicated(dup))) {
+  
+    pvalues.df = do.call(rbind, lapply(unique(dup), function(x) {
       
-      warning("Some d-sep tests are non-symmetrical. The most conservative P-value has been returned. Stay tuned for future developments...")
+      if(length(dup[dup == as.numeric(x)]) > 1) 
+        
+        warning("Some d-sep tests are non-symmetrical. The most conservative P-value has been returned. Stay tuned for future developments...")
+      
+      pvalues.df[as.numeric(x), ][which.min(pvalues.df[as.numeric(x), "p.value"]), ]
+      
+    }
     
-    pvalues.df[as.numeric(x), ][which.min(pvalues.df[as.numeric(x), "p.value"]), ]
+    ) )
     
   }
-  
-  ) )
-  
+    
   # Set degrees of freedom as numeric
   pvalues.df$df = round(as.numeric(pvalues.df$df), 1)
   

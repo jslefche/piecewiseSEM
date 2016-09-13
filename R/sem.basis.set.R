@@ -38,7 +38,82 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
   # Replace placeholder for interaction symbol with :
   basis.set = lapply(basis.set, function(i) gsub(paste("_____", collapse = ""), "\\:", i))
   
-
+  # If correlated errors are present, remove them from the basis set
+  if(!is.null(corr.errors)) {
+    
+    basis.set =  lapply(1:length(basis.set), function(i) {
+      
+      inset = unlist(lapply(corr.errors, function(j) {
+        
+        corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
+        
+        all(
+          
+          unlist(
+            
+            lapply(1:2, function(k)
+              
+              grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) 
+              
+            ) 
+          ) 
+        ) 
+        
+      } ) )
+      
+      if(any(inset == TRUE)) NULL else basis.set[[i]]  
+      
+    } )
+  }
+  
+  # Replace any d-sep where interactions are regressed against the main effect with NULL
+  basis.set = lapply(basis.set, function(i) {
+    
+    if(is.null(i)) NULL else {
+      
+      if(grepl("\\*", i[1])) {
+        
+        int = strsplit(i[1], "\\*")[[1]]
+        
+        if(any(int %in% i[2])) NULL else i 
+        
+      } 
+      
+      else i
+      
+    }
+    
+  } )
+  
+  # Identify responses for which offset is present
+  rpl = do.call(rbind, lapply(formulaList, function(i) {
+    
+    lhs = paste(rownames(attr(terms(i), "factors"))[1])
+    
+    rhs = rownames(attr(terms(i), "factors"))[-1]
+    
+    if(any(grepl("offset", rhs)))
+      
+      data.frame(response = lhs, offset = rhs[grepl("offset", rhs)]) else
+        
+        NULL
+    
+  } ) )
+  
+  # Add offset to basis set
+  if(!is.null(rpl)) 
+    
+    basis.set = lapply(basis.set, function(i) {
+      
+      if(any(i[2] == rpl$response)) {
+        
+        c(i, as.character(rpl[rpl$response == i[2], "offset"]))
+        
+      } else i 
+      
+    } )
+  
+  
   ### TEMPORARY FIX ###
   
   # Reverse intermediate endogenous variables fitted to non-normal distributions
@@ -136,86 +211,11 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
   } )
   
-  # If correlated errors are present, remove them from the basis set
-  if(!is.null(corr.errors)) {
-    
-    basis.set =  lapply(1:length(basis.set), function(i) {
-      
-      inset = unlist(lapply(corr.errors, function(j) {
-        
-        corr.vars = gsub(" ", "", unlist(strsplit(j,"~~")))
-        
-        all(
-          
-          unlist(
-            
-            lapply(1:2, function(k)
-              
-              grepl(paste(corr.vars, collapse = "|"), basis.set[[i]][k]) 
-              
-            ) 
-          ) 
-        ) 
-        
-      } ) )
-      
-      if(any(inset == TRUE)) NULL else basis.set[[i]]  
-      
-    } )
-  }
-  
-  # Replace any d-sep where interactions are regressed against the main effect with NULL
-  basis.set = lapply(basis.set, function(i) {
-    
-    if(is.null(i)) NULL else {
-      
-      if(grepl("\\*", i[1])) {
-        
-        int = strsplit(i[1], "\\*")[[1]]
-        
-        if(any(int %in% i[2])) NULL else i 
-        
-      } 
-      
-      else i
-      
-    }
-    
-  } )
-  
-  # Identify responses for which offset is present
-  rpl = do.call(rbind, lapply(formulaList, function(i) {
-    
-    lhs = paste(rownames(attr(terms(i), "factors"))[1])
-    
-    rhs = rownames(attr(terms(i), "factors"))[-1]
-    
-    if(any(grepl("offset", rhs)))
-      
-      data.frame(response = lhs, offset = rhs[grepl("offset", rhs)]) else
-        
-        NULL
-    
-  } ) )
-  
-  # Add offset to basis set
-  if(!is.null(rpl)) 
-    
-    basis.set = lapply(basis.set, function(i) {
-      
-      if(any(i[2] == rpl$response)) {
-        
-        c(i, as.character(rpl[rpl$response == i[2], "offset"]))
-        
-      } else i 
-      
-    } )
-  
   # Remove NULLs from basis set
   basis.set = basis.set[!sapply(basis.set, is.null)]
   
   # Re-assign names from dropped entries
-  names(basis.set) = as.numeric(as.factor(names(basis.set)))
+  names(basis.set) = as.numeric(as.factor(as.numeric(names(basis.set))))
   
   return(basis.set)
   
