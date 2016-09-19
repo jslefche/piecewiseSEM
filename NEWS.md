@@ -1,6 +1,9 @@
 # piecewiseSEM Change Log
 
-### 2016-08-31 Version 1.1.4
+### 2016-09-19 Version 1.2
+  * Feature addition: new function `acyclic` to test for acyclic DAGs
+  * Feature addition: new function `rsquared` for easier calling of `sem.model.fits`
+  * Bug fix: order of adjacency matrix in `get.sort.dag`
   * Feature addition: model class `glmmTMB`
   * Bug fix: inclusion of transformed variables as additional boxes in `sem.plot`
   * Bug fix: specification of invalid models in `endogenous.reverse`
