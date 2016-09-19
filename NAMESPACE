@@ -1,5 +1,4 @@
 exportPattern("^[[:alpha:]]+")
-importFrom("ggm", "isAcyclic")
 importFrom("lme4", "findbars", "nobars", "lmer", "glmer", "lmerControl", "glmerControl")
 importFrom("methods", "as")
 importFrom("pbkrtest", "KRmodcomp")

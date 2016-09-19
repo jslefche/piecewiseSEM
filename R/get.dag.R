@@ -62,7 +62,7 @@ get.dag = function(formulaList) {
   dimnames(amat) = list(vars, vars)
   
   # Determine if graph is acylic
-  if(!isAcyclic(amat)) warning("The graph contains directed cycles!")
+  if(all(colSums(amat) > 0)) stop("Model is non-recursive (cyclical)! Remove directed cycles and re-run.", call. = FALSE)
   
   return(amat)
   
