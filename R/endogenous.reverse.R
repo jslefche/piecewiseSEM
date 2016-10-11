@@ -1,5 +1,8 @@
 endogenous.reverse = function(basis.set, modelList, add.vars = NULL) {
   
+  # Remove NULLs from basis set
+  basis.set = basis.set[!sapply(basis.set, is.null)]
+  
   # Identify d-sep tests among endogenous variables and reverse if family != "gaussian"
   names(basis.set) = 1:length(basis.set)
   
