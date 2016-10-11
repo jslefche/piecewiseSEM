@@ -1,5 +1,5 @@
-rsquared = function(x) {
+rsquared = function(modelList, aicc = FALSE) {
   
-  sem.model.fits(x)
+  sem.model.fits(modelList, aicc)
   
 }
