@@ -1,6 +1,6 @@
 # piecewiseSEM Change Log
 
-### 2016-09-19 Version 1.2
+### 2016-10-11 Version 1.2
   * Feature addition: new function `acyclic` to test for acyclic DAGs
   * Feature addition: new function `rsquared` for easier calling of `sem.model.fits`
   * Bug fix: order of adjacency matrix in `get.sort.dag`
