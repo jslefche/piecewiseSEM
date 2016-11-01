@@ -1,5 +1,8 @@
 # piecewiseSEM Change Log
 
+### 2016-11-01 Version 1.2.1
+  * Bug fix: multiple levels of `grouping.vars` in `sem.fit`
+
 ### 2016-10-11 Version 1.2.0
   * Feature addition: new function `acyclic` to test for acyclic DAGs
   * Feature addition: new function `rsquared` for easier calling of `sem.model.fits`
