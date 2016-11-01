@@ -12,8 +12,8 @@ Tests independence claims and calculates Fisher's C statistic and associated p-v
 
 \usage{
 sem.fit(modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, 
-  grouping.vars = NULL, adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, 
-  model.control = NULL, .progressBar = TRUE)
+  grouping.vars = NULL, grouping.fun = mean, adjust.p = FALSE, basis.set = NULL, 
+  pvalues.df = NULL, model.control = NULL, .progressBar = TRUE)
 }
 
 \arguments{
@@ -39,7 +39,11 @@ a vector of additional variables whose independence claims should be evaluated, 
 }
 
 \item{grouping.vars}{
-an optional variable that represents the highest level of a hierarchical dataset.
+an optional variable that represents the levels of data aggregation for a multi-level dataset.
+}
+
+\item{grouping.fun}{
+a function defining how variables are aggregated in \code{grouping.vars}. Default is \code{mean}.
 }
 
 \item{adjust.p}{
@@ -77,7 +81,7 @@ Variables with correlated errors have no direct relationship but rather are hypo
 
 The argument \code{add.vars} requires a vector of character strings corresponding to column names in the dataset used to construct the models in \code{modelList}. This is useful if comparing nested SEMs where one wishes to account for additional variables whose independence claims should be evaluated, but which do not have any hypothesized paths in the current SEM. The default assumes there is no additional independence claims that do not appear in the model list.
 
-If the data is hierarchical dataset and one or more responses are identical for each level of a grouping factors -- artificially inflating the df -- users can summarize the dataset for each grouping factor(s) specified in the argument \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
+If the data is hierarchical dataset and one or more responses are identical for each level of a grouping factors -- artificially inflating the degrees of freedom -- users can summarize the dataset for each grouping factor(s) specified in the argument \code{grouping.vars}. For example, consider a two-level hierarchy, where variables at the top level have identical values for each level of the grouping variable. If the response is a top level variable (is identically replicated for the grouping variable), this function takes a mean of the lower level variables for each level of the grouping variable, then runs the test of d-separation. If the response is fully replicated (occurs at the lower level), then no aggregation occurs.
 }
 
 \value{

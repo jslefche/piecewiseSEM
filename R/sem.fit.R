@@ -1,7 +1,7 @@
 sem.fit = function(
   
   modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, 
-  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, 
+  grouping.fun = mean, adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, 
   .progressBar = TRUE
   
   ) {
@@ -17,7 +17,7 @@ sem.fit = function(
   if(is.null(pvalues.df)) pvalues.df = sem.missing.paths(
     
     modelList, data, conditional, corr.errors, add.vars, grouping.vars,
-    adjust.p, basis.set, model.control, .progressBar
+    grouping.fun, adjust.p, basis.set, model.control, .progressBar
     
   )
   
@@ -25,7 +25,7 @@ sem.fit = function(
   fisher.c = sem.fisher.c(
     
     modelList, data, corr.errors, add.vars, grouping.vars, 
-    adjust.p, basis.set, pvalues.df, model.control, .progressBar
+    grouping.fun, adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
   
@@ -33,7 +33,7 @@ sem.fit = function(
   AIC.c = sem.aic(
     
     modelList, data, corr.errors, add.vars, grouping.vars,
-    adjust.p, basis.set, pvalues.df, model.control, .progressBar
+    grouping.fun, adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
   

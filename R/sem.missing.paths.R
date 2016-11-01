@@ -1,7 +1,7 @@
 sem.missing.paths = function(
  
   modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, 
-  adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
+  grouping.fun = mean, adjust.p = FALSE, basis.set = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -40,7 +40,7 @@ sem.missing.paths = function(
       response.test = by(data, lapply(grouping.vars, function(j) data[ ,j]), function(x) length(unique(x[, response])) == 1)
        
       response.test = na.omit(vapply(response.test, unlist, unlist(response.test[[1]])))
-       
+
       # If so, aggregate by grouping.vars
       if(all(response.test == TRUE)) {
         
@@ -48,11 +48,14 @@ sem.missing.paths = function(
         groups = lapply(grouping.vars, function(j) data[ ,j])
         
         names(groups) = grouping.vars
-        
+
+        # Decide aggregation level
+        groups = groups[which(sapply(groups, function(x) length(unique(x))) == length(response.test)):length(groups)]
+                        
         # Aggregate and replace data
         data = suppressWarnings(
           
-          aggregate(data, by = groups, mean, na.rm = T)
+          aggregate(data, by = groups, grouping.fun, na.rm = T)
           
           )
         

@@ -1,7 +1,7 @@
 sem.fisher.c = function(
   
-  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, adjust.p = FALSE, 
-  basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
+  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, grouping.fun = mean,
+  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -10,7 +10,7 @@ sem.fisher.c = function(
   if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
     
     modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars, 
-    adjust.p, basis.set, model.control, .progressBar
+    grouping.fun, adjust.p, basis.set, model.control, .progressBar
     
     ) )
   

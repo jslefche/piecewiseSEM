@@ -1,7 +1,7 @@
 sem.aic = function(
   
-  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, adjust.p = FALSE, 
-  basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
+  modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, grouping.fun = mean,
+  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL, model.control = NULL, .progressBar = TRUE
   
   ) {
   
@@ -10,14 +10,14 @@ sem.aic = function(
   if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
     
     modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars,
-    adjust.p, basis.set, model.control, .progressBar
+    grouping.fun, adjust.p, basis.set, model.control, .progressBar
     
   ) )
   
   fisher.c = sem.fisher.c(
     
-    modelList, data, corr.errors, add.vars, grouping.vars, adjust.p, 
-    basis.set, pvalues.df, model.control, .progressBar
+    modelList, data, corr.errors, add.vars, grouping.vars, grouping.fun, 
+    adjust.p, basis.set, pvalues.df, model.control, .progressBar
     
   )
     
