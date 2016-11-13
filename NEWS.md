@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-11-01 Version 1.2.1
+### 2016-11-13 Version 1.2.1
+  * Bug fix: `sem.basis.set` failed to remove variables regressed against their interaction
   * Bug fix: multiple levels of `grouping.vars` in `sem.fit`
 
 ### 2016-10-11 Version 1.2.0

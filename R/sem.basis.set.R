@@ -71,9 +71,9 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
     
     if(is.null(i)) NULL else {
       
-      if(grepl("\\*", i[1])) {
+      if(grepl("\\*|\\:", i[1])) {
         
-        int = strsplit(i[1], "\\*")[[1]]
+        int = strsplit(i[1], "\\*|\\:")[[1]]
         
         if(any(int %in% i[2])) NULL else i 
         
