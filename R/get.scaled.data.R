@@ -42,8 +42,8 @@ get.scaled.data = function(modelList, data, standardize) {
     trsf = gsub("(.*)\\(.*\\)", "\\1", i)
     
     # Perform transformation
-    newdata[, col.no] = eval(parse(text = gsub(col.no, paste0("newdata[, ", col.no, "]"), i)))
-    
+    newdata[, col.no] = eval(parse(text = gsub(i, paste0("newdata[, ", col.no, "]"), names(i))))
+
   }
       
   # Get variables to scale, ignoring variables that are modeled to non-normal distributions
