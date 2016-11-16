@@ -30,22 +30,26 @@ get.scaled.data = function(modelList, data, standardize) {
   transform.vars = transform.vars[!duplicated(transform.vars)]
   
   # Strip transformations
-  transform.vars2 = sapply(transform.vars, function(i) gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\).*", "\\1", i)))
-  
-  transform.vars2 = sapply(transform.vars2, function(i) gsub(" ", "", i))
+  transform.vars2 = sapply(transform.vars, function(i) 
+    
+    gsub(" ", "", gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\).*", "\\1", i)))
+    
+  )
   
   # For each variables in transform.vars, perform transformation and store as original variable
-  for(i in 1:length(transform.vars2)) {
+  if(length(transform.vars) > 0) 
     
-    # Perform transformation
-    newdata[, transform.vars2[i]] = 
+      for(i in 1:length(transform.vars2)) {
       
-      sapply(newdata[, transform.vars2[i]], function(x) 
+      # Perform transformation
+      newdata[, transform.vars2[i]] = 
         
-        eval(parse(text = gsub(transform.vars2[i], x, transform.vars[i])))
-        
-        )
-    
+        sapply(newdata[, transform.vars2[i]], function(x) 
+          
+          eval(parse(text = gsub(transform.vars2[i], x, transform.vars[i])))
+          
+          )
+      
     }
       
   # Get variables to scale, ignoring variables that are modeled to non-normal distributions
