@@ -97,7 +97,7 @@ get.scaled.data = function(modelList, data, standardize) {
   vars.to.scale = vars.to.scale[!duplicated(vars.to.scale)]
   
   # Remove transformed variables already scaled 
-  vars.to.scale = vars.to.scale[!vars.to.scale %in% transform.vars]
+  vars.to.scale = vars.to.scale[!vars.to.scale %in% gsub(" ", "", transform.vars)]
   
   # Run check to see if variables appear as columns
   if(!all(vars.to.scale %in% colnames(newdata))) stop("Some predictors do not appear in the dataset!")
