@@ -30,7 +30,7 @@ get.scaled.data = function(modelList, data, standardize) {
   transform.vars = transform.vars[!duplicated(transform.vars)]
   
   # Strip transformations
-  transform.vars = sapply(transform.vars, function(i) gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\).$", "\\1", i)))
+  transform.vars = sapply(transform.vars, function(i) gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\).*", "\\1", i)))
   
   # For each variables in transform.vars, perform transformation and store as original variable
   for(i in transform.vars) {
