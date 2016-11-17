@@ -32,7 +32,11 @@ get.scaled.data = function(modelList, data, standardize) {
   # Strip transformations
   transform.vars2 = sapply(transform.vars, function(i) 
     
-    gsub(" ", "", gsub("(.*)\\+.*", "\\1", gsub(".*\\((.*)\\).*", "\\1", i)))
+    gsub(" ", "", 
+         gsub(".*([[:alpha:]]).*", "\\1", 
+              gsub(".*\\((.*)\\).*", "\\1", i)
+         )
+    )
     
   )
   
