@@ -7,12 +7,12 @@ sem.aic = function(
   
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
   
-  if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
+  if(is.null(pvalues.df)) pvalues.df = suppressMessages(suppressWarnings(sem.missing.paths(
     
     modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars,
     grouping.fun, adjust.p, basis.set, model.control, .progressBar
     
-  ) )
+  ) ) )
   
   fisher.c = sem.fisher.c(
     
@@ -28,13 +28,23 @@ sem.aic = function(
   AIC = unname(fisher.c[1] + 2 * K)
   
   # Calculate AICc
-  AICc = unname(fisher.c[1] + 2 * K * (min(unlist(lapply(modelList, nobs)))/(min(unlist(lapply(modelList, nobs))) - K - 1)))
+  n.obs = min(sapply(modelList, function(x) {
+    
+    if(class(x) == "rq") 
+      
+      length(na.omit(residuals(x))) else
+        
+        nobs(x)
+    
+  } ) )
+  
+  AICc = unname(fisher.c[1] + 2 * K * (n.obs/(n.obs - K - 1)))
   
   # Return output in a data.frame
   data.frame(
     AIC = round(AIC, 3),
     AICc = round(AICc, 3), 
     K = round(K, 1), 
-    n = round(min(unlist(lapply(modelList, nobs))), 1) )
+    n = round(n.obs, 1) )
 
 }

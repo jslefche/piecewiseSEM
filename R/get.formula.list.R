@@ -3,7 +3,7 @@ get.formula.list = function(modelList, add.vars = NULL) {
   # Get list of formula from model list
   formulaList = lapply(modelList, function(i) 
     
-    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls", "glmmadmb"))) formula(i) else 
+    if(all(class(i) %in% c("lm", "rq", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls", "glmmadmb"))) formula(i) else 
       
       if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB"))) nobars(formula(i))
     

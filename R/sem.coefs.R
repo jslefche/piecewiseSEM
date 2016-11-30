@@ -39,6 +39,17 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
                  p.value = tab[irow, 4]
                  )
       
+    } else if(any(class(i) %in% c("rq"))) {
+      
+      tab = summary(i, se = "boot")$coefficients
+      
+      data.frame(response = Reduce(paste, deparse(formula(i)[[2]])),
+                 predictor = rownames(tab)[irow],
+                 estimate = tab[irow, 1],
+                 std.error = tab[irow, 2],
+                 p.value = tab[irow, 4]
+      )
+      
     } else if(any(class(i) %in% c("lme", "glmmPQL"))) {
       
       tab = summary(i)$tTable

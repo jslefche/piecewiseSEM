@@ -7,7 +7,7 @@ sem.lavaan = function(modelList, data, compute.int = TRUE, corr.errors = NULL, a
   # Get list of formula from model list
   formula.list = lapply(modelList, function(i) 
     
-    if(all(class(i) %in% c("lm", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls"))) formula(i) else 
+    if(all(class(i) %in% c("lm", "rq", "glm", "negbin", "lme", "glmmPQL", "gls", "pgls"))) formula(i) else 
       
       if(all(class(i) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) nobars(formula(i))
     

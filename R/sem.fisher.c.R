@@ -7,12 +7,12 @@ sem.fisher.c = function(
   
   if(is.null(basis.set)) basis.set = suppressWarnings(sem.basis.set(modelList, corr.errors, add.vars))
 
-  if(is.null(pvalues.df)) pvalues.df = suppressWarnings(sem.missing.paths(
+  if(is.null(pvalues.df)) pvalues.df = suppressMessages(suppressWarnings(sem.missing.paths(
     
     modelList, data, conditional = FALSE, corr.errors, add.vars, grouping.vars, 
     grouping.fun, adjust.p, basis.set, model.control, .progressBar
     
-    ) )
+    ) ) )
   
   # Convert any p-values to a very small number as log(0) == -Inf
   if(length(basis.set) > 0 & any(pvalues.df$p.value == 0)) pvalues.df[pvalues.df$p.value == 0, "p.value"] = 2e-16

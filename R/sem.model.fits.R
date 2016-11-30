@@ -8,7 +8,7 @@ sem.model.fits = function(modelList, aicc = FALSE) {
     
     all(class(i) %in% c("lm", "glm", "negbin", "gls", "pgls", "lme", "lmerMod", "merModLmerTest", "glmerMod", "glmmTMB")) 
     
-  ) ) ) warning("(Pseudo-)R^2s are not yet supported for some model classes!")
+  ) ) ) stop("(Pseudo-)R^2s are not yet supported for some model classes!")
   
   # Check if all responses in the model list are the same
   same = any(duplicated(unlist(sapply(modelList, function(x) all.vars(formula(x))[1]))))

@@ -72,18 +72,22 @@ sem.missing.paths = function(
     # Update basis model with new formula and random structure based on d-sep
     basis.mod.new = suppressMessages(suppressWarnings(
       
-      if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
-      
-        update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), control = control, data = data) else
+      if(is.null(random.formula) & class(basis.mod) == "rq")
         
-          if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
-          
-            update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
-            
-              if(any(class(basis.mod) %in% "glmmTMB")) update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), data = data) else
-                
-                update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), control = control, data = data)
+        update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), data = data) else
       
+          if(is.null(random.formula) | class(basis.mod) == "glmmadmb") 
+          
+            update(basis.mod, formula(paste(basis.set[[i]][2], " ~ ", rhs)), control = control, data = data) else
+          
+              if(any(class(basis.mod) %in% c("lme", "glmmPQL"))) 
+              
+                update(basis.mod, fixed = formula(paste(basis.set[[i]][2], " ~ ", rhs)), random = random.formula, control = control, data = data) else
+                
+                  if(any(class(basis.mod) %in% "glmmTMB")) update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), data = data) else
+                    
+                    update(basis.mod, formula = formula(paste(basis.set[[i]][2], " ~ ", rhs, " + ", random.formula)), control = control, data = data)
+          
     ) )
 
     # Get row number from coefficient table for d-sep variable
@@ -142,34 +146,40 @@ sem.missing.paths = function(
       
       coef.table = summary(basis.mod.new)$coefficients
       
-      as.data.frame(t(unname(coef.table[nrow(coef.table), ]))) 
+      } else if(any(class(basis.mod.new) %in% c("rq"))) {
+      
+      coef.table = summary(basis.mod.new, se = "boot")$coefficients
       
       } else if(any(class(basis.mod.new) == "glmmTMB")) {
         
         coef.table = summary(basis.mod.new)$coefficients$cond
         
-        as.data.frame(t(unname(coef.table[nrow(coef.table), ])))  
-        
-      } else {
-      
-        coef.table = summary(basis.mod.new)$tTable
-        
-        as.data.frame(t(unname(coef.table[nrow(coef.table), ])))  
-        
-      }
+        } else {
+          
+          coef.table = summary(basis.mod.new)$tTable
+          
+        }
     
+    if(!any(class(basis.mod.new) %in% c("lmerMod", "merModLmerTest")))
+      
+      ret = as.data.frame(t(unname(coef.table[nrow(coef.table), ]))) 
+      
     # Add df if summary table does not return
     if(length(ret) != 5 & any(class(basis.mod.new) %in% c("lm", "glm", "negbin", "pgls"))) 
       
       ret = cbind(ret[1:2], summary(basis.mod.new)$df[2], ret[3:4]) else
         
-        if(length(ret) != 5 & any(class(basis.mod.new) %in% c("glmmadmb"))) 
+        if(length(ret) != 5 & any(class(basis.mod.new) %in% c("rq"))) 
           
-          ret = cbind(ret[1:2], summary(basis.mod.new)$n, ret[3:4]) else
-            
-            if(length(ret) != 5)
+          ret = cbind(ret[1:2], summary(basis.mod.new, se = "boot")$rdf, ret[3:4]) else
+        
+            if(length(ret) != 5 & any(class(basis.mod.new) %in% c("glmmadmb"))) 
               
-              ret = cbind(ret[1:2], NA, ret[3:4])
+              ret = cbind(ret[1:2], summary(basis.mod.new)$n, ret[3:4]) else
+                
+                if(length(ret) != 5)
+                  
+                  ret = cbind(ret[1:2], NA, ret[3:4])
       
     # Rename columns 
     names(ret) = c("estimate", "std.error", "df", "crit.value", "p.value")

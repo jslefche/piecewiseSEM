@@ -1,5 +1,3 @@
-# predict = function(object, ...) UseMethod("generic")
-
 sem.predict = function(object, newdata, sefit = FALSE, ...) {
   
   # If not a model object, then coerce to a list
@@ -22,7 +20,7 @@ sem.predict = function(object, newdata, sefit = FALSE, ...) {
     cbind, lapply(x.modelList, function(i) {
     
     # Get model predictions
-    if(any(class(i) %in% c("lm", "glm", "neg.bin", "gls", "pgls")))
+    if(any(class(i) %in% c("lm", "rq", "glm", "neg.bin", "gls", "pgls")))
        
        predict.df = predict(i, newdata, se.fit = sefit, ...) else
          

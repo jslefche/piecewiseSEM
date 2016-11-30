@@ -35,20 +35,24 @@ partial.resid = function(
   control = get.model.control(y.model, model.control)
   
   # Update model
-  y.nox.model = suppressWarnings(if(is.null(random.formula)) 
+  y.nox.model = suppressWarnings(if(is.null(random.formula) & class(y.model) != "rq") 
     
     update(y.model, formula(rhs), control = control) else
       
-      if(any(class(y.model) %in% c("glmmadmb")))
-         
-         update(y.model, formula(rhs)) else
-           
-           if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
+      if(any(class(y.model) %in% c("rq")))
+        
+        update(y.model, formula(rhs)) else
+      
+          if(any(class(y.model) %in% c("glmmadmb")))
              
-             update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
+             update(y.model, formula(rhs)) else
                
-               update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control) 
-    
+               if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
+                 
+                 update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
+                   
+                   update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control) 
+        
   )
   
   # If x is an interaction, calculate and replace in dataset
@@ -87,6 +91,14 @@ partial.resid = function(
                  data = data) else 
                    
                    mod }
+      
+      else if(any(class(y.model) %in% c("rq"))) {
+       
+        update(y.model, 
+               reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
+               data = data) 
+         
+      } else
       
       update(y.model, 
              reformulate(Reduce(paste, deparse(formula(y.nox.model))), response = x), 
