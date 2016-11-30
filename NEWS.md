@@ -1,6 +1,7 @@
 # piecewiseSEM Change Log
 
-### 2016-11-16 Version 1.2.1
+### 2016-11-30 Version 1.2.1
+  * Feature addition: support for models of class `rq`
   * Bug fix: error in scaling of transformed variables in `get.scaled.data`
   * Bug fix: `sem.basis.set` failed to remove variables regressed against their interaction
   * Bug fix: multiple levels of `grouping.vars` in `sem.fit`

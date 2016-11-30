@@ -6,13 +6,13 @@
   
     Lefcheck, Jonathan S. (2015) piecewiseSEM: Piecewise structural equation modeling in R for ecology, evolution, and systematics. Methods in Ecology and Evolution. 7(5): 573-579. DOI: 10.1111/2041-210X.12512
 
-Version: 1.2.1 (2016-11-16)
+Version: 1.2.1 (2016-11-30)
 
 Author: Jon Lefcheck <jslefche@vims.edu>
 
 Supported model classes include: 
 
-  `lm`, `glm`, `glm.nb`, `gls`, `pgls`, `merMod`, `merModLmerTest`, `lme`, `glmmPQL`, `glmmadmb`, and `glmmTMB`.
+  `lm`, `glm`, `rq`, `glm.nb`, `gls`, `pgls`, `merMod`, `merModLmerTest`, `lme`, `glmmPQL`, `glmmadmb`, and `glmmTMB`.
   
 ###WARNING
 

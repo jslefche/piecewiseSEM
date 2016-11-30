@@ -10,7 +10,7 @@ vignette: >
 ---
 The `piecewiseSEM` package implements piecewise structural equation modeling (SEM) for the R statistical language. SEM is useful for simultaneously testing complex multivariate hypotheses, and a piecewise approach (i.e., local estimation) is a flexible variant that allows for the fitting of various model forms and specifications. 
 
-Users are able to construct a list of structured equations corresponding to a single caustal network using the most common linear modeling functions, including: `lm`, `glm`, `glm.nb`, `gls`, `pgls`, `merMod`, `merModLmerTest`, `lme`, `glmmPQL`, and `glmmadmb`. 
+Users are able to construct a list of structured equations corresponding to a single caustal network using the most common linear modeling functions, including: `lm`, `rq`, `glm`, `glm.nb`, `gls`, `pgls`, `merMod`, `merModLmerTest`, `lme`, `glmmPQL`, and `glmmadmb`. 
 
 I provide functions to evaluate (`sem.fit`, `sem.model.fits`), solve (`sem.coefs`), and visualize (`partial.resid`) the output. I also provide a way for users to translate their network to a traditional variance-covariance based SEM as implemented in the `lavaan` package (`sem.lavaan`).
 
