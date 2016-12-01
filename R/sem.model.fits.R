@@ -84,7 +84,13 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       # Test for non-zero random effects
       if(any(sapply(VarCorr(model), function(x) !all(attr(x, "stddev") > 0))))
          
-         stop("Some variance components equal zero. Respecify random structure!")
+        warning(paste0(
+          "The following random components are zero: ",
+          na.omit(as.vector(sapply(VarCorr(model), function(x) ifelse(attr(x, "stddev") == 0, names(attr(x, "stddev")), NA)))),
+          ", for the response: ",
+          as.character(formula(model)[2]),
+          ".\nConsider respecifying the random structure!")
+        )
 
       # Get variance of fixed effects by multiplying coefficients by design matrix
       varF = var(as.vector(fixef(model) %*% t(model@pp$X)))
@@ -149,7 +155,13 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       # Test for non-zero random effects
       if(any(sapply(VarCorr(model), function(x) !all(attr(x, "stddev") > 0))))
         
-        stop("Some variance components equal zero. Respecify random structure!")
+        warning(paste0(
+          "The following random components are zero: ",
+          na.omit(as.vector(sapply(VarCorr(model), function(x) ifelse(attr(x, "stddev") == 0, names(attr(x, "stddev")), NA)))),
+          ", for the response: ",
+          as.character(formula(model)[2]),
+          ".\nConsider respecifying the random structure!")
+        )
       
       # Get design matrix of fixed effects from model
       Fmat = model.matrix(eval(model$call$fixed)[-2], model$data)
@@ -235,7 +247,13 @@ sem.model.fits = function(modelList, aicc = FALSE) {
       # Test for non-zero random effects
       if(any(sapply(VarCorr(model), function(x) !all(attr(x, "stddev") > 0))))
         
-        stop("Some variance components equal zero. Respecify random structure!")
+        warning(paste0(
+          "The following random components are zero: ",
+          na.omit(as.vector(sapply(VarCorr(model), function(x) ifelse(attr(x, "stddev") == 0, names(attr(x, "stddev")), NA)))),
+          ", for the response: ",
+          as.character(formula(model)[2]),
+          ".\nConsider respecifying the random structure!")
+        )
       
       # Classify model family
       ret$Family = summary(model)$family
@@ -491,6 +509,15 @@ sem.model.fits = function(modelList, aicc = FALSE) {
   
   # Strip negative binomial theta
   ret$Family = sapply(as.character(ret$Family), function(x) ifelse(grepl("Negative Binomial", x), "Negative Binomial", x))
+  
+  # Remove conditional column if not a mixed model
+  if(all(is.na(ret$Conditional))) {
+    
+    names(ret)[which(names(ret) == "Marginal")] = "R.squared"
+    
+    ret = ret[, names(ret) != "Conditional"]
+    
+  }
   
   return(ret)
   
