@@ -23,37 +23,64 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
           "\\1",
           strsplit(gsub("list\\((.*)\\)", "\\1", random.formula), ",")[[1]]
           )
-        
-      ) else gsub(".*\\|(.*)?", "\\1", random.formula) 
+        ) 
+    
+    else gsub(" ", "", gsub(".*\\|(.*)?", "\\1", random.formula))
     
     } else 
       
-      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB")))
+      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB"))) {
         
-        sapply(strsplit(random.formula, ".\\+.")[[1]], function(x)
+        ran.ef.splt = strsplit(random.formula, "\\+.")[[1]]
+        
+        sapply(ran.ef.splt[sapply(ran.ef.splt, function(x) grepl("\\|", x))],
+       
+          function(x)
           
-          gsub(".*\\|(.*)\\)", "\\1", x) 
+          gsub(" ", "", gsub(".*\\|(.*)\\)", "\\1", x)) 
           
           )
+        
+      }
+  
+  random.structure = unname(random.structure[!duplicated(random.structure)])
   
   # Get random slopes in the model list, otherwise return vector of terms to drop
-  random.slopes = if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest", "glmmadmb", "glmmTMB"))) 
+  random.slopes = 
     
-    if(is.null(dropterms)) {
+    if(any(class(model) %in% c("lme", "glmmPQL", "glmerMod", "merModLmerTest", "glmmadmb", "glmmTMB"))) 
       
-      unlist(lapply(1:length(modelList), function(j) {
+      if(is.null(dropterms)) {
         
-        if(any(class(modelList[[j]]) %in% c("glmmPQL")))
+        unlist(lapply(1:length(modelList), function(i) {
           
-          unlist(lapply(modelList[[j]]$coefficients$random, function(k) colnames(k)))
-        
-        else if(any(class(modelList[[j]]) %in% c("lme", "glmerMod", "merModLmerTest", "glmmadmb", "glmmTMB"))) 
+          if(any(class(modelList[[i]]) %in% c("glmmPQL"))) {
+            
+            ran.ef = ifelse(any(class(modelList[[i]]$coefficients$random) != "list"), 
+                            
+                            list(modelList[[i]]$coefficients$random), 
+                            
+                            modelList[[i]]$coefficients$random)
+            
+            as.vector(sapply(ran.ef, function(j) colnames(j)))
+            
+          }
           
-          unlist(lapply(ranef(modelList[[j]]), function(k) colnames(k)))
+          else if(any(class(modelList[[i]]) %in% c("lme", "glmerMod", "merModLmerTest", "glmmadmb", "glmmTMB"))) {
+            
+           ran.ef = ifelse(any(class(ranef(modelList[[i]])) != "list"), 
+                  
+                  list(ranef(modelList[[i]])), 
+                  
+                  ranef(modelList[[i]]))
+          
+           as.vector(sapply(ran.ef, function(j) colnames(j)))
+
+          }
+
+        } ) )
         
-      } ) )
-      
-    } else dropterms 
+      } else dropterms 
 
   random.slopes = unname(random.slopes[!duplicated(random.slopes) & random.slopes != "(Intercept)"])
   
@@ -68,32 +95,32 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
     if(any(class(model) %in% c("lme", "glmmPQL", "glmmadmb")))
       
       if(is.list(random.structure)) {
-        
-        lapply(random.structure, function(x) formula(gsub("(.*)\\|", paste("~", new.random.slopes, "|"), x)) ) 
-        
+    
+        eval(parse(text = gsub("*\\~(.*)", paste0("~ ", new.random.slopes, "))"), random.formula)))
+
         } else {
         
-        formula(
-          paste("~ ", 
-                new.random.slopes,
-                " | ",
-                random.structure) 
-        )
+          formula(
+            paste("~ ",
+                  new.random.slopes,
+                  " | ",
+                  random.structure) 
+            )
     
-    } else if(any(class(model) %in% c("glmerMod", "merModLmerTest", "glmmTMB")))
+    } else if(any(class(model) %in% c("glmerMod", "merModLmerTest", "glmmTMB"))) {
       
-      # formula(
-        paste(
-          sapply(random.structure, function(x)
-            paste("(", new.random.slopes, " | ", x, ")") ),
-          collapse = " + ")
-      # )
+      paste(
+        sapply(random.structure, function(x)
+          paste("(", new.random.slopes, " | ", x, ")") ),
+        collapse = " + ")
+      
+    }
     
   } else if(length(random.slopes) == 0) {
       
       if(is.list(random.structure)) {
         
-        lapply(random.structure, function(x) formula(gsub("(.*)\\|", paste("~", new.random.slopes, "|"), x)) ) 
+        eval(parse(text = gsub("*\\~(.*)", paste0("~ ", new.random.slopes, "))"), random.formula)))
         
       } else if(any(class(model) %in% c("lme", "glmmPQL"))) formula(random.formula)
     
