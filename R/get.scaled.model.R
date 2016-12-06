@@ -12,7 +12,11 @@ get.scaled.model = function(model, newdata, modelList) {
     fixed.effs = all.vars(formula(model))[!all.vars(formula(model)) %in% rand.effs]
     
     # Get fixed formula stripped of transformations
-    fixed.form = paste0(fixed.effs[1], " ~ ", paste0(fixed.effs[-1], collapse = " + "))
+    if(grepl("cbind", deparse(formula(model)))) 
+      
+      fixed.form = paste0("cbind(", fixed.effs[1], ", ", fixed.effs[2], ") ~ ", paste0(fixed.effs[-(1:2)], collapse = " + ")) else
+        
+        fixed.form = paste0(fixed.effs[1], " ~ ", paste0(fixed.effs[-1], collapse = " + "))
     
     # Bind back in random structure
     random.form = get.random.formula(model, rhs = paste0(fixed.effs[-1], collapse = " + "), modelList)

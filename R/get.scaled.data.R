@@ -57,7 +57,15 @@ get.scaled.data = function(modelList, data, standardize) {
     }
       
   # Get variables to scale, ignoring variables that are modeled to non-normal distributions
-  vars = unlist(lapply(modelList, function(x) all.vars(formula(x))))
+  vars = unlist(lapply(modelList, function(x) {
+    
+    if(grepl("cbind", deparse(formula(x)))) 
+      
+      all.vars(formula(x))[-c(1:2)] else
+        
+        all.vars(formula(x))
+    
+    } ) )
   
   vars = vars[!duplicated(vars)]
   
@@ -113,7 +121,7 @@ get.scaled.data = function(modelList, data, standardize) {
   if(!all(vars.to.scale %in% colnames(newdata))) stop("Some predictors do not appear in the dataset!")
   
   # Scale those variables by mean and SD, or by range
-  newdata[, vars.to.scale] = apply(newdata[, vars.to.scale], 2, function(x) {
+  newdata[, vars.to.scale] = apply(newdata[, vars.to.scale, drop = FALSE], 2, function(x) {
     
     if(standardize == "scale") scale(x) else
       
