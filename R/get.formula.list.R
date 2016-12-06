@@ -56,6 +56,10 @@ get.formula.list = function(modelList, add.vars = NULL) {
     
   )
   
+  if(any(sapply(formulaList, function(x) grepl("poly", x)))) 
+
+      stop("Polynomials computed within the regression are not yet allowed.\nCompute externally and supply each component as a separate variable!")
+  
   return(formulaList)
   
 }
