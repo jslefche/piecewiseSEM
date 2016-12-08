@@ -56,10 +56,6 @@ Jon Lefcheck
 Unlike the functions \code{DAG} and \code{basiSet} in the \code{ggm} package, this function incorporates interactions if they included in the models.
 }
 
-\seealso{
-\code{\link{DAG}}, \code{\link{basiSet}}
-}
-
 \examples{
 # Load example data
 data(shipley2009)
