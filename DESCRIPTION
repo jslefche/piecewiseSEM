@@ -8,12 +8,11 @@ Maintainer: Jon Lefcheck <jslefche@vims.edu>
 Description: Implements piecewise structural equation models.
 License: GPL-3
 Imports:
-    ggm,
     lavaan,
-    pbkrtest,
-    nlme,
     lme4,
-    methods
+    methods,
+    nlme,
+    pbkrtest
 Suggests:
     knitr,
     rmarkdown
