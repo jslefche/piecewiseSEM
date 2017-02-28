@@ -4,11 +4,25 @@
 
 fisherC <- function(dTable) {
 
-  C <- -2*sum(log(dTable$P.value))
+  if(class(dTable) == "character") {
 
-  p <- 1 - pchisq(C, 2*nrow(dTable))
+    C <- 0
 
-  ret <- data.frame(Fisher.C = C, df = 2*nrow(dTable), P.value = p)
+    p <- 1
+
+    DF <- 0
+
+  } else {
+
+    C <- -2*sum(log(dTable$P.value))
+
+    p <- 1 - pchisq(C, 2*nrow(dTable))
+
+    DF <- 2*nrow(dTable)
+
+  }
+
+  ret <- data.frame(Fisher.C = C, df = DF, P.value = p)
 
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 3)
 

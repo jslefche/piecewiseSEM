@@ -2,7 +2,7 @@
 
 #' @param modelList a list of structural equations
 
-summary.sem <- function(modelList, conditional = TRUE, .progressBar = TRUE) {
+summary.sem <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
   name <- deparse(substitute(modelList))
 

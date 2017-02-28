@@ -6,9 +6,13 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
   b <- basisSet(modelList)
 
-  if(length(b) == 0)
+  if(length(b) == 0) {
 
-    paste("No independence claims present. Tests of directed separation not possible.")
+    warning("No independence claims present. Tests of directed separation not possible.", .call = FALSE))
+
+    c("No independence claims present. Tests of directed separation not possible.")
+
+  }
 
   else {
 

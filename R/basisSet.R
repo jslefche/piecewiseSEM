@@ -91,11 +91,7 @@ removeCerror <- function(b, formulaList) {
 
   }
 
-  if(length(b) == 0)
-
-    warning("There are no independence claims. No tests of directed separation can be returned.")
-
-  else return(b)
+  return(b)
 
 }
 
