@@ -18,9 +18,13 @@ list.sem <- function(...) {
 #
 #     stop("Duplicated response variables detected. Collapse into single multiple regression and re-run.")
 #
-  class(x) <- "list.sem"
 
-  return(print.attr(x))
+  # remove quotes on cerrors
+  print.attr(x)
+
+  class(x) <- "sem"
+
+  x
 
 }
 

@@ -2,12 +2,58 @@
 
 #' @param modelList a list of structural equations
 
-summary.sem <- function(modelList) {
+summary.sem <- function(modelList, conditional = TRUE, .progressBar = TRUE) {
 
-  # Get d-sep table
-  dSep()
+  name <- deparse(substitute(modelList))
 
+  call <- paste(listFormula(modelList), collapse = "\n  ")
+
+  dTable <- dSep(modelList, conditional, .progressBar)
+
+  C <- fisherC(dTable)
+
+  pwAIC <- pwAIC(modelList, C)
+
+  l <- list(name = name, call = call, dTable = dTable, C = C, pwAIC = pwAIC)
+
+  class(l) <- "summary.sem"
+
+  l
 
 }
 
-# summary.sem <- useMethod("summary")
+print.summary.sem <- function(x) {
+
+  cat("Structural Equation Model of", as.character(x$name), "\n")
+
+  cat("\nCall:\n ", x$call)
+
+  cat("\n\n")
+
+  cat("\nTests of directed separation:\n\n", captureTable(print.data.frame(x$dTable, row.names = FALSE)))
+
+  cat("---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
+
+  cat("\n\n\n")
+
+  cat("Goodness-of-fit statistics:\n\n Fisher's C =", as.character(x$C[1]),
+      "with P-value =", as.character(x$C[3]),
+      "and on", as.character(x$C[2]), "degrees of freedom")
+
+  cat("\n")
+
+  cat("\n AIC =", as.character(x$pwAIC[1]))
+
+  invisible(x)
+
+}
+
+captureTable <- function(x) {
+
+  x <- capture.output(x)
+
+  x <- paste0(x, "\n")
+
+  return(x)
+
+}

@@ -91,7 +91,11 @@ removeCerror <- function(b, formulaList) {
 
   }
 
-  return(b)
+  if(length(b) == 0)
+
+    warning("There are no independence claims. No tests of directed separation can be returned.")
+
+  else return(b)
 
 }
 
@@ -119,11 +123,7 @@ replaceTrans <- function(modelList, b, amat) {
 
     f <- which(sapply(notrans, function(j) j[1] == i[2]))
 
-    if(length(i) > 2)
-
-      i[3:length(i)] <- trans[[f]][which(notrans[[f]] %in% i[3:length(i)])]
-
-    flag <- TRUE
+        flag <- TRUE
 
     res <- i[2]
 
@@ -159,11 +159,21 @@ replaceTrans <- function(modelList, b, amat) {
 
 all.vars.trans <- function(.formula) {
 
-  if(class(.formula) == "formula")
+  if(class(.formula) == "formula") {
 
-    rownames(attr(terms(.formula), "factors")) else
+    n <- rownames(attr(terms(.formula), "factors"))
 
-      strsplit(.formula, " ~~ ")[[1]]
+    if(any(grepl("\\|", n))) {
+
+      idn <- which(grepl("\\|", n))
+
+      f <- rownames(attr(terms(.formula), "factors"))[-idn]
+
+      return(f)
+
+    } else return(n)
+
+  } else strsplit(.formula, " ~~ ")[[1]]
 
 }
 
@@ -171,7 +181,7 @@ all.vars.notrans <- function(.formula) {
 
   if(class(.formula) == "formula")
 
-    all.vars(.formula) else
+    all.vars.merMod(.formula) else
 
       strsplit(.formula, " ~~ ")[[1]]
 

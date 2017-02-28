@@ -8,7 +8,7 @@ Dag <- function(formulaList) {
 
   fList <- fList[!sapply(fList, is.null)]
 
-  fList <- lapply(fList, all.vars)
+  fList <- lapply(fList, all.vars.merMod)
 
   vars <- unlist(fList)
 
