@@ -4,7 +4,7 @@
 
 pwAIC <- function(modelList, C) {
 
-  mList <- modelList[!sapply(modelList, function(i) class(i) %in% c("formula.cerror"))]
+  mList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("formula.cerror")))]
 
   K <- do.call(sum, lapply(mList, function(i) attr(logLik(i), "df")))
 

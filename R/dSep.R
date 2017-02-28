@@ -8,7 +8,7 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
   if(length(b) == 0) {
 
-    warning("No independence claims present. Tests of directed separation not possible.", .call = FALSE))
+    warning("No independence claims present. Tests of directed separation not possible.", .call = FALSE)
 
     c("No independence claims present. Tests of directed separation not possible.")
 

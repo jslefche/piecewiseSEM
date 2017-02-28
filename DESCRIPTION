@@ -1,14 +1,17 @@
-Package: piecewiseSEM2
+Package: piecewiseSEM
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Local estimation of piecewise structural equation models
+Version: 2.0.0
+Author: Jon Lefcheck, Jarrett Byrnes, Jim Grace
+Maintainer: Jon Lefcheck <jslefche@vims.edu>
+Description: 
+    Implements piecewise structural equation modeling from a single list of structural equations, 
+    with new methods for non-linear, latent, and composite variables, standardized coefficients,
+    query-based prediction and indirect effects.
 Imports:
+    lme4,
     methods,
     pbkrtest
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -24,7 +24,7 @@ summary.sem <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
 print.summary.sem <- function(x) {
 
-  cat("Structural Equation Model of", as.character(x$name), "\n")
+  cat("\nStructural Equation Model of", as.character(x$name), "\n")
 
   cat("\nCall:\n ", x$call)
 
