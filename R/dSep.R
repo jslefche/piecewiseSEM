@@ -64,6 +64,8 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
         ret <- c(ret[1:2], DF = NA, ret[3:4])
 
+        # Add in df
+
       }
 
       if(any(class(bNewMod) %in% c("lme", "glmmPQL"))) {
@@ -76,11 +78,11 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
       names(ret) <- c("Estimate", "Std.Error", "DF", "Crit.Value", "P.value")
 
-      rhs <- paste(rev(b[[i]][-2]), collapse = " + ")
+      rhs <- paste(b[[i]][-2], collapse = " + ")
 
       if(conditional == FALSE)
 
-        rhs <- paste(b[[i]][length(b[[i]])], " + ...")
+        rhs <- paste(b[[i]][1], " + ...")
 
       ret <- data.frame(Independence.Claim = paste(b[[i]][2], " ~ ", rhs), t(ret))
 

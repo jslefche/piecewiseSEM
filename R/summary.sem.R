@@ -37,6 +37,8 @@ print.summary.sem <- function(x) {
 
   cat("\nTests of directed separation:\n\n", captureTable(print.data.frame(x$dTable, row.names = FALSE)))
 
+  cat("\nCoefficients:\n")
+
   cat("---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
 
   cat("\n\n\n")
