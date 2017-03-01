@@ -1,5 +1,5 @@
 #' A list of supported model classes
-model.classes <- c("noquote", "formula.cerror", "lm", "glm", "gls", "lme", "lmerMod", "glmerMod")
+model.classes <- c("noquote", "formula.cerror", "lm", "glm", "gls", "lme", "glmmPQL", "lmerMod", "merModLmerTest", "glmerMod")
 
 #' Evaluate model classes and stop if unsupported model class
 evaluateClasses <- function(modelList) {

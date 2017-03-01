@@ -42,7 +42,7 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
         bNewmod_drop <- update(bNewMod, formula(paste(" ~ . - ", b[[i]][1])))
 
-        kr <- KRmodcomp(bNewMod, bNewmod_drop)
+        kr <- pbkrtest::KRmodcomp(bNewMod, bNewmod_drop)
 
         ct <- summary(bNewMod)$coefficients
 
