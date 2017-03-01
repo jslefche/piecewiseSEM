@@ -4,7 +4,7 @@
 
 fisherC <- function(dTable) {
 
-  if(class(dTable) == "character") {
+  if(length(dTable) == 0) {
 
     C <- 0
 

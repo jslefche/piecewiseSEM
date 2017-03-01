@@ -92,3 +92,8 @@ onlyBars <- function(.formula) {
     collapse = " + ")
 
 }
+
+#' Recompute p-values using Kenward-Rogers approximation
+# bNewmod_drop <- update(bNewMod, formula(paste(" ~ . - ", b[[i]][1])))
+#
+# kr <- KRmodcomp(bNewMod, bNewmod_drop)
