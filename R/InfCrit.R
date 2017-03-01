@@ -2,21 +2,24 @@
 
 #' @param dTable a list of structural equations
 
-pwAIC <- function(modelList, C) {
+InfCrit <- function(modelList, C) {
 
   mList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("formula.cerror")))]
 
   K <- do.call(sum, lapply(mList, function(i) attr(logLik(i), "df")))
 
-  pwAIC <- as.numeric(C[1] + 2*K)
-
   n.obs <- min(sapply(mList, nobs))
 
+  pwAIC <- as.numeric(C[1] + 2*K)
+
   pwAICc <- pwAIC * (n.obs/(n.obs - K - 1))
+
+  pwBIC <- as.numeric(C[1] + log(n.obs)*K)
 
   ret <- data.frame(
     AIC = pwAIC,
     AICc = pwAICc,
+    BIC = pwBIC,
     K = K,
     n = n.obs
   )

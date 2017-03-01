@@ -12,9 +12,9 @@ summary.sem <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
   C <- fisherC(dTable)
 
-  pwAIC <- pwAIC(modelList, C)
+  IC <- InfCrit(modelList, C)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, pwAIC = pwAIC)
+  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC)
 
   class(l) <- "summary.sem"
 
@@ -28,7 +28,12 @@ print.summary.sem <- function(x) {
 
   cat("\nCall:\n ", x$call)
 
-  cat("\n\n")
+  cat("\n")
+
+  cat("\n    AIC      BIC")
+  cat("\n", as.character(sprintf("%.3f", x$IC[1])), " ", as.character(x$IC[3]))
+
+  cat("\n")
 
   cat("\nTests of directed separation:\n\n", captureTable(print.data.frame(x$dTable, row.names = FALSE)))
 
@@ -36,13 +41,11 @@ print.summary.sem <- function(x) {
 
   cat("\n\n\n")
 
-  cat("Goodness-of-fit statistics:\n\n Fisher's C =", as.character(x$C[1]),
+  cat("Goodness-of-fit:\n\n Fisher's C =", as.character(x$C[1]),
       "with P-value =", as.character(x$C[3]),
       "and on", as.character(x$C[2]), "degrees of freedom")
 
-  cat("\n")
-
-  cat("\n AIC =", as.character(x$pwAIC[1]))
+  cat("\n\n")
 
   invisible(x)
 
