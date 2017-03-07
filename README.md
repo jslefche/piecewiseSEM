@@ -1,5 +1,4 @@
-# piecewiseSEM
-Piecewise Structural Equation Modeling in R
+# piecewiseSEM: Piecewise Structural Equation Modeling in R
 
 ## Version 2.0
 
