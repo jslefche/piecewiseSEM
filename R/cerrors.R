@@ -1,14 +1,29 @@
 cerror <- function(.formula, modelList, data) {
 
-  x <- pcor(.formula, modelList, data)
+  if(class(.formula) == "formula.cerror") {
 
-  p <- pcortest(x)
+    x <- pcor(.formula, modelList, data)
+
+    p <- pcortest(x)
+
+  }
+
 
   return(x, p)
 
 }
 
 pcor <- function() {
+
+  if(class(.formula) == "formula.cerror")
+
+    vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
+
+      vars <- gsub(" ", "", unlist(strsplit(deparse(.formula), "~")))
+
+
+
+  vars <- unlist(strsplit(deparse(.formula), "~"))
 
 }
 

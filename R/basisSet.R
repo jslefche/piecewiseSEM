@@ -71,7 +71,7 @@ removeCerror <- function(b, formulaList) {
 
   ceList <- lapply(formulaList, function(i) if(any(class(i) == "formula.cerror")) {
 
-    strsplit(i, " ~~ ")[[1]]
+    unlist(strsplit(i, " ~~ "))
 
     } else NULL)
 
@@ -165,7 +165,7 @@ all.vars.trans <- function(.formula) {
 
     } else return(n)
 
-  } else strsplit(.formula, " ~~ ")[[1]]
+  } else unlist(strsplit(.formula, " ~~ "))
 
 }
 
@@ -176,7 +176,7 @@ all.vars.notrans <- function(.formula) {
 
     all.vars.merMod(.formula) else
 
-      strsplit(.formula, " ~~ ")[[1]]
+      unlist(strsplit(.formula, " ~~ "))
 
 }
 
@@ -219,7 +219,7 @@ reverseNonLin <- function(b, amat, formulaList) {
 
 specifyDir <- function(b, direction) {
 
-  vars <- gsub(" ", "", strsplit(direction, "\\->|<\\-")[[1]])
+  vars <- gsub(" ", "", unlist(strsplit(direction, "\\->|<\\-")))
 
   b[which(sapply(b, function(i) i[1] == vars[2] & i[2] == vars[1]))] <- NULL
 
