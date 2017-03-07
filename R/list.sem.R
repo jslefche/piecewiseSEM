@@ -9,7 +9,6 @@ list.sem <- function(...) {
 
   # cerror()
 
-
   x <- list(...)
 
   evaluateClasses(x)

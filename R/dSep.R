@@ -2,9 +2,9 @@
 
 #' @param modelList a list of structural equations
 
-dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
+dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
-  b <- basisSet(modelList)
+  b <- basisSet(modelList, direction)
 
   if(length(b) == 0) {
 
@@ -14,7 +14,11 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
   }
 
-  else {
+  else if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
+
+    dupOutput(b)
+
+  } else {
 
     formulaList <- lapply(listFormula(modelList, remove = TRUE), all.vars.merMod)
 
@@ -84,7 +88,7 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
         rhs <- paste(b[[i]][1], " + ...")
 
-      ret <- data.frame(Independence.Claim = paste(b[[i]][2], " ~ ", rhs), t(ret))
+      ret <- data.frame(Independ.Claim = paste(b[[i]][2], " ~ ", rhs), t(ret))
 
       if(.progressBar == TRUE) setTxtProgressBar(pb, i)
 
@@ -94,6 +98,18 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
 
     if(.progressBar == TRUE) close(pb)
 
+    if(conserve == TRUE) {
+
+      ret = do.call(rbind, lapply(unique(names(b)), function(i) {
+
+        r = ret[which(names(b) == i), ]
+
+        r[which.min(r[, "P.value"]), ]
+
+      } ) )
+
+    }
+
     ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
     ret <- cbind.data.frame(ret, sig = sapply(ret$P.value, isSig))
@@ -101,6 +117,42 @@ dSep <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
     names(ret)[ncol(ret)] <- ""
 
     return(ret)
+
+  }
+
+}
+
+dupOutput <- function(b, conserve = FALSE) {
+
+  dup <- names(b)[which(duplicated(names(b)))]
+
+  if(conserve == FALSE) {
+
+    s <- paste("\nNon-linearities detected in the basis set where P-values are not symmetrical.",
+               "\nThis can bias the outcome of the tests of directed separation.\n",
+
+               "\nOffending independence claims:",
+
+               lapply(dup, function(i) {
+
+                 d <- b[names(b) %in% dup]
+
+                 paste(
+                   "\n", paste(d[[1]][2], "<-", d[[1]][1]), "*OR*",
+                   paste(d[[1]][2], "->", d[[1]][1]), "\n"
+                 )
+
+               } ),
+
+               "\nOption 1: Specify directionality using argument 'direction = c()'.\n",
+
+               "\nOption 2: Remove path from the basis set by specifying as a correlated error using '%~~%'.\n",
+
+               "\nOption 3: Use argument 'conserve = TRUE' to compute both tests, and return the most conservative P-value.\n"
+
+               )
+
+    stop(s, call. = FALSE)
 
   }
 

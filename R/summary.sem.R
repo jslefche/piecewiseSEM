@@ -2,13 +2,13 @@
 
 #' @param modelList a list of structural equations
 
-summary.sem <- function(modelList, conditional = FALSE, .progressBar = TRUE) {
+summary.sem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
   name <- deparse(substitute(modelList))
 
   call <- paste(listFormula(modelList), collapse = "\n  ")
 
-  dTable <- dSep(modelList, conditional, .progressBar)
+  dTable <- dSep(modelList, direction, conserve, conditional, .progressBar)
 
   C <- fisherC(dTable)
 
