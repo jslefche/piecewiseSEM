@@ -1,5 +1,6 @@
 Package: piecewiseSEM
 Type: Package
+<<<<<<< HEAD
 Title: Piecewise Structural Equation Modeling
 Version: 1.2.1
 Date: 2016-12-06
@@ -18,3 +19,20 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
+=======
+Title: Local estimation of piecewise structural equation models
+Version: 2.0.0
+Author: Jon Lefcheck, Jarrett Byrnes, Jim Grace
+Maintainer: Jon Lefcheck <jslefche@vims.edu>
+Description: 
+    Implements piecewise structural equation modeling from a single list of structural equations, 
+    with new methods for non-linear, latent, and composite variables, standardized coefficients,
+    query-based prediction and indirect effects.
+Imports:
+    lme4,
+    methods,
+    pbkrtest
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+>>>>>>> piecewiseSEM2/master

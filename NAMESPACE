@@ -1,4 +1,5 @@
 exportPattern("^[[:alpha:]]+")
+<<<<<<< HEAD
 importFrom("lme4", "findbars", "nobars", "lmer", "glmer", "lmerControl", "glmerControl")
 importFrom("methods", "as")
 importFrom("pbkrtest", "KRmodcomp")
@@ -12,3 +13,5 @@ importFrom("stats", "AIC", "aggregate", "as.formula", "cor",
 importFrom("utils", "setTxtProgressBar", "txtProgressBar")
 import(lavaan)
 import(nlme)
+=======
+>>>>>>> piecewiseSEM2/master

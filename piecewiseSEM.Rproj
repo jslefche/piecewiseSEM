@@ -12,6 +12,12 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
+<<<<<<< HEAD
+=======
+AutoAppendNewline: Yes
+StripTrailingWhitespace: Yes
+
+>>>>>>> piecewiseSEM2/master
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
