@@ -7,6 +7,11 @@ Piecewise Structural Equation Modeling in R
 
 ### Example
 ```
+# Install from github
+library(devtools)
+install_github("jslefche/piecewiseSEM@2.0")
+
+# Load library
 library(piecewiseSEM)
 
 # Create fake data
