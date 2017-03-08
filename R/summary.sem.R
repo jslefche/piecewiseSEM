@@ -43,9 +43,9 @@ print.summary.sem <- function(x) {
 
   cat("---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
 
-  cat("\n\n\n")
+  cat("\n\n")
 
-  cat("Goodness-of-fit:\n\n Fisher's C =", as.character(x$C[1]),
+  cat("Goodness-of-fit:\n\n  Fisher's C =", as.character(x$C[1]),
       "with P-value =", as.character(x$C[3]),
       "and on", as.character(x$C[2]), "degrees of freedom")
 

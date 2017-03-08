@@ -17,11 +17,11 @@
 #' @param .formula a formula
 #' @param modelList a list of structural equations
 
-cerror <- function(.formula, modelList) {
+cerror <- function(.formula, modelList, data) {
 
   if(class(.formula) == "formula.cerror") {
 
-    x <- pcor(.formula, modelList)
+    x <- pcor(.formula, modelList, data)
 
   }
 
@@ -29,7 +29,7 @@ cerror <- function(.formula, modelList) {
 
 }
 
-pcor <- function(.formula, modelList) {
+pcor <- function(.formula, modelList, data) {
 
   if(class(.formula) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
 
@@ -41,38 +41,58 @@ pcor <- function(.formula, modelList) {
 
   xvar <- sapply(listFormula(modelList2), function(x) all.vars.merMod(x)[1] == vars[2])
 
-  if(all(yvar == FALSE) | all(xvar == FALSE))
+  if(all(yvar == FALSE) & all(xvar == FALSE)) {
 
-    stop("Variables not found as responses in model list. Ensure spelling is correct!")
-
-  ymod <- modelList[[which(yvar)]]
-
-  if(!vars[2] %in% all.vars.merMod(formula(ymod))) {
-
-    xmod <- modelList[[which(xvar)]]
-
-    yresid <- resid.lme(ymod)
-
-    yresid <- data.frame(.id = names(yresid), yresid = yresid)
-
-    xresid <- resid.lme(xmod)
-
-    xresid <- data.frame(.id = names(xresid), xresid = xresid)
-
-    rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
+    rdata <- data[, colnames(data) %in% vars]
 
   } else {
 
+    if(all(yvar == FALSE) | all(xvar == FALSE))
 
-    # ymod <- update(
+      stop("Variables not found as responses in model list. Ensure spelling is correct!")
+
+    ymod <- modelList[[which(yvar)]]
+
+    if(!vars[2] %in% all.vars.merMod(formula(ymod))) {
+
+      xmod <- modelList[[which(xvar)]]
+
+      yresid <- resid.lme(ymod)
+
+      yresid <- data.frame(.id = names(yresid), yresid = yresid)
+
+      xresid <- resid.lme(xmod)
+
+      xresid <- data.frame(.id = names(xresid), xresid = xresid)
+
+      rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
+
+    } else {
+
+
+      # ymod <- update(
+
+    }
 
   }
 
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
 
-  N <- nrow(rdata)
+  if(all(yvar == FALSE) & all(xvar == FALSE)) {
 
-  P <- 1 - pt((rcor * sqrt(N - 2))/(sqrt(1 - rcor^2)), (N - 2))
+    ctest <- cor.test(rdata[, 1], rdata[, 2])
+
+    N <- ctest$parameter
+
+    P <- ctest$p.value
+
+    } else {
+
+      N <- nrow(rdata)
+
+      P <- 1 - pt((rcor * sqrt(N - 2))/(sqrt(1 - rcor^2)), (N - 2))
+
+      }
 
   ret <- data.frame(
     Response = paste0("~~", vars[1]),

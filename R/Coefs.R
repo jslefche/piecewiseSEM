@@ -4,7 +4,7 @@
 
 coefs <- function(modelList, data) {
 
-  tab <- getCoefs(modelList)
+  tab <- getCoefs(modelList, data)
 
   tab <- cbind(tab, isSig(tab$P.Value))
 
@@ -14,13 +14,13 @@ coefs <- function(modelList, data) {
 
 }
 
-getCoefs <- function(modelList) {
+getCoefs <- function(modelList, data) {
 
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
     if(all(class(i) %in% c("formula.cerror")))
 
-      tab <- cerror(i, modelList) else {
+      tab <- cerror(i, modelList, data) else {
 
       if(all(class(i) %in% c("lm", "glm", "lmerMod", "glmerMod", "merModLmerTest")))
 
