@@ -80,7 +80,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       }
 
-      names(ret) <- c("Estimate", "Std.Error", "DF", "Crit.Value", "P.value")
+      names(ret) <- c("Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
 
       rhs <- paste0(b[[i]][-2], " ", collapse = "+")
 
@@ -104,7 +104,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         r = ret[which(names(b) == i), ]
 
-        r[which.min(r[, "P.value"]), ]
+        r[which.min(r[, "P.Value"]), ]
 
       } ) )
 
@@ -112,7 +112,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
     ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
-    ret <- cbind.data.frame(ret, sig = sapply(ret$P.value, isSig))
+    ret <- cbind.data.frame(ret, sig = sapply(ret$P.Value, isSig))
 
     names(ret)[ncol(ret)] <- ""
 

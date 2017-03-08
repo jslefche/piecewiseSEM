@@ -14,7 +14,7 @@ fisherC <- function(dTable) {
 
   } else {
 
-    C <- -2*sum(log(dTable$P.value))
+    C <- -2*sum(log(dTable$P.Value))
 
     p <- 1 - pchisq(C, 2*nrow(dTable))
 
@@ -22,7 +22,7 @@ fisherC <- function(dTable) {
 
   }
 
-  ret <- data.frame(Fisher.C = C, df = DF, P.value = p)
+  ret <- data.frame(Fisher.C = C, df = DF, P.Value = p)
 
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 3)
 
