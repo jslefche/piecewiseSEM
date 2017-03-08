@@ -14,6 +14,8 @@ install_github("jslefche/piecewiseSEM@2.0")
 library(piecewiseSEM)
 
 # Create fake data
+set.seed(1) 
+
 data = data.frame(
   x = runif(100),
   y1 = runif(100),
@@ -36,4 +38,9 @@ summary(modelList, conserve = T)
 
 # Address conflict using direction = c()
 summary(modelList, direction = c("y2 <- y1"))
+
+# Address conflict using correlated errors
+modelList2 = append.sem(modelList, y2 %~~% y1)
+
+summary(modelList2)
 ```

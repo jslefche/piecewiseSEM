@@ -27,6 +27,22 @@ list.sem <- function(...) {
 
 }
 
+append.sem <- function(x, values) {
+
+  x <- append(x, values)
+
+  class(x[[length(x)]]) <- class(values)
+
+  evaluateClasses(x)
+
+  class(x) <- "sem"
+
+  x
+
+}
+
+
+
 # New operators for latent, composite variables
 
 
