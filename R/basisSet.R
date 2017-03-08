@@ -37,7 +37,7 @@ basisSet <- function(modelList, direction = NULL) {
 
   b <- removeCerror(b, formulaList)
 
-  b <- reverseNonLin(b, amat, formulaList)
+  b <- reverseNonLin(modelList, b, amat, formulaList)
 
   b <- replaceTrans(modelList, b, amat)
 
@@ -99,55 +99,6 @@ removeCerror <- function(b, formulaList) {
 
 }
 
-#' Replace transformations in the basis set by cycling through neighbors and applying
-#' transformations in order of how variables are treated in the child nearest to current node
-
-replaceTrans <- function(modelList, b, amat) {
-
-  formulaList <- listFormula(modelList)
-
-  trans <- lapply(formulaList, all.vars.trans)
-
-  notrans <- lapply(formulaList, all.vars.notrans)
-
-  b <- lapply(b, function(i) {
-
-    f <- which(sapply(notrans, function(j) j[1] == i[2]))
-
-        flag <- TRUE
-
-    res <- i[2]
-
-    while(flag == TRUE) {
-
-      f <- which(sapply(notrans, function(j) res == j[1]))
-
-      if(sum(f) == 0) flag <- FALSE else {
-
-        if(i[1] %in% notrans[[f]][-1]) {
-
-          i[1] <- trans[[f]][which(notrans[[f]] == i[1])]
-
-          flag <- FALSE
-
-          } else {
-
-            res <- colnames(amat)[(which(res == colnames(amat)) - 1)]
-
-          }
-
-      }
-
-    }
-
-    return(i)
-
-  } )
-
-  return(b)
-
-}
-
 #' Get vector of transformed variables
 all.vars.trans <- function(.formula) {
 
@@ -181,7 +132,11 @@ all.vars.notrans <- function(.formula) {
 }
 
 #' If intermediate endogenous variables are nonlinear, return both directions
-reverseNonLin <- function(b, amat, formulaList) {
+reverseNonLin <- function(modelList, b, amat, formulaList) {
+
+  modelList <- modelList[sapply(formulaList, function(x) !class(x) %in% c("formula.cerror"))]
+
+  formulaList <- formulaList[sapply(formulaList, function(x) !class(x) %in% c("formula.cerror"))]
 
   names(b) <- 1:length(b)
 
@@ -191,7 +146,7 @@ reverseNonLin <- function(b, amat, formulaList) {
 
   idx <- names(idx)
 
-  idm <- sapply(modelList, function(i) all.vars.merMod(formula(i))[1] %in% idx)
+  idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
 
   if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
 
@@ -217,6 +172,60 @@ reverseNonLin <- function(b, amat, formulaList) {
 
 }
 
+#' Replace transformations in the basis set by cycling through neighbors and applying
+#' transformations in order of how variables are treated in the child nearest to current node
+
+replaceTrans <- function(modelList, b, amat) {
+
+  formulaList <- listFormula(modelList)
+
+  trans <- lapply(formulaList, all.vars.trans)
+
+  notrans <- lapply(formulaList, all.vars.notrans)
+
+  b <- lapply(b, function(i) {
+
+    f <- which(sapply(notrans, function(j) j[1] == i[2]))
+
+    flag <- TRUE
+
+    res <- i[2]
+
+    while(flag == TRUE) {
+
+      f <- which(sapply(notrans, function(j) res == j[1]))
+
+      if(sum(f) == 0) flag <- FALSE else {
+
+        for(j in f) {
+
+          if(i[1] %in% notrans[j][-1]) {
+
+            i[1] <- trans[j][which(notrans[j] == i[1])]
+
+            flag <- FALSE
+
+          } else {
+
+            res <- colnames(amat)[(which(res == colnames(amat)) - 1)]
+
+          }
+
+        }
+
+      }
+
+    }
+
+    return(i)
+
+  } )
+
+  return(b)
+
+}
+
+#' Remove items from the basis set whose direction is a priori specified
 specifyDir <- function(b, direction) {
 
   vars <- gsub(" ", "", unlist(strsplit(direction, "\\->|<\\-")))
