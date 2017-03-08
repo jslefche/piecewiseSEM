@@ -14,7 +14,9 @@ summary.sem <- function(modelList, direction = NULL, conserve = FALSE, condition
 
   IC <- InfCrit(modelList, C)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC)
+  Coefs <- coefs(modelList, data)
+
+  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs)
 
   class(l) <- "summary.sem"
 
@@ -37,7 +39,7 @@ print.summary.sem <- function(x) {
 
   cat("\nTests of directed separation:\n\n", captureTable(print.data.frame(x$dTable, row.names = FALSE)))
 
-  cat("\nCoefficients:\n")
+  cat("\nCoefficients:\n\n", captureTable(print.data.frame(x$Coefs, row.names = FALSE)))
 
   cat("---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
 

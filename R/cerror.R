@@ -47,7 +47,7 @@ pcor <- function(.formula, modelList) {
 
   ymod <- modelList[[which(yvar)]]
 
-  if(!vars[2] %in% all.vars.merMod(formula(mod))) {
+  if(!vars[2] %in% all.vars.merMod(formula(ymod))) {
 
     xmod <- modelList[[which(xvar)]]
 
@@ -75,12 +75,13 @@ pcor <- function(.formula, modelList) {
   P <- 1 - pt((rcor * sqrt(N - 2))/(sqrt(1 - rcor^2)), (N - 2))
 
   ret <- data.frame(
-    Independ.Claim = .formula[1],
+    Response = paste0("~~", vars[1]),
+    Predictor = paste0("~~", vars[2]),
     Estimate = rcor,
     Std.Error = NA,
-    DF = NA,
+    DF = N,
     Crit.Value = NA,
-    P.value = P
+    P.Value = P
   )
 
   return(ret)
