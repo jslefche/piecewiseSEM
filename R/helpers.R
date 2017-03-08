@@ -40,17 +40,23 @@ listFormula <- function(modelList, remove = FALSE) {
 #' Remove random effects from all.vars
 all.vars.merMod <- function(.formula) {
 
-  n <- rownames(attr(terms(.formula), "factors"))
+  if(class(.formula) == "formula.cerror")
 
-  if(any(grepl("\\|", n))) {
+    gsub(" " , "", unlist(strsplit(.formula, "~~"))) else {
 
-    idn <- which(grepl("\\|", n))
+    n <- rownames(attr(terms(.formula), "factors"))
 
-    f <- all.vars(.formula)[-idn]
+    if(any(grepl("\\|", n))) {
 
-    return(f)
+      idn <- which(grepl("\\|", n))
 
-  } else all.vars(.formula)
+      f <- all.vars(.formula)[-idn]
+
+      return(f)
+
+    } else all.vars(.formula)
+
+    }
 
 }
 
