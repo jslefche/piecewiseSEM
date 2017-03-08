@@ -2,6 +2,10 @@
 
 ## Version 2.0
 
+This is a major update to the `piecewiseSEM` package that includes new functionality, and a completely revised syntax that better reproduces the base R syntax and output.
+
+Currently supported model classes: `lm, glm, gls, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod`
+
 ###WARNING: THIS IS A HIGHLY EXPERIMENTAL BRANCH. FOR DEVELOPMENT ONLY: DO NOT USE!!
 
 ### Example
