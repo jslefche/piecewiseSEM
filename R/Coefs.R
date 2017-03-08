@@ -4,7 +4,13 @@
 
 coefs <- function(modelList, data) {
 
-  getCoefs(modelList)
+  tab <- getCoefs(modelList)
+
+  tab <- cbind(tab, isSig(tab$P.Value))
+
+  names(tab)[length(tab)] = ""
+
+  return(tab)
 
 }
 
