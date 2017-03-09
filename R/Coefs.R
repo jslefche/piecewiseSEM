@@ -2,9 +2,11 @@
 
 #' @param modelList a list of structural equations
 
-coefs <- function(modelList, data) {
+coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
 
-  tab <- getCoefs(modelList, data)
+  tab <- getCoefs(modelList, data, intercepts)
+
+  if(standardize == TRUE) tab <- data.frame(tab, Std.Estimate = stdCoefs(modelList, tab, data, intercepts))
 
   tab <- cbind(tab, isSig(tab$P.Value))
 
@@ -14,7 +16,7 @@ coefs <- function(modelList, data) {
 
 }
 
-getCoefs <- function(modelList, data) {
+getCoefs <- function(modelList, data, intercepts = FALSE) {
 
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
@@ -61,6 +63,8 @@ getCoefs <- function(modelList, data) {
 
       }
 
+    if(intercepts == FALSE) tab <- subset(tab, Predictor != "(Intercept)")
+
     return(tab)
 
     }
@@ -80,8 +84,61 @@ getDF <- function(model, tab) {
 
 }
 
+#' Calculate standardized regression coefficients
+stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
 
-stdCoefs <- function(modelList, data) {
+  if(is.null(tab)) tab <- getCoefs(modelList, data, intercepts)
 
+  do.call(c, lapply(modelList, function(i) {
+
+    f <- unlist(lapply(listFormula(list(i)), all.vars.merMod))
+
+    if(all(class(i) %in% c("formula.cerror"))) {
+
+      Bnew <- subset(tab, Response == f[1])$Estimate
+
+    } else {
+
+
+      B <- subset(tab, Response == f[1])$Estimate
+
+      sd.x <- sapply(f[-1], function(x) sd(data[, x]))
+
+      sd.y <- sdFam(f[1], i, data)
+
+      Bnew <- B * (sd.x / sd.y)
+
+    }
+
+    Bnew <- round(Bnew, 4)
+
+    unname(Bnew)
+
+  } ) )
+
+}
+
+#' Properly scale standard deviations depending on the error distribution
+sdFam <- function(x, model, data) {
+
+  .family = family(model)
+
+  if(.family$family != "gaussian")
+
+    warning(
+      paste0("Standardized coefficients for non-normal distributions must be interpreted differently. See help('stdCoefs')."),
+      call. = FALSE)
+
+  .link <- .family$link
+
+  if(.link == "identity")
+
+    y <- data[, x] else
+
+      y <- model$family$linkfun(data[, x])
+
+  y[is.infinite(y)] <- 0
+
+  sd(y)
 
 }
