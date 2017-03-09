@@ -2,7 +2,7 @@
 
 #' @param ... arguments passed to methods
 
-list.sem <- function(...) {
+psem <- function(...) {
 
 
   # Evaluate correlated errors & store as new object
@@ -21,13 +21,15 @@ list.sem <- function(...) {
   # remove quotes on cerrors
   print.attr(x)
 
-  class(x) <- "sem"
+  class(x) <- "psem"
 
   x
 
 }
 
-append.sem <- function(x, values) {
+# setMethod("list.sem", signature("sem"), function(...) list.sem(...))
+
+update.psem <- function(x, values) {
 
   x <- append(x, values)
 
@@ -35,16 +37,13 @@ append.sem <- function(x, values) {
 
   evaluateClasses(x)
 
-  class(x) <- "sem"
+  class(x) <- "psem"
 
   x
 
 }
 
-
-
 # New operators for latent, composite variables
-
 
 # `%~=%`
 

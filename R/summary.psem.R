@@ -2,7 +2,7 @@
 
 #' @param modelList a list of structural equations
 
-summary.sem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
+summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
   name <- deparse(substitute(modelList))
 
@@ -18,13 +18,13 @@ summary.sem <- function(modelList, direction = NULL, conserve = FALSE, condition
 
   l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs)
 
-  class(l) <- "summary.sem"
+  class(l) <- "summary.psem"
 
   l
 
 }
 
-print.summary.sem <- function(x) {
+print.summary.psem <- function(x) {
 
   cat("\nStructural Equation Model of", as.character(x$name), "\n")
 
