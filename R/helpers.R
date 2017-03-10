@@ -1,5 +1,5 @@
 #' A list of supported model classes
-model.classes <- c("noquote", "formula.cerror", "lm", "glm", "gls", "lme", "glmmPQL", "lmerMod", "merModLmerTest", "glmerMod")
+model.classes <- c("formula", "formula.cerror", "lm", "glm", "gls", "lme", "glmmPQL", "lmerMod", "merModLmerTest", "glmerMod")
 
 #' Evaluate model classes and stop if unsupported model class
 evaluateClasses <- function(modelList) {
@@ -23,11 +23,11 @@ evaluateClasses <- function(modelList) {
 #' If remove = TRUE, take out non-evaluated formula
 listFormula <- function(modelList, remove = FALSE) {
 
-  fList <- lapply(modelList, function(i) if(any(class(i) == "formula.cerror")) i else formula(i) )
+  fList <- lapply(modelList, function(i) if(any(class(i) %in% c("formula.cerror"))) i else formula(i) )
 
   if(remove == TRUE) {
 
-    l <- sapply(modelList, function(i) any(class(i) %in% c("formula.cerror")))
+    l <- sapply(modelList, function(i) any(class(i) %in% c("formula", "formula.cerror")))
 
     fList <- fList[!l]
 

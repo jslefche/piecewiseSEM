@@ -4,27 +4,20 @@
 
 psem <- function(...) {
 
-
-  # Evaluate correlated errors & store as new object
-
-  # cerror()
-
   x <- list(...)
 
   evaluateClasses(x)
 
-#   if(duplicated(sapply(listFormula(...), function(i) i[1])))
-#
-#     stop("Duplicated response variables detected. Collapse into single multiple regression and re-run.")
-#
+  formulaList <- listFormula(x)
 
-  # return error if duplicate responses
-  if(any(duplicated(sapply(listFormula(x), function(y) all.vars.merMod(y)[1]))))
+  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("formula", "formula.cerror")))]
+
+  if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
     stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
 
   # remove quotes on cerrors
-  print.attr(x)
+  # print.attr(x)
 
   class(x) <- "psem"
 

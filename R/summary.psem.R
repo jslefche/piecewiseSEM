@@ -2,7 +2,9 @@
 
 #' @param modelList a list of structural equations
 
-summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
+summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE,
+                         intercepts = FALSE, standardize = TRUE,
+                         .progressBar = TRUE) {
 
   name <- deparse(substitute(modelList))
 
@@ -14,7 +16,7 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   IC <- InfCrit(modelList, C)
 
-  Coefs <- coefs(modelList, data)
+  Coefs <- coefs(modelList, data, intercepts, standardize)
 
   l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs)
 

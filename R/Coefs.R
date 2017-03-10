@@ -18,6 +18,8 @@ coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
 
 getCoefs <- function(modelList, data, intercepts = FALSE) {
 
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) == "formula"))]
+
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
     if(all(class(i) %in% c("formula.cerror")))
@@ -86,6 +88,8 @@ getDF <- function(model, tab) {
 
 #' Calculate standardized regression coefficients
 stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) == "formula"))]
 
   if(is.null(tab)) tab <- getCoefs(modelList, data, intercepts)
 

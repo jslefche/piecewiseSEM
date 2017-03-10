@@ -31,13 +31,13 @@ basisSet <- function(modelList, direction = NULL) {
 
   b <- unlist(b, recursive = FALSE)
 
-  b <- filterExogenous(b, amat)
-
   b <- b[!sapply(b, is.null)]
 
-  b <- removeCerror(b, formulaList)
-
   b <- reverseNonLin(modelList, b, amat, formulaList)
+
+  b <- filterExogenous(b, amat)
+
+  b <- removeCerror(b, formulaList)
 
   b <- replaceTrans(modelList, b, amat)
 
@@ -50,14 +50,13 @@ basisSet <- function(modelList, direction = NULL) {
 }
 
 #' Filter relationships among exogenous variables from the basis set
-
 filterExogenous <- function(b, amat) {
 
   exo <- colnames(amat[, colSums(amat) == 0, drop = FALSE])
 
   b <- lapply(b, function(i)
 
-    if(all(i[1:2] %in% exo)) NULL else i
+    if(all(i[1:2] %in% exo) | i[2] %in% exo) NULL else i
 
   )
 
@@ -66,7 +65,6 @@ filterExogenous <- function(b, amat) {
 }
 
 #' Remove correlated errors from the basis set
-
 removeCerror <- function(b, formulaList) {
 
   ceList <- lapply(formulaList, function(i) if(any(class(i) == "formula.cerror")) {
@@ -188,7 +186,6 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 
 #' Replace transformations in the basis set by cycling through neighbors and applying
 #' transformations in order of how variables are treated in the child nearest to current node
-
 replaceTrans <- function(modelList, b, amat) {
 
   formulaList <- listFormula(modelList)

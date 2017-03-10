@@ -54,7 +54,7 @@ sortDag <- function(amat, formulaList) {
 
       pos <- sapply(formulaList, function(k) k[1] %in% indicated)
 
-      if(all(pos == FALSE)) flag <- FALSE else {
+      if(all(pos == FALSE) | sum(amat[, i]) == 0) flag <- FALSE else {
 
         counter <- counter + 1
 
