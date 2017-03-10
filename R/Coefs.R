@@ -135,9 +135,9 @@ sdFam <- function(x, model, data) {
 
     y <- data[, x] else
 
-      y <- model$family$linkfun(data[, x])
+      y <- data[, x] * model$family$linkfun(mean(data[, x]))
 
-  y[is.infinite(y)] <- 0
+  # y[is.infinite(y)] <- 0
 
   sd(y)
 
