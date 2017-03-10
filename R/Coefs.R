@@ -42,7 +42,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
         }
 
-      if(all(class(i) %in% c("gls", "nlme", "glmmPQL")))
+      if(all(class(i) %in% c("gls", "lme", "glmmPQL")))
 
         tab <- summary(i)$tTable
 
@@ -99,7 +99,6 @@ stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
 
     } else {
 
-
       B <- subset(tab, Response == f[1])$Estimate
 
       sd.x <- sapply(f[-1], function(x) sd(data[, x]))
@@ -121,23 +120,25 @@ stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
 #' Properly scale standard deviations depending on the error distribution
 sdFam <- function(x, model, data) {
 
-  .family = family(model)
+  .family = try(family(model), silent = TRUE)
 
-  if(.family$family != "gaussian")
+  if(class(.family) == "try-error") y <- data[, x] else {
 
-    warning(
-      paste0("Standardized coefficients for non-normal distributions must be interpreted differently. See help('stdCoefs')."),
-      call. = FALSE)
+    if(.family$family != "gaussian")
 
-  .link <- .family$link
+      warning(
+        paste0("Standardized coefficients for non-normal distributions must be interpreted differently. See help('stdCoefs')."),
+        call. = FALSE)
 
-  if(.link == "identity")
+    .link <- .family$link
 
-    y <- data[, x] else
+    if(.link == "identity")
 
-      y <- data[, x] * model$family$linkfun(mean(data[, x]))
+      y <- data[, x] else
 
-  # y[is.infinite(y)] <- 0
+        y <- data[, x] * model$family$linkfun(mean(data[, x]))
+
+  }
 
   sd(y)
 

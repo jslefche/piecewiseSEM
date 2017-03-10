@@ -148,17 +148,31 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 
   idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
 
-  if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
+  idm <- idm[
 
-    idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
+    sapply(modelList[idm], function(x) {
 
-    if(length(idf) > 0) {
+    .family <- try(family(x), silent = TRUE)
 
-      b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
+    if(class(.family) == "try-error") FALSE else TRUE
 
-        c(i[2], i[1], i[-(1:2)]) )
+  } ) ]
 
-        )
+  if(length(idm) > 0) {
+
+    if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
+
+      idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
+
+      if(length(idf) > 0) {
+
+        b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
+
+          c(i[2], i[1], i[-(1:2)]) )
+
+          )
+
+      }
 
     }
 
