@@ -82,11 +82,11 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       names(ret) <- c("Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
 
-      rhs <- paste0(b[[i]][-2], " ", collapse = "+")
+      rhs <- paste0(b[[i]][-2], " ", collapse = " + ")
 
       if(conditional == FALSE)
 
-        rhs <- paste0(b[[i]][1], " +...")
+        rhs <- paste0(b[[i]][1], " + ...")
 
       ret <- data.frame(Independ.Claim = paste(b[[i]][2], " ~ ", rhs), t(ret))
 
