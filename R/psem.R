@@ -18,6 +18,11 @@ psem <- function(...) {
 #     stop("Duplicated response variables detected. Collapse into single multiple regression and re-run.")
 #
 
+  # return error if duplicate responses
+  if(any(duplicated(sapply(listFormula(x), function(y) all.vars.merMod(y)[1]))))
+
+    stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
+
   # remove quotes on cerrors
   print.attr(x)
 
