@@ -35,16 +35,16 @@ modelList = psem(
 )
 
 # Run summary
-summary(modelList)
+summary(modelList, data)
 
 # Address conflict using conserve = T
-summary(modelList, conserve = T)
+summary(modelList, data, conserve = T)
 
 # Address conflict using direction = c()
-summary(modelList, direction = c("y2 <- y1"))
+summary(modelList, data, direction = c("y2 <- y1"))
 
 # Address conflict using correlated errors
 modelList2 = update(modelList, y2 %~~% y1)
 
-summary(modelList2)
+summary(modelList2, data)
 ```

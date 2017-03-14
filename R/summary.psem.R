@@ -2,7 +2,7 @@
 
 #' @param modelList a list of structural equations
 
-summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE,
+summary.psem <- function(modelList, data, direction = NULL, conserve = FALSE, conditional = FALSE,
                          intercepts = FALSE, standardize = TRUE,
                          .progressBar = TRUE) {
 
