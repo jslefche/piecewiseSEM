@@ -4,7 +4,7 @@
 
 basisSet <- function(modelList, direction = NULL) {
 
-  formulaList <- listFormula(modelList)
+  formulaList <- listFormula(modelList, remove = FALSE)
 
   amat <- Dag(formulaList)
 
@@ -35,11 +35,11 @@ basisSet <- function(modelList, direction = NULL) {
 
   if(length(b) > 0) {
 
+    b <- removeCerror(b, formulaList)
+
     b <- reverseNonLin(modelList, b, amat, formulaList)
 
     b <- filterExogenous(b, amat)
-
-    b <- removeCerror(b, formulaList)
 
     b <- replaceTrans(modelList, b, amat)
 
