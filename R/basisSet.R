@@ -41,7 +41,7 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- filterExogenous(b, amat)
 
-    b <- replaceTrans(modelList, b, amat)
+    b <- replaceTrans(modelList, b, amat, formulaList)
 
     if(!is.null(direction))
 
@@ -63,6 +63,8 @@ filterExogenous <- function(b, amat) {
     if(all(i[1:2] %in% exo) | i[2] %in% exo) NULL else i
 
   )
+
+  b <- b[!sapply(b, is.null)]
 
   return(b)
 
@@ -190,9 +192,13 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 
 #' Replace transformations in the basis set by cycling through neighbors and applying
 #' transformations in order of how variables are treated in the child nearest to current node
-replaceTrans <- function(modelList, b, amat) {
+replaceTrans <- function(modelList, b, amat, formulaList) {
 
-  formulaList <- listFormula(modelList)
+  idx <- which(sapply(modelList, function(x) !any(class(x) %in% c("formula", "formula.cerror"))))
+
+  modelList <- modelList[idx]
+
+  formulaList <- formulaList[idx]
 
   trans <- lapply(formulaList, all.vars.trans)
 
@@ -232,7 +238,7 @@ replaceTrans <- function(modelList, b, amat) {
 
     }
 
-    return(i)
+    i
 
   } )
 

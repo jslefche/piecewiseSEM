@@ -18,9 +18,9 @@ summary.psem <- function(modelList, data, direction = NULL, conserve = FALSE, co
 
   Coefs <- coefs(modelList, data, intercepts, standardize)
 
-  R2 <- rsquared(modelList)
+  # R2 <- rsquared(modelList)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs, R2 = R2)
+  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs) #, R2 = R2)
 
   class(l) <- "summary.psem"
 
@@ -53,7 +53,7 @@ print.summary.psem <- function(x) {
       "with P-value =", as.character(x$C[3]),
       "and on", as.character(x$C[2]), "degrees of freedom")
 
-  cat("\n  Individual models: R-squared =\n  ", captureTable(x$R2))
+  # cat("\n  Individual models: R-squared =\n  ", captureTable(x$R2))
 
   invisible(x)
 

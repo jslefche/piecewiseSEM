@@ -6,7 +6,7 @@ coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
 
   tab <- getCoefs(modelList, data, intercepts)
 
-  if(standardize == TRUE) tab <- data.frame(tab, Std.Estimate = stdCoefs(modelList, data, intercepts))
+  if(standardize == TRUE) tab <- data.frame(tab, Std.Estimate = stdCoefs(modelList, data, tab, intercepts))
 
   tab <- cbind(tab, isSig(tab$P.Value))
 
@@ -87,7 +87,7 @@ getDF <- function(model, tab) {
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, data, intercepts) {
+stdCoefs <- function(modelList, data, tab, intercepts) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -99,13 +99,13 @@ stdCoefs <- function(modelList, data, intercepts) {
 
     j <- modelList[[i]]
 
+    f <- unlist(lapply(listFormula(list(j)), all.vars.merMod))
+
     if(all(class(j) %in% c("formula.cerror"))) {
 
-      Bnew <- subset(tab, Response == f[1])$Estimate
+      Bnew <- subset(tab, Response == paste0("~~", f[1]))$Estimate
 
     } else {
-
-      tab <- getCoefs(j, newdata, intercepts)
 
       notrans <- all.vars.notrans(formula(j))
 
@@ -123,9 +123,9 @@ stdCoefs <- function(modelList, data, intercepts) {
 
       }
 
-      f <- unlist(lapply(listFormula(list(j)), all.vars.merMod))
+      tabNew <- getCoefs(j, newdata, intercepts)
 
-      B <- subset(tab, Response == f[1])$Estimate
+      B <- subset(tabNew, Response == f[1])$Estimate
 
       sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
 
