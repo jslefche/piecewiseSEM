@@ -18,7 +18,9 @@ summary.psem <- function(modelList, data, direction = NULL, conserve = FALSE, co
 
   Coefs <- coefs(modelList, data, intercepts, standardize)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs)
+  R2 <- rsquared(modelList)
+
+  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs, R2 = R2)
 
   class(l) <- "summary.psem"
 
@@ -39,30 +41,30 @@ print.summary.psem <- function(x) {
 
   cat("\n")
 
-  cat("\nTests of directed separation:\n\n", captureTable(print.data.frame(x$dTable, row.names = FALSE)))
+  cat("\nTests of directed separation:\n\n", captureTable(x$dTable))
 
-  cat("\nCoefficients:\n\n", captureTable(print.data.frame(x$Coefs, row.names = FALSE)))
+  cat("\nCoefficients:\n\n", captureTable(x$Coefs))
 
-  cat("---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
+  cat("  ---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
 
   cat("\n\n")
 
-  cat("Goodness-of-fit:\n\n  Fisher's C =", as.character(x$C[1]),
+  cat("Goodness-of-fit:\n\n  Global model: Fisher's C =", as.character(x$C[1]),
       "with P-value =", as.character(x$C[3]),
       "and on", as.character(x$C[2]), "degrees of freedom")
 
-  cat("\n\n")
+  cat("\n  Individual models: R-squared =\n  ", captureTable(x$R2))
 
   invisible(x)
 
 }
 
-captureTable <- function(x) {
+captureTable <- function(g) {
 
-  x <- capture.output(x)
+  g1 <- capture.output(print(g, row.names = FALSE))
 
-  x <- paste0(x, "\n")
+  g1 <- paste0(g1, "\n")
 
-  return(x)
+  return(g1)
 
 }
