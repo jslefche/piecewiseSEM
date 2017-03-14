@@ -33,17 +33,21 @@ basisSet <- function(modelList, direction = NULL) {
 
   b <- b[!sapply(b, is.null)]
 
-  b <- reverseNonLin(modelList, b, amat, formulaList)
+  if(length(b) > 0) {
 
-  b <- filterExogenous(b, amat)
+    b <- reverseNonLin(modelList, b, amat, formulaList)
 
-  b <- removeCerror(b, formulaList)
+    b <- filterExogenous(b, amat)
 
-  b <- replaceTrans(modelList, b, amat)
+    b <- removeCerror(b, formulaList)
 
-  if(!is.null(direction))
+    b <- replaceTrans(modelList, b, amat)
 
-    b <- specifyDir(b, direction)
+    if(!is.null(direction))
+
+      b <- specifyDir(b, direction)
+
+  }
 
   return(b)
 
