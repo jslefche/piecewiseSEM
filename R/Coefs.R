@@ -6,7 +6,7 @@ coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
 
   tab <- getCoefs(modelList, data, intercepts)
 
-  if(standardize == TRUE) tab <- data.frame(tab, Std.Estimate = stdCoefs(modelList, tab, data, intercepts))
+  if(standardize == TRUE) tab <- data.frame(tab, Std.Estimate = stdCoefs(modelList, data, intercepts))
 
   tab <- cbind(tab, isSig(tab$P.Value))
 
@@ -17,6 +17,8 @@ coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
 }
 
 getCoefs <- function(modelList, data, intercepts = FALSE) {
+
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) == "formula"))]
 
@@ -49,7 +51,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
         tab <- summary(i)$tTable
 
       tab <- data.frame(
-        Response = unlist(lapply(listFormula(list(i)), all.vars.merMod))[1],
+        Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
         Predictor = rownames(tab),
         tab,
         row.names = NULL
@@ -69,9 +71,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
     return(tab)
 
-    }
-
-  ) )
+    } ) )
 
   tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
 
@@ -87,47 +87,49 @@ getDF <- function(model, tab) {
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
+stdCoefs <- function(modelList, data, intercepts) {
+
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) == "formula"))]
 
-  if(is.null(tab)) tab <- getCoefs(modelList, data, intercepts)
-
   do.call(c, lapply(1:length(modelList), function(i) {
 
-    if(is.list(data)) newdata <- data[[i]] else newdata <- data
+    if(class(data) == "list") newdata <- data[[i]] else newdata <- data
 
-    i <- modelList[[i]]
+    j <- modelList[[i]]
 
-    notrans <- all.vars.notrans(formula(i))
-
-    trans <- all.vars.trans(formula(i))
-
-    if(any(notrans != trans)) {
-
-      for(j in 1:length(notrans)) {
-
-        newdata[, notrans[j]] <-
-
-          sapply(newdata[, notrans[j]], function(x) eval(parse(text = gsub(notrans[j], x, trans[j]))))
-
-      }
-
-    }
-
-    f <- unlist(lapply(listFormula(list(i)), all.vars.merMod))
-
-    if(all(class(i) %in% c("formula.cerror"))) {
+    if(all(class(j) %in% c("formula.cerror"))) {
 
       Bnew <- subset(tab, Response == f[1])$Estimate
 
     } else {
 
+      tab <- getCoefs(j, newdata, intercepts)
+
+      notrans <- all.vars.notrans(formula(j))
+
+      trans <- all.vars.trans(formula(j))
+
+      if(any(notrans != trans)) {
+
+        for(k in 1:length(notrans)) {
+
+          newdata[, notrans[k]] <-
+
+            sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
+
+        }
+
+      }
+
+      f <- unlist(lapply(listFormula(list(j)), all.vars.merMod))
+
       B <- subset(tab, Response == f[1])$Estimate
 
       sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
 
-      sd.y <- sdFam(f[1], i, newdata)
+      sd.y <- sdFam(f[1], j, newdata)
 
       Bnew <- B * (sd.x / sd.y)
 
