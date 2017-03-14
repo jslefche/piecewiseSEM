@@ -93,7 +93,27 @@ stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
 
   if(is.null(tab)) tab <- getCoefs(modelList, data, intercepts)
 
-  do.call(c, lapply(modelList, function(i) {
+  do.call(c, lapply(1:length(modelList), function(i) {
+
+    if(is.list(data)) newdata <- data[[i]] else newdata <- data
+
+    i <- modelList[[i]]
+
+    notrans <- all.vars.notrans(formula(i))
+
+    trans <- all.vars.trans(formula(i))
+
+    if(any(notrans != trans)) {
+
+      for(j in 1:length(notrans)) {
+
+        newdata[, notrans[j]] <-
+
+          sapply(newdata[, notrans[j]], function(x) eval(parse(text = gsub(notrans[j], x, trans[j]))))
+
+      }
+
+    }
 
     f <- unlist(lapply(listFormula(list(i)), all.vars.merMod))
 
@@ -105,9 +125,9 @@ stdCoefs <- function(modelList, tab = NULL, data, intercepts) {
 
       B <- subset(tab, Response == f[1])$Estimate
 
-      sd.x <- sapply(f[-1], function(x) sd(data[, x]))
+      sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
 
-      sd.y <- sdFam(f[1], i, data)
+      sd.y <- sdFam(f[1], i, newdata)
 
       Bnew <- B * (sd.x / sd.y)
 
@@ -132,7 +152,8 @@ sdFam <- function(x, model, data) {
 
       warning(
         paste0("Standardized coefficients for non-normal distributions must be interpreted differently. See help('stdCoefs')."),
-        call. = FALSE)
+        call. = FALSE
+        )
 
     .link <- .family$link
 
@@ -144,6 +165,6 @@ sdFam <- function(x, model, data) {
 
   }
 
-  sd(y)
+  sd(y, na.rm = TRUE)
 
 }
