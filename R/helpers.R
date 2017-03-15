@@ -48,11 +48,9 @@ all.vars.merMod <- function(.formula) {
 
     if(any(grepl("\\|", n))) {
 
-      idn <- which(grepl("\\|", n))
+      f <- lme4::nobars(.formula)
 
-      f <- all.vars(.formula)[-idn]
-
-      return(f)
+      all.vars(f)
 
     } else all.vars(.formula)
 
