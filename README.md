@@ -31,20 +31,21 @@ data = data.frame(
 modelList = psem(
   lm(y1 ~ x, data),
   glm(y2 ~ x, "poisson", data),
-  lm(y3 ~ y1 + y2, data)
+  lm(y3 ~ y1 + y2, data),
+  data
 )
 
 # Run summary
-summary(modelList, data)
+summary(modelList)
 
 # Address conflict using conserve = T
-summary(modelList, data, conserve = T)
+summary(modelList, conserve = T)
 
 # Address conflict using direction = c()
-summary(modelList, data, direction = c("y2 <- y1"))
+summary(modelList, direction = c("y2 <- y1"))
 
 # Address conflict using correlated errors
 modelList2 = update(modelList, y2 %~~% y1)
 
-summary(modelList2, data)
+summary(modelList2)
 ```
