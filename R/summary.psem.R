@@ -20,6 +20,10 @@ summary.psem <- function(modelList, data, direction = NULL, conserve = FALSE, co
 
   # R2 <- rsquared(modelList)
 
+  if(length(dTable) > 0)
+
+    dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)
+
   l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs) #, R2 = R2)
 
   class(l) <- "summary.psem"

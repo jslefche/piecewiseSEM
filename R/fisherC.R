@@ -14,6 +14,8 @@ fisherC <- function(dTable) {
 
   } else {
 
+    if(any(dTable$P.value == 0)) dTable$P.value = dTable$P.Value + 1e-20
+
     C <- -2*sum(log(dTable$P.Value))
 
     p <- 1 - pchisq(C, 2*nrow(dTable))

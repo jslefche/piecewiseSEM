@@ -110,7 +110,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
     }
 
-    ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
+    # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
     ret <- cbind.data.frame(ret, sig = sapply(ret$P.Value, isSig))
 
