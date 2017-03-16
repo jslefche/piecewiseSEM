@@ -4,6 +4,10 @@
 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
+  data <- modelList$data
+
+  modelList <- modelList[-which(names(modelList) == "data")]
+
   b <- basisSet(modelList, direction)
 
   if(length(b) == 0) {
@@ -33,12 +37,12 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
       if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) {
 
         bNewMod <- suppressWarnings(
-          update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))))
+          update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))), data)
         )
 
       } else {
 
-        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))))
+        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data)
 
       }
 

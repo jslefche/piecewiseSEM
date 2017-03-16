@@ -20,7 +20,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) == "formula"))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
@@ -34,7 +34,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
       if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
 
-        krp <- KRp(i, all.vars.merMod(formula(i))[-1], intercepts)
+        krp <- KRp(i, all.vars.merMod(formula(i))[-1], intercepts = TRUE)
 
         tab <- as.data.frame(append(as.data.frame(tab), list(DF = krp[1,]), after = 2))
 
@@ -87,7 +87,7 @@ stdCoefs <- function(modelList, data, tab, intercepts) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) == "formula"))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
   do.call(c, lapply(1:length(modelList), function(i) {
 

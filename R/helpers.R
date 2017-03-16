@@ -1,27 +1,8 @@
-#' A list of supported model classes
-model.classes <- c("formula", "formula.cerror", "lm", "glm", "gls", "lme", "glmmPQL", "lmerMod", "merModLmerTest", "glmerMod")
-
-#' Evaluate model classes and stop if unsupported model class
-evaluateClasses <- function(modelList) {
-
-  classes <- unlist(sapply(modelList, class))
-
-  classes <- classes[!duplicated(classes)]
-
-  if(!all(classes %in% model.classes))
-
-    stop(
-      paste0(
-        "Unsupported model class in model list: ",
-        paste0(classes[!classes %in% model.classes], collapse = ", "),
-        ". See 'help(piecewiseSEM)' for more details.")
-    )
-
-}
-
 #' Get list of formula from a `sem` object
 #' If remove = TRUE, take out non-evaluated formula
 listFormula <- function(modelList, remove = FALSE) {
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -108,7 +89,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 
     kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
 
-    d <- kr$stats$ddf
+    d <- round(kr$stats$ddf, 2)
 
     p <- kr$stats$p.valueU
 
@@ -116,7 +97,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 
   } )
 
-  if(int == TRUE) {
+  if(intercepts == TRUE) {
 
     reducMod <- update(model, as.formula(paste("~ 0 + .")))
 

@@ -138,9 +138,9 @@ all.vars.notrans <- function(.formula) {
 #' If intermediate endogenous variables are nonlinear, return both directions
 reverseNonLin <- function(modelList, b, amat, formulaList) {
 
-  modelList <- modelList[sapply(formulaList, function(x) !class(x) %in% c("formula.cerror"))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("formula", "formula.cerror")))]
 
-  formulaList <- formulaList[sapply(formulaList, function(x) !class(x) %in% c("formula.cerror"))]
+  formulaList <- listFormula(modelList, remove = TRUE)
 
   names(b) <- 1:length(b)
 
