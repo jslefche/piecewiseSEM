@@ -161,7 +161,7 @@ sdFam <- function(x, model, data) {
 
       y <- data[, x] else {
 
-        if(class(model) %in% c("glmerMod"))
+        if(any(class(model) %in% c("glmerMod")))
 
           linkfun <- model@resp$family$linkfun else
 
