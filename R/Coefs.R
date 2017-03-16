@@ -34,7 +34,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
       if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
 
-        krp <- KRp(i, names(fixef(i))[-1], intercepts = TRUE)
+        krp <- KRp(i, all.vars.merMod(formula(i))[-1], intercepts)
 
         tab <- as.data.frame(append(as.data.frame(tab), list(DF = krp[1,]), after = 2))
 
