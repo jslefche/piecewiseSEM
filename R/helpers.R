@@ -112,3 +112,26 @@ KRp <- function(model, vars, intercepts = FALSE) {
   } else ret
 
 }
+
+#' Get data from model object
+getData <- function(model) {
+
+  if(any(class(model) %in% c("lm")))
+
+    data <- model$model
+
+  if(any(class(model) %in% c("glm", "glmmPQL")))
+
+    data <- model$data
+
+  if(any(class(model) %in% c("gls", "lme")))
+
+    data <- nlme::getData(model)
+
+  if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
+
+    data <- model@frame
+
+  return(data)
+
+}

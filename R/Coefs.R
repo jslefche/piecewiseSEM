@@ -2,7 +2,15 @@
 
 #' @param modelList a list of structural equations
 
-coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
+coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE) {
+
+  if(class(modelList) == "psem") data <- modelList$data else
+
+    data <- getData(modelList)
+
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
   tab <- getCoefs(modelList, data, intercepts)
 
@@ -17,10 +25,6 @@ coefs <- function(modelList, data, intercepts = FALSE, standardize = TRUE) {
 }
 
 getCoefs <- function(modelList, data, intercepts = FALSE) {
-
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
-
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
@@ -85,13 +89,9 @@ getDF <- function(model, tab) {
 #' Calculate standardized regression coefficients
 stdCoefs <- function(modelList, data, tab, intercepts) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
-
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
+  newdata <- data
 
   do.call(c, lapply(1:length(modelList), function(i) {
-
-    if(class(data) == "list") newdata <- data[[i]] else newdata <- data
 
     j <- modelList[[i]]
 
@@ -119,7 +119,7 @@ stdCoefs <- function(modelList, data, tab, intercepts) {
 
       }
 
-      tabNew <- getCoefs(j, newdata, intercepts)
+      if(!identical(newdata, data)) tabNew <- getCoefs(j, newdata, intercepts) else tabNew <- tab
 
       B <- subset(tabNew, Response == f[1])$Estimate
 
