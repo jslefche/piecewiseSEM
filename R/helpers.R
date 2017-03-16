@@ -23,6 +23,8 @@ evaluateClasses <- function(modelList) {
 #' If remove = TRUE, take out non-evaluated formula
 listFormula <- function(modelList, remove = FALSE) {
 
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
   fList <- lapply(modelList, function(i) if(any(class(i) %in% c("formula.cerror"))) i else formula(i) )
 
   if(remove == TRUE) {
@@ -114,7 +116,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 
   } )
 
-  if(intercepts == TRUE) {
+  if(int == TRUE) {
 
     reducMod <- update(model, as.formula(paste("~ 0 + .")))
 
