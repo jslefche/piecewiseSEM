@@ -60,9 +60,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       if(any(class(bNewMod) %in% c("lm", "glm", "glmerMod"))) {
 
-        ct <- summary(bNewMod)$coefficients
+        ct <- as.data.frame(summary(bNewMod)$coefficients)
 
-        ret <- as.data.frame(ct[nrow(ct), , drop = FALSE])
+        ret <- ct[nrow(ct), , drop = FALSE]
 
         ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
@@ -72,9 +72,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       if(any(class(bNewMod) %in% c("lme", "glmmPQL"))) {
 
-        ct <- summary(bNewMod)$tTable
+        ct <- as.data.frame(summary(bNewMod)$tTable)
 
-        ret <- ct[nrow(ct), ]
+        ret <- ct[nrow(ct), , drop = FALSE]
 
       }
 
@@ -95,6 +95,8 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
     } ) )
 
     if(.progressBar == TRUE) close(pb)
+
+    rownames(ret) <- NULL
 
     if(conserve == TRUE) {
 
