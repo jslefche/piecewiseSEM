@@ -159,9 +159,17 @@ sdFam <- function(x, model, data) {
 
     if(.link == "identity")
 
-      y <- data[, x] else
+      y <- data[, x] else {
 
-        y <- data[, x] * model$family$linkfun(mean(data[, x]))
+        if(class(model) %in% c("glmerMod"))
+
+          linkfun <- model@resp$family$linkfun else
+
+            linkfun <- model$family$linkfun
+
+        y <- data[, x] * linkfun(mean(data[, x]))
+
+      }
 
   }
 
