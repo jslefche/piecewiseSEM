@@ -34,15 +34,11 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
       if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
 
-        KRp <- sapply(names(fixef(i))[-1], function(x) {
+        krp <- KRp(i, names(fixef(i))[-1], intercepts = TRUE)
 
-          reducMod <- update(i, as.formula(paste("~ . -", x)))
+        tab <- as.data.frame(append(as.data.frame(tab), list(DF = krp[1,]), after = 2))
 
-          pbkrtest::KRmodcomp(i, reducMod)$test$p.value[1]
-
-        } )
-
-        tab[, `Pr(>|t|)`] <- KRp
+        tab[, "Pr(>|t|)"] <- krp[2, ]
 
         }
 
@@ -131,7 +127,9 @@ stdCoefs <- function(modelList, data, tab, intercepts) {
 
       sd.y <- sdFam(f[1], j, newdata)
 
-      Bnew <- B * (sd.x / sd.y)
+      if(intercepts == FALSE) Bnew <- B * (sd.x / sd.y) else
+
+        Bnew <- c(0, B[-1] * (sd.x / sd.y))
 
     }
 

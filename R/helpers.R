@@ -98,6 +98,34 @@ onlyBars <- function(.formula) {
 }
 
 #' Recompute p-values using Kenward-Rogers approximation
-# bNewmod_drop <- update(bNewMod, formula(paste(" ~ . - ", b[[i]][1])))
-#
-# kr <- KRmodcomp(bNewMod, bNewmod_drop)
+KRp <- function(model, vars, intercepts = FALSE) {
+
+  ret <- sapply(vars, function(x) {
+
+    reducMod <- update(model, as.formula(paste("~ . -", x)))
+
+    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
+
+    d <- kr$stats$ddf
+
+    p <- kr$stats$p.valueU
+
+    c(d, p)
+
+  } )
+
+  if(intercepts == TRUE) {
+
+    reducMod <- update(model, as.formula(paste("~ 0 + .")))
+
+    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
+
+    d <- kr$stats$ddf
+
+    p <- kr$stats$p.valueU
+
+    cbind(`(Intercept)` = c(d, p), ret)
+
+  } else ret
+
+}

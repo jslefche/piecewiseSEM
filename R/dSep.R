@@ -44,17 +44,15 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       if(any(class(bNewMod) %in% c("lmerMod", "merModLmerTest"))) {
 
-        bNewmod_drop <- update(bNewMod, formula(paste(" ~ . - ", b[[i]][1])))
-
-        kr <- pbkrtest::KRmodcomp(bNewMod, bNewmod_drop)
+        kr <- KRp(bNewMod, b[[i]][1], intercepts = FALSE)
 
         ct <- summary(bNewMod)$coefficients
 
         ret <- data.frame(
           t(ct[nrow(ct), 1:2]),
-          kr$test$ddf[1],
+          kr[1, ],
           ct[nrow(ct), 3],
-          kr$test$p.value[1],
+          kr[2, ],
           row.names = NULL
         )
 
@@ -64,9 +62,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ct <- summary(bNewMod)$coefficients
 
-        ret <- ct[nrow(ct), ]
+        ret <- as.data.frame(ct[nrow(ct), , drop = FALSE])
 
-        ret <- c(ret[1:2], DF = NA, ret[3:4])
+        ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
         # Add in df
 
@@ -88,7 +86,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         rhs <- paste0(b[[i]][1], " + ...")
 
-      ret <- data.frame(Independ.Claim = paste(b[[i]][2], " ~ ", rhs), t(ret))
+      ret <- data.frame(Independ.Claim = paste(b[[i]][2], " ~ ", rhs), ret)
 
       if(.progressBar == TRUE) setTxtProgressBar(pb, i)
 
