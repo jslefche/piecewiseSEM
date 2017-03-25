@@ -33,11 +33,11 @@ psem <- function(...) {
 
 # setMethod("list.sem", signature("sem"), function(...) list.sem(...))
 
-update.psem <- function(x, values) {
+update.psem <- function(x, ...) {
 
-  x <- append(x, values)
+  l <- list(...)
 
-  class(x[[length(x)]]) <- class(values)
+  for(i in 1:length(l)) x <- append(x, l[[i]])
 
   evaluateClasses(x)
 
