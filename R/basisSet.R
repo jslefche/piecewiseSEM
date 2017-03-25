@@ -41,9 +41,6 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- reverseNonLin(modelList, b, amat, formulaList)
 
-
-   # FIX
-
     b <- replaceTrans(modelList, b, amat, formulaList)
 
     if(!is.null(direction))
@@ -193,7 +190,7 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 #' transformations in order of how variables are treated in the child nearest to current node
 replaceTrans <- function(modelList, b, amat, formulaList) {
 
-  idx <- which(sapply(modelList, function(x) !any(class(x) %in% c("formula", "formula.cerror"))))
+  idx <- which(sapply(modelList, function(x) !any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror"))))
 
   modelList <- modelList[idx]
 
