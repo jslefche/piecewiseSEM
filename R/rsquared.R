@@ -3,6 +3,9 @@ rsquared = function(modelList, aicc = FALSE) {
   # If object is just an individual model, convert to a list
   if(!all(class(modelList) %in% c("psem", "list"))) modelList = list(modelList)
 
+  # Remove all other variables
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
+  
   # Check to see if classes are supported
   if(!all(sapply(modelList, function(i)
 
