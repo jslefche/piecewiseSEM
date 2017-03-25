@@ -29,3 +29,12 @@ InfCrit <- function(modelList, C) {
   return(ret)
 
 }
+
+#` Generalized function for extraction AIC score
+AIC.psem <- function(x) summary(x, .progressBar = FALSE)$IC$AIC
+
+#` Generalized function for extraction AICc score
+AICc.psem <- function(x) summary(x, .progressBar = FALSE)$IC$AICc
+
+#` Generalized function for extraction BIC score
+AIC.psem <- function(x) summary(x, .progressBar = FALSE)$IC$BIC
