@@ -35,11 +35,14 @@ basisSet <- function(modelList, direction = NULL) {
 
   if(length(b) > 0) {
 
+    b <- filterExogenous(b, amat)
+
     b <- removeCerror(b, formulaList)
 
     b <- reverseNonLin(modelList, b, amat, formulaList)
 
-    b <- filterExogenous(b, amat)
+
+   # FIX
 
     b <- replaceTrans(modelList, b, amat, formulaList)
 
@@ -85,15 +88,11 @@ removeCerror <- function(b, formulaList) {
 
     b <- lapply(b, function(i) {
 
-      lapply(ceList, function(j) {
+      flag = any(sapply(ceList, function(j) all(i[1:2] %in% j)))
 
-        if(all(i[1:2] %in% j)) NULL else i
-
-      } )
+      if(flag == TRUE) NULL else i
 
     } )
-
-    b <- unlist(b, recursive = FALSE)
 
     b <- b[!sapply(b, is.null)]
 
