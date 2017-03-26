@@ -1,5 +1,5 @@
 #' Summarize tests of directed separation using Fisher's C statistic
-
+#'
 #' @param dTable a list of structural equations
 
 InfCrit <- function(modelList, C) {

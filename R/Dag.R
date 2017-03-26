@@ -1,5 +1,5 @@
 #' Generate adjacency matrix from list of structural equations
-
+#'
 #' @param formulaList a list of formulae corresponding to structural equations
 
 Dag <- function(formulaList) {
