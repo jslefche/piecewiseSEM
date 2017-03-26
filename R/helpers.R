@@ -114,7 +114,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 }
 
 #' Get data from model object
-getData <- function(model) {
+getData. <- function(model) {
 
   if(any(class(model) %in% c("lm")))
 

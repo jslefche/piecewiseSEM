@@ -108,7 +108,7 @@ cyclic <- function(amat, formulaList) {
 
     i %in% indicated_sum
 
-    } )
+  } )
 
   any(cyc == TRUE)
 

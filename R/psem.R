@@ -1,5 +1,5 @@
 #' Create a list of structural equations
-
+#'
 #' @param ... arguments passed to methods
 
 psem <- function(...) {
@@ -8,9 +8,13 @@ psem <- function(...) {
 
   idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame"))))
 
-  x <- x[c((1:length(x))[!1:length(x) %in% idx], idx)]
+  if(length(idx) > 0) {
 
-  names(x)[length(x)] <- "data"
+    x <- x[c((1:length(x))[!1:length(x) %in% idx], idx)]
+
+    names(x)[length(x)] <- "data"
+
+  }
 
   evaluateClasses(x)
 

@@ -1,14 +1,14 @@
 #' Get (standardized) coefficients from list of structural equations
-
+#'
 #' @param modelList a list of structural equations
 
 coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE) {
 
-  if(class(modelList) == "psem") data <- modelList$data else
-
-    data <- getData(modelList)
-
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList[[1]])
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
@@ -53,8 +53,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
       tab <- data.frame(
         Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
         Predictor = rownames(tab),
-        tab,
-        row.names = NULL
+        tab
       )
 
       if(ncol(tab) == 6) {
@@ -74,6 +73,8 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
     } ) )
 
   tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
+
+  rownames(tab) <- NULL
 
   return(tab)
 
@@ -103,27 +104,15 @@ stdCoefs <- function(modelList, data, tab, intercepts) {
 
     } else {
 
-      notrans <- all.vars.notrans(formula(j))
-
-      trans <- all.vars.trans(formula(j))
-
-      if(any(notrans != trans)) {
-
-        for(k in 1:length(notrans)) {
-
-          newdata[, notrans[k]] <-
-
-            sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
-
-        }
-
-      }
+      newdata <- dataTrans(formula(j), newdata)
 
       if(!identical(newdata, data)) tabNew <- getCoefs(j, newdata, intercepts) else tabNew <- tab
 
       B <- subset(tabNew, Response == f[1])$Estimate
 
       sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
+
+      if(length(B) != length(sd.x)) sd.x <- c(sd.x, sdInt(j, newdata))
 
       sd.y <- sdFam(f[1], j, newdata)
 
@@ -174,5 +163,43 @@ sdFam <- function(x, model, data) {
   }
 
   sd(y, na.rm = TRUE)
+
+}
+
+#' Transform variables based on model formula and store in new data frame
+dataTrans <- function(.formula, newdata) {
+
+  notrans <- all.vars.notrans(.formula)
+
+  trans <- all.vars.trans(.formula)
+
+  if(any(notrans != trans)) {
+
+    for(k in 1:length(notrans)) {
+
+      newdata[, notrans[k]] <-
+
+        sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
+
+    }
+
+  }
+
+  return(newdata)
+
+}
+
+#' Calculate standard deviations for interactions
+sdInt <- function(model, newdata) {
+
+  v <- attr(terms(model), "term.labels")
+
+  int <- v[grepl(":", v)]
+
+  sapply(int, function(x) {
+
+    sd(apply(newdata[, strsplit(x, ":")[[1]]], 1, prod, na.rm = TRUE))
+
+  } )
 
 }
