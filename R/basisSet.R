@@ -39,7 +39,7 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- removeCerror(b, formulaList)
 
-    b <- reverseNonLin(modelList, b, amat, formulaList)
+    if(length(b) > 0) b <- reverseNonLin(modelList, b, amat, formulaList)
 
     b <- replaceTrans(modelList, b, amat, formulaList)
 
