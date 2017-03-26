@@ -6,7 +6,9 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
                          intercepts = FALSE, standardize = TRUE,
                          .progressBar = TRUE) {
 
-  data <- modelList$data
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList[[1]])
 
   name <- deparse(substitute(modelList))
 
