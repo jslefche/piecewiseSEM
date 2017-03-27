@@ -30,11 +30,20 @@ InfCrit <- function(modelList, C) {
 
 }
 
-#` Generalized function for extraction AIC score
-AIC.psem <- function(x) summary(x, .progressBar = FALSE)$IC$AIC
+#` Generalized function for extraction AIC(c) score
+AIC.psem <- function(x) {
 
-#` Generalized function for extraction AICc score
-AICc.psem <- function(x) summary(x, .progressBar = FALSE)$IC$AICc
+  x. <- suppressWarnings(summary(x, .progressBar = FALSE)$IC)
+
+  c(AIC = x.$AIC, AICc = x.$AICc)
+
+}
 
 #` Generalized function for extraction BIC score
-AIC.psem <- function(x) summary(x, .progressBar = FALSE)$IC$BIC
+BIC.psem <- function(x) {
+
+  x. <- suppressWarnings(summary(x, .progressBar = FALSE)$IC)
+
+  c(BIC = x.$BIC)
+
+}

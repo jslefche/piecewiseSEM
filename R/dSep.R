@@ -4,9 +4,9 @@
 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
-  data <- modelList$data
+  # data <- modelList$data
 
-  modelList <- modelList[-which(names(modelList) == "data")]
+  if(length(modelList) > 2) modelList <- modelList[-which(names(modelList) == "data")]
 
   b <- basisSet(modelList, direction)
 

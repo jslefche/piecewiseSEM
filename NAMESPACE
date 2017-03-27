@@ -1,3 +1,4 @@
 exportPattern("^[[:alpha:]]+")
 export("%~~%")
-exportClasses(sem)
+exportClasses(psem, summary.psem, AIC.psem, BIC.psem)
+export(summary, AIC, BIC)
