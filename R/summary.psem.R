@@ -20,7 +20,7 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   IC <- InfCrit(modelList, C)
 
-  Coefs <- coefs(modelList, data, intercepts, standardize)
+  coefficients <- coefs(modelList, data, intercepts, standardize)
 
   # R2 <- rsquared(modelList)
 
@@ -28,7 +28,7 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, Coefs = Coefs) #, R2 = R2)
+  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, coefficients = coefficients) #, R2 = R2)
 
   class(l) <- "summary.psem"
 
@@ -51,7 +51,7 @@ print.summary.psem <- function(x) {
 
   cat("\nTests of directed separation:\n\n", captureTable(x$dTable))
 
-  cat("\nCoefficients:\n\n", captureTable(x$Coefs))
+  cat("\nCoefficients:\n\n", captureTable(x$coefficients))
 
   cat("  ---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
 

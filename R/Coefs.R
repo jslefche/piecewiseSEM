@@ -26,6 +26,8 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
 getCoefs <- function(modelList, data, intercepts = FALSE) {
 
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
     if(all(class(i) %in% c("formula.cerror")))
@@ -52,7 +54,7 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 
       tab <- data.frame(
         Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
-        Predictor = rownames(tab),
+        Predictor = c("(Intercept)", all.vars.merMod(listFormula(list(i))[[1]])[-1]),
         tab
       )
 
@@ -83,12 +85,16 @@ getCoefs <- function(modelList, data, intercepts = FALSE) {
 #' Get residual degrees of freedom for a linear regression
 getDF <- function(model, tab) {
 
+  ### NEED TO FIX THIS ###
+
   cbind(tab[, 1:4], DF = NA, tab[, 5:6])
 
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, data, tab, intercepts) {
+stdCoefs <- function(modelList, data, tab = NULL, intercepts) {
+
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
   newdata <- data
 
@@ -100,15 +106,15 @@ stdCoefs <- function(modelList, data, tab, intercepts) {
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
-      Bnew <- subset(tab, Response == paste0("~~", f[1]))$Estimate
+      Bnew <- subset(tab, Response == paste0("~~", f[1]) & Predictor == paste0("~~", f[2]))$Estimate
 
     } else {
 
       newdata <- dataTrans(formula(j), newdata)
 
-      if(!identical(newdata, data)) tabNew <- getCoefs(j, newdata, intercepts) else tabNew <- tab
+      if(is.null(tab) | !identical(newdata, data)) tab <- getCoefs(j, newdata, intercepts)
 
-      B <- subset(tabNew, Response == f[1])$Estimate
+      B <- subset(tab, Response == f[1])$Estimate
 
       sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
 
@@ -173,6 +179,14 @@ dataTrans <- function(.formula, newdata) {
 
   trans <- all.vars.trans(.formula)
 
+  if(any(grepl("scale(.*)", trans))) {
+
+    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
+
+    warning("`scale` applied to variable--use argument `standardize = TRUE` instead.", call. = FALSE)
+
+  }
+
   if(any(notrans != trans)) {
 
     for(k in 1:length(notrans)) {
@@ -184,6 +198,8 @@ dataTrans <- function(.formula, newdata) {
     }
 
   }
+
+  colnames(newdata) <- notrans
 
   return(newdata)
 
