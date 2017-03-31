@@ -108,15 +108,15 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
-  newdata <- data
-
   do.call(rbind, lapply(1:length(modelList), function(i) {
 
     j <- modelList[[i]]
 
-    tab <- unstdCoefs(j, newdata, intercepts)
-
     f <- unlist(lapply(listFormula(list(j)), all.vars.merMod))
+
+    newdata <- data[, f]
+
+    tab <- unstdCoefs(j, newdata, intercepts)
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
