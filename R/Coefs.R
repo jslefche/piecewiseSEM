@@ -12,9 +12,9 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
-  tab <- getCoefs(modelList, data, intercepts)
+  if(standardize == TRUE) tab <- stdCoefs(modelList, data, intercepts) else
 
-  if(standardize == TRUE) tab <- data.frame(tab, Std.Estimate = stdCoefs(modelList, data, tab, intercepts))
+    tab <- unstdCoefs(modelList, data, intercepts)
 
   tab <- cbind(tab, isSig(tab$P.Value))
 
@@ -24,9 +24,15 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
 }
 
-getCoefs <- function(modelList, data, intercepts = FALSE) {
+unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList[[1]])
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
   tab <- do.call(rbind, lapply(modelList, function(i) {
 
@@ -92,15 +98,23 @@ getDF <- function(model, tab) {
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, data, tab = NULL, intercepts) {
+stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList[[1]])
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
+
   newdata <- data
 
-  do.call(c, lapply(1:length(modelList), function(i) {
+  do.call(rbind, lapply(1:length(modelList), function(i) {
 
     j <- modelList[[i]]
+
+    tab <- unstdCoefs(j, newdata, intercepts)
 
     f <- unlist(lapply(listFormula(list(j)), all.vars.merMod))
 
@@ -111,8 +125,6 @@ stdCoefs <- function(modelList, data, tab = NULL, intercepts) {
     } else {
 
       newdata <- dataTrans(formula(j), newdata)
-
-      if(is.null(tab) | !identical(newdata, data)) tab <- getCoefs(j, newdata, intercepts)
 
       B <- subset(tab, Response == f[1])$Estimate
 
@@ -130,7 +142,7 @@ stdCoefs <- function(modelList, data, tab = NULL, intercepts) {
 
     Bnew <- round(Bnew, 4)
 
-    unname(Bnew)
+    cbind(tab, Std.Estimate = unname(Bnew))
 
   } ) )
 
