@@ -41,7 +41,7 @@ update.psem <- function(x, ...) {
 
   l <- list(...)
 
-  for(i in 1:length(l)) x <- append(x, l[[i]])
+  for(i in 1:length(l)) x[[length(x) + 1]] <- l[[i]]
 
   evaluateClasses(x)
 
@@ -51,14 +51,6 @@ update.psem <- function(x, ...) {
 
 }
 
-#' A list of supported model classes
-model.classes <- c(
-  "data.frame",
-  "formula", "formula.cerror",
-  "lm", "glm", "gls",
-  "lme", "glmmPQL",
-  "lmerMod", "merModLmerTest", "glmerMod"
-  )
 
 #' Evaluate model classes and stop if unsupported model class
 evaluateClasses <- function(modelList) {
@@ -67,13 +59,22 @@ evaluateClasses <- function(modelList) {
 
   classes <- classes[!duplicated(classes)]
 
+  model.classes <- c(
+    "data.frame",
+    "formula", "formula.cerror",
+    "lm", "glm", "gls",
+    "lme", "glmmPQL",
+    "lmerMod", "merModLmerTest", "glmerMod"
+  )
+
   if(!all(classes %in% model.classes))
 
     stop(
       paste0(
         "Unsupported model class in model list: ",
         paste0(classes[!classes %in% model.classes], collapse = ", "),
-        ". See 'help(piecewiseSEM)' for more details.")
+        ". See 'help(piecewiseSEM)' for more details."),
+      call. = FALSE
     )
 
 }
