@@ -24,6 +24,7 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
 }
 
+#' Get raw (understandardized) coefficients from model
 unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
@@ -60,7 +61,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       tab <- data.frame(
         Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
-        Predictor = c("(Intercept)", all.vars.merMod(listFormula(list(i))[[1]])[-1]),
+        Predictor = rownames(tab),
         tab
       )
 
@@ -112,9 +113,15 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     j <- modelList[[i]]
 
-    f <- unlist(lapply(listFormula(list(j)), all.vars.merMod))
+    f <- listFormula(list(j))[[1]]
 
-    newdata <- data[, f]
+    if(all(all.vars.merMod(f) %in% colnames(data)))
+
+      newdata <- data[, all.vars.merMod(f)] else
+
+        newdata <- data[, all.vars.trans(f)]
+
+    f <- all.vars.merMod(f)
 
     tab <- unstdCoefs(j, newdata, intercepts)
 
@@ -191,7 +198,7 @@ dataTrans <- function(.formula, newdata) {
 
   trans <- all.vars.trans(.formula)
 
-  if(any(grepl("scale(.*)", trans))) {
+  if(any(grepl("scale\\(.*\\)", trans))) {
 
     trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
 
