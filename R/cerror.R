@@ -93,13 +93,13 @@ partialResid <- function(.formula, modelList, data = NULL) {
 
         }
 
-    yresid <- resid.lme(ymod)
+    yresid <- resid(ymod) #resid.lme(ymod)
 
-    yresid <- data.frame(.id = names(yresid), yresid = yresid)
+    yresid <- data.frame(.id = name.vec(names(yresid)), yresid = yresid)
 
-    xresid <- resid.lme(xmod)
+    xresid <- resid(xmod) #resid.lme(xmod)
 
-    xresid <- data.frame(.id = names(xresid), xresid = xresid)
+    xresid <- data.frame(.id = name.vec(names(xresid)), xresid = xresid)
 
     rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
 
@@ -180,5 +180,14 @@ resid.lme <- function(model) {
   } else r <- resid(model)
 
   return(r)
+
+}
+
+#' Name vector so every entry is unique, preserving original order
+name.vec <- function(v) {
+
+  v <- sapply(unique(v), function(x) v[v == x] <- paste(v[v == x], 1:length(v[v == x]), sep = ".") )
+
+  unlist(v)
 
 }
