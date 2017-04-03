@@ -37,6 +37,7 @@ psem <- function(...) {
 
 # setMethod("list.sem", signature("sem"), function(...) list.sem(...))
 
+#' Update psem model object with additional values
 update.psem <- function(x, ...) {
 
   l <- list(...)
