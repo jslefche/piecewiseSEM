@@ -93,21 +93,11 @@ partialResid <- function(.formula, modelList, data = NULL) {
 
         }
 
-    yresid <- resid(ymod) #resid.lme(ymod)
+    yresid <- data.frame(.id = rownames(getData.(ymod)), yresid = resid(ymod)) #resid.lme(ymod)
 
-    xresid <- resid(xmod) #resid.lme(xmod)
-    
-    if(length(yresid) == length(xresid))
-      
-      rdata <- data.frame(yresid = yresid, xresid = xresid) else {
+    xresid <- data.frame(.id = rownames(getData.(xmod)), xresid = resid(xmod)) #resid.lme(xmod)
 
-        yresid <- data.frame(.id = name.vec(names(yresid)), yresid = yresid)
-    
-        xresid <- data.frame(.id = name.vec(names(xresid)), xresid = xresid)
-    
-        rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
-        
-      }
+    rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
 
   }
 
