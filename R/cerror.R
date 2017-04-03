@@ -1,4 +1,5 @@
 #' Operator: correlated errors
+
 `%~~%` <- function(e1, e2) {
 
   x <- paste(deparse(substitute(e1)), "~~", deparse(substitute(e2)))
@@ -12,13 +13,13 @@
 }
 
 #' Calculating (partial) correlations
-
+#'
 #' @param .formula a formula
 #' @param modelList a list of structural equations
 
 cerror <- function(.formula, modelList, data = NULL) {
 
-  tab <- pcor(.formula, modelList, data)
+  tab <- partCorr(.formula, modelList, data)
 
   tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
 
@@ -26,7 +27,8 @@ cerror <- function(.formula, modelList, data = NULL) {
 
 }
 
-pcor <- function(.formula, modelList, data = NULL) {
+#' Extract partial residuals
+partResid <- function(.formula, modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -98,7 +100,16 @@ pcor <- function(.formula, modelList, data = NULL) {
 
     rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
 
-    }
+  }
+
+  return(rdata)
+
+}
+
+#' Calculate partial correlations from partial residuals
+partCorr <- function(.formula, modelList, data = NULL) {
+
+  rdata <- partResid(.formula, modelList, data)
 
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
 
