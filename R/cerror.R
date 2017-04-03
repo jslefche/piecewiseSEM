@@ -44,9 +44,9 @@ partialResid <- function(.formula, modelList, data = NULL) {
 
   vars <- strsplit(vars, ":|\\*")
 
-  yvar <- sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] %in% vars[[1]])
+  yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all.vars.merMod(x)[1])
 
-  xvar <- sapply(listFormula(modelList), function(x) all(all.vars.merMod(x)[1] %in% vars[[2]]))
+  xvar <- sapply(listFormula(modelList), function(x) all(vars[[2]] %in% all.vars.merMod(x)[1]))
 
   if(all(yvar == FALSE) & all(xvar == FALSE)) {
 
