@@ -1,5 +1,4 @@
 #' Operator: correlated errors
-
 `%~~%` <- function(e1, e2) {
 
   x <- paste(deparse(substitute(e1)), "~~", deparse(substitute(e2)))
@@ -17,11 +16,11 @@
 #' @param .formula a formula
 #' @param modelList a list of structural equations
 
-cerror <- function(.formula, modelList, data) {
+cerror <- function(.formula, modelList) {
 
   if(class(.formula) == "formula.cerror") {
 
-    x <- pcor(.formula, modelList, data)
+    x <- pcor(.formula, modelList)
 
   }
 
@@ -29,17 +28,23 @@ cerror <- function(.formula, modelList, data) {
 
 }
 
-pcor <- function(.formula, modelList, data) {
+pcor <- function(.formula, modelList) {
+
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList[[1]])
 
   if(class(.formula) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
 
       vars <- gsub(" ", "", unlist(strsplit(deparse(.formula), "~")))
 
-  modelList2 <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("formula.cerror")))]
+  vars <- strsplit(vars, ":|\\*")
 
-  yvar <- sapply(listFormula(modelList2), function(x) all.vars.merMod(x)[1] == vars[1])
+  yvar <- sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] %in% vars[[1]])
 
-  xvar <- sapply(listFormula(modelList2), function(x) all.vars.merMod(x)[1] == vars[2])
+  xvar <- sapply(listFormula(modelList), function(x) any(all.vars.merMod(x)[-1] %in% vars[[2]]))
 
   if(all(yvar == FALSE) & all(xvar == FALSE)) {
 
@@ -47,34 +52,41 @@ pcor <- function(.formula, modelList, data) {
 
   } else {
 
-    if(all(yvar == FALSE) | all(xvar == FALSE))
+    if(which(yvar) != which(xvar))
 
       stop("Variables not found as responses in model list. Ensure spelling is correct!")
 
     ymod <- modelList[[which(yvar)]]
 
-    if(!vars[2] %in% all.vars.merMod(formula(ymod))) {
+    if(length(vars[[2]]) > 1) {
 
-      xmod <- modelList[[which(xvar)]]
+      ymod <- update(ymod, formula(paste(". ~ . -", paste(vars[[2]], collapse = ":"))))
 
-      yresid <- resid.lme(ymod)
+      data[, (ncol(data) + 1)] <- apply(data[, vars[[2]]], 1, prod, na.rm = TRUE)
 
-      yresid <- data.frame(.id = names(yresid), yresid = yresid)
+      names(data)[ncol(data)] <- paste(vars[[2]], collapse = ".")
 
-      xresid <- resid.lme(xmod)
+      xmod <- update(ymod, formula(paste(paste(vars[[2]], collapse = "."), "~ . -", paste(vars[[2]], collapse = ":"))))
 
-      xresid <- data.frame(.id = names(xresid), xresid = xresid)
+      } else {
 
-      rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
+        ymod <- update(ymod, formula(paste(". ~ . -", vars[[2]])))
 
-    } else {
+        xmod <- update(ymod, formula(paste(vars[[2]], " ~ . -", vars[[2]])))
 
+        }
 
-      # ymod <- update(
+    yresid <- resid.lme(ymod)
+
+    yresid <- data.frame(.id = names(yresid), yresid = yresid)
+
+    xresid <- resid.lme(xmod)
+
+    xresid <- data.frame(.id = names(xresid), xresid = xresid)
+
+    rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
 
     }
-
-  }
 
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
 
@@ -95,8 +107,8 @@ pcor <- function(.formula, modelList, data) {
       }
 
   ret <- data.frame(
-    Response = paste0("~~", vars[1]),
-    Predictor = paste0("~~", vars[2]),
+    Response = paste0("~~", vars[[1]]),
+    Predictor = paste0("~~", paste(vars[[2]], collapse = ":")),
     Estimate = rcor,
     Std.Error = NA,
     DF = N,
