@@ -19,7 +19,7 @@
 
 cerror <- function(.formula, modelList, data = NULL) {
 
-  tab <- partCorr(.formula, modelList, data)
+  tab <- partialCorr(.formula, modelList, data)
 
   tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
 
@@ -28,7 +28,7 @@ cerror <- function(.formula, modelList, data = NULL) {
 }
 
 #' Extract partial residuals
-partResid <- function(.formula, modelList, data = NULL) {
+partialResid <- function(.formula, modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -46,7 +46,7 @@ partResid <- function(.formula, modelList, data = NULL) {
 
   yvar <- sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] %in% vars[[1]])
 
-  xvar <- sapply(listFormula(modelList), function(x) any(all.vars.merMod(x)[1] %in% vars[[2]]))
+  xvar <- sapply(listFormula(modelList), function(x) all(all.vars.merMod(x)[1] %in% vars[[2]]))
 
   if(all(yvar == FALSE) & all(xvar == FALSE)) {
 
@@ -74,13 +74,16 @@ partResid <- function(.formula, modelList, data = NULL) {
 
     if(length(vars[[2]]) > 1) {
 
-      ymod <- update(ymod, formula(paste(". ~ . -", paste(vars[[2]], collapse = ":"))))
+      ymod <- update(ymod,
+                     formula(paste(". ~ . -", paste(vars[[2]], collapse = ":"))))
 
-      data[, (ncol(data) + 1)] <- apply(data[, vars[[2]]], 1, prod, na.rm = TRUE)
+      data <- data.frame(data, apply(data[, vars[[2]]], 1, prod, na.rm = TRUE))
 
-      names(data)[ncol(data)] <- paste(vars[[2]], collapse = ".")
+      names(data)[ncol(data)] <- paste(vars[[2]], collapse = "...")
 
-      xmod <- update(xmod, formula(paste(paste(vars[[2]], collapse = "."), "~ . -", paste(vars[[2]], collapse = ":"))))
+      xmod <- update(xmod,
+                     formula(paste(paste(vars[[2]], collapse = "..."), "~ . -", paste(vars[[2]], collapse = ":"))),
+                     data = data)
 
       } else {
 
@@ -107,7 +110,7 @@ partResid <- function(.formula, modelList, data = NULL) {
 }
 
 #' Calculate partial correlations from partial residuals
-partCorr <- function(.formula, modelList, data = NULL) {
+partialCorr <- function(.formula, modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -117,7 +120,7 @@ partCorr <- function(.formula, modelList, data = NULL) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
-  rdata <- partResid(.formula, modelList, data)
+  rdata <- partialResid(.formula, modelList, data)
 
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
 
