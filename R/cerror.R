@@ -16,25 +16,25 @@
 #' @param .formula a formula
 #' @param modelList a list of structural equations
 
-cerror <- function(.formula, modelList) {
+cerror <- function(.formula, modelList, data = NULL) {
 
-  if(class(.formula) == "formula.cerror") {
+  tab <- pcor(.formula, modelList, data)
 
-    x <- pcor(.formula, modelList)
+  tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
 
-  }
-
-  return(x)
+  return(tab)
 
 }
 
-pcor <- function(.formula, modelList) {
+pcor <- function(.formula, modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
   if(class(modelList) == "psem") data <- modelList$data
 
   if(is.null(data)) data <- getData.(modelList[[1]])
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
   if(class(.formula) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
 
@@ -44,19 +44,31 @@ pcor <- function(.formula, modelList) {
 
   yvar <- sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] %in% vars[[1]])
 
-  xvar <- sapply(listFormula(modelList), function(x) any(all.vars.merMod(x)[-1] %in% vars[[2]]))
+  xvar <- sapply(listFormula(modelList), function(x) any(all.vars.merMod(x)[1] %in% vars[[2]]))
 
   if(all(yvar == FALSE) & all(xvar == FALSE)) {
 
-    rdata <- data[, colnames(data) %in% vars]
+    if(!all(unlist(vars) %in% colnames(data)))
+
+      stop("Variables not found in the model list. Ensure spelling is correct!") else
+
+        rdata <- data[, colnames(data) %in% vars]
 
   } else {
 
-    if(which(yvar) != which(xvar))
+    if(all(xvar == FALSE))
 
-      stop("Variables not found as responses in model list. Ensure spelling is correct!")
+      xvar <- sapply(listFormula(modelList), function(x) {
+
+        f <- all.vars.merMod(x)
+
+        any(f[1] == vars[[1]] & f[-1] %in% vars[[2]])
+
+      } )
 
     ymod <- modelList[[which(yvar)]]
+
+    xmod <- modelList[[which(xvar)]]
 
     if(length(vars[[2]]) > 1) {
 
@@ -66,13 +78,13 @@ pcor <- function(.formula, modelList) {
 
       names(data)[ncol(data)] <- paste(vars[[2]], collapse = ".")
 
-      xmod <- update(ymod, formula(paste(paste(vars[[2]], collapse = "."), "~ . -", paste(vars[[2]], collapse = ":"))))
+      xmod <- update(xmod, formula(paste(paste(vars[[2]], collapse = "."), "~ . -", paste(vars[[2]], collapse = ":"))))
 
       } else {
 
         ymod <- update(ymod, formula(paste(". ~ . -", vars[[2]])))
 
-        xmod <- update(ymod, formula(paste(vars[[2]], " ~ . -", vars[[2]])))
+        xmod <- update(xmod, formula(paste(vars[[2]], " ~ . -", vars[[2]])))
 
         }
 
@@ -94,6 +106,8 @@ pcor <- function(.formula, modelList) {
 
     ctest <- cor.test(rdata[, 1], rdata[, 2])
 
+    t. <- ctest$statistic
+
     N <- ctest$parameter
 
     P <- ctest$p.value
@@ -102,7 +116,9 @@ pcor <- function(.formula, modelList) {
 
       N <- nrow(rdata)
 
-      P <- 1 - pt((rcor * sqrt(N - 2))/(sqrt(1 - rcor^2)), (N - 2))
+      t. <- (rcor * sqrt(N - 2))/(sqrt(1 - rcor^2))
+
+      P <- 1 - pt(t., (N - 2))
 
       }
 
@@ -112,7 +128,7 @@ pcor <- function(.formula, modelList) {
     Estimate = rcor,
     Std.Error = NA,
     DF = N,
-    Crit.Value = NA,
+    Crit.Value = t.,
     P.Value = P
   )
 
