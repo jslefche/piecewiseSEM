@@ -109,11 +109,27 @@ partResid <- function(.formula, modelList, data = NULL) {
 #' Calculate partial correlations from partial residuals
 partCorr <- function(.formula, modelList, data = NULL) {
 
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList[[1]])
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+
   rdata <- partResid(.formula, modelList, data)
 
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
 
-  if(all(yvar == FALSE) & all(xvar == FALSE)) {
+  if(class(.formula) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
+
+    vars <- gsub(" ", "", unlist(strsplit(deparse(.formula), "~")))
+
+  vars <- strsplit(vars, ":|\\*")
+
+  flag <- unlist(vars) %in% unlist(sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1]))
+
+  if(all(flag == FALSE)) {
 
     ctest <- cor.test(rdata[, 1], rdata[, 2])
 
