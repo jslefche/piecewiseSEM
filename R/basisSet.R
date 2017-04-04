@@ -35,6 +35,8 @@ basisSet <- function(modelList, direction = NULL) {
 
   if(length(b) > 0) {
 
+    b <- filterExisting(b, formulaList)
+    
     b <- filterExogenous(b, amat)
 
     b <- removeCerror(b, formulaList)
@@ -68,6 +70,23 @@ filterExogenous <- function(b, amat) {
 
   return(b)
 
+}
+
+#' Remove existing paths from the basis set
+filterExisting <- function(b, formulaList) {
+  
+  b <- lapply(b, function(i) {
+    
+    f <- formulaList[sapply(formulaList, function(x) all.vars.merMod(x)[1] == i[1])]
+    
+    if(any(sapply(f, function(x) any(all.vars.merMod(x)[-1] %in% i[2])))) NULL else i
+    
+  } )
+  
+  b <- b[!sapply(b, is.null)]
+  
+  return(b)
+    
 }
 
 #' Remove correlated errors from the basis set
