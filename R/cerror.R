@@ -13,7 +13,7 @@
 }
 
 #' Calculating (partial) correlations
-#'
+
 #' @param .formula a formula
 #' @param modelList a list of structural equations
 
@@ -142,9 +142,17 @@ partialCorr <- function(.formula, modelList, data = NULL) {
 
       N <- nrow(rdata)
 
-      t. <- (rcor * sqrt(N - 2))/(sqrt(1 - rcor^2))
+      k <- c(all.vars.merMod(formula(ymod)), all.vars.merMod(formula(xmod)))
 
-      P <- 1 - pt(t., (N - 2))
+      k <- k[!duplicated(k)]
+
+      k <- k[!k %in% vars]
+
+      k <- length(k)
+
+      t. <- rcor * sqrt((N - 2 - k)/(1 - rcor^2))
+
+      P <- pt(t., (N - 2 - k))
 
       }
 
