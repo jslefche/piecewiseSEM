@@ -150,9 +150,11 @@ partialCorr <- function(.formula, modelList, data = NULL) {
 
       k <- length(k)
 
-      t. <- rcor * sqrt((N - 2 - k)/(1 - rcor^2))
+      N <- N - k - 2
 
-      P <- pt(t., (N - 2 - k))
+      t. <- rcor * sqrt(N/(1 - rcor^2))
+
+      P <- pt(t., N)
 
       }
 
