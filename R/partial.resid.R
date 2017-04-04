@@ -37,21 +37,21 @@ partial.resid = function(
   # Update model
   y.nox.model = suppressWarnings(if(is.null(random.formula) & class(y.model) != "rq") 
     
-    update(y.model, formula(rhs), control = control) else
+    update(y.model, formula(rhs), control = control, data = data) else
       
       if(any(class(y.model) %in% c("rq")))
         
-        update(y.model, formula(rhs)) else
+        update(y.model, formula(rhs), data = data) else
       
           if(any(class(y.model) %in% c("glmmadmb")))
              
-             update(y.model, formula(rhs)) else
+             update(y.model, formula(rhs), data=data) else
                
                if(any(class(y.model) %in% c("lme", "glmmPQL"))) 
                  
-                 update(y.model, fixed = formula(rhs), random = random.formula, control = control) else
+                 update(y.model, fixed = formula(rhs), random = random.formula, control = control, data = data) else
                    
-                   update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control) 
+                   update(y.model, formula(paste(Reduce(paste, deparse(rhs)), " + ", random.formula, collapse = "")), control = control, data= data) 
         
   )
   
