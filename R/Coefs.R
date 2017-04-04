@@ -6,7 +6,7 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  if(class(modelList) == "psem") data <- modelList$data
+  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
   if(is.null(data)) data <- getData.(modelList[[1]])
 
@@ -29,7 +29,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  if(class(modelList) == "psem") data <- modelList$data
+  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
   if(is.null(data)) data <- getData.(modelList[[1]])
 
@@ -103,7 +103,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  if(class(modelList) == "psem") data <- modelList$data
+  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
   if(is.null(data)) data <- getData.(modelList[[1]])
 
