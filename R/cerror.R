@@ -46,13 +46,13 @@ partialResid <- function(.formula, modelList, data = NULL) {
 
   residModList <- getResidModels(vars, modelList, data)
 
-  yresid <- data.frame(.id = rownames(getData.(residModList$ymod)), yresid = resid(residModList$ymod)) #resid.lme(ymod)
+  yresid <- data.frame(.id = rownames(getData.(residModList$ymod)), yresid = as.numeric(resid(residModList$ymod))) #resid.lme(ymod)
 
   if(all(class(residModList$xmod) == "numeric"))
 
-    xresid <- data.frame(.id = 1:length(residModList$xmod), xresid = residModList$xmod) else
+    xresid <- data.frame(.id = names(residModList$xmod), xresid = residModList$xmod) else
 
-      xresid <- data.frame(.id = rownames(getData.(residModList$xmod)), xresid = resid(residModList$xmod)) #resid.lme(xmod)
+      xresid <- data.frame(.id = rownames(getData.(residModList$xmod)), xresid = as.numeric(resid(residModList$xmod))) #resid.lme(xmod)
 
   rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
 
@@ -203,6 +203,8 @@ getResidModels <- function(vars, modelList, data) {
     if(all(xvar == FALSE)) {
 
       xmod <- data[, vars[[2]]]
+
+      names(xmod) <- rownames(data)
 
     } else {
 
