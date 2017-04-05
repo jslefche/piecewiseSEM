@@ -4,9 +4,7 @@
 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
-  # data <- modelList$data
-
-  if(length(modelList) > 2) modelList <- modelList[-which(names(modelList) == "data")]
+  # modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame")))]
 
   b <- basisSet(modelList, direction)
 
