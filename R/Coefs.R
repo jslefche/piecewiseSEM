@@ -109,7 +109,9 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
-  do.call(rbind, lapply(1:length(modelList), function(i) {
+  tab <- unstdCoefs(modelList, data, intercepts)
+
+  Bnew <- do.call(c, lapply(1:length(modelList), function(i) {
 
     j <- modelList[[i]]
 
@@ -122,8 +124,6 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
         newdata <- data[, all.vars.trans(f)]
 
     f <- all.vars.merMod(f)
-
-    tab <- unstdCoefs(j, newdata, intercepts)
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
@@ -147,11 +147,11 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     }
 
-    Bnew <- round(Bnew, 4)
-
-    cbind(tab, Std.Estimate = unname(Bnew))
+    round(Bnew, 4)
 
   } ) )
+
+  cbind(tab, Std.Estimate = unname(Bnew))
 
 }
 
