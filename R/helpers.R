@@ -113,24 +113,36 @@ KRp <- function(model, vars, intercepts = FALSE) {
 
 }
 
-#' Get data from model object
-getData. <- function(model) {
+#' Get data from model list
+getData. <- function(modelList) {
 
-  if(any(class(model) %in% c("lm")))
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-    data <- model$model
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
-  if(any(class(model) %in% c("glm", "glmmPQL")))
+  data <- do.call(cbind, lapply(modelList, function(model) {
 
-    data <- model$data
+    if(any(class(model) %in% c("lm")))
 
-  if(any(class(model) %in% c("gls", "lme")))
+      data <- model$model
 
-    data <- nlme::getData(model)
+    if(any(class(model) %in% c("glm", "glmmPQL")))
 
-  if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
+      data <- model$data
 
-    data <- model@frame
+    if(any(class(model) %in% c("gls", "lme")))
+
+      data <- nlme::getData(model)
+
+    if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
+
+      data <- model@frame
+
+    return(data)
+
+  } ) )
+
+  data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 
   return(data)
 

@@ -34,7 +34,7 @@ partialResid <- function(.formula, modelList, data = NULL) {
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
-  if(is.null(data)) data <- getData.(modelList[[1]])
+  if(is.null(data)) data <- getData.(modelList)
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
