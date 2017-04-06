@@ -3,6 +3,7 @@
 #' @param modelList a list of structural equations
 
 summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE,
+                         claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
                          .progressBar = TRUE) {
 
@@ -16,7 +17,7 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   dTable <- dSep(modelList, direction, conserve, conditional, .progressBar)
 
-  C <- fisherC(dTable)
+  C <- fisherC(dTable, claims)
 
   IC <- InfCrit(modelList, C)
 
