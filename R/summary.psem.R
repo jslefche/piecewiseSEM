@@ -23,13 +23,13 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   coefficients <- coefs(modelList, data, intercepts, standardize)
 
-  R2 <- rsquared_old(modelList)
+  # R2 <- rsquared_old(modelList)
 
   if(length(dTable) > 0)
 
     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, coefficients = coefficients, R2 = R2)
+  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, coefficients = coefficients) #, R2 = R2)
 
   class(l) <- "summary.psem"
 
