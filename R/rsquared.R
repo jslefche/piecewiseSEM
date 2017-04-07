@@ -8,19 +8,17 @@ rsquared <- function(modelList, method = "delta") {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
-  # get data
-
   evaluateClasses(modelList)
 
   ret <- do.call(rbind, lapply(modelList, function(i) {
 
-    if(any(class(i) %in% c("lm", "gls"))) r <- rsquared.lm(i)
+    if(all(class(i) %in% c("lm", "gls"))) r <- rsquared.lm(i)
 
     if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i)
 
-    if(any(class(i) %in% c("lme"))) r <- rsquared.lme(i)
+    if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i)
 
-    if(any(class(i) %in% c("lmerMod", "merModLmerTest"))) r <- rsquared.merMod(i)
+    if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) r <- rsquared.merMod(i)
 
     if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method)
 
@@ -35,22 +33,12 @@ rsquared <- function(modelList, method = "delta") {
 }
 
 #' R^2 for lm objects
-rsquared.lm <- function(model) {
-
-  y <- all.vars.merMod(formula(model))[1]
-
-  num <- sum((data[, y] - fitted(model))^2)
-
-  denom <- sum((data[, y] - mean(data[, y], na.rm = TRUE))^2)
-
-  1 - (num/denom)
-
-}
+rsquared.lm <- function(model) summary(model)$r.squared
 
 #' R^2 for glm objects
 rsquared.glm <- function(model) {
 
-  if(family(model) == "gaussian") rsquared.lm(model, data) else {
+  if(family(model) == "gaussian") rsquared.lm(model) else {
 
     # Nagelkerke
 
@@ -167,7 +155,7 @@ rsquared.glmerMod <- function(model, method = "delta") {
 
           if(method == "trigamma") sigmaE <- trigamma(nu)
 
-        }
+        } else stop("Unsupported link function!")
 
       }
 
@@ -177,24 +165,39 @@ rsquared.glmerMod <- function(model, method = "delta") {
 
       if(method == "delta") sigmaE <- 1 / (mean(model@resp$y) - (1 - mean(model@resp$y)))
 
-    } else if(family. == "Gamma") {
+      } else if(family. == "Gamma") {
 
+        lambda <- attr(VarCorr(model), "sc")^2
 
+        omega <- 1
 
+        if(link == "log") {
 
+          nu <- omega / lambda
 
+          if(method == "delta") sigmaE <- 1/nu
 
-      } else stop("Unsupported link function!")
+          if(method == "lognormal") sigmaE <- log(1 + 1/nu)
 
-    sigmaA <- sum(as.numeric(VarCorr(model)))
+          if(method == "trigamma") sigmaE <- trigamma(nu)
 
-    mar <- (sigmaF) / (sigmaF + sigmaA + sigmaE)
+          }
 
-    con <- (sigmaF + sigmaA) / (sigmaF + sigmaA + sigmaE)
+        if(link == "inverse") {
 
-    list(family = family., link = link, Marginal = mar, Conditional = con)
+          } else stop("Unsupported link function!")
+
+      } else stop("Unsupported family!")
 
   }
+
+  sigmaA <- sum(as.numeric(VarCorr(model)))
+
+  mar <- (sigmaF) / (sigmaF + sigmaA + sigmaE)
+
+  con <- (sigmaF + sigmaA) / (sigmaF + sigmaA + sigmaE)
+
+  list(family = family., link = link, Marginal = mar, Conditional = con)
 
 }
 
