@@ -281,24 +281,19 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
         if(method == "trigamma") sigmaE <- trigamma(nu)
 
-      }
+      } else stop("Unsupported link function!")
 
     }
 
   } else if(family. %in% c("binomial", "quasibinomial")) {
 
+    lamba <- mean(model$data[, all.vars.merMod(formula(model))[1]])
 
+    if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
 
-
-
+    if(method == "delta") sigmaE <- 1 / (lamba * (1 - lamba))
 
     } else if(family. %in% c("Gamma")) {
-
-
-
-
-
-
 
       } else stop("Unsupported family!")
 
