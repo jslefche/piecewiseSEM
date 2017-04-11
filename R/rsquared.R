@@ -24,9 +24,11 @@ rsquared <- function(modelList, method = "delta") {
 
     if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method)
 
-    do.call(cbind, r)
+    do.call(data.frame, r)
 
   } ) )
+
+  ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 2)
 
   return(ret)
 
@@ -159,37 +161,41 @@ rsquared.glmerMod <- function(model, method = "delta") {
 
       }
 
-    } else if(family. == "binomial") {
+    } else
 
-      if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
+      if(family. == "binomial") {
 
-      if(method == "delta") sigmaE <- 1 / (mean(model@resp$y) - (1 - mean(model@resp$y)))
+        if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
 
-      } else if(family. == "Gamma") {
+        if(method == "delta") sigmaE <- 1 / (mean(model@resp$y) - (1 - mean(model@resp$y)))
 
-        lambda <- attr(VarCorr(model), "sc")^2
+        } else
 
-        omega <- 1
+          if(family. == "Gamma") {
 
-        if(link == "log") {
+            lambda <- attr(VarCorr(model), "sc")^2
 
-          nu <- omega / lambda
+            omega <- 1
 
-          if(method == "delta") sigmaE <- 1/nu
+            if(link == "log") {
 
-          if(method == "lognormal") sigmaE <- log(1 + 1/nu)
+              nu <- omega / lambda
 
-          if(method == "trigamma") sigmaE <- trigamma(nu)
+              if(method == "delta") sigmaE <- 1/nu
 
-          }
+              if(method == "lognormal") sigmaE <- log(1 + 1/nu)
 
-        if(link == "inverse") {
+              if(method == "trigamma") sigmaE <- trigamma(nu)
 
-          } else stop("Unsupported link function!")
+              } else
 
-      } else stop("Unsupported family!")
+                if(link == "inverse") {
 
-  }
+                  } else stop("Unsupported link function!")
+
+          } else stop("Unsupported family!")
+
+    }
 
   sigmaA <- sum(as.numeric(VarCorr(model)))
 
@@ -307,4 +313,3 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 }
 
 #' R^2 for glmmadmb objects
-
