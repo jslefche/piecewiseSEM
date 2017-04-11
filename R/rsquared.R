@@ -165,9 +165,11 @@ rsquared.glmerMod <- function(model, method = "delta") {
 
       if(family. == "binomial") {
 
+        lambda <- mean(model@resp$y)
+
         if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
 
-        if(method == "delta") sigmaE <- 1 / (mean(model@resp$y) - (1 - mean(model@resp$y)))
+        if(method == "delta") sigmaE <- 1 / (lambda * (1 - lambda))
 
         } else
 
@@ -295,6 +297,18 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
     } else if(family. %in% c("Gamma")) {
 
+      if(link == "log") {
+
+        nu <- 1 / as.numeric(VarCorr(model)[nrow(VarCorr(model)), 1])
+
+        if(method == "delta") sigmaE <- 1 / nu
+
+        if(method == "log-normal") sigmaE <- log(1 + 1/nu)
+
+        if(method == "trigamma") sigmaE <- trigamma(nu)
+
+        } else stop("Unsupported link function!")
+
       } else stop("Unsupported family!")
 
   sigmaA <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
@@ -308,3 +322,29 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 }
 
 #' R^2 for glmmadmb objects
+
+
+
+
+
+
+#' Remove random effects from all.vars
+all.vars.merMod <- function(.formula) {
+
+  if(class(.formula) == "formula.cerror")
+
+    gsub(" " , "", unlist(strsplit(.formula, "~~"))) else {
+
+      n <- rownames(attr(terms(.formula), "factors"))
+
+      if(any(grepl("\\|", n))) {
+
+        f <- lme4::nobars(.formula)
+
+        all.vars(f)
+
+      } else all.vars(.formula)
+
+    }
+
+}
