@@ -275,13 +275,11 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
       if(link == "log") {
 
-        nu <- omega / lambda
+        if(method == "delta") sigmaE <- omega / lambda
 
-        if(method == "delta") sigmaE <- nu
+        if(method == "lognormal") sigmaE <- log(1 + (omega / lambda))
 
-        if(method == "lognormal") sigmaE <- log(1 + nu)
-
-        if(method == "trigamma") sigmaE <- trigamma(nu)
+        if(method == "trigamma") sigmaE <- trigamma(lambda/omega)
 
       } else stop("Unsupported link function!")
 
@@ -303,7 +301,7 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
         if(method == "delta") sigmaE <- 1 / nu
 
-        if(method == "log-normal") sigmaE <- log(1 + 1/nu)
+        if(method == "lognormal") sigmaE <- log(1 + 1/nu)
 
         if(method == "trigamma") sigmaE <- trigamma(nu)
 
@@ -326,7 +324,7 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
 
 
-
+### DELETE LATER ###
 
 #' Remove random effects from all.vars
 all.vars.merMod <- function(.formula) {
