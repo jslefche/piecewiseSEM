@@ -12,7 +12,9 @@ rsquared <- function(modelList, method = "delta") {
 
   ret <- do.call(rbind, lapply(modelList, function(i) {
 
-    if(all(class(i) %in% c("lm", "gls"))) r <- rsquared.lm(i)
+    if(all(class(i) %in% c("lm"))) r <- rsquared.lm(i)
+    
+    if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
 
     if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i)
 
@@ -36,6 +38,19 @@ rsquared <- function(modelList, method = "delta") {
 
 #' R^2 for lm objects
 rsquared.lm <- function(model) summary(model)$r.squared
+
+#' R^2 for gls objects
+rsquared.gls <- function(model) {
+  
+  X <- model.matrix(eval(model$call$model[-2]), getData.(model))
+  
+  sigmaF <- var(as.vector(model$coefficients %*% t(X)))
+  
+  sigmaE <- var(resid(model))
+  
+  list(family = "gaussian", link = "identity", Rsquared = sigmaF / (sigmaF + sigmaE))
+   
+}
 
 #' R^2 for glm objects
 rsquared.glm <- function(model) {
