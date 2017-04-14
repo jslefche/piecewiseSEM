@@ -85,7 +85,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 
   ret <- sapply(vars, function(x) {
 
-    reducMod <- update(model, as.formula(paste("~ . -", x)))
+    reducMod <- update(model, as.formula(paste(". ~ . -", x)))
 
     kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
 
