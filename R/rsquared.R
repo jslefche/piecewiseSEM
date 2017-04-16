@@ -2,7 +2,7 @@
 #'
 #' @params a model or list of models
 
-rsquared <- function(modelList, method = "delta") {
+rsquared <- function(modelList, method = "trigamma") {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList = list(modelList)
 
@@ -13,7 +13,7 @@ rsquared <- function(modelList, method = "delta") {
   ret <- do.call(rbind, lapply(modelList, function(i) {
 
     if(all(class(i) %in% c("lm"))) r <- rsquared.lm(i)
-    
+
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
 
     if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i)
@@ -41,15 +41,15 @@ rsquared.lm <- function(model) summary(model)$r.squared
 
 #' R^2 for gls objects
 rsquared.gls <- function(model) {
-  
+
   X <- model.matrix(eval(model$call$model[-2]), getData.(model))
-  
+
   sigmaF <- var(as.vector(model$coefficients %*% t(X)))
-  
+
   sigmaE <- var(resid(model))
-  
+
   list(family = "gaussian", link = "identity", Rsquared = sigmaF / (sigmaF + sigmaE))
-   
+
 }
 
 #' R^2 for glm objects
@@ -140,7 +140,7 @@ rsquared.lme <- function(model) {
 }
 
 #' R^2 for glmer objects
-rsquared.glmerMod <- function(model, method = "delta") {
+rsquared.glmerMod <- function(model, method = "trigamma") {
 
   link <- family(model)$link
 
@@ -155,6 +155,8 @@ rsquared.glmerMod <- function(model, method = "delta") {
     sigmaF <- var(as.vector(lme4::fixef(model) %*% t(X)))
 
     if(family. == "poisson") {
+
+      if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
       lambda <- attr(VarCorr(model), "sc")^2
 
@@ -180,15 +182,21 @@ rsquared.glmerMod <- function(model, method = "delta") {
 
       if(family. == "binomial") {
 
+        if(!method %in% c("none", "delta", "trigamma")) stop("Unsupported method!")
+
         lambda <- mean(model@resp$y)
 
-        if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
+        if(method == "trigamma") method = "delta"
+
+        if(method == "none") sigmaE <- sigmaD <- (pi^2)/3
 
         if(method == "delta") sigmaE <- 1 / (lambda * (1 - lambda))
 
         } else
 
           if(family. == "Gamma") {
+
+            if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
             lambda <- attr(VarCorr(model), "sc")^2
 
@@ -225,7 +233,7 @@ rsquared.glmerMod <- function(model, method = "delta") {
 }
 
 #' R^2 for negbin objects
-rsquared.negbin <- function(model, method = "delta") {
+rsquared.negbin <- function(model, method = "trigamma") {
 
   link <- family(model)$link
 
@@ -244,6 +252,8 @@ rsquared.negbin <- function(model, method = "delta") {
     lambda <- mean(model@resp$y)
 
     if(link == "log") {
+
+      if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
       nu <- (1/lambda) + (1/theta)
 
@@ -268,7 +278,7 @@ rsquared.negbin <- function(model, method = "delta") {
 }
 
 #' R^2 for glmmPQL objects
-rsquared.glmmPQL <- function(model, method = "delta") {
+rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   link <- model$family$link
 
@@ -290,6 +300,8 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
       if(link == "log") {
 
+        if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
+
         if(method == "delta") sigmaE <- omega / lambda
 
         if(method == "lognormal") sigmaE <- log(1 + (omega / lambda))
@@ -302,7 +314,11 @@ rsquared.glmmPQL <- function(model, method = "delta") {
 
   } else if(family. %in% c("binomial", "quasibinomial")) {
 
+    if(!method %in% c("none", "delta", "trigamma")) stop("Unsupported method!")
+
     lamba <- mean(model$data[, all.vars.merMod(formula(model))[1]])
+
+    if(method == "trigamma") method = "delta"
 
     if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
 
@@ -311,6 +327,8 @@ rsquared.glmmPQL <- function(model, method = "delta") {
     } else if(family. %in% c("Gamma")) {
 
       if(link == "log") {
+
+        if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
         nu <- 1 / as.numeric(VarCorr(model)[nrow(VarCorr(model)), 1])
 
@@ -359,5 +377,67 @@ all.vars.merMod <- function(.formula) {
       } else all.vars(.formula)
 
     }
+
+}
+
+#' Get data from model list
+getData. <- function(modelList) {
+
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+
+  data <- do.call(cbind, lapply(modelList, function(model) {
+
+    if(any(class(model) %in% c("lm")))
+
+      data <- model$model
+
+    if(any(class(model) %in% c("glm", "glmmPQL")))
+
+      data <- model$data
+
+    if(any(class(model) %in% c("gls", "lme")))
+
+      data <- nlme::getData(model)
+
+    if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
+
+      data <- model@frame
+
+    return(data)
+
+  } ) )
+
+  data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
+
+  return(data)
+
+}
+
+#' Evaluate model classes and stop if unsupported model class
+evaluateClasses <- function(modelList) {
+
+  classes <- unlist(sapply(modelList, class))
+
+  classes <- classes[!duplicated(classes)]
+
+  model.classes <- c(
+    "data.frame",
+    "formula", "formula.cerror",
+    "lm", "glm", "gls",
+    "lme", "glmmPQL",
+    "lmerMod", "merModLmerTest", "glmerMod"
+  )
+
+  if(!all(classes %in% model.classes))
+
+    stop(
+      paste0(
+        "Unsupported model class in model list: ",
+        paste0(classes[!classes %in% model.classes], collapse = ", "),
+        ". See 'help(piecewiseSEM)' for more details."),
+      call. = FALSE
+    )
 
 }
