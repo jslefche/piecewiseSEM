@@ -20,7 +20,7 @@ library(piecewiseSEM)
 # Create fake data
 set.seed(1) 
 
-data = data.frame(
+data <- data.frame(
   x = runif(100),
   y1 = runif(100),
   y2 = rpois(100, 1),
@@ -28,7 +28,7 @@ data = data.frame(
 )
 
 # Store in SEM list 
-modelList = psem(
+modelList <- psem(
   lm(y1 ~ x, data),
   glm(y2 ~ x, "poisson", data),
   lm(y3 ~ y1 + y2, data),
