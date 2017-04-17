@@ -37,7 +37,9 @@ rsquared <- function(modelList, method = "trigamma") {
 }
 
 #' R^2 for lm objects
-rsquared.lm <- function(model) summary(model)$r.squared
+rsquared.lm <- function(model)
+
+  list(family = "gaussian", link = "identity", Rsquared = summary(model)$r.squared)
 
 #' R^2 for gls objects
 rsquared.gls <- function(model) {

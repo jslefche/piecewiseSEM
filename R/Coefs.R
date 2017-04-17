@@ -18,6 +18,8 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   tab <- cbind(tab, isSig(tab$P.Value))
 
+  tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
+
   names(tab)[length(tab)] = ""
 
   return(tab)
@@ -80,8 +82,6 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
     return(tab)
 
     } ) )
-
-  tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
 
   rownames(tab) <- NULL
 
@@ -146,8 +146,6 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
         Bnew <- c(0, B[-1] * (sd.x / sd.y))
 
     }
-
-    round(Bnew, 4)
 
   } ) )
 
