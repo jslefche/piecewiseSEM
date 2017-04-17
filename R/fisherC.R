@@ -4,6 +4,8 @@
 
 fisherC <- function(dTable, claims = NULL) {
 
+  if(class(dTable) == "psem") dTable <- dSep(dTable)
+
   if(length(dTable) == 0) {
 
     C <- 0

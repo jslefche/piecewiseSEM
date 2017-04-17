@@ -35,14 +35,54 @@ psem <- function(...) {
 
 }
 
-# setMethod("list.sem", signature("sem"), function(...) list.sem(...))
-
 #' Update psem model object with additional values
 update.psem <- function(x, ...) {
 
   l <- list(...)
 
-  for(i in 1:length(l)) x[[length(x) + 1]] <- l[[i]]
+  for(i in l) {
+
+    if(all(class(i) %in% c("matrix", "data.frame"))) {
+
+      idx <- which(names(x) == "data")
+
+      if(length(idx) == 0) x$data = i else
+
+        x[[idx]] <- i
+
+      x <- lapply(x, function(j) {
+
+        if(!any(class(j) %in% c("matrix", "data.frame", "formula", "formula.cerror")))
+
+          update(j, data = i) else j
+
+        } )
+
+      } else if(all(class(i) %in% c("formula"))) {
+
+        if(length(all.vars.merMod(i)) == 1) {
+
+          x[[length(x) + 1]] <- i
+
+        } else {
+
+            resp <- sapply(x, function(y) if(!any(class(y) %in% c("matrix", "data.frame")))
+
+              all.vars.merMod(y)[1] else "")
+
+            idx <- which(resp == all.vars.merMod(i)[1])
+
+            x[[idx]] <- update(x[[idx]], i)
+
+            }
+
+        } else {
+
+          x[[length(x) + 1]] <- i
+
+        }
+
+  }
 
   evaluateClasses(x)
 

@@ -23,6 +23,8 @@ listFormula <- function(modelList, remove = FALSE) {
 #' Remove random effects from all.vars
 all.vars.merMod <- function(.formula) {
 
+  if(!any(class(.formula) %in% c("formula", "formula.cerror"))) .formula <- formula(.formula)
+
   if(class(.formula) == "formula.cerror")
 
     gsub(" " , "", unlist(strsplit(.formula, "~~"))) else {
@@ -147,3 +149,4 @@ getData. <- function(modelList) {
   return(data)
 
 }
+
