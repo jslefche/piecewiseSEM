@@ -2,7 +2,7 @@
 #'
 #' @params a model or list of models
 
-rsquared <- function(modelList, method = "trigamma") {
+rsquared <- function(modelList, method = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList = list(modelList)
 
@@ -55,27 +55,29 @@ rsquared.gls <- function(model) {
 }
 
 #' R^2 for glm objects
-rsquared.glm <- function(model) {
+rsquared.glm <- function(model, method = "nagelkerke") {
 
-  if(family(model) == "gaussian") rsquared.lm(model) else {
+  link <- family(model)$link
 
-    # Nagelkerke
+  family. <- family(model)$family
 
-    logLikModel <- as.numeric(logLik(model))
+  if(method == "coxsnell") {
 
-    null <- update(model, . ~ 1)
+    n <- nobs(model)
 
-    logLikNull <- as.numeric(logLik(null))
+    r <- 1 - exp((model$dev - model$null) / n)
 
-    n <- 2/nobs(model)
+    if(method == "nagelkerke")
 
-    r <- 1 - (logLikNull/logLikModel)^n
+      r <- r / (1 - exp(-model$null / n))
 
-    # why isnt this working!!
+    }
 
-    r / (1 - logLikNull^n)
+  if(method == "mcfadden")
 
-  }
+    r <- 1 - (as.numeric(logLik(model)) / as.numeric(logLik(null)))
+
+  list(family = family., link = link, Rsquared = r)
 
 }
 
