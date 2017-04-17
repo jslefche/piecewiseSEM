@@ -41,7 +41,7 @@ rsquared <- function(modelList, method = NULL) {
 #' R^2 for lm objects
 rsquared.lm <- function(model)
 
-  list(family = "gaussian", link = "identity", Rsquared = summary(model)$r.squared)
+  list(family = "gaussian", link = "identity", R.squared = summary(model)$r.squared)
 
 #' R^2 for gls objects
 rsquared.gls <- function(model) {
