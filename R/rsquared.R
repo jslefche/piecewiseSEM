@@ -16,7 +16,7 @@ rsquared <- function(modelList, method = NULL) {
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
 
-    if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i)
+    if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method)
 
     if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i)
 
@@ -59,11 +59,13 @@ rsquared.gls <- function(model) {
 #' R^2 for glm objects
 rsquared.glm <- function(model, method = "nagelkerke") {
 
+  if(is.null(method)) method <- "nagelkerke"
+
   link <- family(model)$link
 
   family. <- family(model)$family
 
-  if(method == "coxsnell") {
+  if(method %in% c("coxsnell", "nagelkerke")) {
 
     n <- nobs(model)
 
@@ -147,6 +149,8 @@ rsquared.lme <- function(model) {
 
 #' R^2 for glmer objects
 rsquared.glmerMod <- function(model, method = "trigamma") {
+
+  if(is.null(method)) method <- "trigamma"
 
   link <- family(model)$link
 
@@ -241,6 +245,8 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 #' R^2 for negbin objects
 rsquared.negbin <- function(model, method = "trigamma") {
 
+  if(is.null(method)) method <- "trigamma"
+
   link <- family(model)$link
 
   family. <- family(model)$family
@@ -285,6 +291,8 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
 #' R^2 for glmmPQL objects
 rsquared.glmmPQL <- function(model, method = "trigamma") {
+
+  if(is.null(method)) method <- "trigamma"
 
   link <- model$family$link
 
@@ -360,90 +368,3 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
 #' R^2 for glmmadmb objects
 
-
-
-
-### DELETE LATER ###
-
-#' Remove random effects from all.vars
-all.vars.merMod <- function(.formula) {
-
-  if(class(.formula) == "formula.cerror")
-
-    gsub(" " , "", unlist(strsplit(.formula, "~~"))) else {
-
-      n <- rownames(attr(terms(.formula), "factors"))
-
-      if(any(grepl("\\|", n))) {
-
-        f <- lme4::nobars(.formula)
-
-        all.vars(f)
-
-      } else all.vars(.formula)
-
-    }
-
-}
-
-#' Get data from model list
-getData. <- function(modelList) {
-
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
-
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
-
-  data <- do.call(cbind, lapply(modelList, function(model) {
-
-    if(any(class(model) %in% c("lm")))
-
-      data <- model$model
-
-    if(any(class(model) %in% c("glm", "glmmPQL")))
-
-      data <- model$data
-
-    if(any(class(model) %in% c("gls", "lme")))
-
-      data <- nlme::getData(model)
-
-    if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
-
-      data <- model@frame
-
-    return(data)
-
-  } ) )
-
-  data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
-
-  return(data)
-
-}
-
-#' Evaluate model classes and stop if unsupported model class
-evaluateClasses <- function(modelList) {
-
-  classes <- unlist(sapply(modelList, class))
-
-  classes <- classes[!duplicated(classes)]
-
-  model.classes <- c(
-    "data.frame",
-    "formula", "formula.cerror",
-    "lm", "glm", "gls",
-    "lme", "glmmPQL",
-    "lmerMod", "merModLmerTest", "glmerMod"
-  )
-
-  if(!all(classes %in% model.classes))
-
-    stop(
-      paste0(
-        "Unsupported model class in model list: ",
-        paste0(classes[!classes %in% model.classes], collapse = ", "),
-        ". See 'help(piecewiseSEM)' for more details."),
-      call. = FALSE
-    )
-
-}
