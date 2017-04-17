@@ -26,7 +26,9 @@ rsquared <- function(modelList, method = NULL) {
 
     if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method)
 
-    do.call(data.frame, r)
+    ret <- do.call(data.frame, r)
+
+    ret <- data.frame(Response = all.vars.merMod(formula(i))[1], ret)
 
   } ) )
 
@@ -50,7 +52,7 @@ rsquared.gls <- function(model) {
 
   sigmaE <- var(resid(model))
 
-  list(family = "gaussian", link = "identity", Rsquared = sigmaF / (sigmaF + sigmaE))
+  list(family = "gaussian", link = "identity", R.squared = sigmaF / (sigmaF + sigmaE))
 
 }
 
@@ -77,7 +79,7 @@ rsquared.glm <- function(model, method = "nagelkerke") {
 
     r <- 1 - (as.numeric(logLik(model)) / as.numeric(logLik(null)))
 
-  list(family = family., link = link, Rsquared = r)
+  list(family = family., link = link, R.squared = r)
 
 }
 
