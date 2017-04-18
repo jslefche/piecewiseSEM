@@ -168,6 +168,28 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     sigmaF <- var(as.vector(lme4::fixef(model) %*% t(X)))
 
+    sigma <- unclass(lme4::VarCorr(model))
+
+    rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
+
+    rand <- rand[match(names(sigma), rand)]
+
+    idx <- sapply(rand, function(x) {
+
+      data <- getData.(model)
+
+      length(unique(data[, x])) == nrow(data)
+
+    } )
+
+    sigmaL <- sum(sapply(sigma[!idx], function(i) {
+
+      Z <- as.matrix(X[, rownames(i), drop = FALSE])
+
+      sum(diag(Z %*% i %*% t(Z))) / nrow(X)
+
+    } ) )
+
     if(family. == "poisson") {
 
       if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
@@ -236,11 +258,9 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     }
 
-  sigmaA <- sum(as.numeric(VarCorr(model)))
+  mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
 
-  mar <- (sigmaF) / (sigmaF + sigmaA + sigmaE)
-
-  con <- (sigmaF + sigmaA) / (sigmaF + sigmaA + sigmaE)
+  con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
   list(family = family., link = link, Marginal = mar, Conditional = con)
 
@@ -260,6 +280,28 @@ rsquared.negbin <- function(model, method = "trigamma") {
   X <- model.matrix(model)
 
   sigmaF <- var(as.vector(fixef(model) %*% t(X)))
+
+  sigma <- unclass(lme4::VarCorr(model))
+
+  rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
+
+  rand <- rand[match(names(sigma), rand)]
+
+  idx <- sapply(rand, function(x) {
+
+    data <- getData.(model)
+
+    length(unique(data[, x])) == nrow(data)
+
+  } )
+
+  sigmaL <- sum(sapply(sigma[!idx], function(i) {
+
+    Z <- as.matrix(X[, rownames(i), drop = FALSE])
+
+    sum(diag(Z %*% i %*% t(Z))) / nrow(X)
+
+  } ) )
 
   if(family. == "Negative Binomial") {
 
@@ -283,11 +325,9 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   }
 
-  sigmaA <- sum(as.numeric(VarCorr(model)))
+  mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
 
-  mar <- (sigmaF) / (sigmaF + sigmaA + sigmaE)
-
-  con <- (sigmaF + sigmaA) / (sigmaF + sigmaA + sigmaE)
+  con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
   list(family = family., link = link, Marginal = mar, Conditional = con)
 
@@ -360,11 +400,11 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
       } else stop("Unsupported family!")
 
-  sigmaA <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
+  sigmaL <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
 
-  mar <- (sigmaF) / (sigmaF + sigmaA + sigmaE)
+  mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
 
-  con <- (sigmaF + sigmaA) / (sigmaF + sigmaA + sigmaE)
+  con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
   list(family = family., link = link, Marginal = mar, Conditional = con)
 
