@@ -32,7 +32,7 @@ fisherC <- function(dTable, claims = NULL) {
 
     DF <- 2 * length(ps)
 
-    P <- 1 - pchisq(C, 2 * DF)
+    P <- 1 - pchisq(C, DF)
 
   }
 
