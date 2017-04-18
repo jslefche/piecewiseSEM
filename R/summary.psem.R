@@ -25,6 +25,8 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   R2 <- rsquared(modelList)
 
+  R2[, which(sapply(R2, is.numeric))] <- round(R2[, which(sapply(R2, is.numeric))], 2)
+
   if(length(dTable) > 0)
 
     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)

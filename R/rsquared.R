@@ -32,7 +32,7 @@ rsquared <- function(modelList, method = NULL) {
 
   } ) )
 
-  ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 2)
+  # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 2)
 
   return(ret)
 
@@ -77,9 +77,13 @@ rsquared.glm <- function(model, method = "nagelkerke") {
 
     }
 
-  if(method == "mcfadden")
+  if(method == "mcfadden") {
+
+    null <- update(model, . ~ 1)
 
     r <- 1 - (as.numeric(logLik(model)) / as.numeric(logLik(null)))
+
+  }
 
   list(family = family., link = link, R.squared = r)
 
