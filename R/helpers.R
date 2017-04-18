@@ -43,11 +43,6 @@ all.vars.merMod <- function(.formula) {
 
 }
 
-#' Expand polynomials
-expandPoly <- function(formulaList) {
-
-  }
-
 
 #' Do not print attributes with custom functions
 print.attr <- function(x) {
@@ -79,6 +74,43 @@ onlyBars <- function(.formula) {
     ),
 
     collapse = " + ")
+
+}
+
+#' Get random effects from lme
+findbars.lme <- function(model) {
+
+  rand <- model$call$random
+
+  rand <- gsub(".*\\|(.*)", "\\1", as.character(rand)[2])
+
+  strsplit(gsub(" " , "", rand), "\\/")[[1]]
+
+}
+
+#' Get random effects variance-covariance from lme
+getVarCov. <- function(model) {
+
+  vc <- try(getVarCov(model), silent = TRUE)
+
+  if(class(vc) == "try-error") {
+
+    vc <- VarCorr(model)
+
+    v <- suppressWarnings(as.numeric(vc[, 1]))
+
+    names(v) <- gsub(" =", "", rownames(vc))
+
+    vm <- as.list(na.omit(v[-length(v)]))
+
+
+    vl <- lapply(1:length(vm), function(i) matrix(vm[[i]], dimnames = list(names(vm)[i], names(vm)[i])))
+
+    names(vl) <- names(which(is.na(v)))
+
+    vl
+
+  } else vc
 
 }
 

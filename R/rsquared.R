@@ -125,19 +125,25 @@ rsquared.lme <- function(model) {
 
   sigmaF <- var(as.vector(nlme::fixef(model) %*% t(X)))
 
-  # does not work for nested random effects! see maybe mgcv::extract.lme.cov ?
+  sigma <- getVarCov.(model)
 
-  sigma <- nlme::getVarCov(model)
+  rand <- findbars.lme(model)
 
-  if(any(class(sigma) != "list")) sigma <- list(sigma)
+  rand <- rand[match(names(sigma), rand)]
 
-  sigmaL <- sum(sapply(1:length(sigma), function(i) {
+  idx <- sapply(rand, function(x) {
 
-    sigma. <- sigma[[i]]
+    data <- getData.(model)
 
-    Z <- as.matrix(X[, rownames(sigma.), drop = FALSE])
+    length(unique(data[, x])) == nrow(data)
 
-    sum(diag(Z %*% sigma. %*% t(Z))) / nrow(X)
+  } )
+
+  sigmaL <- sum(sapply(sigma[!idx], function(i) {
+
+    Z <- as.matrix(X[, rownames(i), drop = FALSE])
+
+    sum(diag(Z %*% i %*% t(Z))) / nrow(X)
 
   } ) )
 
