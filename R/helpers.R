@@ -93,7 +93,7 @@ getVarCov. <- function(model) {
 
   vc <- try(getVarCov(model), silent = TRUE)
 
-  if(class(vc) == "try-error") {
+  if(any(class(vc) == "try-error")) {
 
     vc <- VarCorr(model)
 
@@ -103,14 +103,13 @@ getVarCov. <- function(model) {
 
     vm <- as.list(na.omit(v[-length(v)]))
 
-
     vl <- lapply(1:length(vm), function(i) matrix(vm[[i]], dimnames = list(names(vm)[i], names(vm)[i])))
 
     names(vl) <- names(which(is.na(v)))
 
     vl
 
-  } else vc
+  } else list(vc)
 
 }
 

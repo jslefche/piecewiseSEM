@@ -127,19 +127,7 @@ rsquared.lme <- function(model) {
 
   sigma <- getVarCov.(model)
 
-  rand <- findbars.lme(model)
-
-  rand <- rand[match(names(sigma), rand)]
-
-  idx <- sapply(rand, function(x) {
-
-    data <- getData.(model)
-
-    length(unique(data[, x])) == nrow(data)
-
-  } )
-
-  sigmaL <- sum(sapply(sigma[!idx], function(i) {
+  sigmaL <- sum(sapply(sigma, function(i) {
 
     Z <- as.matrix(X[, rownames(i), drop = FALSE])
 
@@ -147,7 +135,7 @@ rsquared.lme <- function(model) {
 
   } ) )
 
-  sigmaE <- summary(model)$sigma
+  sigmaE <- summary(model)$sigma^2
 
   mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
 
