@@ -22,6 +22,10 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
   } else {
 
+    if(is.null(data) & class(modelList) == "psem") data <- modelList$data
+
+    if(is.null(data)) data <- getData.(modelList)
+
     formulaList <- lapply(listFormula(modelList, remove = TRUE), all.vars.merMod)
 
     if(.progressBar == T & length(b) > 0)
@@ -35,12 +39,12 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
       if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) {
 
         bNewMod <- suppressWarnings(
-          update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))), data)
+          update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))), data = data)
         )
 
       } else {
 
-        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data)
+        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = data)
 
       }
 

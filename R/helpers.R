@@ -153,7 +153,7 @@ getData. <- function(modelList) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
-  data <- do.call(cbind, lapply(modelList, function(model) {
+  data.list <- lapply(modelList, function(model) {
 
     if(any(class(model) %in% c("lm")))
 
@@ -173,11 +173,20 @@ getData. <- function(modelList) {
 
     return(data)
 
-  } ) )
+  } )
+
+  n <- max(sapply(data.list, nrow))
+
+  data <- data.list[[which(sapply(data.list, function(x) nrow(x) == n))[1]]]
+
+  for(i in 1:length(data.list)) {
+
+    data <- merge(data, data.list[[i]], all = TRUE)
+
+  }
 
   data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 
   return(data)
 
 }
-
