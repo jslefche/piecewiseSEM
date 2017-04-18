@@ -34,6 +34,8 @@ rsquared <- function(modelList, method = NULL) {
 
   # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 2)
 
+  rownames(ret) <- NULL
+
   return(ret)
 
 }

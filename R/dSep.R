@@ -4,9 +4,17 @@
 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
-  # modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame")))]
+  if(class(modelList) == "psem") data <- modelList$data
+
+  if(is.null(data)) data <- getData.(modelList)
 
   b <- basisSet(modelList, direction)
+
+  if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
+
+    dupOutput(b)
+
+  }
 
   if(length(b) == 0) {
 
@@ -14,17 +22,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
     data.frame()
 
-  }
-
-  else if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
-
-    dupOutput(b)
-
   } else {
-
-    if(is.null(data) & class(modelList) == "psem") data <- modelList$data
-
-    if(is.null(data)) data <- getData.(modelList)
 
     formulaList <- lapply(listFormula(modelList, remove = TRUE), all.vars.merMod)
 
