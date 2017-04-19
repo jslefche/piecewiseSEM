@@ -68,9 +68,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ret <- ct[nrow(ct), , drop = FALSE]
 
-        ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
+        if(all(class(bNewMod) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$df[2], ret[, 3:4])
 
-        # Add in df
+        if(all(class(bNewMod) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = length(summary(bNewMod)$residuals), ret[, 3:4])
 
       }
 
@@ -79,8 +79,8 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
         ct <- as.data.frame(summary(bNewMod)$tTable)
 
         ret <- ct[nrow(ct), , drop = FALSE]
-        
-        if(ncol(ret) == 4) ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4]) 
+
+        if(ncol(ret) == 4) ret <- cbind(ret[, 1:2], DF = summary(i)$fixDF$X[-1], ret[, 3:4])
 
       }
 

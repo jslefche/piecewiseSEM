@@ -12,17 +12,17 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
-  if(standardize == TRUE) tab <- stdCoefs(modelList, data, intercepts) else
+  if(standardize == TRUE) ret <- stdCoefs(modelList, data, intercepts) else
 
-    tab <- unstdCoefs(modelList, data, intercepts)
+    ret <- unstdCoefs(modelList, data, intercepts)
 
-  tab <- cbind(tab, isSig(tab$P.Value))
+  ret <- cbind(ret, isSig(ret$P.Value))
 
-  tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
+  ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
-  names(tab)[length(tab)] = ""
+  names(ret)[length(ret)] = ""
 
-  return(tab)
+  return(ret)
 
 }
 
@@ -37,64 +37,65 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
-  tab <- do.call(rbind, lapply(modelList, function(i) {
+  ret <- do.call(rbind, lapply(modelList, function(i) {
 
     if(all(class(i) %in% c("formula.cerror")))
 
-      tab <- cerror(i, modelList, data) else {
+      ret <- cerror(i, modelList, data) else {
 
-      if(all(class(i) %in% c("lm", "glm", "lmerMod", "glmerMod", "merModLmerTest")))
+        if(all(class(i) %in% c("lm", "glm", "lmerMod", "glmerMod", "merModLmerTest"))) {
 
-        tab <- summary(i)$coefficients
+          ret <- as.data.frame(summary(i)$coefficients)
 
-      if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
+          if(all(class(i) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
 
-        krp <- KRp(i, all.vars.merMod(formula(i))[-1], intercepts = TRUE)
+          if(all(class(i) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
 
-        tab <- as.data.frame(append(as.data.frame(tab), list(DF = krp[1,]), after = 2))
+          }
 
-        tab[, "Pr(>|t|)"] <- krp[2, ]
+        if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
+
+          krp <- KRp(i, all.vars.merMod(formula(i))[-1], intercepts = TRUE)
+
+          ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
+
+          ret[, "Pr(>|t|)"] <- krp[2, ]
+
+          }
+
+        if(all(class(i) %in% c("gls", "lme", "glmmPQL"))) {
+
+          ret <- as.data.frame(summary(i)$tTable)
+
+          if(ncol(ret) == 4) ret <- cbind(ret[, 1:2], DF = summary(i)$fixDF$X[-1], ret[, 3:4])
+
+          }
+
+        ret <- data.frame(
+          Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
+          Predictor = rownames(ret),
+          ret
+          )
+
+        if(ncol(ret) == 6) {
+
+          ret <- getDF(i, ret)
+
+          }
+
+        names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
 
         }
 
-      if(all(class(i) %in% c("gls", "lme", "glmmPQL")))
+    if(intercepts == FALSE) ret <- subset(ret, Predictor != "(Intercept)")
 
-        tab <- summary(i)$tTable
-
-      tab <- data.frame(
-        Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
-        Predictor = rownames(tab),
-        tab
-      )
-
-      if(ncol(tab) == 6) {
-
-        tab <- getDF(i, tab)
-
-      }
-
-      names(tab) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
-
-      }
-
-    if(intercepts == FALSE) tab <- subset(tab, Predictor != "(Intercept)")
-
-    return(tab)
+    return(ret)
 
     } ) )
 
-  rownames(tab) <- NULL
+  rownames(ret) <- NULL
 
-  return(tab)
-
-}
-
-#' Get residual degrees of freedom for a linear regression
-getDF <- function(model, tab) {
-
-  ### NEED TO FIX THIS ###
-
-  cbind(tab[, 1:4], DF = NA, tab[, 5:6])
+  return(ret)
 
 }
 
@@ -109,7 +110,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
 
-  tab <- unstdCoefs(modelList, data, intercepts)
+  ret <- unstdCoefs(modelList, data, intercepts)
 
   Bnew <- do.call(c, lapply(1:length(modelList), function(i) {
 
@@ -127,13 +128,13 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
-      Bnew <- subset(tab, Response == paste0("~~", f[1]) & Predictor == paste0("~~", f[2]))$Estimate
+      Bnew <- subset(ret, Response == paste0("~~", f[1]) & Predictor == paste0("~~", f[2]))$Estimate
 
     } else {
 
       newdata <- dataTrans(formula(j), newdata)
 
-      B <- subset(tab, Response == f[1])$Estimate
+      B <- subset(ret, Response == f[1])$Estimate
 
       sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
 
@@ -149,7 +150,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   } ) )
 
-  cbind(tab, Std.Estimate = unname(Bnew))
+  cbind(ret, Std.Estimate = unname(Bnew))
 
 }
 
