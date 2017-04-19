@@ -74,11 +74,13 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       }
 
-      if(any(class(bNewMod) %in% c("lme", "glmmPQL"))) {
+      if(any(class(bNewMod) %in% c("gls", "lme", "glmmPQL"))) {
 
         ct <- as.data.frame(summary(bNewMod)$tTable)
 
         ret <- ct[nrow(ct), , drop = FALSE]
+        
+        if(ncol(ret) == 4) ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4]) 
 
       }
 
