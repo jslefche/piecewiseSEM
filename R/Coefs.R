@@ -67,7 +67,13 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
           ret <- as.data.frame(summary(i)$tTable)
 
-          if(ncol(ret) == 4) ret <- cbind(ret[, 1:2], DF = summary(i)$fixDF$X[-1], ret[, 3:4])
+          if(ncol(ret) == 4 & class(i) %in% c("gls"))
+
+            ret <- cbind(ret[, 1:2], DF = length(residuals(i)), ret[, 3:4])
+
+          if(ncol(ret) == 4 & class(i) %in% c("lme", "glmmPQL"))
+
+            ret <- cbind(ret[, 1:2], DF = summary(i)$fixDF$X[-1], ret[, 3:4])
 
           }
 
