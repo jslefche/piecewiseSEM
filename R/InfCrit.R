@@ -2,9 +2,11 @@
 #'
 #' @param dTable a list of structural equations
 
-infCrit <- function(modelList, C) {
+infCrit <- function(modelList, C = NULL) {
 
   modelList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
+
+  if(is.null(C)) C <- fisherC(modelList)
 
   K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
 
