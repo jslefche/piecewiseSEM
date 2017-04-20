@@ -49,6 +49,10 @@ getData. <- function(modelList) {
 
       data <- model$data
 
+    if(any(class(model) %in% c("sarlm")))
+
+      stop("Supply data in psem object!")
+
     if(any(class(model) %in% c("gls", "lme")))
 
       data <- nlme::getData(model)
@@ -149,7 +153,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 #' If remove = TRUE, take out non-evaluated formula
 listFormula <- function(modelList, remove = FALSE) {
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame")))]
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -167,6 +171,8 @@ listFormula <- function(modelList, remove = FALSE) {
 
 }
 
+#' Get number of observations from a model
+nobs. <- function(model) if(class(model) == "sarlm") length(fitted(model)) else nobs(model)
 
 #' Get random effects from merMod
 onlyBars <- function(.formula) {

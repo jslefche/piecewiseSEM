@@ -19,7 +19,7 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   C <- fisherC(dTable, claims)
 
-  IC <- InfCrit(modelList, C)
+  IC <- infCrit(modelList, C)
 
   coefficients <- coefs(modelList, data, intercepts, standardize)
 

@@ -6,7 +6,7 @@ rsquared <- function(modelList, method = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList = list(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
 
   evaluateClasses(modelList)
 
@@ -15,6 +15,8 @@ rsquared <- function(modelList, method = NULL) {
     if(all(class(i) %in% c("lm"))) r <- rsquared.lm(i)
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
+
+    if(all(class(i) %in% c("sarlm"))) r <- list(family = "gaussian", identity = "link", R.squared = NA)
 
     if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method)
 

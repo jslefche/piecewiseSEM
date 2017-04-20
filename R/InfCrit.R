@@ -2,13 +2,13 @@
 #'
 #' @param dTable a list of structural equations
 
-InfCrit <- function(modelList, C) {
+infCrit <- function(modelList, C) {
 
-  mList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+  modelList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
 
-  K <- do.call(sum, lapply(mList, function(i) attr(logLik(i), "df")))
+  K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
 
-  n.obs <- min(sapply(mList, nobs))
+  n.obs <- min(sapply(modelList, nobs.))
 
   pwAIC <- as.numeric(C[1] + 2*K)
 

@@ -153,7 +153,7 @@ all.vars.notrans <- function(.formula) {
 #' If intermediate endogenous variables are nonlinear, return both directions
 reverseNonLin <- function(modelList, b, amat, formulaList) {
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame","formula", "formula.cerror")))]
 
   formulaList <- listFormula(modelList, remove = TRUE)
 
@@ -209,7 +209,7 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 #' transformations in order of how variables are treated in the child nearest to current node
 replaceTrans <- function(modelList, b, amat, formulaList) {
 
-  idx <- which(sapply(modelList, function(x) !any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror"))))
+  idx <- which(sapply(modelList, function(x) !any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror"))))
 
   modelList <- modelList[idx]
 

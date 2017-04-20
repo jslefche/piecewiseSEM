@@ -6,7 +6,7 @@ psem <- function(...) {
 
   x <- list(...)
 
-  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame"))))
+  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame"))))
 
   if(length(idx) > 0) {
 
@@ -20,14 +20,11 @@ psem <- function(...) {
 
   formulaList <- listFormula(x)
 
-  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
 
   if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
     stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
-
-  # remove quotes on cerrors
-  # print.attr(x)
 
   class(x) <- "psem"
 
@@ -101,11 +98,12 @@ evaluateClasses <- function(modelList) {
   classes <- classes[!duplicated(classes)]
 
   model.classes <- c(
-    "data.frame",
+    "data.frame", "SpatialPointsDataFrame",
     "formula", "formula.cerror",
     "lm", "glm", "gls",
     "lme", "glmmPQL",
-    "lmerMod", "merModLmerTest", "glmerMod"
+    "lmerMod", "merModLmerTest", "glmerMod",
+    "sarlm"
   )
 
   if(!all(classes %in% model.classes))

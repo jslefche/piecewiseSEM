@@ -10,7 +10,7 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   if(is.null(data)) data <- getData.(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
 
   if(standardize == TRUE) ret <- stdCoefs(modelList, data, intercepts) else
 
@@ -35,7 +35,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(is.null(data)) data <- getData.(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
 
   ret <- do.call(rbind, lapply(modelList, function(i) {
 
@@ -51,7 +51,15 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
           if(all(class(i) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
 
-          }
+        }
+
+        if(all(class(i) %in% c("sarlm"))) {
+
+          ret <- as.data.frame(summary(i)$Coef)
+
+          ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
+
+        }
 
         if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
 
@@ -83,12 +91,6 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           ret
           )
 
-        if(ncol(ret) == 6) {
-
-          ret <- getDF(i, ret)
-
-          }
-
         names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
 
         }
@@ -114,7 +116,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(is.null(data)) data <- getData.(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
 
   ret <- unstdCoefs(modelList, data, intercepts)
 
@@ -137,6 +139,8 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
       Bnew <- subset(ret, Response == paste0("~~", f[1]) & Predictor == paste0("~~", f[2]))$Estimate
 
     } else {
+
+      if(class(newdata) %in% c("SpatialPointsDataFrame")) newdata <- newdata@data
 
       newdata <- dataTrans(formula(j), newdata)
 
@@ -197,11 +201,11 @@ sdFam <- function(x, model, data) {
 }
 
 #' Transform variables based on model formula and store in new data frame
-dataTrans <- function(.formula, newdata) {
+dataTrans <- function(formula., newdata) {
 
-  notrans <- all.vars.notrans(.formula)
+  notrans <- all.vars.notrans(formula.)
 
-  trans <- all.vars.trans(.formula)
+  trans <- all.vars.trans(formula.)
 
   if(any(grepl("scale\\(.*\\)", trans))) {
 

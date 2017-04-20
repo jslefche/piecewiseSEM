@@ -14,12 +14,12 @@
 
 #' Calculating (partial) correlations
 
-#' @param .formula a formula
+#' @param formula. a formula
 #' @param modelList a list of structural equations
 
-cerror <- function(.formula, modelList, data = NULL) {
+cerror <- function(formula., modelList, data = NULL) {
 
-  tab <- partialCorr(.formula, modelList, data)
+  tab <- partialCorr(formula., modelList, data)
 
   tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
 
@@ -28,7 +28,7 @@ cerror <- function(.formula, modelList, data = NULL) {
 }
 
 #' Extract partial residuals
-partialResid <- function(.formula, modelList, data = NULL) {
+partialResid <- function(formula., modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -38,15 +38,19 @@ partialResid <- function(.formula, modelList, data = NULL) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
-  if(class(.formula) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
+  if(class(formula.) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(formula., "~~"))) else
 
-      vars <- gsub(" ", "", unlist(strsplit(deparse(.formula), "~")))
+      vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
 
   vars <- strsplit(vars, ":|\\*")
 
   residModList <- getResidModels(vars, modelList, data)
 
-  yresid <- data.frame(.id = rownames(getData.(residModList$ymod)), yresid = as.numeric(resid(residModList$ymod))) #resid.lme(ymod)
+  if(all(class(residModList$ymod) == "numeric"))
+
+    yresid <- data.frame(.id = names(residModList$ymod), yresid = residModList$ymod) else
+
+      yresid <- data.frame(.id = rownames(getData.(residModList$ymod)), yresid = as.numeric(resid(residModList$ymod))) #resid.lme(ymod)
 
   if(all(class(residModList$xmod) == "numeric"))
 
@@ -61,7 +65,7 @@ partialResid <- function(.formula, modelList, data = NULL) {
 }
 
 #' Calculate partial correlations from partial residuals
-partialCorr <- function(.formula, modelList, data = NULL) {
+partialCorr <- function(formula., modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -71,13 +75,13 @@ partialCorr <- function(.formula, modelList, data = NULL) {
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
-  rdata <- partialResid(.formula, modelList, data)
+  rdata <- partialResid(formula., modelList, data)
 
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
 
-  if(class(.formula) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(.formula, "~~"))) else
+  if(class(formula.) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(formula., "~~"))) else
 
-    vars <- gsub(" ", "", unlist(strsplit(deparse(.formula), "~")))
+    vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
 
   vars <- strsplit(vars, ":|\\*")
 
@@ -171,13 +175,23 @@ getResidModels <- function(vars, modelList, data) {
 
     if(!all(unlist(vars) %in% colnames(data)))
 
-      stop("Variables not found in the model list. Ensure spelling is correct!") else
+      stop("Variables not found in the model list. Ensure spelling is correct!") else {
 
         rdata <- data[, colnames(data) %in% vars]
 
+        ymod <- data[, vars[[1]]]
+
+        names(ymod) <- rownames(data)
+
+        xmod <- data[, vars[[2]]]
+
+        names(xmod) <- rownames(data)
+
+      }
+
   } else {
 
-    if(all(xvar == FALSE))
+    if(all(xvar == FALSE)) {
 
       xvar <- sapply(listFormula(modelList), function(x) {
 
@@ -186,6 +200,8 @@ getResidModels <- function(vars, modelList, data) {
         any(f[1] == vars[[1]] & f[-1] %in% vars[[2]])
 
       } )
+
+      }
 
     ymod <- modelList[[which(yvar)]]
 

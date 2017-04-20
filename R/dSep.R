@@ -70,7 +70,17 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         if(all(class(bNewMod) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$df[2], ret[, 3:4])
 
-        if(all(class(bNewMod) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = length(summary(bNewMod)$residuals), ret[, 3:4])
+        if(all(class(bNewMod) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
+
+      }
+
+      if(all(class(bNewMod) %in% c("sarlm"))) {
+
+        ct <- as.data.frame(summary(bNewMod)$Coef)
+
+        ret <- ct[nrow(ct), , drop = FALSE]
+
+        ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
       }
 
