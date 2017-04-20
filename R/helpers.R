@@ -175,7 +175,7 @@ listFormula <- function(modelList, remove = FALSE) {
 }
 
 #' Get number of observations from a model
-nobs. <- function(model) if(class(model) == "sarlm") length(fitted(model)) else nobs(model)
+nobs. <- function(model) if(all(class(model) == "sarlm")) length(fitted(model)) else nobs(model)
 
 #' Get random effects from merMod
 onlyBars <- function(.formula) {

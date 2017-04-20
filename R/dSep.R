@@ -40,7 +40,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
           update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))), data = data)
         )
 
-      } else if(class(bMod) %in% c("pgls")) {
+      } else if(all(class(bMod) %in% c("pgls"))) {
 
         bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = bMod$data)
 
