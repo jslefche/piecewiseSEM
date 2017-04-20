@@ -8,6 +8,8 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
+  if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
+
   if(is.null(data)) data <- getData.(modelList)
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]

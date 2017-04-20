@@ -73,7 +73,7 @@ partialCorr <- function(formula., modelList, data = NULL) {
 
   if(is.null(data)) data <- getData.(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
 
   rdata <- partialResid(formula., modelList, data)
 
