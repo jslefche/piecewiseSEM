@@ -8,9 +8,9 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
-  if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
-
   if(is.null(data)) data <- getData.(modelList)
+
+  if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
 
@@ -45,13 +45,13 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       ret <- cerror(i, modelList, data) else {
 
-        if(all(class(i) %in% c("lm", "glm", "lmerMod", "glmerMod", "merModLmerTest"))) {
+        if(all(class(i) %in% c("lm", "glm", "lmerMod", "glmerMod", "pgls"))) {
 
           ret <- as.data.frame(summary(i)$coefficients)
 
           if(all(class(i) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
 
-          if(all(class(i) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
+          if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
 
         }
 

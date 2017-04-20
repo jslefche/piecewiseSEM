@@ -12,7 +12,7 @@ rsquared <- function(modelList, method = NULL) {
 
   ret <- do.call(rbind, lapply(modelList, function(i) {
 
-    if(all(class(i) %in% c("lm"))) r <- rsquared.lm(i)
+    if(any(class(i) %in% c("lm", "pgls"))) r <- rsquared.lm(i)
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
 
@@ -31,6 +31,10 @@ rsquared <- function(modelList, method = NULL) {
     ret <- do.call(data.frame, r)
 
     ret <- data.frame(Response = all.vars.merMod(formula(i))[1], ret)
+
+    # if(ncol(ret) != 5) ret[, ncol(ret) + 1] <- NA
+
+    return(ret)
 
   } ) )
 

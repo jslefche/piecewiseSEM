@@ -45,17 +45,21 @@ getData. <- function(modelList) {
 
       data <- model$model
 
-    if(any(class(model) %in% c("glm", "glmmPQL")))
+    if(any(class(model) %in% c("glm", "glmmPQL", "pgls")))
 
       data <- model$data
 
-    if(any(class(model) %in% c("sarlm")))
+    if(all(class(model) %in% c("sarlm")))
 
       stop("Supply data in psem object!")
 
     if(any(class(model) %in% c("gls", "lme")))
 
       data <- nlme::getData(model)
+
+    if(all(class(model) %in% c("pgls")))
+
+      data <- model$data$data
 
     if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
 
@@ -80,7 +84,6 @@ getData. <- function(modelList) {
   return(data)
 
 }
-
 
 #' Get random effects variance-covariance from lme
 getVarCov. <- function(model) {

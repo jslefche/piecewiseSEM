@@ -40,11 +40,11 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
           update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))), data = data)
         )
 
-      } else {
+      } else if(class(bMod) %in% c("pgls")) {
 
-        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = data)
+        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = bMod$data)
 
-      }
+        } else bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = data)
 
       if(any(class(bNewMod) %in% c("lmerMod", "merModLmerTest"))) {
 
@@ -62,7 +62,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       }
 
-      if(any(class(bNewMod) %in% c("lm", "glm", "glmerMod"))) {
+      if(any(class(bNewMod) %in% c("lm", "glm", "glmerMod", "pgls"))) {
 
         ct <- as.data.frame(summary(bNewMod)$coefficients)
 
@@ -70,7 +70,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         if(all(class(bNewMod) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$df[2], ret[, 3:4])
 
-        if(all(class(bNewMod) %in% c("glmerMod"))) ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
+        if(all(class(bNewMod) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
       }
 
@@ -131,8 +131,6 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
       } ) )
 
     }
-
-    # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
     ret <- cbind.data.frame(ret, sig = sapply(ret$P.Value, isSig))
 

@@ -103,7 +103,8 @@ evaluateClasses <- function(modelList) {
     "lm", "glm", "gls",
     "lme", "glmmPQL",
     "lmerMod", "merModLmerTest", "glmerMod",
-    "sarlm"
+    "sarlm",
+    "pgls"
   )
 
   if(!all(classes %in% model.classes))
