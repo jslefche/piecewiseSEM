@@ -18,14 +18,14 @@ summary.psem <- function(modelList, groups = NULL,
 
     names(modelList2) <- lvls
 
-    lapply(modelList2, function(i) summary.psem2(i, groups, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar))
+    lapply(modelList2, function(i) summary.psem2(i, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar))
 
-  } else summary.psem2(modelList, groups, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar)
+  } else summary.psem2(modelList, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar)
 
 }
 
 #' Evaluate a list of structural equations
-summary.psem2 <- function(modelList, groups = NULL,
+summary.psem2 <- function(modelList,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
