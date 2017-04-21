@@ -16,7 +16,7 @@ psem <- function(...) {
 
   } else {
 
-    x$data <- getData.(modelList)
+    x$data <- getData.(x)
 
   }
 
