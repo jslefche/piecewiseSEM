@@ -14,7 +14,19 @@ psem <- function(...) {
 
     names(x)[length(x)] <- "data"
 
+  } else {
+
+    x$data <- getData.(modelList)
+
   }
+
+  if(any(is.na(names(x)))) {
+
+    idx. <- which(is.na(names(x)))
+
+    names(x)[idx.] <- idx.
+
+    }
 
   evaluateClasses(x)
 

@@ -4,11 +4,9 @@
 
 coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- psem(modelList)
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
-
-  if(is.null(data)) data <- getData.(modelList)
 
   if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
 

@@ -4,9 +4,7 @@
 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
-  if(class(modelList) == "psem") data <- modelList$data
-
-  if(is.null(data)) data <- getData.(modelList)
+  data <- modelList$data
 
   b <- basisSet(modelList, direction)
 

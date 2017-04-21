@@ -1,21 +1,21 @@
 #' Remove random effects from all.vars
-all.vars.merMod <- function(.formula) {
+all.vars.merMod <- function(formula.) {
 
-  if(!any(class(.formula) %in% c("formula", "formula.cerror"))) .formula <- formula(.formula)
+  if(!any(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
-  if(class(.formula) == "formula.cerror")
+  if(class(formula.) == "formula.cerror")
 
-    gsub(" " , "", unlist(strsplit(.formula, "~~"))) else {
+    gsub(" " , "", unlist(strsplit(formula., "~~"))) else {
 
-      n <- rownames(attr(terms(.formula), "factors"))
+      n <- rownames(attr(terms(formula.), "factors"))
 
       if(any(grepl("\\|", n))) {
 
-        f <- lme4::nobars(.formula)
+        f <- lme4::nobars(formula.)
 
         all.vars(f)
 
-      } else all.vars(.formula)
+      } else all.vars(formula.)
 
     }
 
@@ -178,11 +178,11 @@ listFormula <- function(modelList, remove = FALSE) {
 nobs. <- function(model) if(all(class(model) == "sarlm")) length(fitted(model)) else nobs(model)
 
 #' Get random effects from merMod
-onlyBars <- function(.formula) {
+onlyBars <- function(formula.) {
 
   paste(
 
-    sapply(lme4::findbars(.formula), function(x)
+    sapply(lme4::findbars(formula.), function(x)
 
       paste0("(", deparse(x), ")")
 

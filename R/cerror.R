@@ -30,11 +30,9 @@ cerror <- function(formula., modelList, data = NULL) {
 #' Extract partial residuals
 partialResid <- function(formula., modelList, data = NULL) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- psem(modelList)
 
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
-
-  if(is.null(data)) data <- getData.(modelList)
+  data <- modelList$data
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
 
@@ -67,11 +65,9 @@ partialResid <- function(formula., modelList, data = NULL) {
 #' Calculate partial correlations from partial residuals
 partialCorr <- function(formula., modelList, data = NULL) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- psem(modelList)
 
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
-
-  if(is.null(data)) data <- getData.(modelList)
+  data <- modelList$data
 
   modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
 

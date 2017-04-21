@@ -2,12 +2,13 @@
 #'
 #' @param modelList a list of structural equations
 
-summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE,
-                         claims = NULL,
+summary.psem <- function(modelList,
+                         direction = NULL, conserve = FALSE, conditional = FALSE,
+                         add.claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
                          .progressBar = TRUE) {
 
-  if(class(modelList) == "psem") data <- modelList$data
+  data <- modelList$data
 
   if(is.null(data)) data <- getData.(modelList)
 
@@ -17,9 +18,9 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
   dTable <- dSep(modelList, direction, conserve, conditional, .progressBar)
 
-  C <- fisherC(dTable, claims)
+  Cstat <- fisherC(dTable, add.claims)
 
-  IC <- infCrit(modelList, C)
+  IC <- infCrit(modelList, Cstat)
 
   coefficients <- coefs(modelList, data, intercepts, standardize)
 
@@ -31,7 +32,7 @@ summary.psem <- function(modelList, direction = NULL, conserve = FALSE, conditio
 
     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)
 
-  l <- list(name = name, call = call, dTable = dTable, C = C, IC = IC, coefficients = coefficients, R2 = R2)
+  l <- list(name = name, call = call, dTable = dTable, Cstat = Cstat, IC = IC, coefficients = coefficients, R2 = R2)
 
   class(l) <- "summary.psem"
 
@@ -60,9 +61,9 @@ print.summary.psem <- function(x) {
 
   cat("\n\n")
 
-  cat("Goodness-of-fit:\n\n  Global model: Fisher's C =", as.character(x$C[1]),
-      "with P-value =", as.character(x$C[3]),
-      "and on", as.character(x$C[2]), "degrees of freedom")
+  cat("Goodness-of-fit:\n\n  Global model: Fisher's C =", as.character(x$Cstat[1]),
+      "with P-value =", as.character(x$Cstat[3]),
+      "and on", as.character(x$Cstat[2]), "degrees of freedom")
 
   cat("\n\n  Individual R-squared:\n  ", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
 
