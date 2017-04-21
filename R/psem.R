@@ -44,63 +44,46 @@ psem <- function(...) {
 
 }
 
-#' Update psem model object with additional values
-update.psem <- function(x, ...) {
+#' Convert list to psem object
+as.psem <- function(x) {
 
-  l <- list(...)
+  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame"))))
 
-  for(i in l) {
+  if(length(idx) > 0) {
 
-    if(all(class(i) %in% c("matrix", "data.frame"))) {
+    x <- x[c((1:length(x))[!1:length(x) %in% idx], idx)]
 
-      idx <- which(names(x) == "data")
+    names(x)[length(x)] <- "data"
 
-      if(length(idx) == 0) x$data = i else
+  } else {
 
-        x[[idx]] <- i
+    x$data <- getData.(x)
 
-      x <- lapply(x, function(j) {
+  }
 
-        if(!any(class(j) %in% c("matrix", "data.frame", "formula", "formula.cerror")))
+  if(any(is.na(names(x)))) {
 
-          update(j, data = i) else j
+    idx. <- which(is.na(names(x)))
 
-        } )
-
-      } else if(all(class(i) %in% c("formula"))) {
-
-        if(length(all.vars.merMod(i)) == 1) {
-
-          x[[length(x) + 1]] <- i
-
-        } else {
-
-            resp <- sapply(x, function(y) if(!any(class(y) %in% c("matrix", "data.frame")))
-
-              all.vars.merMod(y)[1] else "")
-
-            idx <- which(resp == all.vars.merMod(i)[1])
-
-            x[[idx]] <- update(x[[idx]], i)
-
-            }
-
-        } else {
-
-          x[[length(x) + 1]] <- i
-
-        }
+    names(x)[idx.] <- idx.
 
   }
 
   evaluateClasses(x)
+
+  formulaList <- listFormula(x)
+
+  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
+
+  if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
+
+    stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
 
   class(x) <- "psem"
 
   x
 
 }
-
 
 #' Evaluate model classes and stop if unsupported model class
 evaluateClasses <- function(modelList) {
@@ -128,6 +111,82 @@ evaluateClasses <- function(modelList) {
         ". See 'help(piecewiseSEM)' for more details."),
       call. = FALSE
     )
+
+}
+
+#' Print psem
+print.psem <- function(x) {
+
+  print(lapply(x, function(i) {
+
+    if(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame"))
+
+      head(i) else
+
+        if(class(i) %in% c("formula", "formula.cerror"))
+
+          as.character(i) else
+
+            deparse(formula(i))
+
+  } ) )
+
+}
+
+#' Update psem model object with additional values
+update.psem <- function(x, ...) {
+
+  l <- list(...)
+
+  for(i in l) {
+
+    if(all(class(i) %in% c("matrix", "data.frame"))) {
+
+      idx <- which(names(x) == "data")
+
+      if(length(idx) == 0) x$data = i else
+
+        x[[idx]] <- i
+
+      x <- lapply(x, function(j) {
+
+        if(!any(class(j) %in% c("matrix", "data.frame", "formula", "formula.cerror")))
+
+          update(j, data = i) else j
+
+      } )
+
+    } else if(all(class(i) %in% c("formula"))) {
+
+      if(length(all.vars.merMod(i)) == 1) {
+
+        x[[length(x) + 1]] <- i
+
+      } else {
+
+        resp <- sapply(x, function(y) if(!any(class(y) %in% c("matrix", "data.frame")))
+
+          all.vars.merMod(y)[1] else "")
+
+        idx <- which(resp == all.vars.merMod(i)[1])
+
+        x[[idx]] <- update(x[[idx]], i)
+
+      }
+
+    } else {
+
+      x[[length(x) + 1]] <- i
+
+    }
+
+  }
+
+  evaluateClasses(x)
+
+  class(x) <- "psem"
+
+  x
 
 }
 
