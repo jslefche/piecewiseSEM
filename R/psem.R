@@ -127,7 +127,7 @@ print.psem <- function(x) {
 
           as.character(i) else
 
-            deparse(formula(i))
+            c(deparse(formula(i)), class(i))
 
   } ) )
 

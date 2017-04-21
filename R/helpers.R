@@ -119,12 +119,12 @@ isSig <- function(p) {
 
 }
 
-#' Recompute p-values using Kenward-Rogers approximation
-KRp <- function(model, vars, intercepts = FALSE) {
+#' Recompute P-values using Kenward-Rogers approximation
+KRp <- function(model, vars, data, intercepts = FALSE) {
 
   ret <- sapply(vars, function(x) {
 
-    reducMod <- update(model, as.formula(paste(". ~ . -", x)))
+    reducMod <- update(model, as.formula(paste(". ~ . -", x)), data = data)
 
     kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
 
@@ -138,7 +138,7 @@ KRp <- function(model, vars, intercepts = FALSE) {
 
   if(intercepts == TRUE) {
 
-    reducMod <- update(model, as.formula(paste("~ 0 + .")))
+    reducMod <- update(model, as.formula(paste("~ 0 + .")), data = data)
 
     kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
 

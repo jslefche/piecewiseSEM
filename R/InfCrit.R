@@ -2,11 +2,11 @@
 #'
 #' @param dTable a list of structural equations
 
-infCrit <- function(modelList, Cstat = NULL, add.claims = NULL) {
+infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   modelList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
 
-  if(is.null(Cstat)) Cstat <- fisherC(modelList, add.claims)
+  if(is.null(Cstat)) Cstat <- fisherC(modelList, add.claims, add.claims, direction, conserve, conditional, .progressBar)
 
   K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
 
@@ -35,7 +35,9 @@ infCrit <- function(modelList, Cstat = NULL, add.claims = NULL) {
 #` Generalized function for extraction AIC(c) score
 AIC.psem <- function(x) {
 
-  x. <- suppressWarnings(summary(x, .progressBar = FALSE)$IC)
+  if(class(x) != "summary.psem") x <- summary(x, .progressBar = FALSE)
+
+  x. <- suppressWarnings(x$IC)
 
   c(AIC = x.$AIC, AICc = x.$AICc)
 
@@ -44,7 +46,9 @@ AIC.psem <- function(x) {
 #` Generalized function for extraction BIC score
 BIC.psem <- function(x) {
 
-  x. <- suppressWarnings(summary(x, .progressBar = FALSE)$IC)
+  if(class(x) != "summary.psem") x <- summary(x, .progressBar = FALSE)
+
+  x. <- suppressWarnings(x$IC)
 
   c(BIC = x.$BIC)
 

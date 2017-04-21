@@ -2,9 +2,9 @@
 #'
 #' @param dTable a list of structural equations
 
-fisherC <- function(dTable, add.claims = NULL) {
+fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  if(class(dTable) == "psem") dTable <- dSep(dTable)
+  if(class(dTable) == "psem") dTable <- dSep(dTable, direction, conserve, conditional, .progressBar)
 
   if(length(dTable) == 0) {
 

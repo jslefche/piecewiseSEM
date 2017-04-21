@@ -4,8 +4,6 @@
 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
 
-  data <- modelList$data
-
   b <- basisSet(modelList, direction)
 
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
@@ -22,6 +20,8 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
   } else {
 
+    data <- modelList$data
+
     formulaList <- lapply(listFormula(modelList, remove = TRUE), all.vars.merMod)
 
     if(.progressBar == T & length(b) > 0)
@@ -35,18 +35,24 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
       if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "glmerMod"))) {
 
         bNewMod <- suppressWarnings(
-          update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))), data = data)
+          update(bMod,
+                 formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))),
+                 data = data)
         )
 
       } else if(all(class(bMod) %in% c("pgls"))) {
 
-        bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = bMod$data)
+        bNewMod <- update(bMod,
+                          formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
+                          data = data)
 
-        } else bNewMod <- update(bMod, formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))), data = data)
+        } else bNewMod <- update(bMod,
+                                 formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
+                                 data = data)
 
       if(any(class(bNewMod) %in% c("lmerMod", "merModLmerTest"))) {
 
-        kr <- KRp(bNewMod, b[[i]][1], intercepts = FALSE)
+        kr <- KRp(bNewMod, b[[i]][1], data, intercepts = FALSE)
 
         ct <- summary(bNewMod)$coefficients
 
