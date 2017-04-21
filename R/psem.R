@@ -6,7 +6,7 @@ psem <- function(...) {
 
   x <- list(...)
 
-  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame"))))
+  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
   if(length(idx) > 0) {
 
@@ -32,7 +32,7 @@ psem <- function(...) {
 
   formulaList <- listFormula(x)
 
-  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
+  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data", "formula", "formula.cerror")))]
 
   if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
@@ -93,7 +93,7 @@ evaluateClasses <- function(modelList) {
   classes <- classes[!duplicated(classes)]
 
   model.classes <- c(
-    "data.frame", "SpatialPointsDataFrame",
+    "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data",
     "formula", "formula.cerror",
     "lm", "glm", "gls",
     "lme", "glmmPQL",
@@ -117,9 +117,9 @@ evaluateClasses <- function(modelList) {
 #' Print psem
 print.psem <- function(x) {
 
-  print(lapply(x, function(i) {
+  print(sapply(x, function(i) {
 
-    if(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame"))
+    if(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))
 
       head(i) else
 
@@ -129,7 +129,11 @@ print.psem <- function(x) {
 
             c(deparse(formula(i)), class(i))
 
-  } ) )
+  } ), quote = FALSE )
+
+  cat("\n")
+
+  print(paste0("class(", class(x), ")"))
 
 }
 
@@ -140,7 +144,7 @@ update.psem <- function(x, ...) {
 
   for(i in l) {
 
-    if(all(class(i) %in% c("matrix", "data.frame"))) {
+    if(all(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))) {
 
       idx <- which(names(x) == "data")
 
@@ -150,7 +154,7 @@ update.psem <- function(x, ...) {
 
       x <- lapply(x, function(j) {
 
-        if(!any(class(j) %in% c("matrix", "data.frame", "formula", "formula.cerror")))
+        if(!any(class(j) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data", "formula", "formula.cerror")))
 
           update(j, data = i) else j
 
@@ -164,7 +168,7 @@ update.psem <- function(x, ...) {
 
       } else {
 
-        resp <- sapply(x, function(y) if(!any(class(y) %in% c("matrix", "data.frame")))
+        resp <- sapply(x, function(y) if(!any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")))
 
           all.vars.merMod(y)[1] else "")
 

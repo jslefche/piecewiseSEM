@@ -55,20 +55,35 @@ basisSet <- function(modelList, direction = NULL) {
 
 }
 
-#' Filter relationships among exogenous variables from the basis set
-filterExogenous <- function(b, amat) {
+#' Get vector of untransformed variables
+all.vars.notrans <- function(.formula) {
 
-  exo <- colnames(amat[, colSums(amat) == 0, drop = FALSE])
+  if(class(.formula) == "formula")
 
-  b <- lapply(b, function(i)
+    all.vars.merMod(.formula) else
 
-    if(all(i[1:2] %in% exo) | i[2] %in% exo) NULL else i
+      unlist(strsplit(.formula, " ~~ "))
 
-  )
+}
 
-  b <- b[!sapply(b, is.null)]
+#' Get vector of transformed variables
+all.vars.trans <- function(.formula) {
 
-  return(b)
+  if(class(.formula) == "formula") {
+
+    n <- rownames(attr(terms(.formula), "factors"))
+
+    if(any(grepl("\\|", n))) {
+
+      idn <- which(grepl("\\|", n))
+
+      f <- rownames(attr(terms(.formula), "factors"))[-idn]
+
+      return(f)
+
+    } else return(n)
+
+  } else unlist(strsplit(.formula, " ~~ "))
 
 }
 
@@ -82,6 +97,23 @@ filterExisting <- function(b, formulaList) {
     if(any(sapply(f, function(x) any(all.vars.merMod(x)[-1] %in% i[2])))) NULL else i
 
   } )
+
+  b <- b[!sapply(b, is.null)]
+
+  return(b)
+
+}
+
+#' Filter relationships among exogenous variables from the basis set
+filterExogenous <- function(b, amat) {
+
+  exo <- colnames(amat[, colSums(amat) == 0, drop = FALSE])
+
+  b <- lapply(b, function(i)
+
+    if(all(i[1:2] %in% exo) | i[2] %in% exo) NULL else i
+
+  )
 
   b <- b[!sapply(b, is.null)]
 
@@ -118,98 +150,11 @@ removeCerror <- function(b, formulaList) {
 
 }
 
-#' Get vector of transformed variables
-all.vars.trans <- function(.formula) {
-
-  if(class(.formula) == "formula") {
-
-    n <- rownames(attr(terms(.formula), "factors"))
-
-    if(any(grepl("\\|", n))) {
-
-      idn <- which(grepl("\\|", n))
-
-      f <- rownames(attr(terms(.formula), "factors"))[-idn]
-
-      return(f)
-
-    } else return(n)
-
-  } else unlist(strsplit(.formula, " ~~ "))
-
-}
-
-#' Get vector of untransformed variables
-all.vars.notrans <- function(.formula) {
-
-  if(class(.formula) == "formula")
-
-    all.vars.merMod(.formula) else
-
-      unlist(strsplit(.formula, " ~~ "))
-
-}
-
-#' If intermediate endogenous variables are nonlinear, return both directions
-reverseNonLin <- function(modelList, b, amat, formulaList) {
-
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame","formula", "formula.cerror")))]
-
-  formulaList <- listFormula(modelList, remove = TRUE)
-
-  names(b) <- 1:length(b)
-
-  idx <- which(colSums(amat[colSums(amat) == 0, , drop = FALSE]) > 0)
-
-  idx <- idx[!idx %in% which(colSums(amat[!colSums(amat) == 0, , drop = FALSE]) > 0)]
-
-  idx <- names(idx)
-
-  idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
-
-  idm <- idm[
-
-    sapply(modelList[idm], function(x) {
-
-    .family <- try(family(x), silent = TRUE)
-
-    if(class(.family) == "try-error") FALSE else TRUE
-
-  } ) ]
-
-  if(length(idm) > 0) {
-
-    if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
-
-      idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
-
-      if(length(idf) > 0) {
-
-        b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
-
-          c(i[2], i[1], i[-(1:2)]) )
-
-          )
-
-      }
-
-    }
-
-  }
-
-  r <- sapply(formulaList, function(x) all.vars.merMod(x)[1])
-
-  b <- b[sapply(b, function(x) any(x[2] %in% r))]
-
-  return(b)
-
-}
-
 #' Replace transformations in the basis set by cycling through neighbors and applying
 #' transformations in order of how variables are treated in the child nearest to current node
 replaceTrans <- function(modelList, b, amat, formulaList) {
 
-  idx <- which(sapply(modelList, function(x) !any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror"))))
+  idx <- which(names(modelList) %in% names(removeData(modelList, formulas = 1)))
 
   modelList <- modelList[idx]
 
@@ -256,6 +201,61 @@ replaceTrans <- function(modelList, b, amat, formulaList) {
     i
 
   } )
+
+  return(b)
+
+}
+
+#' If intermediate endogenous variables are nonlinear, return both directions
+reverseNonLin <- function(modelList, b, amat, formulaList) {
+
+  modelList <- removeData(modelList, formulas = 1)
+
+  formulaList <- listFormula(modelList, remove = TRUE)
+
+  names(b) <- 1:length(b)
+
+  idx <- which(colSums(amat[colSums(amat) == 0, , drop = FALSE]) > 0)
+
+  idx <- idx[!idx %in% which(colSums(amat[!colSums(amat) == 0, , drop = FALSE]) > 0)]
+
+  idx <- names(idx)
+
+  idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
+
+  idm <- idm[
+
+    sapply(modelList[idm], function(x) {
+
+    .family <- try(family(x), silent = TRUE)
+
+    if(class(.family) == "try-error") FALSE else TRUE
+
+  } ) ]
+
+  if(length(idm) > 0) {
+
+    if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
+
+      idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
+
+      if(length(idf) > 0) {
+
+        b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
+
+          c(i[2], i[1], i[-(1:2)]) )
+
+          )
+
+      }
+
+    }
+
+  }
+
+  r <- sapply(formulaList, function(x) all.vars.merMod(x)[1])
+
+  b <- b[sapply(b, function(x) any(x[2] %in% r))]
 
   return(b)
 

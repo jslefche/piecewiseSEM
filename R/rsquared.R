@@ -6,7 +6,7 @@ rsquared <- function(modelList, method = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList = list(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
+  modelList <- removeData(modelList, formulas = 1)
 
   evaluateClasses(modelList)
 

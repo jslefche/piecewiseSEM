@@ -37,7 +37,7 @@ getData. <- function(modelList) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "formula", "formula.cerror")))]
+  modelList <- removeData(modelList, formulas = 1)
 
   data.list <- lapply(modelList, function(model) {
 
@@ -156,7 +156,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 #' If remove = TRUE, take out non-evaluated formula
 listFormula <- function(modelList, remove = FALSE) {
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame")))]
+  modelList <- removeData(modelList, formulas = 0)
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -200,3 +200,18 @@ print.attr <- function(x) {
   noquote(x)
 
 }
+
+#' Remove data from the model list
+removeData <- function(modelList, formulas = 0) {
+
+  remove <- c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")
+
+  if(formulas == 1) remove <- c(remove, "formula", "formula.cerror")
+
+  if(formulas == 2) remove <- c(remove, "formula")
+
+  modelList[!sapply(modelList, function(x) any(class(x) %in% remove))]
+
+}
+
+remove

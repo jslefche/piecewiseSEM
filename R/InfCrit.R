@@ -4,9 +4,9 @@
 
 infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  modelList <- modelList[!sapply(modelList, function(i) any(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
+  if(is.null(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)
 
-  if(is.null(Cstat)) Cstat <- fisherC(modelList, add.claims, add.claims, direction, conserve, conditional, .progressBar)
+  modelList <- removeData(modelList, formulas = 1)
 
   K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
 

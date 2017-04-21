@@ -14,7 +14,7 @@ summary.psem <- function(modelList,
 
   dTable <- dSep(modelList, direction, conserve, conditional, .progressBar)
 
-  Cstat <- fisherC(dTable, add.claims, direction, conserve, conditional, .progressBar )
+  Cstat <- fisherC(dTable, add.claims, direction, conserve, conditional, .progressBar)
 
   IC <- infCrit(modelList, Cstat, add.claims, direction, conserve, conditional, .progressBar)
 

@@ -8,7 +8,9 @@ coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
 
   if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
+  if(class(data) %in% c("comparative.data")) data <- data$data
+
+  modelList <- removeData(modelList, formulas = 2)
 
   if(standardize == TRUE) ret <- stdCoefs(modelList, data, intercepts) else
 
@@ -33,7 +35,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(is.null(data)) data <- getData.(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
+  modelList <- removeData(modelList, formulas = 2)
 
   ret <- do.call(rbind, lapply(modelList, function(i) {
 
@@ -112,9 +114,11 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
+
+
   if(is.null(data)) data <- getData.(modelList)
 
-  modelList <- modelList[!sapply(modelList, function(x) any(class(x) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula")))]
+  modelList <- removeData(modelList, formulas = 2)
 
   ret <- unstdCoefs(modelList, data, intercepts)
 
@@ -162,6 +166,39 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
 }
 
+#' Transform variables based on model formula and store in new data frame
+dataTrans <- function(formula., newdata) {
+
+  notrans <- all.vars.notrans(formula.)
+
+  trans <- all.vars.trans(formula.)
+
+  if(any(grepl("scale\\(.*\\)", trans))) {
+
+    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
+
+    warning("`scale` applied to variable--use argument `standardize = TRUE` instead.", call. = FALSE)
+
+  }
+
+  if(any(notrans != trans)) {
+
+    for(k in 1:length(notrans)) {
+
+      newdata[, notrans[k]] <-
+
+        sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
+
+    }
+
+  }
+
+  colnames(newdata) <- notrans
+
+  return(newdata)
+
+}
+
 #' Properly scale standard deviations depending on the error distribution
 sdFam <- function(x, model, data) {
 
@@ -195,39 +232,6 @@ sdFam <- function(x, model, data) {
   }
 
   sd(y, na.rm = TRUE)
-
-}
-
-#' Transform variables based on model formula and store in new data frame
-dataTrans <- function(formula., newdata) {
-
-  notrans <- all.vars.notrans(formula.)
-
-  trans <- all.vars.trans(formula.)
-
-  if(any(grepl("scale\\(.*\\)", trans))) {
-
-    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
-
-    warning("`scale` applied to variable--use argument `standardize = TRUE` instead.", call. = FALSE)
-
-  }
-
-  if(any(notrans != trans)) {
-
-    for(k in 1:length(notrans)) {
-
-      newdata[, notrans[k]] <-
-
-        sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
-
-    }
-
-  }
-
-  colnames(newdata) <- notrans
-
-  return(newdata)
 
 }
 
