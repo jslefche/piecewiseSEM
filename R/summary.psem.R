@@ -1,8 +1,31 @@
-#' Evaluate a list of structural equations
+#' Evaluate a list of structural equations with grouping
 #'
 #' @param modelList a list of structural equations
 
-summary.psem <- function(modelList,
+summary.psem <- function(modelList, groups = NULL,
+                         direction = NULL, conserve = FALSE, conditional = FALSE,
+                         add.claims = NULL,
+                         intercepts = FALSE, standardize = TRUE,
+                         .progressBar = TRUE) {
+
+  if(!is.null(groups)) {
+
+    data <- modelList$data
+
+    lvls <- unique(data[, colnames(data) %in% groups])
+
+    modelList2 <- lapply(lvls, function(i) update(modelList, data = data[data[, colnames(data) %in% groups] == i, ]))
+
+    names(modelList2) <- lvls
+
+    lapply(modelList2, function(i) summary.psem2(i, groups, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar))
+
+  } else summary.psem2(modelList, groups, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar)
+
+}
+
+#' Evaluate a list of structural equations
+summary.psem2 <- function(modelList, groups = NULL,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
