@@ -51,7 +51,7 @@ getData. <- function(modelList) {
 
     if(all(class(model) %in% c("sarlm")))
 
-      stop("Supply data in psem object!")
+      stop("Supply data in `psem` object!")
 
     if(any(class(model) %in% c("gls", "lme")))
 

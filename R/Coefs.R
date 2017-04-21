@@ -2,11 +2,9 @@
 #'
 #' @param modelList a list of structural equations
 
-coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE) {
+coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- psem(modelList)
-
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
+  if(class(modelList) == "psem") data <- modelList$data else data <- getData.(modelList)
 
   if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
 
@@ -29,7 +27,7 @@ coefs <- function(modelList, data = NULL, intercepts = FALSE, standardize = TRUE
 #' Get raw (understandardized) coefficients from model
 unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+  if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
@@ -110,7 +108,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 #' Calculate standardized regression coefficients
 stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+  if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 

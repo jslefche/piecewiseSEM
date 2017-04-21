@@ -8,10 +8,6 @@ summary.psem <- function(modelList,
                          intercepts = FALSE, standardize = TRUE,
                          .progressBar = TRUE) {
 
-  data <- modelList$data
-
-  if(is.null(data)) data <- getData.(modelList)
-
   name <- deparse(substitute(modelList))
 
   call <- paste(listFormula(modelList), collapse = "\n  ")
@@ -22,7 +18,7 @@ summary.psem <- function(modelList,
 
   IC <- infCrit(modelList, Cstat)
 
-  coefficients <- coefs(modelList, data, intercepts, standardize)
+  coefficients <- coefs(modelList, intercepts, standardize)
 
   R2 <- rsquared(modelList)
 
