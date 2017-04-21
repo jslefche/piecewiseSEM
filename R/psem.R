@@ -30,9 +30,7 @@ psem <- function(...) {
 
   evaluateClasses(x)
 
-  formulaList <- listFormula(x)
-
-  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data", "formula", "formula.cerror")))]
+  formulaList <- listFormula(removeData(x, formulas = 1))
 
   if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
@@ -71,9 +69,7 @@ as.psem <- function(x) {
 
   evaluateClasses(x)
 
-  formulaList <- listFormula(x)
-
-  formulaList <- formulaList[!sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "formula", "formula.cerror")))]
+  formulaList <- listFormula(removeData(x, formulas = 1))
 
   if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
@@ -93,6 +89,7 @@ evaluateClasses <- function(modelList) {
   classes <- classes[!duplicated(classes)]
 
   model.classes <- c(
+    "character",
     "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data",
     "formula", "formula.cerror",
     "lm", "glm", "gls",
@@ -119,7 +116,7 @@ print.psem <- function(x) {
 
   print(sapply(x, function(i) {
 
-    if(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))
+    if(class(i) %in% c("character", "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))
 
       head(i) else
 
@@ -160,7 +157,7 @@ update.psem <- function(x, ...) {
 
       } )
 
-    } else if(all(class(i) %in% c("formula"))) {
+    } else if(all(class(i) %in% c("character", "formula"))) {
 
       if(length(all.vars.merMod(i)) == 1) {
 

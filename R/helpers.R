@@ -204,7 +204,7 @@ print.attr <- function(x) {
 #' Remove data from the model list
 removeData <- function(modelList, formulas = 0) {
 
-  remove <- c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")
+  remove <- c("character", "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")
 
   if(formulas == 1) remove <- c(remove, "formula", "formula.cerror")
 
