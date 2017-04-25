@@ -112,7 +112,7 @@ rsquared.merMod <- function(model) {
 
     Z <- as.matrix(X[, rownames(sigma.), drop = FALSE])
 
-    sum(diag(Z %*% sigma. %*% t(Z))) / nrow(X)
+    sum(rowSums(Z %*% sigma.) * Z) / nrow(X)
 
   } ) )
 
@@ -139,7 +139,7 @@ rsquared.lme <- function(model) {
 
     Z <- as.matrix(X[, rownames(i), drop = FALSE])
 
-    sum(diag(Z %*% i %*% t(Z))) / nrow(X)
+    sum(rowSums(Z %*% i) * Z) / nrow(X)
 
   } ) )
 
@@ -188,7 +188,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
       Z <- as.matrix(X[, rownames(i), drop = FALSE])
 
-      sum(diag(Z %*% i %*% t(Z))) / nrow(X)
+      sum(rowSums(Z %*% i) * Z) / nrow(X)
 
     } ) )
 
@@ -301,7 +301,7 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
     Z <- as.matrix(X[, rownames(i), drop = FALSE])
 
-    sum(diag(Z %*% i %*% t(Z))) / nrow(X)
+    sum(rowSums(Z %*% i) * Z) / nrow(X)
 
   } ) )
 
