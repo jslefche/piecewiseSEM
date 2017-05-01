@@ -41,17 +41,13 @@ getData. <- function(modelList) {
 
   data.list <- lapply(modelList, function(model) {
 
-    if(any(class(model) %in% c("lm")))
+    if(any(class(model) %in% c("lm", "sarlm")))
 
-      data <- model$model
+      data <- eval(model$call$data)
 
     if(any(class(model) %in% c("glm", "glmmPQL", "pgls")))
 
       data <- model$data
-
-    if(all(class(model) %in% c("sarlm")))
-
-      stop("Supply data in `psem` object!")
 
     if(any(class(model) %in% c("gls", "lme")))
 
@@ -213,5 +209,3 @@ removeData <- function(modelList, formulas = 0) {
   modelList[!sapply(modelList, function(x) any(class(x) %in% remove))]
 
 }
-
-remove
