@@ -35,9 +35,7 @@ infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL
 #` Generalized function for extraction AIC(c) score
 AIC.psem <- function(x) {
 
-  if(class(x) != "summary.psem") x <- summary(x, .progressBar = FALSE)
-
-  x. <- suppressWarnings(x$IC)
+  x. <- infCrit(x)
 
   c(AIC = x.$AIC, AICc = x.$AICc)
 
@@ -46,9 +44,7 @@ AIC.psem <- function(x) {
 #` Generalized function for extraction BIC score
 BIC.psem <- function(x) {
 
-  if(class(x) != "summary.psem") x <- summary(x, .progressBar = FALSE)
-
-  x. <- suppressWarnings(x$IC)
+  x. <- infCrit(x)
 
   c(BIC = x.$BIC)
 
