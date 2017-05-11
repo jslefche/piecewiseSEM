@@ -10,7 +10,7 @@ rsquared <- function(modelList, method = NULL) {
 
   evaluateClasses(modelList)
 
-  ret <- do.call(rbind, lapply(modelList, function(i) {
+  ret <- lapply(modelList, function(i) {
 
     if(any(class(i) %in% c("lm", "pgls"))) r <- rsquared.lm(i)
 
@@ -36,7 +36,25 @@ rsquared <- function(modelList, method = NULL) {
 
     return(ret)
 
-  } ) )
+  } )
+
+  if(length(unique(sapply(ret, ncol))) != 1) {
+
+    nc <- max(sapply(ret, ncol))
+
+    ret <- lapply(ret, function(i)
+
+      if(ncol(i) == nc) i else {
+
+        data.frame(i[, 1:3], Marginal = i[, 4], Conditional = NA)
+
+      }
+
+    )
+
+  }
+
+  ret <- do.call(rbind, ret)
 
   # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 2)
 
