@@ -158,6 +158,8 @@ listFormula <- function(modelList, remove = FALSE) {
 
   fList <- lapply(modelList, function(i) if(any(class(i) %in% c("formula.cerror"))) i else formula(i) )
 
+  fList <- lapply(fList, lme4::nobars)
+
   if(remove == TRUE) {
 
     l <- sapply(modelList, function(i) any(class(i) %in% c("formula", "formula.cerror")))

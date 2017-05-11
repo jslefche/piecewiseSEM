@@ -72,19 +72,17 @@ print.summary.psem <- function(x) {
 
   cat("\n")
 
-  cat("\nTests of directed separation:\n\n", captureTable(x$dTable))
+  cat("\n---\nTests of directed separation:\n\n", captureTable(x$dTable))
 
-  cat("\nCoefficients:\n\n", captureTable(x$coefficients))
-
-  cat("  ---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
-
-  cat("\n\n")
-
-  cat("Goodness-of-fit:\n\n  Global model: Fisher's C =", as.character(x$Cstat[1]),
+  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(x$Cstat[1]),
       "with P-value =", as.character(x$Cstat[3]),
       "and on", as.character(x$Cstat[2]), "degrees of freedom")
 
-  cat("\n\n  Individual R-squared:\n  ", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
+  cat("\n\n---\nCoefficients:\n\n", captureTable(x$coefficients))
+
+  cat("\n  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
+
+  cat("\n\nIndividual R-squared:\n\n", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
 
   invisible(x)
 
