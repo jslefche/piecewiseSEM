@@ -116,8 +116,6 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
-
-
   if(is.null(data)) data <- getData.(modelList)
 
   modelList <- removeData(modelList, formulas = 2)
@@ -246,7 +244,11 @@ sdInt <- function(model, newdata) {
 
   sapply(int, function(x) {
 
-    sd(apply(newdata[, strsplit(x, ":")[[1]]], 1, prod, na.rm = TRUE))
+    x <- strsplit(x, ":")[[1]]
+
+    x <- gsub("(.*) \\+.*", "\\1", gsub(".*\\((.*)\\)", "\\1", x))
+
+    sd(apply(newdata[, x], 1, prod, na.rm = TRUE))
 
   } )
 
