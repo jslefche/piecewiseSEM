@@ -4,6 +4,8 @@
 
 coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
 
+  if(!class(modelList) %in% c("psem", "list")) modelList <- list(modelList)
+
   if(class(modelList) == "psem") data <- modelList$data else data <- getData.(modelList)
 
   if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
