@@ -22,7 +22,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
     data <- modelList$data
 
-    formulaList <- lapply(listFormula(modelList, remove = TRUE), all.vars.merMod)
+    formulaList <- lapply(listFormula(modelList, remove = TRUE), all.vars.trans)
 
     if(.progressBar == T & length(b) > 0)
 

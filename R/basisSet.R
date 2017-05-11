@@ -41,13 +41,11 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- removeCerror(b, formulaList)
 
-    if(length(b) > 0) b <- reverseNonLin(modelList, b, amat, formulaList)
+    b <- reverseNonLin(modelList, b, amat, formulaList)
 
-    b <- replaceTrans(modelList, b, amat, formulaList)
+    if(!is.null(direction)) b <- specifyDir(b, direction)
 
-    if(!is.null(direction))
-
-      b <- specifyDir(b, direction)
+    b <- replaceTrans(modelList, b, amat)
 
   }
 
@@ -56,34 +54,34 @@ basisSet <- function(modelList, direction = NULL) {
 }
 
 #' Get vector of untransformed variables
-all.vars.notrans <- function(.formula) {
+all.vars.notrans <- function(formula.) {
 
-  if(class(.formula) == "formula")
+  if(class(formula.) == "formula")
 
-    all.vars.merMod(.formula) else
+    all.vars.merMod(formula.) else
 
-      unlist(strsplit(.formula, " ~~ "))
+      unlist(strsplit(formula., " ~~ "))
 
 }
 
 #' Get vector of transformed variables
-all.vars.trans <- function(.formula) {
+all.vars.trans <- function(formula.) {
 
-  if(class(.formula) == "formula") {
+  if(class(formula.) == "formula") {
 
-    n <- rownames(attr(terms(.formula), "factors"))
+    n <- rownames(attr(terms(formula.), "factors"))
 
     if(any(grepl("\\|", n))) {
 
       idn <- which(grepl("\\|", n))
 
-      f <- rownames(attr(terms(.formula), "factors"))[-idn]
+      f <- rownames(attr(terms(formula.), "factors"))[-idn]
 
       return(f)
 
     } else return(n)
 
-  } else unlist(strsplit(.formula, " ~~ "))
+  } else unlist(strsplit(formula., " ~~ "))
 
 }
 
@@ -152,43 +150,37 @@ removeCerror <- function(b, formulaList) {
 
 #' Replace transformations in the basis set by cycling through neighbors and applying
 #' transformations in order of how variables are treated in the child nearest to current node
-replaceTrans <- function(modelList, b, amat, formulaList) {
+replaceTrans <- function(modelList, b, amat) {
 
-  idx <- which(names(modelList) %in% names(removeData(modelList, formulas = 1)))
+  modelList <- removeData(modelList, formulas = 1)
 
-  modelList <- modelList[idx]
+  formulaList <- listFormula(modelList)
 
-  formulaList <- formulaList[idx]
+  amat <- amat[, colSums(amat) > 0]
+
+  formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars.notrans(x)[1] == colnames(amat)))]
 
   trans <- lapply(formulaList, all.vars.trans)
 
   notrans <- lapply(formulaList, all.vars.notrans)
 
-  b <- lapply(b, function(i) {
+  b <- lapply(rev(b), function(i) {
 
-    f <- which(sapply(notrans, function(j) j[1] == i[2]))
+    i[2] <- trans[[which(sapply(notrans, function(x) x[1] == i[2]))]][1]
 
     flag <- TRUE
 
-    res <- i[2]
-
     while(flag == TRUE) {
 
-      f <- which(sapply(notrans, function(j) res == j[1]))
+      for(j in (1:length(i))[-2]) {
 
-      if(sum(f) == 0) flag <- FALSE else {
+        for(k in length(formulaList):1) {
 
-        for(j in f) {
+          if(i[j] %in% notrans[[k]][-1]) {
 
-          if(i[1] %in% notrans[j][-1]) {
-
-            i[1] <- trans[j][which(notrans[j] == i[1])]
+            i[j] <- trans[[k]][which(i[j] == notrans[[k]])]
 
             flag <- FALSE
-
-          } else {
-
-            res <- colnames(amat)[(which(res == colnames(amat)) - 1)]
 
           }
 
@@ -198,11 +190,11 @@ replaceTrans <- function(modelList, b, amat, formulaList) {
 
     }
 
-    i
+    return(i)
 
   } )
 
-  return(b)
+  return(rev(b))
 
 }
 
