@@ -1,0 +1,31 @@
+---
+title: "piecewiseSEM: Piecewise Structural Equation Modeling in R"
+author: "Jonathan S. Lefcheck"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Structural equation modeling (SEM) is among the fastest growing statistical techniques in ecology and evolution, and provides a new way to explore and quantify ecological systems. SEM unites multiple variables in a single causal network. Causality is central to SEM as the technique implicitly assumes that the relationships among variables represent causal links. Because variables can be both predictors and responses, SEM is a useful tool for quantifying both direct and indirect (cascading) effects.
+
+Piecewise SEM (or confirmatory path analysis) expands upon traditional SEM by introducing a flexible mathematical framework that can incorporate a wide variety of model structures, distributions, and assumptions. These include: interactions and non-normal responses, random effects and hierarchical models, and alternate correlation structures (including phylogenetic, spatial, and temporal).
+
+This release is version 2.0 of the package and contains substantial updates to both the syntax and the underlying calculations. All functions have been replaced and rewritten from the ground up. 
+
+The first part of this vignette will briefly introduce the concepts behind piecewise SEM. The second part will introduce the new syntax using a worked example. The third and final part will briefly compare the old and new versions of the package.
+
+## Part I: An Introduction to Structural Equation Modeling
+
+
+ $Y = X\beta + \epsilon$,
+
+## Part II: An Example using `piecewiseSEM`
+
+
+## Part III: Comparing Package Versions
+
