@@ -1,9 +1,9 @@
 Package: piecewiseSEM
 Type: Package
 Title: Local estimation of piecewise structural equation models
-Version: 2.0.1
-Date: 2017-05-01
-Author: Jon Lefcheck, Jarrett Byrnes, Jim Grace
+Version: 2.0
+Date: 2017-08-07
+Author: Jon Lefcheck, Jim Grace, Jarrett Byrnes
 Maintainer: Jon Lefcheck <jslefche@vims.edu>
 Description:
     Implements piecewise structural equation modeling from a single list of structural equations, 
