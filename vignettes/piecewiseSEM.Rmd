@@ -29,3 +29,149 @@ The first part of this vignette will briefly introduce the concepts behind piece
 
 ## Part III: Comparing Package Versions
 
+The new version 2.0 of `piecewiseSEM` replaces all of the old functions from version 1.x. This section will walk the user through the same worked example included in version 1.x from Shipley (2009), emphasizing the new syntax.
+
+### Introduction to Shipley (2009)
+
+Shipley included an example dataset in his 2009 paper 'Confirmatory path analysis in a generalized multilevel context.' The data are included in this version of the package and alternately hosted in Ecological Archives E090-028-S1 (DOI: 10.1890/08-1034.1). While not actual observations (the data are randomly generated), the hypotheses correspond to actual ecological phenomenon. 
+
+Briefly, the data concern a forest survey where 5 individual trees of a particular species are followed at 20 sites every year beginning in 1970. For each individual, there is a measurement of:
+-the degree days until break
+-the Julian date (date of year) of bud break
+-the increase in stem diameter per tree; and
+-a binary variable indicating whether the tree is alive (1) or dead (0)
+Shipley notes that this model would be difficult to test using traditional SEM because it represents variation occurring at multiple levels (between sites, between individuals within sites, and between years within individuals within sites), and one response, survival, is not normally distributed.
+
+Shipley hypothesizes that the data adhere to the following hypothesized causal structure:
+![Shipley 2009 Fig. 2](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley_2009.jpg)
+
+This example was included as the primary worked dataset in version 1.x of `piecewiseSEM`.
+
+### Comparing version 1.x and 2.0 in evaluating the Shipley SEM
+
+In the previous version 1.x of the package, the model is constructed using a `list` and then supplied to various additional functions to measure fit, extract coefficients, and so on. Version 2.0 of the package uses the new function `psem` and uses `summary` to extract all that information at once.
+
+Next, we will walk through the analysis of the Shipley data using version 1.x and version 2.0, and compare the output.
+
+```{r, message = F, results = "hide"}
+# Load required packages
+library(piecewiseSEM)
+library(nlme)
+library(lme4)
+
+# Load Shipley data
+data(shipley)
+
+# Create list of structural equations
+shipley.list <- list(
+
+  lme(DD ~ lat, random = ~ 1 | site / tree, na.action = na.omit, 
+  data = shipley),
+  
+  lme(Date ~ DD, random = ~ 1 | site / tree, na.action = na.omit, 
+  data = shipley),
+  
+  lme(Growth ~ Date, random = ~ 1 | site / tree, na.action = na.omit, 
+  data = shipley),
+  
+  glmer(Live ~ Growth + (1 | site) + (1 | tree), 
+  family = binomial(link = "logit"), data = shipley) 
+  
+  )
+```
+Note the use of mixed effects models to account for the nested non-independence of replicates as well as the use of a generalized linear mixed effects model to account for the binomial distribution of survival.
+
+Next, we extract the goodness-of-fit and path coefficients.
+
+```{r}
+(old.fit <- sem.fit(shipley.list, shipley, .progressBar = F))
+
+(old.coefs <- sem.coefs(shipley.list))
+```
+Note the warnings produced by calling the old functions.
+  
+Now, we repeat the exercise using the new functions.
+```{r, messages = FALSE}
+shipley.psem <- psem(
+
+  lme(DD ~ lat, random = ~ 1 | site / tree, na.action = na.omit, 
+  data = shipley),
+  
+  lme(Date ~ DD, random = ~ 1 | site / tree, na.action = na.omit, 
+  data = shipley),
+  
+  lme(Growth ~ Date, random = ~ 1 | site / tree, na.action = na.omit, 
+  data = shipley),
+  
+  glmer(Live ~ Growth + (1 | site) + (1 | tree), 
+  family = binomial(link = "logit"), data = shipley) 
+  
+  )
+
+(new.summary <- summary(shipley.psem, .progressBar = F))
+```
+The output will look familiar to anyone who has run a regression in R.
+
+First, we have the call, which represents the structural questions.
+
+Next are the AIC and new BIC values, formerly accessible using `sem.aic`. The two produce identical values.
+```{r, messages = FALSE}
+# Old function
+sem.aic(shipley.list, shipley, .progressBar = F)$AIC
+# Extract from new summary object
+new.summary$IC$AIC
+### NOT RUN
+# Alternately, one could call AIC() on the `psem` object
+# AIC(shipley.psem)
+```
+Note that because the values are stored in the summary output, they are much quicker to access than having to recompute the d-sep tests using `sem.aic`.
+
+Following the information criterion values, we have the tests of directed separation. As in the previous version, the independence claims are truncated to remove the conditioning variables (they can be shown using the argument `conditional = TRUE`).
+
+The d-sep tests are, once again, identical between the two versions, but are faster to retrieve from `summary` than recomputing them from scratch.
+```{r, messages = FALSE}
+# Old function
+sem.missing.paths(shipley.list, shipley, .progressBar = F)
+# Extract from new summary object
+new.summary$dTable
+### NOT RUN
+# Alternately, one could call dSep() on the `psem` object
+# dSep(shipley.psem)
+```
+
+After the d-sep table is the Fisher's C statistic, and the results from the Chi-squared test. This information was formerly obtained from `sem.fit`.
+```{r, messages = FALSE}
+# Old function
+sem.fit(shipley.list, shipley, .progressBar = F)$Fisher.C
+# Extract from summary object
+new.summary$Cstat
+```
+As with all other functions, the values are exactly the same although the underlying functions have been rewritten to be more efficient.
+
+Next, we have the path coefficients and the standardized estimates.
+```{r, messages = FALSE}
+# Old function
+sem.coefs(shipley.list, shipley)
+
+sem.coefs(shipley.list, shipley, standardize = "scale")
+# Extract from new summary object
+new.summary$coefficients
+# The new coefs() function is much faster too
+coefs(shipley.psem)
+```
+
+Note two items: 
+-the standardized estimates are now reported by default at the end of the coefficients table (column `Std.Estimate`).
+-the standardized estimate for the logistic regression is different, based on new calculations (see `help(stdCoefs)`)
+
+For the moment, version 2.0 only reports the scaled estimates (based on the standard deviations of the response and predictor). Future versions will include a range standardization.
+
+Finally, `summary` reports the individual model R[2] values. These were formerly obtained using `sem.model.fits` which was confusing. I have not included the old calculations in the package as the new `rsquared` function includes new calculations. However, this information is useful and therefore is now reported alongside the d-sep tests, Fisher's C, and path coefficients.
+
+### Additional functions
+
+The function `partial.resid` has been replaced with `partialResid` although the syntax is the same. The plotting output, however, has been eliminated.
+
+`sem.lavaan` has not yet been ported to version 2.0, and it may not, as there was some confusion how multi-level models were translated to the variance-covariance framework (they weren't, only the formulae were ported).
+
+`sem.plot` has also not yet been ported to version 2.0, since it was of limited utility. It may make an appearance in teh future.

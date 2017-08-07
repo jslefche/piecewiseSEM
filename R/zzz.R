@@ -1,5 +1,8 @@
 .onAttach <- function(libname, pkgname) {
 
-  packageStartupMessage("piecewiseSEM version 2.0\nThis is a new version of the package! For help, see vignette('piecewiseSEM')")
+  packageStartupMessage("
+  This is piecewiseSEM version 2.0.\n
+  It is strongly recommended you see Section 3 of the vignette('piecewiseSEM') to familiarize yourself with the new syntax.
+  Questions or bugs can be addressed to 'jlefcheck@bigelow.org'")
 
-}
+  }
