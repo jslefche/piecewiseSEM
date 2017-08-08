@@ -4,7 +4,7 @@
 Correlated errors
 }
 \description{
-Partial correlations and significance tests
+Calculates partial correlations and partial significance tests.
 }
 \usage{
 cerror(formula., modelList, data = NULL)

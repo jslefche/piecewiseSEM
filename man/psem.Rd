@@ -4,7 +4,7 @@
 Fitting piecewise structural equation models
 }
 \description{
-Creates a list of structural equations.
+\code{psem} is used to unite a list of structural equations into a single structural equation model.
 }
 \usage{
 psem(..., data)
