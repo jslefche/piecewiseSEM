@@ -152,35 +152,39 @@ removeCerror <- function(b, formulaList) {
 #' transformations in order of how variables are treated in the child nearest to current node
 replaceTrans <- function(modelList, b, amat) {
 
-  modelList <- removeData(modelList, formulas = 1)
+  if(length(b) > 0) {
 
-  formulaList <- listFormula(modelList)
+    modelList <- removeData(modelList, formulas = 1)
 
-  amat <- amat[, colSums(amat) > 0]
+    formulaList <- listFormula(modelList)
 
-  formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars.notrans(x)[1] == colnames(amat)))]
+    amat <- amat[, colSums(amat) > 0]
 
-  trans <- lapply(formulaList, all.vars.trans)
+    formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars.notrans(x)[1] == colnames(amat)))]
 
-  notrans <- lapply(formulaList, all.vars.notrans)
+    trans <- lapply(formulaList, all.vars.trans)
 
-  b <- lapply(rev(b), function(i) {
+    notrans <- lapply(formulaList, all.vars.notrans)
 
-    i[2] <- trans[[which(sapply(notrans, function(x) x[1] == i[2]))]][1]
+    b <- lapply(rev(b), function(i) {
 
-    flag <- TRUE
+      i[2] <- trans[[which(sapply(notrans, function(x) x[1] == i[2]))]][1]
 
-    while(flag == TRUE) {
+      flag <- TRUE
 
-      for(j in (1:length(i))[-2]) {
+      while(flag == TRUE) {
 
-        for(k in length(formulaList):1) {
+        for(j in (1:length(i))[-2]) {
 
-          if(i[j] %in% notrans[[k]][-1]) {
+          for(k in length(formulaList):1) {
 
-            i[j] <- trans[[k]][which(i[j] == notrans[[k]])]
+            if(i[j] %in% notrans[[k]][-1]) {
 
-            flag <- FALSE
+              i[j] <- trans[[k]][which(i[j] == notrans[[k]])]
+
+              flag <- FALSE
+
+            }
 
           }
 
@@ -188,66 +192,72 @@ replaceTrans <- function(modelList, b, amat) {
 
       }
 
-    }
+      return(i)
 
-    return(i)
+    } )
 
-  } )
+    b <- rev(b)
 
-  return(rev(b))
+  }
+
+  return(b)
 
 }
 
 #' If intermediate endogenous variables are nonlinear, return both directions
 reverseNonLin <- function(modelList, b, amat, formulaList) {
 
-  modelList <- removeData(modelList, formulas = 1)
+  if(length(b) > 0) {
 
-  formulaList <- listFormula(modelList, remove = TRUE)
+    modelList <- removeData(modelList, formulas = 1)
 
-  names(b) <- 1:length(b)
+    formulaList <- listFormula(modelList, remove = TRUE)
 
-  idx <- which(colSums(amat[colSums(amat) == 0, , drop = FALSE]) > 0)
+    names(b) <- 1:length(b)
 
-  idx <- idx[!idx %in% which(colSums(amat[!colSums(amat) == 0, , drop = FALSE]) > 0)]
+    idx <- which(colSums(amat[colSums(amat) == 0, , drop = FALSE]) > 0)
 
-  idx <- names(idx)
+    idx <- idx[!idx %in% which(colSums(amat[!colSums(amat) == 0, , drop = FALSE]) > 0)]
 
-  idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
+    idx <- names(idx)
 
-  idm <- idm[
+    idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
 
-    sapply(modelList[idm], function(x) {
+    idm <- idm[
 
-    .family <- try(family(x), silent = TRUE)
+      sapply(modelList[idm], function(x) {
 
-    if(class(.family) == "try-error") FALSE else TRUE
+      .family <- try(family(x), silent = TRUE)
 
-  } ) ]
+      if(class(.family) == "try-error") FALSE else TRUE
 
-  if(length(idm) > 0) {
+    } ) ]
 
-    if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
+    if(length(idm) > 0) {
 
-      idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
+      if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
 
-      if(length(idf) > 0) {
+        idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
 
-        b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
+        if(length(idf) > 0) {
 
-          c(i[2], i[1], i[-(1:2)]) )
+          b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
 
-          )
+            c(i[2], i[1], i[-(1:2)]) )
+
+            )
+
+        }
 
       }
 
     }
 
+    r <- sapply(formulaList, function(x) all.vars.merMod(x)[1])
+
+    b <- b[sapply(b, function(x) any(x[2] %in% r))]
+
   }
-
-  r <- sapply(formulaList, function(x) all.vars.merMod(x)[1])
-
-  b <- b[sapply(b, function(x) any(x[2] %in% r))]
 
   return(b)
 
