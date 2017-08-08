@@ -19,19 +19,100 @@ This release is version 2.0 of the package and contains substantial updates to b
 
 The first part of this vignette will briefly introduce the concepts behind piecewise SEM. The second part will introduce the new syntax using a worked example. The third and final part will briefly compare the old and new versions of the package.
 
-## Part I: An Introduction to Structural Equation Modeling
+## 1. An Introduction to Structural Equation Modeling
 
 
  $Y = X\beta + \epsilon$,
 
-## Part II: An Example using `piecewiseSEM`
+## 2. An Example using `piecewiseSEM`
 
 
-## Part III: Comparing Package Versions
+### 2.1 Worked example
+
+### 2.2 GLMs in pSEM
+
+A problematic case arises when intermediate endogenous variables are non-normally distributed. Consider the following SEM:
+
+![GLM sem](https://github.com/jslefche/jslefche.github.io/blob/master/img/GLM_sem.jpg?raw=true)
+
+In this SEM, there are two independence claims:
+
+(1) y3 | x1 (y1, y2)
+
+(2) y2 | y1 (x1)
+
+Considering the second independence claim, in a Gaussian world, the significance value is the same whether the test is conducted as y2 | y1 (x1) or y1 | y2 (x1). This is NOT true, however, when one or both of the variables are modeled using a generalized linear model (GLM) fit to a non-normal distribution. This is because the response is now transformed via the link function (e.g., log-link for Poisson GLM, logit-link for binomigla GLM, probit-link for logistic regression, and so on). This transformations means the P-value obtained by regressing y1 against y2 is NOT the same as the one obtained by regressing y2 against y1.
+
+The following example will show this is the case:
+```{r, messages = F}
+# Generate fake data
+glmdat <- data.frame(x1 = runif(50), y1 = rpois(50, 10), y2 = rpois(50, 50), y3 = runif(50))
+
+# Extract P-values
+summary(lm(y1 ~ y2 + x1, glmdat))$coefficients[2, 4]
+
+summary(lm(y2 ~ y1 + x1, glmdat))$coefficients[2, 4]
+
+# Repeat but model y1 and y2 and Poisson-distributed
+summary(glm(y1 ~ y2 + x1, "poisson", glmdat))$coefficients[2, 4]
+
+summary(glm(y2 ~ y1 + x1, "poisson", glmdat))$coefficients[2, 4]
+```
+
+This is problematic because the d-sep tests are dependent on the significance value. If theP-value is biased based on the direction of the test, then the goodness-of-fit of the model can be over- or underestimated.
+
+`piecewiseSEM` version 2.0 solves this by providing three options. 
+
+(1) One can specify the directionality of the test if, for instance, it makes greater biological sense to test y1 against y2 instead of the reverse.
+
+(2) One can remove that path from the basis set and instead specify it as a correlated error using `%~~%`.
+
+(3) One can conduct both tests and choose the most conservative (i.e., lowest) P-value.
+
+These options are returned by `summary` in the event the above scenario is identified in the SEM:
+```{r}
+# Generate fake data
+glmdat <- data.frame(x1 = runif(50), y1 = rpois(50, 10), y2 = rpois(50, 50), y3 = runif(50))
+
+# Construct SEM
+glmsem <- psem(
+  glm(y1 ~ x1, "poisson", glmdat),
+  glm(y2 ~ x1, "poisson", glmdat),
+  lm(y3 ~ y1 + y2, glmdat)
+)
+
+summary(glmsem)
+```
+In option 1, the directionality can be specified using `direction = c()` as an additional argument.
+```{r}
+summary(glmsem, direction = c("y1 <- y2"))
+```
+In option 2, the SEM can be updated to remove that test.
+```{r}
+summary(update(glmsem, y1 %~~% y2))
+```
+Note that the claim no londer appears in the section for the tests of directed separation.
+
+Finally, option 3 can be invoked by specifying `conserve = T` as an additional argument
+```{r}
+summary(glmsem, conserve = T)
+```
+
+The user should be vigilant for these kinds of situations and ensure that both the specified paths AND the independence claims all make biological sense.
+
+### 2.3 Standardized coefficients for GLMs
+
+### 2.4 Correlated errors
+
+### 2.5 Nested models and AIC
+
+
+
+## 3. Comparing Package Versions
 
 The new version 2.0 of `piecewiseSEM` replaces all of the old functions from version 1.x. This section will walk the user through the same worked example included in version 1.x from Shipley (2009), emphasizing the new syntax.
 
-### Introduction to Shipley (2009)
+### 3.1 Introduction to Shipley (2009)
 
 Shipley included an example dataset in his 2009 paper 'Confirmatory path analysis in a generalized multilevel context.' The data are included in this version of the package and alternately hosted in Ecological Archives E090-028-S1 (DOI: 10.1890/08-1034.1). While not actual observations (the data are randomly generated), the hypotheses correspond to actual ecological phenomenon. 
 
@@ -47,7 +128,7 @@ Shipley hypothesizes that the data adhere to the following hypothesized causal s
 
 This example was included as the primary worked dataset in version 1.x of `piecewiseSEM`.
 
-### Comparing version 1.x and 2.0 in evaluating the Shipley SEM
+### 3.2 Comparing versions in evaluating the Shipley's SEM
 
 In the previous version 1.x of the package, the model is constructed using a `list` and then supplied to various additional functions to measure fit, extract coefficients, and so on. Version 2.0 of the package uses the new function `psem` and uses `summary` to extract all that information at once.
 
@@ -173,7 +254,7 @@ For the moment, version 2.0 only reports the scaled estimates (based on the stan
 
 Finally, `summary` reports the individual model R[2] values. These were formerly obtained using `sem.model.fits` which was confusing. I have not included the old calculations in the package as the new `rsquared` function includes new calculations. However, this information is useful and therefore is now reported alongside the d-sep tests, Fisher's C, and path coefficients.
 
-### Additional functions
+### 3.3 Additional functions
 
 The function `partial.resid` has been replaced with `partialResid` although the syntax is the same. The plotting output, however, has been eliminated.
 
