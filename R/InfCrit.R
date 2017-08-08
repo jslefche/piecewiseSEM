@@ -1,6 +1,6 @@
-#' Summarize tests of directed separation using Fisher's Cstat statistic
+#' Return information criterion values for piecewise SEM
 #'
-#' @param dTable a list of structural equations
+#' @param modelList a list of structural equations
 
 infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
@@ -33,19 +33,10 @@ infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL
 }
 
 #` Generalized function for extraction AIC(c) score
-AIC.psem <- function(x) {
+AIC.psem <- function(modelList) infCrit(modelList)$AIC
 
-  x. <- infCrit(x)
-
-  c(AIC = x.$AIC, AICc = x.$AICc)
-
-}
+AICc.psem <- function(modelList) infCrit(modelList)$AICc
 
 #` Generalized function for extraction BIC score
-BIC.psem <- function(x) {
+BIC.psem <- function(modelList) infCrit(modelList)$BIC
 
-  x. <- infCrit(x)
-
-  c(BIC = x.$BIC)
-
-}

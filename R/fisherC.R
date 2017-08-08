@@ -1,6 +1,6 @@
 #' Summarize tests of directed separation using Fisher's C statistic
 #'
-#' @param dTable a list of structural equations
+#' @param dTable a data.frame of evaluated independence claims
 
 fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
