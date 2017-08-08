@@ -1,0 +1,70 @@
+\name{cerror}
+\alias{cerror}
+\title{
+Correlated errors
+}
+\description{
+Partial correlations and significance tests
+}
+\usage{
+cerror(formula., modelList, data = NULL)
+}
+\arguments{
+  \item{formula.}{
+  A formula specifying the two correlated variables using \code{\%~~\%}.
+}
+  \item{modelList}{
+  A list of structural equations using \code{psem}.
+}
+  \item{data}{
+  A \code{data.frame} containing the data used in the list of equations.
+}
+}
+\details{
+If the variables are exogenous, then the correlated error is the raw bivariate correlation.
+
+If the variables are endogenous, then the correlated error is the partial correlation, accounting for the influence of any predictors.
+
+The significance of the correlated error is conducted using \code{cor.test} if the variables are exogenous. Otherwise, a t-statistic is constructed and compared to a t-distribution with N - k - 2 degrees of freedom (where N is the total number of replicates, and k is the total number of variables informing the relationship) to derive a P-value.
+}
+\value{
+Returns a \code{data.frame} containing the (partial) correlation and associated significance test.
+}
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}
+\seealso{
+\code{\link{cor.test}}, \code{\link{\%~~\%}}
+}
+\examples{
+# Generate example data
+dat <- data.frame(x1 = runif(50),
+  x2 = runif(50), y1 = runif(50),
+    y2 = runif(50))
+
+# Create list of structural equations
+sem <- psem(
+  lm(y1 ~ x1 + x2, dat),
+  lm(y2 ~ y1 + x1, dat)
+)
+
+# Look at correlated error between x1 and x2
+# (exogenous)
+cerror(x1 \%~~\% x2, sem, dat)
+
+# Same as cor.test
+with(dat, cor.test(x1, x2))
+
+# Look at correlatde error between x1 and y1
+# (endogenous)
+cerror(y1 \%~~\% x1, sem, dat)
+
+# Not the same as cor.test
+# (accounts for influence of x1 and x2 on y1)
+with(dat, cor.test(y1, x1))
+
+# Specify in psem
+sem <- update(sem, x1 \%~~\% y1)
+
+coefs(sem)
+}
