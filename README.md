@@ -15,6 +15,9 @@ install_github("jslefche/piecewiseSEM@2.0")
 # Load library
 library(piecewiseSEM)
 
+# Read vignette
+vignette("piecewiseSEM")
+
 # Create fake data
 set.seed(1) 
 

@@ -90,24 +90,29 @@ Next, we extract the goodness-of-fit and path coefficients.
 ```
 Note the warnings produced by calling the old functions.
   
-Now, we repeat the exercise using the new functions.
+Now, we repeat the exercise using the new functions. `as.psem` converts the list to `psem` object, but you could also run the code using `psem` instead of `list`.
 ```{r, messages = FALSE}
-shipley.psem <- psem(
+shipley.psem <- as.psem(shipley.list)
+### NOT RUN
+# shipley.psem <- psem(
+# 
+#   lme(DD ~ lat, random = ~ 1 | site / tree, na.action = na.omit, 
+#   data = shipley),
+#   
+#   lme(Date ~ DD, random = ~ 1 | site / tree, na.action = na.omit, 
+#   data = shipley),
+#   
+#   lme(Growth ~ Date, random = ~ 1 | site / tree, na.action = na.omit, 
+#   data = shipley),
+#   
+#   glmer(Live ~ Growth + (1 | site) + (1 | tree), 
+#   family = binomial(link = "logit"), data = shipley) 
+#   
+#   )
+```
 
-  lme(DD ~ lat, random = ~ 1 | site / tree, na.action = na.omit, 
-  data = shipley),
-  
-  lme(Date ~ DD, random = ~ 1 | site / tree, na.action = na.omit, 
-  data = shipley),
-  
-  lme(Growth ~ Date, random = ~ 1 | site / tree, na.action = na.omit, 
-  data = shipley),
-  
-  glmer(Live ~ Growth + (1 | site) + (1 | tree), 
-  family = binomial(link = "logit"), data = shipley) 
-  
-  )
-
+Now we extract a summary of the object.
+```{r}
 (new.summary <- summary(shipley.psem, .progressBar = F))
 ```
 The output will look familiar to anyone who has run a regression in R.
@@ -172,6 +177,6 @@ Finally, `summary` reports the individual model R[2] values. These were formerly
 
 The function `partial.resid` has been replaced with `partialResid` although the syntax is the same. The plotting output, however, has been eliminated.
 
-`sem.lavaan` has not yet been ported to version 2.0, and it may not, as there was some confusion how multi-level models were translated to the variance-covariance framework (they weren't, only the formulae were ported).
+`sem.lavaan` has not yet been ported to version 2.0, and it may not, as there was some confusion how multi-level models were translated to the variance-covariance framework (hint: they weren't, only the formulae were transferred).
 
 `sem.plot` has also not yet been ported to version 2.0, since it was of limited utility. It may make an appearance in teh future.
