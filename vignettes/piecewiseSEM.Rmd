@@ -24,17 +24,21 @@ The first part of this vignette will briefly introduce the concepts behind piece
 
  $Y = X\beta + \epsilon$,
 
-## 2. An Example using `piecewiseSEM`
+## 2. An Example using piecewiseSEM
 
 
 ### 2.1 Worked example
 
+```{r}
+# Load required libraries
+library(piecewiseSEM)
+```
+
 ### 2.2 GLMs in pSEM
 
-A problematic case arises when intermediate endogenous variables are non-normally distributed. Consider the following SEM:
+A problematic case arises when intermediate endogenous variables are non-normally distributed. Consider the following SEM.
 
-![GLM sem](https://github.com/jslefche/jslefche.github.io/blob/master/img/GLM_sem.jpg?raw=true)
-
+![glmSEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/GLM_sem.jpg?raw=true)
 In this SEM, there are two independence claims:
 
 (1) y3 | x1 (y1, y2)
@@ -70,7 +74,7 @@ This is problematic because the d-sep tests are dependent on the significance va
 (3) One can conduct both tests and choose the most conservative (i.e., lowest) P-value.
 
 These options are returned by `summary` in the event the above scenario is identified in the SEM:
-```{r}
+```{r, error = T}
 # Generate fake data
 glmdat <- data.frame(x1 = runif(50), y1 = rpois(50, 10), y2 = rpois(50, 50), y3 = runif(50))
 
@@ -85,27 +89,30 @@ summary(glmsem)
 ```
 In option 1, the directionality can be specified using `direction = c()` as an additional argument.
 ```{r}
-summary(glmsem, direction = c("y1 <- y2"))
+summary(glmsem, direction = c("y1 <- y2"), .progressBar = F)$dTable
 ```
 In option 2, the SEM can be updated to remove that test.
 ```{r}
-summary(update(glmsem, y1 %~~% y2))
+summary(update(glmsem, y1 %~~% y2), .progressBar = F)
 ```
 Note that the claim no londer appears in the section for the tests of directed separation.
 
 Finally, option 3 can be invoked by specifying `conserve = T` as an additional argument
 ```{r}
-summary(glmsem, conserve = T)
+summary(glmsem, conserve = T, .progressBar = F)$dTable
 ```
 
-The user should be vigilant for these kinds of situations and ensure that both the specified paths AND the independence claims all make biological sense.
+The user should be vigilant for these kinds of situations and ensure that both the specified paths AND the independence claims all make biological sense. In the case where the underlying assumptions of the d-sep tests can bias the goodness-of-fit statistic, `piecewiseSEM` will automatically alert the user.
 
 ### 2.3 Standardized coefficients for GLMs
 
 ### 2.4 Correlated errors
 
+
+
 ### 2.5 Nested models and AIC
 
+Shipley (2013) notes that the Fisher's C statistic can be used to 
 
 
 ## 3. Comparing Package Versions
@@ -124,7 +131,7 @@ Briefly, the data concern a forest survey where 5 individual trees of a particul
 Shipley notes that this model would be difficult to test using traditional SEM because it represents variation occurring at multiple levels (between sites, between individuals within sites, and between years within individuals within sites), and one response, survival, is not normally distributed.
 
 Shipley hypothesizes that the data adhere to the following hypothesized causal structure:
-![Shipley 2009 Fig. 2](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley_2009.jpg)
+![ShipleySEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/shipley_sem.jpg?raw=true)
 
 This example was included as the primary worked dataset in version 1.x of `piecewiseSEM`.
 
@@ -136,7 +143,6 @@ Next, we will walk through the analysis of the Shipley data using version 1.x an
 
 ```{r, message = F, results = "hide"}
 # Load required packages
-library(piecewiseSEM)
 library(nlme)
 library(lme4)
 
