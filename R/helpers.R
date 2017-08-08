@@ -144,6 +144,8 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
     cbind(`(Intercept)` = c(d, p), ret)
 
+    # cbind(`(Intercept)` = c(NA, NA), ret)
+
   } else ret
 
 }
