@@ -114,23 +114,29 @@ evaluateClasses <- function(modelList) {
 #' Print psem
 print.psem <- function(x) {
 
-  print(sapply(x, function(i) {
+  formulas <- listFormula(x)
 
-    if(class(i) %in% c("character", "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))
+  formulas.print <- sapply(1:length(formulas), function(i) {
 
-      head(i) else
+    paste0(class(x[[i]]), ": ", deparse(formulas[[i]]))
 
-        if(class(i) %in% c("formula", "formula.cerror"))
+  } )
 
-          as.character(i) else
+  data.print <- if(!is.null(x$data)) head(data) else head(getData.(x))
 
-            c(deparse(formula(i)), class(i))
+  class.print <- paste0("class(", class(x), ")")
 
-  } ), quote = FALSE )
+  cat("Structural Equations:\n")
+
+  cat(paste(formulas.print, collapse = "\n"))
+
+  cat("\n\nData:\n")
+
+  print(data.print)
 
   cat("\n")
 
-  print(paste0("class(", class(x), ")"))
+  print(class.print)
 
 }
 
