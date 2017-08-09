@@ -3,7 +3,7 @@ title: "piecewiseSEM: Piecewise Structural Equation Modeling in R"
 author: "Jonathan S. Lefcheck"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::pdf_document:
+  rmarkdown::html_vignette:
     toc: true
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -216,7 +216,7 @@ Let's consider comparing the following models for the mediating role of `y1`:
 ![2.5 AIC SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_AIC_example.jpg?raw=true)
 
 One might think that the models could be coded like this, and then compared:
-```{r, eval = F}
+```{r, results = 'hide'}
 AICdat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
 
 sem1 <- psem(
