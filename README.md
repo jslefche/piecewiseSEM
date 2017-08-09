@@ -2,7 +2,7 @@
 
 ## Version 2.0
 
-This is a major update to the `piecewiseSEM` package that includes new functionality, and a completely revised syntax that better reproduces the base R syntax and output.
+This is a major update to the `piecewiseSEM` package that includes new functionality, and a completely revised syntax that better reproduces the base R syntax and output. It is advised that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
 
 Currently supported model classes: `lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod`
 
@@ -46,7 +46,7 @@ summary(modelList, conserve = T)
 summary(modelList, direction = c("y2 <- y1"))
 
 # Address conflict using correlated errors
-modelList2 = update(modelList, y2 %~~% y1)
+modelList2 <- update(modelList, y2 %~~% y1)
 
 summary(modelList2)
 ```
