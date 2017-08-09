@@ -31,7 +31,7 @@ Returns an object of class \code{psem}.
 Jon Lefcheck <jlefcheck@bigelow.org>
 }
 \seealso{
-\code{\link{\%~~\%}}
+\code{\link{summary.psem}}, \code{\link{\%~~\%}}
 }
 \examples{
 
