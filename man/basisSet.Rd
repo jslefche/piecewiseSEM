@@ -9,13 +9,12 @@ Derivation of the set of independence claims--the basis set--for use in evaluati
 \usage{
 basisSet(modelList, direction = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{modelList}{
-%%     ~~Describe \code{modelList} here~~
+  A list of structural equations.
 }
   \item{direction}{
-%%     ~~Describe \code{direction} here~~
+  A \code{vector} of claims defining the specific directionality of independence claims; for use in special cases (see Details).
 }
 }
 \details{

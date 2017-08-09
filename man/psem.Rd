@@ -12,10 +12,10 @@ psem(..., data)
 \arguments{
   \item{\dots}{
   A list of structural equations.
-  }
+}
   \item{data}{
   A \code{data.frame} used to fit the equations.
-  }
+}
 }
 \details{
 \code{psem} takes a list of structural equations, which can be model objects of classes: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod}.

@@ -1,0 +1,87 @@
+\name{summary.psem}
+\alias{summary.psem}
+\title{
+Summarizing piecewise structural equation models
+}
+\description{
+Returns information necessary to interpret piecewise structural equation models, including tests of directed separation, path coefficients, information criterion values, and R-squared values of individual models. Also estimates separate SEMs by an optional grouping variable.
+}
+\usage{
+summary.psem(modelList, groups = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, add.claims = NULL, intercepts = FALSE, standardize = TRUE, .progressBar = TRUE)
+}
+\arguments{
+  \item{modelList}{
+  A list of structural equations.
+}
+  \item{groups}{
+  A vector of grouping variables (see Details).
+}
+  \item{direction}{
+  A \code{vector} of claims defining the specific directionality of independence claims; for use in special cases (see Details).
+}
+  \item{conserve}{
+ Whether the most conservative P-value should be returned; for use in special cases (see Details). Default is FALSE.
+}
+  \item{conditional}{
+Whether the conditioning variables should be shown in the d-sep table. Default is FALSE.
+}
+  \item{add.claims}{
+  An optional \code{vector} of additional independence claims to be added to the basis set.
+}
+  \item{intercepts}{
+  Whether intercepts should be included in the coefficients table. Default is FALSE.
+}
+  \item{standardize}{
+  Whether standardized path coefficients should be reported. Default is TRUE.
+}
+  \item{.progressBar}{
+  An optional progress bar. Default is TRUE.
+}
+}
+\details{
+
+The argument \code{groups} splits the analysis based on an optional grouping factor, conducts separate d-sep tests, and reports goodness-of-fit and path coefficients for each submodel. The procedure is approximately similar to a multigroup analysis in traditional variance-covariance SEM.
+
+In cases involving non-normally distributed responses in the independence claims that are modeled using generalized linear models, the significance of the independence claim is not reversable (e.g., the P-value of Y ~ X is not the same as X ~ Y). This is due to the transformation of the response via the link function. In extreme cases, this can bias the goodness-of-fit tests. \code{summary.psem} will issue a warning when this case is present and provide guidance for solutions. One solution is to specify the directionality of the relationship using the \code{direction} argument, e.g. \code{direction = c("X <- Y")}. Another is to run both tests (Y ~ X, X ~ Y) and return the most conservative (i.e., lowest) P-value, which can be toggled using the \code{conserve = TRUE} argument.
+
+In some cases, additional claims that were excluded from the basis set can be added back in using the argument \code{add.claims}. These could be, for instance, independence claims among exogenous variables. See Details in \code{\link{basisSet}}.
+
+Standardized path coefficients are scaled by standard deviations.
+}
+\value{
+The function \code{summary.psem} returns a list of summary statistics:
+  \item{dTable}{
+  A summary table of the tests of directed separation, from \code{\link{dSep}}.
+  }
+  \item{CStat}{
+  Fisher's C statistic, degrees of freedom, and significance value based on a Chi-square test.
+  }
+  \item{IC}{
+  Information criterion (Akaike, Bayesianm, corrected Akaike) as well as degrees of freedom and sample size.
+  }
+  \item{coefficients}{
+  A summary table of the path coefficients, from \code{link{coefs}}.
+  }
+  \item{R2}{
+  (Pseudo)-R2 values, from \code{\link{rsquared}}.
+  }
+}
+\references{
+Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
+
+Shipley, Bill. Cause and correlation in biology: a user's guide to path analysis, structural equations and causal inference. Cambridge University Press, 2002.
+
+Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context." Ecology 90.2 (2009): 363-368.
+
+Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
+}
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}
+\seealso{
+The model fitting function \code{\link{psem}}.
+}
+\examples{
+
+
+}
