@@ -21,17 +21,63 @@ The first part of this vignette will briefly introduce the concepts behind piece
 
 ## 1. An Introduction to Structural Equation Modeling
 
+Broadly, structural equation modeling (SEM) unites multiple variables in a single causal network. They are generally presented using box-and-arrow diagrams denoting directed relationships among variables:
 
- $Y = X\beta + \epsilon$,
+![example_sem](https://github.com/jslefche/jslefche.github.io/blob/master/img/example_sem.jpg?raw=true) 
+
+Those variables that exist only as predictors in the network are referred to as exogenous, and those that are predicted (at any point) as endogenous. Exogenous variables therefore only ever have arrows coming out of them, while endogenous arrows have arrows coming into them (which does not preclude them from having arrows come out of them as well). This vocabulary is important when considering some special cases later.
+
+In traditional SEM, the relationships among variables (i.e., their linear coefficients) are estimated simultaneously in a single  variance-covariance matrix. This approach is well developed but can be computationally intensive (depending on the sizes of the vcov matrix) and additionally assumes independence and normality of errors, two assumptions that are generally violated in ecological research.
+
+Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This proces decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are modeled separately, and then whose inferences are combined later for the entire SEM. This approach has two consequences: (1) increasingly large networks can be estimated with ease compared to a single vcov matrix, and (2) specific assumptions about the distribution and covariance of the replicates can be addressed using typical extensions of linear regression, such as fixed covariance structures, random effects, and other sophisticated modeling techniques. 
+
+Unlike traditional SEM, which uses a Chi-square test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed a priori to be biologically or mechanistically insigificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant) or whether  some causal relationship may exist as captured by the data.
+
+For instance, the preceding example SEM contains 4 specified paths (solid, black) and 2 unspecified paths (dashed, red), the latter of which constitute the basis set:
+
+![sem_missing](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_missing_paths.jpg?raw=true)
+
+In this case, there are two relationships that need to be evaluated: `y3` and `x1`, and `y3` and `y2`. However, there are additional influences on `y3`, specifically the directed path from `y2`. Thus, the claims need to be evaluated for 'conditional independence,' i.e. that the two variables are independent *conditional* on the known influences on both of them. This also pertains to the influences on `y2`,  including the potential contributions of `x1`. So the full claim would be: `y2 | y3 (y1, x1)`, with the claim of interest separated by the `|` bar and the conditioning variables followed in parentheses.
+
+As the network grows more complex, however, the independence claims only consider variables that are *immediately ancestral* to the primary claim. For example, if there was another variable predicting `x1`, it would not be considered in the independence claim between `y3` and `y2` since it is >1 node away in the network.
+
+The independence claims are evaluating by fitting a regression between the two variables of interest with any conditioning variables included as covariates, and then extracting the P-value from the significance test that the relationship between the two variables is equal to 0. Thus, the claim above `y2 | y3 (y1, x1)` would be modeled as `y3 ~ y2 + y1 + x1` . These regressions are constructed using the same assumptions about `y3` as specified in the actual structural equation model. So, for instance, if `y3` is a hierarchically sampled variable predicted by `y1`, then same hierarchical structure would carry over to the test of directed separation of `y3` predicted by `y2`.
+
+The P-values of the significance tests are then combined in a single Fisher's C statistic using the following equation:
+
+  C = -2$\sum_{i=1}^{k}$ln(p$_{i}$)
+
+This statistic is Chi-square distributed with 2k degrees of freedom, with k being the number of independence claims in the basis set.
+
+Shipley (2013) also showed that the the C statistic can be used to compute an AIC score for the SEM, so that nested comparisons can be made in a model selection framework:
+
+  AIC = C + 2K
+  
+where K is the likelihood degrees of freedom. A further variance, AICc, can be obtained by adding an additional penalty based on sample size:
+
+  AICc = C + 2K(n / n - K - 1)
+  
+The `piecewiseSEM` package automates the derivation of the basis set and the tests of directed separation, as well as extraction of path coefficients.
 
 ## 2. An Example using piecewiseSEM
 
+Let's make up some fake data corresponding to the path diagram above:
+```{r}
+dat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
+```
 
 ### 2.1 Worked example
 
 ```{r}
 # Load required libraries
 library(piecewiseSEM)
+```
+
+
+```{r, error = T}
+model <- psem(lm(y1 ~ x1, dat), lm(y1 ~ y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
+
+model <- psem(lm(y1 ~ x1 + y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
 ```
 
 ### 2.2 GLMs in pSEM
