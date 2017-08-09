@@ -202,6 +202,9 @@ print.attr <- function(x) {
 }
 
 #' Remove data from the model list
+#' formulas = 0, keep everything
+#' formulas = 1, remove all formulas including correlated errors
+#' formulas = 2, remove only formula but keep correlated errors
 removeData <- function(modelList, formulas = 0) {
 
   remove <- c("character", "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")
