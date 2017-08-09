@@ -3,7 +3,7 @@ title: "piecewiseSEM: Piecewise Structural Equation Modeling in R"
 author: "Jonathan S. Lefcheck"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  rmarkdown::pdf_document:
     toc: true
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -23,7 +23,7 @@ The first part of this vignette will briefly introduce the concepts behind piece
 
 Broadly, structural equation modeling (SEM) unites multiple variables in a single causal network. They are generally presented using box-and-arrow diagrams denoting directed relationships among variables:
 
-![example_sem](https://github.com/jslefche/jslefche.github.io/blob/master/img/example_sem.jpg?raw=true) 
+![1.1 Example SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/example_sem.jpg?raw=true) 
 
 Those variables that exist only as predictors in the network are referred to as exogenous, and those that are predicted (at any point) as endogenous. Exogenous variables therefore only ever have arrows coming out of them, while endogenous arrows have arrows coming into them (which does not preclude them from having arrows come out of them as well). This vocabulary is important when considering some special cases later.
 
@@ -35,7 +35,7 @@ Unlike traditional SEM, which uses a Chi-square test to compare the observed and
 
 For instance, the preceding example SEM contains 4 specified paths (solid, black) and 2 unspecified paths (dashed, red), the latter of which constitute the basis set:
 
-![sem_missing](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_missing_paths.jpg?raw=true)
+![1.2 Missing Paths](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_missing_paths.jpg?raw=true)
 
 In this case, there are two relationships that need to be evaluated: `y3` and `x1`, and `y3` and `y2`. However, there are additional influences on `y3`, specifically the directed path from `y2`. Thus, the claims need to be evaluated for 'conditional independence,' i.e. that the two variables are independent *conditional* on the known influences on both of them. This also pertains to the influences on `y2`,  including the potential contributions of `x1`. So the full claim would be: `y2 | y3 (y1, x1)`, with the claim of interest separated by the `|` bar and the conditioning variables followed in parentheses.
 
@@ -45,46 +45,74 @@ The independence claims are evaluating by fitting a regression between the two v
 
 The P-values of the significance tests are then combined in a single Fisher's C statistic using the following equation:
 
-  C = -2$\sum_{i=1}^{k}$ln(p$_{i}$)
+  $$C = -2\sum_{i=1}^{k}ln(p_{i})$$
 
 This statistic is Chi-square distributed with 2k degrees of freedom, with k being the number of independence claims in the basis set.
 
 Shipley (2013) also showed that the the C statistic can be used to compute an AIC score for the SEM, so that nested comparisons can be made in a model selection framework:
 
-  AIC = C + 2K
+  $$AIC = C + 2K$$
   
 where K is the likelihood degrees of freedom. A further variance, AICc, can be obtained by adding an additional penalty based on sample size:
 
-  AICc = C + 2K(n / n - K - 1)
+  $$AIC_c = C + 2K\frac{n}{(n - K - 1)}$$
   
 The `piecewiseSEM` package automates the derivation of the basis set and the tests of directed separation, as well as extraction of path coefficients.
 
 ## 2. An Example using piecewiseSEM
+
+### 2.1 Worked example
 
 Let's make up some fake data corresponding to the path diagram above:
 ```{r}
 dat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
 ```
 
-### 2.1 Worked example
-
-```{r}
-# Load required libraries
-library(piecewiseSEM)
-```
-
+And we will use `piecewiseSEM` to fit the model. The function is `psem` and we supply the regressions corresponding to the relationships specified in the path diagram
 
 ```{r, error = T}
-model <- psem(lm(y1 ~ x1, dat), lm(y1 ~ y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
+# Load required libraries
+library(piecewiseSEM)
 
+model <- psem(lm(y1 ~ x1, dat), lm(y1 ~ y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
+```
+
+You'll note that this produces an error because we have incorrectly broken down the component regressions. A common mistake is to list each path separately, but the proper specification is to collapse multiple pathways into a single multiple regression if the response is the same. Thus, the model becomes:
+
+```{r}
 model <- psem(lm(y1 ~ x1 + y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
 ```
 
-### 2.2 GLMs in pSEM
+To evaluate the model, we call `summary` on the `psem` object.
+```{r}
+summary(model, .progressBar = F)
+```
+
+The output shows the call of the model (the component equations), the AIC and BIC scores (derived from that C statistic), and then the tests of directed separation. The last column of the table reports the P-values, which are summarized using the above equation to yield the global goodness-of-fit below. The next table reports the path coefficients, including the standardized values (scaled by standardized deviations). Finally, the individual R-squared values of each regression is given, to aid in evaluation of the model fit.
+
+### 2.2 Standardized coefficients for GLMs
+
+Standardized coefficients are automatically calculated by multiplying the path coefficients $\Beta$ and multiplying by the ratio of the standard deviations of x and y:
+
+  $$\beta_{std} = \beta*\left( \frac{sd_x}{sd_y} \right)$$
+
+The 
+
+```{r}
+# Create model from example data
+lm.mod <- lm(y1 ~ x1 + y2, dat)
+# Extract coefficients
+coefs(lm.mod)
+# Compute standardized coefficient from Beta and raw data, and compare to coefs output
+coef(lm.mod)[2] * (sd(dat$x1)/sd(dat$y1))
+```
+
+### 2.3 GLMs in pSEM
 
 A problematic case arises when intermediate endogenous variables are non-normally distributed. Consider the following SEM.
 
-![glmSEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/GLM_sem.jpg?raw=true)
+![2.2 GLM SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/GLM_sem.jpg?raw=true)
+
 In this SEM, there are two independence claims:
 
 (1) y3 | x1 (y1, y2)
@@ -137,7 +165,7 @@ In option 1, the directionality can be specified using `direction = c()` as an a
 ```{r}
 summary(glmsem, direction = c("y1 <- y2"), .progressBar = F)$dTable
 ```
-In option 2, the SEM can be updated to remove that test.
+In option 2, the SEM can be updated to remove that test by specifying it as a correlated error (see Section 2.4).
 ```{r}
 summary(update(glmsem, y1 %~~% y2), .progressBar = F)
 ```
@@ -150,15 +178,30 @@ summary(glmsem, conserve = T, .progressBar = F)$dTable
 
 The user should be vigilant for these kinds of situations and ensure that both the specified paths AND the independence claims all make biological sense. In the case where the underlying assumptions of the d-sep tests can bias the goodness-of-fit statistic, `piecewiseSEM` will automatically alert the user.
 
-### 2.3 Standardized coefficients for GLMs
-
 ### 2.4 Correlated errors
 
+Correlated errors are bivariate relationships where it is presumed that the relationship among variables is not causal and unidirectional, but rather that both are being driven by some underlying driver and are therefore correlated. This is denoted by using a double-headed arrow:
 
+![2.4 Correlated error](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_correlated_error.jpg?raw=true) 
+
+This behavior is specified in `piecewiseSEM` using the operator `%~~%` in the `psem` function. We can fit the above SEM:
+```{r}
+cordat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
+
+corsem <- psem(
+  lm(y1 ~ x1, cordat),
+  lm(y2 ~ x1, cordat),
+  y1 %~~% y2, 
+  lm(y3 ~ y1 + y2, cordat)
+)
+
+summary(corsem, .progressBar = F)
+```
 
 ### 2.5 Nested models and AIC
 
-Shipley (2013) notes that the Fisher's C statistic can be used to 
+
+ 
 
 
 ## 3. Comparing Package Versions
@@ -177,7 +220,7 @@ Briefly, the data concern a forest survey where 5 individual trees of a particul
 Shipley notes that this model would be difficult to test using traditional SEM because it represents variation occurring at multiple levels (between sites, between individuals within sites, and between years within individuals within sites), and one response, survival, is not normally distributed.
 
 Shipley hypothesizes that the data adhere to the following hypothesized causal structure:
-![ShipleySEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/shipley_sem.jpg?raw=true)
+![3.1 Shipley SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/shipley_sem.jpg?raw=true)
 
 This example was included as the primary worked dataset in version 1.x of `piecewiseSEM`.
 
