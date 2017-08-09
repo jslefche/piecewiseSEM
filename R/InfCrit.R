@@ -33,10 +33,29 @@ infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL
 }
 
 #` Generalized function for extraction AIC(c) score
-AIC.psem <- function(modelList) infCrit(modelList)$AIC
+AIC.psem <- function(x, y = NULL, aicc = FALSE) {
 
-AICc.psem <- function(modelList) infCrit(modelList)$AICc
+  aicx <- infCrit(x)
+
+  if(aicc == FALSE) AICx <- aicx$AIC else AICx <- aicx$AICc
+
+  if(is.null(y)) AICx else {
+
+    aicy <- infCrit(y)
+
+    if(aicc == FALSE) AICy <- aicy$AIC else AICy <- aicy$AICc
+
+    dfx <- aicx$K; dfy <- aicy$K
+
+    data.frame(
+      df = c(dfx, dfy),
+      AIC = c(AICx, AICy),
+      row.names = c(deparse(substitute(x)), deparse(substitute(y)))
+    )
+
+  }
+
+}
 
 #` Generalized function for extraction BIC score
 BIC.psem <- function(modelList) infCrit(modelList)$BIC
-
