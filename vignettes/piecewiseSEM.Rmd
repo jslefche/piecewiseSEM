@@ -198,6 +198,15 @@ corsem <- psem(
 summary(corsem, .progressBar = F)
 ```
 
+In the case where the correlated error occurs between two exogenous variables, it is simply the raw bivariate correlation whose P-value is determined using the function `cor.test`. In the event the correlated error includes an endogenous variable, it is the partial correlation that removes the effect of influencing variables.
+
+In the above example, the correlated error removes the influence of `x1` on both `y1` and `y2` before computing their correlation.
+```{r}
+cor(resid(lm(y1 ~ x1, cordat)), resid(lm(y2 ~ x1, cordat)))
+
+cerror(y1 %~~% y2, corsem)
+```
+
 ### 2.5 Nested models and AIC
 
 
