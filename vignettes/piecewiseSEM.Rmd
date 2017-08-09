@@ -236,7 +236,9 @@ AIC(sem1, sem2)
 However, this does not account for the potential missing relationships with `y3` to be in the model, which is critical as AIC incorporates Fisher's C, which is determined by the d-sep tests. `y3` must be present in the d-sep tests to make the comparison fair (i.e., the models must be nested. To do so, we can use the following syntax:
 
 ```{r}
-AIC(sem1, update(sem2, y3 ~ 1))
+sem2new <- update(sem2, y3 ~ 1)
+
+AIC(sem1, sem2new)
 ```
 
 Now the comparison is fair and the model selection procedure is robust.
