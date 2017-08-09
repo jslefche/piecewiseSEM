@@ -29,15 +29,17 @@ Those variables that exist only as predictors in the network are referred to as 
 
 In traditional SEM, the relationships among variables (i.e., their linear coefficients) are estimated simultaneously in a single  variance-covariance matrix. This approach is well developed but can be computationally intensive (depending on the sizes of the vcov matrix) and additionally assumes independence and normality of errors, two assumptions that are generally violated in ecological research.
 
-Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This proces decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are modeled separately, and then whose inferences are combined later for the entire SEM. This approach has two consequences: (1) increasingly large networks can be estimated with ease compared to a single vcov matrix, and (2) specific assumptions about the distribution and covariance of the replicates can be addressed using typical extensions of linear regression, such as fixed covariance structures, random effects, and other sophisticated modeling techniques. 
+Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This proces decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are modeled separately, and then whose inferences are combined later for the entire SEM. This approach has two consequences: 
+1. Increasingly large networks can be estimated with ease compared to a single vcov matrix, and 
+2. Specific assumptions about the distribution and covariance of the replicates can be addressed using typical extensions of linear regression, such as fixed covariance structures, random effects, and other sophisticated modeling techniques. 
 
-Unlike traditional SEM, which uses a Chi-square test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed a priori to be biologically or mechanistically insigificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant) or whether  some causal relationship may exist as captured by the data.
+Unlike traditional SEM, which uses a $\chi^2$ test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed a priori to be biologically or mechanistically insigificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant) or whether  some causal relationship may exist as captured by the data.
 
 For instance, the preceding example SEM contains 4 specified paths (solid, black) and 2 unspecified paths (dashed, red), the latter of which constitute the basis set:
 
 ![1.2 Missing Paths](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_missing_paths.jpg?raw=true)
 
-In this case, there are two relationships that need to be evaluated: `y3` and `x1`, and `y3` and `y2`. However, there are additional influences on `y3`, specifically the directed path from `y2`. Thus, the claims need to be evaluated for 'conditional independence,' i.e. that the two variables are independent *conditional* on the known influences on both of them. This also pertains to the influences on `y2`,  including the potential contributions of `x1`. So the full claim would be: `y2 | y3 (y1, x1)`, with the claim of interest separated by the `|` bar and the conditioning variables followed in parentheses.
+In this case, there are two relationships that need to be evaluated: `y3` and `x1`, and `y3` and `y2`. However, there are additional influences on `y3`, specifically the directed path from `y2`. Thus, the claims need to be evaluated for 'conditional independence,' i.e. that the two variables are independent *conditional* on the known influences on both of them. This also pertains to the influences on `y2`,  including the potential contributions of `x1`. So the full claim would be: `y2 | y3 (y1, x1)`, with the claim of interest separated by the `|` bar and the conditioning variable(s) following in parentheses.
 
 As the network grows more complex, however, the independence claims only consider variables that are *immediately ancestral* to the primary claim. For example, if there was another variable predicting `x1`, it would not be considered in the independence claim between `y3` and `y2` since it is >1 node away in the network.
 
@@ -47,7 +49,7 @@ The P-values of the significance tests are then combined in a single Fisher's C 
 
   $$C = -2\sum_{i=1}^{k}ln(p_{i})$$
 
-This statistic is Chi-square distributed with 2k degrees of freedom, with k being the number of independence claims in the basis set.
+This statistic is $\chi^2$-distributed with 2k degrees of freedom, with k being the number of independence claims in the basis set.
 
 Shipley (2013) also showed that the the C statistic can be used to compute an AIC score for the SEM, so that nested comparisons can be made in a model selection framework:
 
@@ -92,11 +94,11 @@ The output shows the call of the model (the component equations), the AIC and BI
 
 ### 2.2 Standardized coefficients for GLMs
 
-Standardized coefficients are automatically calculated by multiplying the path coefficients $\Beta$ and multiplying by the ratio of the standard deviations of x and y:
+Standardized coefficients are automatically calculated by multiplying the path coefficients $\beta$ and multiplying by the ratio of the standard deviations of x and y:
 
   $$\beta_{std} = \beta*\left( \frac{sd_x}{sd_y} \right)$$
 
-The 
+Performing this exercise manually generates the same standardized coefficients as the function `coefs`:
 
 ```{r}
 # Create model from example data
@@ -137,11 +139,11 @@ summary(glm(y1 ~ y2 + x1, "poisson", glmdat))$coefficients[2, 4]
 summary(glm(y2 ~ y1 + x1, "poisson", glmdat))$coefficients[2, 4]
 ```
 
-This is problematic because the d-sep tests are dependent on the significance value. If theP-value is biased based on the direction of the test, then the goodness-of-fit of the model can be over- or underestimated.
+This is problematic because the d-sep tests are dependent on the significance value. If the P-value is biased based on the direction of the test, then the goodness-of-fit of the model can be over- or underestimated.
 
 `piecewiseSEM` version 2.0 solves this by providing three options. 
 
-(1) One can specify the directionality of the test if, for instance, it makes greater biological sense to test y1 against y2 instead of the reverse.
+(1) One can specify the directionality of the test if, for instance, it makes greater biological sense to test `y1` against `y2` instead of the reverse.
 
 (2) One can remove that path from the basis set and instead specify it as a correlated error using `%~~%`.
 
@@ -169,7 +171,7 @@ In option 2, the SEM can be updated to remove that test by specifying it as a co
 ```{r}
 summary(update(glmsem, y1 %~~% y2), .progressBar = F)
 ```
-Note that the claim no londer appears in the section for the tests of directed separation.
+Note that the claim no longer appears in the section for the tests of directed separation.
 
 Finally, option 3 can be invoked by specifying `conserve = T` as an additional argument
 ```{r}
@@ -213,10 +215,10 @@ As noted, Shipley (2013) used the Fisher's C statistic to construct an AIC score
 
 Let's consider comparing the following models for the mediating role of `y1`:
 
-![2.5 AIC SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_AIC_example.jpg?raw=true)
+![2.5.1 AIC SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_AIC_example.jpg?raw=true)
 
 One might think that the models could be coded like this, and then compared:
-```{r, results = 'hide'}
+```{r, message = F, results = 'hide'}
 AICdat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
 
 sem1 <- psem(
@@ -233,7 +235,11 @@ sem2 <- psem(
 AIC(sem1, sem2)
 ```
 
-However, this does not account for the potential missing relationships with `y3` to be in the model, which is critical as AIC incorporates Fisher's C, which is determined by the d-sep tests. `y3` must be present in the d-sep tests to make the comparison fair (i.e., the models must be nested. To do so, we can use the following syntax:
+However, this does not account for the potential missing relationships with `y3` to be in the model, which is critical as AIC incorporates Fisher's C, which is determined by the d-sep tests. `y3` must be present in the d-sep tests to make the comparison fair (i.e., the models must be nested). 
+
+![2.5.2 AIC SEM (nested)](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_AIC_example2.jpg?raw=true)
+
+To do so, we can use the following syntax:
 
 ```{r}
 sem2new <- update(sem2, y3 ~ 1)
@@ -252,13 +258,16 @@ The new version 2.0 of `piecewiseSEM` replaces all of the old functions from ver
 Shipley included an example dataset in his 2009 paper 'Confirmatory path analysis in a generalized multilevel context.' The data are included in this version of the package and alternately hosted in Ecological Archives E090-028-S1 (DOI: 10.1890/08-1034.1). While not actual observations (the data are randomly generated), the hypotheses correspond to actual ecological phenomenon. 
 
 Briefly, the data concern a forest survey where 5 individual trees of a particular species are followed at 20 sites every year beginning in 1970. For each individual, there is a measurement of:
--the degree days until break
--the Julian date (date of year) of bud break
--the increase in stem diameter per tree; and
--a binary variable indicating whether the tree is alive (1) or dead (0)
+*the latitude of the site (`lat`)
+*the degree days until break (`DD`)
+*the Julian date (date of year) of bud break (`Date`)
+*the increase in stem diameter per tree (`Growth`)
+*a binary variable indicating whether the tree is alive (1) or dead (0) (`Survival`)
+
 Shipley notes that this model would be difficult to test using traditional SEM because it represents variation occurring at multiple levels (between sites, between individuals within sites, and between years within individuals within sites), and one response, survival, is not normally distributed.
 
 Shipley hypothesizes that the data adhere to the following hypothesized causal structure:
+
 ![3.1 Shipley SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/shipley_sem.jpg?raw=true)
 
 This example was included as the primary worked dataset in version 1.x of `piecewiseSEM`.
@@ -359,7 +368,7 @@ new.summary$dTable
 # dSep(shipley.psem)
 ```
 
-After the d-sep table is the Fisher's C statistic, and the results from the Chi-squared test. This information was formerly obtained from `sem.fit`.
+After the d-sep table is the Fisher's C statistic, and the results from the $\chi^2$ test. This information was formerly obtained from `sem.fit`.
 ```{r, messages = FALSE}
 # Old function
 sem.fit(shipley.list, shipley, .progressBar = F)$Fisher.C
@@ -381,12 +390,12 @@ coefs(shipley.psem)
 ```
 
 Note two items: 
--the standardized estimates are now reported by default at the end of the coefficients table (column `Std.Estimate`).
--the standardized estimate for the logistic regression is different, based on new calculations (see `help(stdCoefs)`)
+*the standardized estimates are now reported by default at the end of the coefficients table (column `Std.Estimate`).
+*the standardized estimate for the logistic regression is different, based on new calculations (see `?coefs`)
 
 For the moment, version 2.0 only reports the scaled estimates (based on the standard deviations of the response and predictor). Future versions will include a range standardization.
 
-Finally, `summary` reports the individual model R[2] values. These were formerly obtained using `sem.model.fits` which was confusing. I have not included the old calculations in the package as the new `rsquared` function includes new calculations. However, this information is useful and therefore is now reported alongside the d-sep tests, Fisher's C, and path coefficients.
+Finally, `summary` reports the individual model R^2^ values. These were formerly obtained using `sem.model.fits` which was confusing. I have not included the old calculations in the package as the new `rsquared` function includes new calculations. However, this information is useful and therefore is now reported alongside the d-sep tests, Fisher's C, and path coefficients.
 
 ### 3.3 Additional functions
 
