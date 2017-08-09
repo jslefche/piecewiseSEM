@@ -55,7 +55,7 @@ Shipley (2013) also showed that the the C statistic can be used to compute an AI
 
   $$AIC = C + 2K$$
   
-where K is the likelihood degrees of freedom. A further variance, AICc, can be obtained by adding an additional penalty based on sample size:
+where K is the likelihood degrees of freedom. A further variant, $AIC_c$, can be obtained by adding an additional penalty based on sample size:
 
   $$AIC_c = C + 2K\frac{n}{(n - K - 1)}$$
   
