@@ -209,9 +209,37 @@ cerror(y1 %~~% y2, corsem)
 
 ### 2.5 Nested models and AIC
 
+As noted, Shipley (2013) used the Fisher's C statistic to construct an AIC score to facilitate model comparison and selection. This can be accomplished in the `piecewiseSEM` package with one important distinction.
 
- 
+Let's consider comparing the following models for the mediating role of `y1`:
 
+![2.5 AIC SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_AIC_example.jpg?raw=true)
+
+One might think that the models could be coded like this, and then compared:
+```{r, eval = F}
+AICdat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
+
+sem1 <- psem(
+  lm(y1 ~ x1, AICdat),
+  lm(y2 ~ x1 + y1, AICdat),
+  lm(y3 ~ y2, AICdat)
+)
+
+sem2 <- psem(
+  lm(y1 ~ x1, AICdat),
+  lm(y2 ~ x1 + y1, AICdat)
+)
+
+AIC(sem1, sem2)
+```
+
+However, this does not account for the potential missing relationships with `y3` to be in the model, which is critical as AIC incorporates Fisher's C, which is determined by the d-sep tests. `y3` must be present in the d-sep tests to make the comparison fair (i.e., the models must be nested. To do so, we can use the following syntax:
+
+```{r}
+AIC(sem1, update(sem2, y3 ~ 1))
+```
+
+Now the comparison is fair and the model selection procedure is robust.
 
 ## 3. Comparing Package Versions
 
@@ -365,3 +393,13 @@ The function `partial.resid` has been replaced with `partialResid` although the 
 `sem.lavaan` has not yet been ported to version 2.0, and it may not, as there was some confusion how multi-level models were translated to the variance-covariance framework (hint: they weren't, only the formulae were transferred).
 
 `sem.plot` has also not yet been ported to version 2.0, since it was of limited utility. It may make an appearance in teh future.
+
+### 4. References
+
+Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
+
+Shipley, Bill. Cause and correlation in biology: a user's guide to path analysis, structural equations and causal inference. Cambridge University Press, 2002.
+
+Shipley, Bill. "Confirmatory path analysis in a generalized multilevel context." Ecology 90.2 (2009): 363-368.
+
+Shipley, Bill. "The AIC model selection method applied to path analytic models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
