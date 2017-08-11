@@ -204,32 +204,7 @@ sdFam <- function(x, model, data) {
 
   .family = try(family(model), silent = TRUE)
 
-  if(class(.family) == "try-error") y <- data[, x] else {
-
-    if(.family$family != "gaussian")
-
-      warning(
-        paste0("Standardized coefficients for non-normal distributions must be interpreted differently. See help('stdCoefs')."),
-        call. = FALSE
-        )
-
-    .link <- .family$link
-
-    if(.link == "identity")
-
-      y <- data[, x] else {
-
-        if(any(class(model) %in% c("glmerMod")))
-
-          linkfun <- model@resp$family$linkfun else
-
-            linkfun <- model$family$linkfun
-
-        y <- data[, x] * linkfun(mean(data[, x]))
-
-      }
-
-  }
+  if(class(.family) == "try-error" | .family$family == "gaussian") y <- data[, x] else y <- NA
 
   sd(y, na.rm = TRUE)
 
