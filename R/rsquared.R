@@ -238,15 +238,24 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
       if(family. == "binomial") {
 
-        if(!method %in% c("none", "delta", "trigamma")) stop("Unsupported method!")
+        if(method == "trigamma") method <- "observation"
 
-        lambda <- mean(model@resp$y)
+        if(!method %in% c("none", "observation")) stop("Unsupported method!")
 
-        if(method == "trigamma") method = "delta"
+        if(method == "none") sigmaE <- sigmaD <- pi^2/3
 
-        if(method == "none") sigmaE <- sigmaD <- (pi^2)/3
+        if(method == "observation") {
 
-        if(method == "delta") sigmaE <- 1 / (lambda * (1 - lambda))
+          nullmod <- update(model, formula(paste(". ~ 1", paste("+", onlyBars(formula(model))))))
+
+          vt <- sum(unlist(VarCorr(model))^2)
+
+          pmean <- plogis(as.numeric(fixef(nullmod)) - 0.5 * vt *
+                            tanh(as.numeric(fixef(nullmod)) * (1 + 2 * exp(-0.5 * vt)/6)))
+
+          sigmaE <- 1/(pmean * (1 - pmean))
+
+          }
 
         } else
 
@@ -325,9 +334,11 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   if(family. == "Negative Binomial") {
 
-    theta <- getME(model, "glmer.nb.theta")
+    nullmod <- update(model, formula(paste(". ~ 1", paste("+", onlyBars(formula(model))))))
 
-    lambda <- mean(model@resp$y)
+    lambda <- as.numeric(exp(fixef(nullmod) + 0.5 * sum(unlist(VarCorr(model))^2)))
+
+    theta <- lme4::getME(model, "glmer.nb.theta")
 
     if(link == "log") {
 
@@ -368,9 +379,13 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   sigma <- VarCorr(model)
 
+  sigmaL <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
+
   if(family. %in% c("poisson", "quasipoisson")) {
 
-    lambda <- mean(model$data[, all.vars.merMod(formula(model))[1]])
+    nullmod <- suppressMessages(update(model, . ~ 1 + -.))
+
+    lambda <- as.numeric(exp(fixef(nullmod) + 0.5 * sum(unlist(getVarCov.(nullmod)))))
 
     if(family. == "poisson") omega <- 1 else omega <- as.numeric(sigma[nrow(sigma), 1])
 
@@ -394,6 +409,11 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
     if(!method %in% c("none", "delta", "trigamma")) stop("Unsupported method!")
 
+
+
+    ### ~~~ NEED TO GET PROPER SIGMAE HERE ~~~ ###
+
+
     lamba <- mean(model$data[, all.vars.merMod(formula(model))[1]])
 
     if(method == "trigamma") method = "delta"
@@ -401,6 +421,11 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
     if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
 
     if(method == "delta") sigmaE <- 1 / (lamba * (1 - lamba))
+
+
+
+
+
 
     } else if(family. %in% c("Gamma")) {
 
@@ -419,8 +444,6 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
         } else stop("Unsupported link function!")
 
       } else stop("Unsupported family!")
-
-  sigmaL <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
 
   mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
 

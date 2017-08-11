@@ -68,13 +68,13 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       }
 
-      if(any(class(bNewMod) %in% c("lm", "glm", "glmerMod", "pgls"))) {
+      if(any(class(bNewMod) %in% c("lm", "glm", "negbin", "glmerMod", "pgls"))) {
 
         ct <- as.data.frame(summary(bNewMod)$coefficients)
 
         ret <- ct[nrow(ct), , drop = FALSE]
 
-        if(all(class(bNewMod) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$df[2], ret[, 3:4])
+        if(all(class(bNewMod) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$df[2], ret[, 3:4])
 
         if(all(class(bNewMod) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
