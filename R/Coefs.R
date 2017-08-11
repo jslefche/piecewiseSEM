@@ -200,11 +200,15 @@ dataTrans <- function(formula., newdata) {
 }
 
 #' Properly scale standard deviations depending on the error distribution
-sdFam <- function(x, model, data) {
+sdFam <- function(x, model, newdata) {
 
   .family = try(family(model), silent = TRUE)
 
-  if(class(.family) == "try-error" | .family$family == "gaussian") y <- data[, x] else y <- NA
+  if(class(.family) == "try-error") y <- newdata[, x] else
+
+    if(.family$family == "gaussian") y <- newdata[, x] else
+
+      y <- NA
 
   sd(y, na.rm = TRUE)
 
