@@ -45,11 +45,11 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       ret <- cerror(i, modelList, data) else {
 
-        if(all(class(i) %in% c("lm", "glm", "lmerMod", "glmerMod", "pgls"))) {
+        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "pgls"))) {
 
           ret <- as.data.frame(summary(i)$coefficients)
 
-          if(all(class(i) %in% c("lm", "glm"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
+          if(all(class(i) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
 
           if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
 

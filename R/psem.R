@@ -92,7 +92,7 @@ evaluateClasses <- function(modelList) {
     "character",
     "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data",
     "formula", "formula.cerror",
-    "lm", "glm", "gls",
+    "lm", "glm", "gls", "negbin",
     "lme", "glmmPQL",
     "lmerMod", "merModLmerTest", "glmerMod",
     "sarlm",

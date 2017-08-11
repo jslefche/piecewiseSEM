@@ -26,9 +26,13 @@ findbars.lme <- function(model) {
 
   rand <- model$call$random
 
-  rand <- gsub(".*\\|(.*)", "\\1", as.character(rand)[2])
+  sapply(rand, function(i) {
 
-  strsplit(gsub(" " , "", rand), "\\/")[[1]]
+    i = gsub(".*\\|(.*)", "\\1", as.character(i)[2])
+
+    strsplit(gsub(" " , "", i), "\\/")[[1]]
+
+  } )
 
 }
 
@@ -41,25 +45,27 @@ getData. <- function(modelList) {
 
   data.list <- lapply(modelList, function(model) {
 
-    if(any(class(model) %in% c("lm", "sarlm")))
+    if(any(class(model) %in% c("lm", "negbin", "sarlm")))
 
-      data <- eval(model$call$data)
+      data <- eval(model$call$data) else
 
-    if(any(class(model) %in% c("glm", "glmmPQL", "pgls")))
+    if(any(class(model) %in% c("glm", "glmmPQL")))
 
-      data <- model$data
+      data <- model$data else
 
     if(any(class(model) %in% c("gls", "lme")))
 
-      data <- nlme::getData(model)
+      data <- nlme::getData(model) else
 
     if(all(class(model) %in% c("pgls")))
 
-      data <- model$data$data
+      data <- model$data$data else
 
     if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
 
-      data <- model@frame
+      data <- model@frame else
+
+        data <- data.frame()
 
     return(data)
 
