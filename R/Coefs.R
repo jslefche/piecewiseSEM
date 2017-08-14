@@ -136,7 +136,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
-      Bnew <- subset(ret, Response == paste0("~~", f[1]) & Predictor == paste0("~~", f[2]))$Estimate
+      Bnew <- subset(ret, Response == paste0("~~", f.trans[1]) & Predictor == paste0("~~", f.trans[2]))$Estimate
 
     } else {
 
