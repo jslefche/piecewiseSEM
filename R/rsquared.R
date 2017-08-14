@@ -240,9 +240,9 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
         if(method == "trigamma") method <- "observation"
 
-        if(!method %in% c("none", "observation")) stop("Unsupported method!")
+        if(!method %in% c("theoretical", "observation")) stop("Unsupported method!")
 
-        if(method == "none") sigmaE <- sigmaD <- pi^2/3
+        if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
 
         if(method == "observation") {
 
@@ -285,13 +285,13 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
           } else stop("Unsupported family!")
 
+    mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
+
+    con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
+
+    list(family = family., link = link, method = method, Marginal = mar, Conditional = con)
+
     }
-
-  mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
-
-  con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
-
-  list(family = family., link = link, Marginal = mar, Conditional = con)
 
 }
 
@@ -360,7 +360,7 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
-  list(family = family., link = link, Marginal = mar, Conditional = con)
+  list(family = family., link = link, method = method, Marginal = mar, Conditional = con)
 
 }
 
@@ -449,7 +449,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
-  list(family = family., link = link, Marginal = mar, Conditional = con)
+  list(family = family., link = link, method = method, Marginal = mar, Conditional = con)
 
 }
 
