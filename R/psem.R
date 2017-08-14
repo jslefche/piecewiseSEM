@@ -26,7 +26,11 @@ psem <- function(...) {
 
     names(x)[idx.] <- idx.
 
-    }
+  }
+
+  # if(any(sapply(x$data, class) == "factor"))
+  #
+  #   stop("Some predictors in the model are factors. Respecify as binary or ordered numeric!", call. = FALSE)
 
   evaluateClasses(x)
 
@@ -118,7 +122,11 @@ print.psem <- function(x) {
 
   formulas.print <- sapply(1:length(formulas), function(i) {
 
-    paste0(class(x[[i]]), ": ", deparse(formulas[[i]]))
+    if(class(formulas[[i]]) == "formula.cerror")
+
+      paste0("Correlated error: ", paste(formulas[[i]])) else
+
+        paste0(class(x[[i]])[1], ": ", deparse(formulas[[i]]))
 
   } )
 
