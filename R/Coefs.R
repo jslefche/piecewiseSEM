@@ -45,13 +45,23 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       ret <- cerror(i, modelList, data) else {
 
-        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "pgls"))) {
+        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "pgls"))) {
 
           ret <- as.data.frame(summary(i)$coefficients)
 
           if(all(class(i) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
 
           if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
+
+          if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
+
+            krp <- KRp(i, all.vars.trans(formula(i))[-1], data, intercepts = TRUE)
+
+            ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
+
+            ret[, "Pr(>|t|)"] <- krp[2, ]
+
+          }
 
         }
 
@@ -62,16 +72,6 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
         }
-
-        if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
-
-          krp <- KRp(i, all.vars.merMod(formula(i))[-1], data, intercepts = TRUE)
-
-          ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
-
-          ret[, "Pr(>|t|)"] <- krp[2, ]
-
-          }
 
         if(all(class(i) %in% c("gls", "lme", "glmmPQL"))) {
 
@@ -88,7 +88,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           }
 
         ret <- data.frame(
-          Response = all.vars.merMod(listFormula(list(i))[[1]])[1],
+          Response = all.vars.trans(listFormula(list(i))[[1]])[1],
           Predictor = rownames(ret),
           ret
           )
@@ -128,13 +128,11 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     f <- listFormula(list(j))[[1]]
 
-    if(all(all.vars.merMod(f) %in% colnames(data)))
+    newdata <- data[, all.vars.notrans(f)]
 
-      newdata <- data[, all.vars.merMod(f)] else
+    f.trans <- all.vars.trans(f)
 
-        newdata <- data[, all.vars.trans(f)]
-
-    f <- all.vars.merMod(f)
+    f.notrans <- all.vars.notrans(f)
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
@@ -144,15 +142,15 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       if(class(newdata) %in% c("SpatialPointsDataFrame")) newdata <- newdata@data
 
-      newdata <- dataTrans(formula(j), newdata)
+      newdata. <- dataTrans(formula(j), newdata)
 
-      B <- subset(ret, Response == f[1])$Estimate
+      B <- subset(ret, Response == f.trans[1])$Estimate
 
-      sd.x <- sapply(f[-1], function(x) sd(newdata[, x], na.rm = TRUE))
+      sd.x <- sapply(f.notrans[-1], function(x) sd(newdata.[, x], na.rm = TRUE))
 
-      if(length(B) != length(sd.x)) sd.x <- c(sd.x, sdInt(j, newdata))
+      if(length(B) != length(sd.x)) sd.x <- c(sd.x, sdInt(j, newdata.))
 
-      sd.y <- sdFam(f[1], j, newdata)
+      sd.y <- sdFam(f.notrans[1], j, newdata.)
 
       if(intercepts == FALSE) Bnew <- B * (sd.x / sd.y) else
 
@@ -162,7 +160,9 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   } ) )
 
-  cbind(ret, Std.Estimate = unname(Bnew))
+  ret <- data.frame(ret, Std.Estimate = unname(Bnew))
+
+  return(ret)
 
 }
 
@@ -173,11 +173,15 @@ dataTrans <- function(formula., newdata) {
 
   trans <- all.vars.trans(formula.)
 
+  trans <- unlist(strsplit(trans, "\\:"))
+
+  trans <- trans[!duplicated(trans)]
+
   if(any(grepl("scale\\(.*\\)", trans))) {
 
     trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
 
-    warning("`scale` applied to variable--use argument `standardize = TRUE` instead.", call. = FALSE)
+    warning("`scale` applied directly to variable. Use argument `standardize = TRUE` instead.", call. = FALSE)
 
   }
 
