@@ -45,6 +45,9 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- reverseNonLin(modelList, b, amat, formulaList)
 
+
+
+
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
     # b <- replaceTrans(modelList, b, amat)
@@ -206,7 +209,11 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 
         .family <- try(family(x), silent = TRUE)
 
-        if(.family$family == "gaussian" | class(.family) == "try-error") FALSE else TRUE
+        if(class(.family) == "try-error") FALSE else
+
+          if(.family$family == "gaussian") FALSE else
+
+            TRUE
 
     } ) ]
 
