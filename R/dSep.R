@@ -59,9 +59,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
         ct <- summary(bNewMod)$coefficients
 
         ret <- data.frame(
-          t(ct[nrow(ct), 1:2]),
+          t(ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, 1:2]),
           kr[1, ],
-          ct[nrow(ct), 3],
+          ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, 3],
           kr[2, ],
           row.names = NULL
         )
@@ -72,7 +72,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ct <- as.data.frame(summary(bNewMod)$coefficients)
 
-        ret <- ct[nrow(ct), , drop = FALSE]
+        ret <- ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, , drop = FALSE]
 
         if(all(class(bNewMod) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$df[2], ret[, 3:4])
 
@@ -84,7 +84,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ct <- as.data.frame(summary(bNewMod)$Coef)
 
-        ret <- ct[nrow(ct), , drop = FALSE]
+        ret <- ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, , drop = FALSE]
 
         ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
@@ -94,7 +94,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ct <- as.data.frame(summary(bNewMod)$tTable)
 
-        ret <- ct[nrow(ct), , drop = FALSE]
+        ret <- ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, , drop = FALSE]
 
         if(ncol(ret) == 4 & class(bNewMod) %in% c("gls"))
 

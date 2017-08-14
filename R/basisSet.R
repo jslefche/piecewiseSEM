@@ -39,49 +39,19 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- filterExogenous(b, amat)
 
+    b <- filterInteractions(b)
+
     b <- removeCerror(b, formulaList)
 
     b <- reverseNonLin(modelList, b, amat, formulaList)
 
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
-    b <- replaceTrans(modelList, b, amat)
+    # b <- replaceTrans(modelList, b, amat)
 
   }
 
   return(b)
-
-}
-
-#' Get vector of untransformed variables
-all.vars.notrans <- function(formula.) {
-
-  if(class(formula.) == "formula")
-
-    all.vars.merMod(formula.) else
-
-      unlist(strsplit(formula., " ~~ "))
-
-}
-
-#' Get vector of transformed variables
-all.vars.trans <- function(formula.) {
-
-  if(class(formula.) == "formula") {
-
-    n <- rownames(attr(terms(formula.), "factors"))
-
-    if(any(grepl("\\|", n))) {
-
-      idn <- which(grepl("\\|", n))
-
-      f <- rownames(attr(terms(formula.), "factors"))[-idn]
-
-      return(f)
-
-    } else return(n)
-
-  } else unlist(strsplit(formula., " ~~ "))
 
 }
 
@@ -90,9 +60,9 @@ filterExisting <- function(b, formulaList) {
 
   b <- lapply(b, function(i) {
 
-    f <- formulaList[sapply(formulaList, function(x) all.vars.merMod(x)[1] == i[1])]
+    f <- formulaList[sapply(formulaList, function(x) all.vars.trans(x)[1] == i[1])]
 
-    if(any(sapply(f, function(x) any(all.vars.merMod(x)[-1] %in% i[2])))) NULL else i
+    if(any(sapply(f, function(x) any(all.vars.trans(x)[-1] %in% i[2])))) NULL else i
 
   } )
 
@@ -116,6 +86,13 @@ filterExogenous <- function(b, amat) {
   b <- b[!sapply(b, is.null)]
 
   return(b)
+
+}
+
+#' Filter interactions from the d-sep tests
+filterInteractions <- function(b) {
+
+  if(grepl("\\:", b[2])) NULL else b
 
 }
 
@@ -150,59 +127,59 @@ removeCerror <- function(b, formulaList) {
 
 #' Replace transformations in the basis set by cycling through neighbors and applying
 #' transformations in order of how variables are treated in the child nearest to current node
-replaceTrans <- function(modelList, b, amat) {
-
-  if(length(b) > 0) {
-
-    modelList <- removeData(modelList, formulas = 1)
-
-    formulaList <- listFormula(modelList)
-
-    amat <- amat[, colSums(amat) > 0]
-
-    formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars.notrans(x)[1] == colnames(amat)))]
-
-    trans <- lapply(formulaList, all.vars.trans)
-
-    notrans <- lapply(formulaList, all.vars.notrans)
-
-    b <- lapply(rev(b), function(i) {
-
-      i[2] <- trans[[which(sapply(notrans, function(x) x[1] == i[2]))]][1]
-
-      flag <- TRUE
-
-      while(flag == TRUE) {
-
-        for(j in (1:length(i))[-2]) {
-
-          for(k in length(formulaList):1) {
-
-            if(i[j] %in% notrans[[k]][-1]) {
-
-              i[j] <- trans[[k]][which(i[j] == notrans[[k]])]
-
-              flag <- FALSE
-
-            }
-
-          }
-
-        }
-
-      }
-
-      return(i)
-
-    } )
-
-    b <- rev(b)
-
-  }
-
-  return(b)
-
-}
+# replaceTrans <- function(modelList, b, amat) {
+#
+#   if(length(b) > 0) {
+#
+#     modelList <- removeData(modelList, formulas = 1)
+#
+#     formulaList <- listFormula(modelList)
+#
+#     amat <- amat[, colSums(amat) > 0]
+#
+#     formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars.notrans(x)[1] == colnames(amat)))]
+#
+#     trans <- lapply(formulaList, all.vars.trans)
+#
+#     notrans <- lapply(formulaList, all.vars.notrans)
+#
+#     b <- lapply(rev(b), function(i) {
+#
+#       i[2] <- trans[[which(sapply(notrans, function(x) x[1] == i[2]))]][1]
+#
+#       flag <- TRUE
+#
+#       while(flag == TRUE) {
+#
+#         for(j in (1:length(i))[-2]) {
+#
+#           for(k in length(formulaList):1) {
+#
+#             if(i[j] %in% notrans[[k]][-1]) {
+#
+#               i[j] <- trans[[k]][which(i[j] == notrans[[k]])]
+#
+#               flag <- FALSE
+#
+#             }
+#
+#           }
+#
+#         }
+#
+#       }
+#
+#       return(i)
+#
+#     } )
+#
+#     b <- rev(b)
+#
+#   }
+#
+#   return(b)
+#
+# }
 
 #' If intermediate endogenous variables are nonlinear, return both directions
 reverseNonLin <- function(modelList, b, amat, formulaList) {
@@ -221,15 +198,15 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 
     idx <- names(idx)
 
-    idm <- sapply(formulaList, function(i) all.vars.merMod(i)[1] %in% idx)
+    idm <- sapply(formulaList, function(i) all.vars.trans(i)[1] %in% idx)
 
     idm <- idm[
 
       sapply(modelList[idm], function(x) {
 
-      .family <- try(family(x), silent = TRUE)
+        .family <- try(family(x), silent = TRUE)
 
-      if(class(.family) == "try-error") FALSE else TRUE
+        if(.family$family == "gaussian" | class(.family) == "try-error") FALSE else TRUE
 
     } ) ]
 
@@ -253,7 +230,7 @@ reverseNonLin <- function(modelList, b, amat, formulaList) {
 
     }
 
-    r <- sapply(formulaList, function(x) all.vars.merMod(x)[1])
+    r <- sapply(formulaList, function(x) all.vars.trans(x)[1])
 
     b <- b[sapply(b, function(x) any(x[2] %in% r))]
 

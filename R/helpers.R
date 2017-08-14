@@ -9,15 +9,44 @@ all.vars.merMod <- function(formula.) {
 
       n <- rownames(attr(terms(formula.), "factors"))
 
-      if(any(grepl("\\|", n))) {
+      if(any(grepl("\\|", n)))
 
-        f <- lme4::nobars(formula.)
+        all.vars(lme4::nobars(formula.)) else
 
-        all.vars(f)
-
-      } else all.vars(formula.)
+          all.vars(formula.)
 
     }
+
+}
+
+#' Get vector of untransformed variables
+all.vars.notrans <- function(formula.) {
+
+  if(class(formula.) == "formula") {
+
+    if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
+
+      all.vars(formula.)
+
+    } else
+
+      unlist(strsplit(formula., " ~~ "))
+
+}
+
+
+
+
+#' Get vector of transformed variables
+all.vars.trans <- function(formula.) {
+
+  if(class(formula.) == "formula") {
+
+    if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
+
+    c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
+
+    } else unlist(strsplit(formula., " ~~ "))
 
 }
 
@@ -83,6 +112,8 @@ getData. <- function(modelList) {
 
   data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 
+  colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+
   return(data)
 
 }
@@ -123,6 +154,14 @@ isSig <- function(p) {
 
 #' Recompute P-values using Kenward-Rogers approximation
 KRp <- function(model, vars, data, intercepts = FALSE) {
+
+  if(grepl("\\*", deparse(formula(model))) & !all(grepl("\\*", vars))) {
+
+    f <- all.vars.trans(formula(model))
+
+    model <- update(model, as.formula(paste(f[1], " ~ ", paste(f[-1], collapse = " + "), " + ", paste(onlyBars(formula(model)), collapse = " + "))))
+
+  }
 
   ret <- sapply(vars, function(x) {
 
