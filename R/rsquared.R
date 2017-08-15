@@ -67,7 +67,7 @@ rsquared <- function(modelList, method = NULL) {
 #' R^2 for lm objects
 rsquared.lm <- function(model)
 
-  list(family = "gaussian", link = "identity", R.squared = summary(model)$r.squared)
+  list(family = "gaussian", link = "identity", method = NA, R.squared = summary(model)$r.squared)
 
 #' R^2 for gls objects
 rsquared.gls <- function(model) {
@@ -78,7 +78,7 @@ rsquared.gls <- function(model) {
 
   sigmaE <- var(resid(model))
 
-  list(family = "gaussian", link = "identity", R.squared = sigmaF / (sigmaF + sigmaE))
+  list(family = "gaussian", link = "identity", method = NA, R.squared = sigmaF / (sigmaF + sigmaE))
 
 }
 
@@ -140,7 +140,7 @@ rsquared.merMod <- function(model) {
 
   con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
-  list(family = "gaussian", link = "identity", Marginal = mar, Conditional = con)
+  list(family = "gaussian", link = "identity", method = NA, Marginal = mar, Conditional = con)
 
 }
 
@@ -167,7 +167,7 @@ rsquared.lme <- function(model) {
 
   con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
-  list(family = "gaussian", link = "identity", Marginal = mar, Conditional = con)
+  list(family = "gaussian", link = "identity", method = NA, Marginal = mar, Conditional = con)
 
 }
 
@@ -409,24 +409,26 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   } else if(family. %in% c("binomial", "quasibinomial")) {
 
-    if(!method %in% c("none", "delta", "trigamma")) stop("Unsupported method!")
+    if(method == "trigamma") method <- "observation"
 
+    if(!method %in% c("theoretical", "observation")) stop("Unsupported method!")
 
+    if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
 
-    ### ~~~ NEED TO GET PROPER SIGMAE HERE ~~~ ###
+    if(method == "observation") {
 
+      f <- paste(all.vars.trans(formula(model))[1], " ~ 1")
 
-    lamba <- mean(model$data[, all.vars.merMod(formula(model))[1]])
+      nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE)
 
-    if(method == "trigamma") method = "delta"
+      vt <- sum(unlist(getVarCov.(model)))
 
-    if(method == "none") sigmaE <- sigmaD <- pi^(2/3)
+      pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
+                        tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
 
-    if(method == "delta") sigmaE <- 1 / (lamba * (1 - lamba))
+      sigmaE <- 1/(pmean * (1 - pmean))
 
-
-
-
+      }
 
 
     } else if(family. %in% c("Gamma")) {
