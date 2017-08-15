@@ -238,13 +238,13 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
       if(family. == "binomial") {
 
-        if(method == "trigamma") method <- "observation"
+        if(method == "trigamma") method <- "delta"
 
-        if(!method %in% c("theoretical", "observation")) stop("Unsupported method!")
+        if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
 
         if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
 
-        if(method == "observation") {
+        if(method == "delta") {
 
           f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model)))
 
@@ -409,13 +409,13 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   } else if(family. %in% c("binomial", "quasibinomial")) {
 
-    if(method == "trigamma") method <- "observation"
+    if(method == "trigamma") method <- "delta"
 
-    if(!method %in% c("theoretical", "observation")) stop("Unsupported method!")
+    if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
 
     if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
 
-    if(method == "observation") {
+    if(method == "delta") {
 
       f <- paste(all.vars.trans(formula(model))[1], " ~ 1")
 
