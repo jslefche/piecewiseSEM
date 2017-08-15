@@ -14,16 +14,49 @@ rsquared(modelList, method = NULL)
   A regression, or a list of structural equations.
 }
   \item{method}{
-  An optional vector of methods for use in calculating R2.
+  The method used to compute the R2 value (see Details).
 }
 }
 \details{
-
-
 For mixed models, marginal R2 considers only the variance by the fixed effects, and the conditional R2 by both the fixed and random effects.
+
+For GLMs (\code{glm}), supported methods include:
+
+  \item{mcfadden}{
+  1 - ratio of likelihoods of full vs. null models
+
+  }
+  \item{coxsnell}{
+  McFadden's R2 but raised to 2/N. Upper limit is < 1
+  }
+   \item{nagelkerke}{
+  Adjust's Cox-Snell R2 so that upper limit = 1. The DEFAULT method
+  }
+
+For GLMERs fit to Poisson, Gamma, and negative binomial distributions (\code{glmer}, \code{glmmPQL}, \code{glmer.nb}), supported methods include
+
+  \item{delta}{
+  Approximates the observation variance based on second-order Taylor series expansion. Can be used with many families and link functions
+  }
+  \item{lognormal}{
+  Observation variance is the variance of the log-normal distribution
+  }
+  \item{trigamma}{
+  Provides most accurate estimate of the observation variance but is limited to only the log link. The DEFAULT method
+  }
+
+For GLMERs fit to the binomial distribution (\code{glmer}, \code{glmmPQL}), supported methods include:
+
+  \item{theoretical}{
+  Assumes observation variance is pi^2/3
+  }
+  \item{delta}{
+  Approximates the observation variance as above. The DEFAULT method
+  }
+
 }
 \value{
-Returns a \code{data.frame} with the response, its family and link, and the R2 value. Mixed models also return marginal and conditional R2 values.
+Returns a \code{data.frame} with the response, its family and link, the method used to estimate R2, and the R2 value itself. Mixed models also return marginal and conditional R2 values.
 }
 \references{
 Nakagawa, Sinichi, Johnson, Paul C.D., and Holger Schielzeth. "The coefficient of determination R2 and intra-class correlation coefficient from generalized linear mixed-effects models revisted and expanded." bioRxiv 095851 (2017).
