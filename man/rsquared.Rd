@@ -21,39 +21,38 @@ rsquared(modelList, method = NULL)
 For mixed models, marginal R2 considers only the variance by the fixed effects, and the conditional R2 by both the fixed and random effects.
 
 For GLMs (\code{glm}), supported methods include:
-
-  \item{mcfadden}{
+\itemize{
+  \item{\code{mcfadden}}{
   1 - ratio of likelihoods of full vs. null models
-
   }
-  \item{coxsnell}{
+  \item{\code{coxsnell}}{
   McFadden's R2 but raised to 2/N. Upper limit is < 1
   }
-   \item{nagelkerke}{
+   \item{\code{nagelkerke}}{
   Adjust's Cox-Snell R2 so that upper limit = 1. The DEFAULT method
   }
-
+}
 For GLMERs fit to Poisson, Gamma, and negative binomial distributions (\code{glmer}, \code{glmmPQL}, \code{glmer.nb}), supported methods include
-
-  \item{delta}{
+\itemize{
+  \item{\code{delta}}{
   Approximates the observation variance based on second-order Taylor series expansion. Can be used with many families and link functions
   }
-  \item{lognormal}{
+  \item{\code{lognormal}}{
   Observation variance is the variance of the log-normal distribution
   }
-  \item{trigamma}{
+  \item{\code{trigamma}}{
   Provides most accurate estimate of the observation variance but is limited to only the log link. The DEFAULT method
   }
-
+}
 For GLMERs fit to the binomial distribution (\code{glmer}, \code{glmmPQL}), supported methods include:
-
-  \item{theoretical}{
+\itemize{
+  \item{\code{theoretical}}{
   Assumes observation variance is pi^2/3
   }
-  \item{delta}{
+  \item{\code{delta}}{
   Approximates the observation variance as above. The DEFAULT method
   }
-
+}
 }
 \value{
 Returns a \code{data.frame} with the response, its family and link, the method used to estimate R2, and the R2 value itself. Mixed models also return marginal and conditional R2 values.
