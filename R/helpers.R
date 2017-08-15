@@ -104,11 +104,15 @@ getData. <- function(modelList) {
 
   data <- data.list[[which(sapply(data.list, function(x) nrow(x) == n))[1]]]
 
-  for(i in 1:length(data.list)) {
-
-    data <- merge(data, data.list[[i]], all = TRUE)
-
-  }
+  # if(length(data.list) > 1) {
+  #
+  #   for(i in 1:length(data.list)) {
+  #
+  #   data <- merge(data, data.list[[i]], all = TRUE)
+  #
+  #   }
+  #
+  # }
 
   data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 

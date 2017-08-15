@@ -194,9 +194,9 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     rand <- rand[match(names(sigma), rand)]
 
-    idx <- sapply(rand, function(x) {
+    data <- getData.(model)
 
-      data <- getData.(model)
+    idx <- sapply(rand, function(x) {
 
       length(unique(data[, x])) == nrow(data)
 
@@ -246,12 +246,14 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
         if(method == "observation") {
 
-          nullmod <- update(model, formula(paste(". ~ 1", paste("+", onlyBars(formula(model))))))
+          f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model)))
 
-          vt <- sum(unlist(VarCorr(model))^2)
+          nullmodel <- lme4::glmer(formula(f), family = binomial(link = link), data = data)
 
-          pmean <- plogis(as.numeric(fixef(nullmod)) - 0.5 * vt *
-                            tanh(as.numeric(fixef(nullmod)) * (1 + 2 * exp(-0.5 * vt)/6)))
+          vt <- sum(unlist(VarCorr(nullmodel)))
+
+          pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
+                            tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
 
           sigmaE <- 1/(pmean * (1 - pmean))
 
@@ -316,13 +318,9 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   rand <- rand[match(names(sigma), rand)]
 
-  idx <- sapply(rand, function(x) {
+  data <- getData.(model)
 
-    data <- getData.(model)
-
-    length(unique(data[, x])) == nrow(data)
-
-  } )
+  idx <- sapply(rand, function(x) length(unique(data[, x])) == nrow(data))
 
   sigmaL <- sum(sapply(sigma[!idx], function(i) {
 
@@ -334,9 +332,13 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   if(family. == "Negative Binomial") {
 
-    nullmod <- update(model, formula(paste(". ~ 1", paste("+", onlyBars(formula(model))))))
+    f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model)))
 
-    lambda <- as.numeric(exp(fixef(nullmod) + 0.5 * sum(unlist(VarCorr(model))^2)))
+    nullmodel <- lme4::glmer.nb(formula(f), family=negative.binomial(link = link), data)
+
+    # nullmodel <- update(model, formula(paste(". ~ 1 +", onlyBars(formula(model)))))
+
+    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(VarCorr(nullmodel)))))
 
     theta <- lme4::getME(model, "glmer.nb.theta")
 
@@ -383,9 +385,9 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   if(family. %in% c("poisson", "quasipoisson")) {
 
-    nullmod <- suppressMessages(update(model, . ~ 1 + -.))
+    nullmodel <- suppressMessages(update(model, . ~ 1 + -.))
 
-    lambda <- as.numeric(exp(fixef(nullmod) + 0.5 * sum(unlist(getVarCov.(nullmod)))))
+    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(getVarCov.(nullmodel)))))
 
     if(family. == "poisson") omega <- 1 else omega <- as.numeric(sigma[nrow(sigma), 1])
 
