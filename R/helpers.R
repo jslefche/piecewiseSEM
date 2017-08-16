@@ -100,19 +100,7 @@ getData. <- function(modelList) {
 
   } )
 
-  n <- max(sapply(data.list, nrow))
-
-  data <- data.list[[which(sapply(data.list, function(x) nrow(x) == n))[1]]]
-
-  # if(length(data.list) > 1) {
-  #
-  #   for(i in 1:length(data.list)) {
-  #
-  #   data <- merge(data, data.list[[i]], all = TRUE)
-  #
-  #   }
-  #
-  # }
+  data <- Reduce(function(x, y) merge(x, y, by.x = colnames(data.list[[1]]), all.x = FALSE), data.list)
 
   data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 

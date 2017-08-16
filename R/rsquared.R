@@ -383,9 +383,17 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   sigmaL <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
 
+  data <- getData.(model)
+
   if(family. %in% c("poisson", "quasipoisson")) {
 
-    nullmodel <- suppressMessages(update(model, . ~ 1 + -.))
+    f <- paste(all.vars.trans(formula(model))[1], " ~ 1")
+
+    if(family. == "poisson")
+
+      nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = poisson(link = link), data = data, verbose = FALSE) else
+
+        nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = quasipoisson(link = link), data = data, verbose = FALSE)
 
     lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(getVarCov.(nullmodel)))))
 
@@ -419,9 +427,13 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
       f <- paste(all.vars.trans(formula(model))[1], " ~ 1")
 
-      nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE)
+      if(family. == "binomial")
 
-      vt <- sum(unlist(getVarCov.(model)))
+        nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE) else
+
+          nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = quasibinomial(link = link), data = data, verbose = FALSE)
+
+      vt <- sum(unlist(getVarCov.(nullmodel)))
 
       pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
                         tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
@@ -429,7 +441,6 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
       sigmaE <- 1/(pmean * (1 - pmean))
 
       }
-
 
     } else if(family. %in% c("Gamma")) {
 
