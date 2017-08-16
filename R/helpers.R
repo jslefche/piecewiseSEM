@@ -106,6 +106,8 @@ getData. <- function(modelList) {
 
   colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
 
+  data <- as.data.frame(data)
+
   return(data)
 
 }

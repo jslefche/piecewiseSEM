@@ -140,7 +140,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     } else {
 
-      if(class(newdata) %in% c("SpatialPointsDataFrame")) newdata <- newdata@data
+      if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
 
       newdata. <- dataTrans(formula(j), newdata)
 

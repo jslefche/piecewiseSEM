@@ -6,13 +6,15 @@ psem <- function(...) {
 
   x <- list(...)
 
-  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
+  idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
   if(length(idx) > 0) {
 
     x <- x[c((1:length(x))[!1:length(x) %in% idx], idx)]
 
     names(x)[length(x)] <- "data"
+
+    x$data <- as.data.frame(x)
 
   } else {
 
