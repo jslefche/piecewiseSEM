@@ -12,7 +12,7 @@ rsquared <- function(modelList, method = NULL) {
 
   ret <- lapply(modelList, function(i) {
 
-    if(any(class(i) %in% c("lm", "pgls"))) r <- rsquared.lm(i)
+    if(all(class(i) %in% c("lm", "pgls"))) r <- rsquared.lm(i)
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
 
@@ -111,7 +111,7 @@ rsquared.glm <- function(model, method = "nagelkerke") {
 
   }
 
-  list(family = family., link = link, R.squared = r)
+  list(family = family., link = link, method = method, R.squared = r)
 
 }
 

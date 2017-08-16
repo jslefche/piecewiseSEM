@@ -45,9 +45,6 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- reverseNonLin(modelList, b, amat, formulaList)
 
-
-
-
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
     # b <- replaceTrans(modelList, b, amat)
