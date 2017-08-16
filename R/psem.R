@@ -130,7 +130,7 @@ print.psem <- function(x) {
 
   } )
 
-  data.print <- if(!is.null(x$data)) head(data) else head(getData.(x))
+  data.print <- if(!is.null(x$data)) head(x$data) else head(getData.(x))
 
   class.print <- paste0("class(", class(x), ")")
 
