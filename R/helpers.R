@@ -100,7 +100,7 @@ getData. <- function(modelList) {
 
   } )
 
-  data <- Reduce(function(x, y) merge(x, y, by.x = colnames(data.list[[1]]), all.x = FALSE), data.list)
+  data <- Reduce(function(x, y) merge(x, y, all.x = FALSE), data.list)
 
   data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 
