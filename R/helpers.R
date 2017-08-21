@@ -22,23 +22,40 @@ all.vars.merMod <- function(formula.) {
 #' Get vector of untransformed variables
 all.vars.notrans <- function(formula.) {
 
+  if(!class(formula.) %in% c("formula", "formula.cerror")) formula. <- formula(formula.)
+
   if(class(formula.) == "formula") {
 
     if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
 
-      all.vars(formula.)
+    formula. <- all.vars.trans(formula.)
 
-    } else
+    if(any(grepl(":", formula.))) {
 
-      unlist(strsplit(formula., " ~~ "))
+      idx <- which(grepl(":", formula.))
+
+      for(i in idx) formula.[i] <- paste(sapply(strsplit(formula.[i], ":"), stripTransformations), collapse = ":")
+
+      for(j in (1:length(formula.))[-idx]) formula.[j] <- stripTransformations(formula.[j])
+
+    } else {
+
+      formula. <- sapply(formula., stripTransformations)
+
+    }
+
+  } else
+
+    formula. <- unlist(strsplit(formula., " ~~ "))
+
+  return(formula.)
 
 }
 
-
-
-
 #' Get vector of transformed variables
 all.vars.trans <- function(formula.) {
+
+  if(!class(formula.) %in% c("formula", "formula.cerror")) formula. <- formula(formula.)
 
   if(class(formula.) == "formula") {
 
@@ -253,5 +270,14 @@ removeData <- function(modelList, formulas = 0) {
   if(formulas == 2) remove <- c(remove, "formula")
 
   modelList[!sapply(modelList, function(x) any(class(x) %in% remove))]
+
+}
+
+#' Strip transformations
+stripTransformations <- function(x) {
+
+  x <- gsub(".*\\((.*)\\).*", "\\1", x)
+
+  gsub(" ", "", gsub("(.*)\\+.*", "\\1", x))
 
 }
