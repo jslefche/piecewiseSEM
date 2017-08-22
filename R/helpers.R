@@ -22,7 +22,7 @@ all.vars.merMod <- function(formula.) {
 #' Get vector of untransformed variables
 all.vars.notrans <- function(formula.) {
 
-  if(!class(formula.) %in% c("formula", "formula.cerror")) formula. <- formula(formula.)
+  if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
   if(class(formula.) == "formula") {
 
@@ -44,9 +44,7 @@ all.vars.notrans <- function(formula.) {
 
     }
 
-  } else
-
-    formula. <- unlist(strsplit(formula., " ~~ "))
+  } else formula. <- unlist(strsplit(formula., " ~~ "))
 
   return(formula.)
 
@@ -55,7 +53,7 @@ all.vars.notrans <- function(formula.) {
 #' Get vector of transformed variables
 all.vars.trans <- function(formula.) {
 
-  if(!class(formula.) %in% c("formula", "formula.cerror")) formula. <- formula(formula.)
+  if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
   if(class(formula.) == "formula") {
 

@@ -74,8 +74,9 @@ getResidModels <- function(vars, modelList, data) {
 
     ymod <- modelList[[which(yvar)]]
 
-    ymod <- update(ymod, formula =
-      drop.terms(terms(ymod), which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1])), keep.response = TRUE))
+    termlabels <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
+
+    if(length(termlabels) > 0) ymod <- update(ymod, formula = drop.terms(terms(ymod), termlabels, keep.response = TRUE))
 
     if(all(xvar == FALSE)) {
 
@@ -87,13 +88,13 @@ getResidModels <- function(vars, modelList, data) {
 
       xmod <- modelList[[which(xvar)]]
 
-      newxvar <- all.vars.trans(xmod)[grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(xmod))]
-
-      newdata <- data
+      newyvar <- all.vars.trans(xmod)[which(paste(vars[[2]], collapse = ":") == all.vars.notrans(xmod))]
 
       if(length(vars[[2]]) > 1) {
 
-        splitxvar <- unlist(strsplit(newxvar, ":"))
+        splitxvar <- unlist(strsplit(newyvar, ":"))
+
+        newdata <- data
 
         for(i in 1:length(splitxvar)) {
 
@@ -113,7 +114,7 @@ getResidModels <- function(vars, modelList, data) {
 
       } else {
 
-        f <- paste(newxvar, " ~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))
+        f <- paste(newyvar, " ~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))
 
         xmod <- update(xmod, formula = formula(f))
 
