@@ -12,8 +12,8 @@ Fitting and evaluation of piecewise structural equation models, complete with go
 \tabular{ll}{
 Package: \tab piecewiseSEM\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2017-08-14\cr
+Version: \tab 2.0.0\cr
+Date: \tab 2017-08-22\cr
 Depends: \tab R (3.4), nlme, pbkrtest\cr
 Suggests: \tab MASS, lme4\cr
 License: \tab MIT\cr
