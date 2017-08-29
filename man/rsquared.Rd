@@ -64,6 +64,38 @@ Nakagawa, Sinichi, Johnson, Paul C.D., and Holger Schielzeth. "The coefficient o
 Jon Lefcheck <jlefcheck@bigelow.org>
 }
 \examples{
+  \dontrun{
+    # Create data
+    dat <- data.frame(
+      ynorm = rnorm(100),
+      ypois = rpois(100, 100),
+      x1 = rnorm(100),
+      random = letters[1:5]
+    )
 
+    # Get R2 for linear model
+    rsquared(lm(ynorm ~ x1, dat))
 
+    # Get R2 for generalized linear model
+    rsquared(glm(ypois ~ x1, "poisson", dat))
+
+    rsquared(glm(ypois ~ x1, "poisson", dat), method = "mcfadden") # McFadden R2
+
+    # Get R2 for generalized least-squares model
+    rsquared(gls(ynorm ~ x1, dat))
+
+    # Get R2 for linear mixed effects model (nlme)
+    rsquared(nlme::lme(ynorm ~ x1, random = ~ 1 | random, dat))
+
+    # Get R2 for linear mixed effects model (lme4)
+    rsquared(lme4::lmer(ynorm ~ x1 + (1 | random), dat))
+
+    # Get R2 for generalized linear mixed effects model (lme4)
+    rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat))
+
+    rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat), method = "delta") # Delta method
+
+    # Get R2 for generalized linear mixed effects model (glmmPQL)
+    rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))
+  }
 }
