@@ -401,9 +401,33 @@ Finally, `summary` reports the individual model R^2^ values. These were formerly
 
 The function `partial.resid` has been replaced with `partialResid` although the syntax is the same. The plotting output, however, has been eliminated.
 
+`partialResid` extracts the partial effects of `y ~ x` in a multiple regression `y ~ x + Z`. For example:
+
+```
+# Generate data
+dat <- data.frame(y = rnorm(100), x1 = rnorm(100), x2 = rnorm(100))
+
+# Build model
+model <- lm(y ~ x1 + x2, dat)
+
+# Compute partial residuals of y ~ x1
+yresid <- resid(lm(y ~ x2, dat))
+
+xresid <- resid(lm(x1 ~ x2, dat))
+
+# Use partialResid
+presid <- partialResid(y ~ x1, model)
+
+par(mfrow = c(1, 2))
+
+plot(yresid, xresid)
+
+plot(presid) # identical plot!
+```
+
 `sem.lavaan` has not yet been ported to version 2.0, and it may not, as there was some confusion how multi-level models were translated to the variance-covariance framework (hint: they weren't, only the formulae were transferred).
 
-`sem.plot` has also not yet been ported to version 2.0, since it was of limited utility. It may make an appearance in teh future.
+`sem.plot` has also not yet been ported to version 2.0, since it was of limited utility. It may make an appearance in the future.
 
 ## 4. References
 
