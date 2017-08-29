@@ -128,7 +128,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
     f <- listFormula(list(j))[[1]]
 
-    newdata <- data[, all.vars.notrans(f)]
+    newdata <- data[, all.vars.merMod(f)]
 
     f.trans <- all.vars.trans(f)
 
@@ -146,9 +146,9 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       B <- subset(ret, Response == f.trans[1])$Estimate
 
-      sd.x <- sapply(f.notrans[-1], function(x) sd(newdata.[, x], na.rm = TRUE))
+      sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE))
 
-      if(length(B) != length(sd.x)) sd.x <- c(sd.x, sdInt(j, newdata.))
+      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, sdInt(j, newdata.))
 
       sd.y <- sdFam(f.notrans[1], j, newdata.)
 
@@ -169,7 +169,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 #' Transform variables based on model formula and store in new data frame
 dataTrans <- function(formula., newdata) {
 
-  notrans <- all.vars.notrans(formula.)
+  notrans <- all.vars.merMod(formula.)
 
   trans <- all.vars.trans(formula.)
 
@@ -185,7 +185,7 @@ dataTrans <- function(formula., newdata) {
 
   }
 
-  if(any(notrans != trans)) {
+  if(any(!notrans %in% trans)) {
 
     for(k in 1:length(notrans)) {
 
