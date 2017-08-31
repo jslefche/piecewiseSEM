@@ -10,11 +10,11 @@ psem <- function(...) {
 
   if(length(idx) > 0) {
 
-    x <- x[c((1:length(x))[!1:length(x) %in% idx], idx)]
+    if(is.null(names(x))) names(x) <- 1:length(x)
 
-    names(x)[length(x)] <- "data"
+    names(x)[idx] <- "data"
 
-    x$data <- as.data.frame(x)
+    x$data <- as.data.frame(x$data)
 
   } else {
 
