@@ -37,6 +37,6 @@ Temporary Items
 # RStudio created directories
 .gitignore
 .Rbuildignore
-piecewiseSEM.Rproj
 .Rproj.user
 inst/doc
+*.Rproj
