@@ -192,17 +192,21 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
 
-    rand <- rand[match(names(sigma), rand)]
+    rand <- rand[!duplicated(rand)]
 
     data <- getData.(model)
 
-    idx <- sapply(rand, function(x) {
+    idx <- sapply(strsplit(rand, "\\:"), function(x) {
 
       length(unique(data[, x])) == nrow(data)
 
     } )
 
-    sigmaL <- sum(sapply(sigma[!idx], function(i) {
+    sigma.names <- strsplit(names(sigma), "\\.")
+
+    idx. <- sapply(sigma.names, function(x) !any(x %in% rand[idx]))
+
+    sigmaL <- sum(sapply(sigma[idx.], function(i) {
 
       Z <- as.matrix(X[, rownames(i), drop = FALSE])
 
@@ -246,9 +250,11 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
         if(method == "delta") {
 
-          f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model)))
+          rand <- onlyBars(formula(model))
 
-          nullmodel <- lme4::glmer(formula(f), family = binomial(link = link), data = data)
+          f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+
+          nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = binomial(link = link), data = data))
 
           vt <- sum(unlist(VarCorr(nullmodel)))
 
@@ -316,13 +322,21 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
 
-  rand <- rand[match(names(sigma), rand)]
+  rand <- rand[!duplicated(rand)]
 
   data <- getData.(model)
 
-  idx <- sapply(rand, function(x) length(unique(data[, x])) == nrow(data))
+  idx <- sapply(strsplit(rand, "\\:"), function(x) {
 
-  sigmaL <- sum(sapply(sigma[!idx], function(i) {
+    length(unique(data[, x])) == nrow(data)
+
+  } )
+
+  sigma.names <- strsplit(names(sigma), "\\.")
+
+  idx. <- sapply(sigma.names, function(x) !any(x %in% rand[idx]))
+
+  sigmaL <- sum(sapply(sigma[idx.], function(i) {
 
     Z <- as.matrix(X[, rownames(i), drop = FALSE])
 
@@ -332,9 +346,11 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   if(family. == "Negative Binomial") {
 
-    f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model)))
+    rand <- onlyBars(formula(model))
 
-    nullmodel <- lme4::glmer.nb(formula(f), family=negative.binomial(link = link), data)
+    f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+
+    nullmodel <- suppressWarnings(lme4::glmer.nb(formula(f), family=negative.binomial(link = link), data))
 
     # nullmodel <- update(model, formula(paste(". ~ 1 +", onlyBars(formula(model)))))
 
@@ -391,9 +407,9 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
     if(family. == "poisson")
 
-      nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = poisson(link = link), data = data, verbose = FALSE) else
+      nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = poisson(link = link), data = data, verbose = FALSE)) else
 
-        nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = quasipoisson(link = link), data = data, verbose = FALSE)
+        nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasipoisson(link = link), data = data, verbose = FALSE))
 
     lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(getVarCov.(nullmodel)))))
 
@@ -429,9 +445,9 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
       if(family. == "binomial")
 
-        nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE) else
+        nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE)) else
 
-          nullmodel <- MASS::glmmPQL(formula(f), random = model$call$random, family = quasibinomial(link = link), data = data, verbose = FALSE)
+          nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasibinomial(link = link), data = data, verbose = FALSE))
 
       vt <- sum(unlist(getVarCov.(nullmodel)))
 

@@ -242,17 +242,17 @@ listFormula <- function(modelList, remove = FALSE) {
 nobs. <- function(model) if(all(class(model) == "sarlm")) length(fitted(model)) else nobs(model)
 
 #' Get random effects from merMod
-onlyBars <- function(formula.) {
+onlyBars <- function(formula., slopes = TRUE) {
 
-  paste(
+  f <- lme4::findbars(formula.)
 
-    sapply(lme4::findbars(formula.), function(x)
+  if(slopes == TRUE) paste(sapply(f, function(x) paste0("(", deparse(x), ")")), collapse = " + ") else {
 
-      paste0("(", deparse(x), ")")
+    f <- f[sapply(f, function(x) grepl("1\\||1 \\|", deparse(x)))]
 
-    ),
+    paste(sapply(f, function(x) paste0("(", deparse(x), ")")), collapse = " + ")
 
-    collapse = " + ")
+  }
 
 }
 
