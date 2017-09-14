@@ -1,8 +1,8 @@
 #' Evaluate a list of structural equations with grouping
 #'
-#' @param modelList a list of structural equations
+#' @param object a list of structural equations
 
-summary.psem <- function(modelList, groups = NULL,
+summary.psem <- function(object, groups = NULL,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
@@ -10,40 +10,40 @@ summary.psem <- function(modelList, groups = NULL,
 
   if(!is.null(groups)) {
 
-    data <- modelList$data
+    data <- object$data
 
     lvls <- unique(data[, colnames(data) %in% groups])
 
-    modelList2 <- lapply(lvls, function(i) update(modelList, data = data[data[, colnames(data) %in% groups] == i, ]))
+    object2 <- lapply(lvls, function(i) update(object, data = data[data[, colnames(data) %in% groups] == i, ]))
 
-    names(modelList2) <- lvls
+    names(object2) <- lvls
 
-    lapply(modelList2, function(i) summary.psem2(i, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar))
+    lapply(object2, function(i) summary2.psem(i, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar))
 
-  } else summary.psem2(modelList, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar)
+  } else summary2.psem(object, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar)
 
 }
 
 #' Evaluate a list of structural equations
-summary.psem2 <- function(modelList,
+summary2.psem <- function(object,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
                          .progressBar = TRUE) {
 
-  name <- deparse(substitute(modelList))
+  name <- deparse(substitute(object))
 
-  call <- paste(listFormula(modelList), collapse = "\n  ")
+  call <- paste(listFormula(object), collapse = "\n  ")
 
-  dTable <- dSep(modelList, direction, conserve, conditional, .progressBar)
+  dTable <- dSep(object, direction, conserve, conditional, .progressBar)
 
   Cstat <- fisherC(dTable, add.claims, direction, conserve, conditional, .progressBar)
 
-  IC <- infCrit(modelList, Cstat, add.claims, direction, conserve, conditional, .progressBar)
+  IC <- infCrit(object, Cstat, add.claims, direction, conserve, conditional, .progressBar)
 
-  coefficients <- coefs(modelList, intercepts, standardize)
+  coefficients <- coefs(object, intercepts, standardize)
 
-  R2 <- rsquared(modelList)
+  R2 <- rsquared(object)
 
   R2[, which(sapply(R2, is.numeric))] <- round(R2[, which(sapply(R2, is.numeric))], 2)
 
@@ -59,32 +59,32 @@ summary.psem2 <- function(modelList,
 
 }
 
-print.summary.psem <- function(x) {
+print.summary.psem <- function(object, ...) {
 
-  cat("\nStructural Equation Model of", as.character(x$name), "\n")
+  cat("\nStructural Equation Model of", as.character(object$name), "\n")
 
-  cat("\nCall:\n ", x$call)
+  cat("\nCall:\n ", object$call)
 
   cat("\n")
 
   cat("\n    AIC      BIC")
-  cat("\n", as.character(sprintf("%.3f", x$IC[1])), " ", as.character(x$IC[3]))
+  cat("\n", as.character(sprintf("%.3f", object$IC[1])), " ", as.character(object$IC[3]))
 
   cat("\n")
 
-  cat("\n---\nTests of directed separation:\n\n", captureTable(x$dTable))
+  cat("\n---\nTests of directed separation:\n\n", captureTable(object$dTable))
 
-  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(x$Cstat[1]),
-      "with P-value =", as.character(x$Cstat[3]),
-      "and on", as.character(x$Cstat[2]), "degrees of freedom")
+  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(object$Cstat[1]),
+      "with P-value =", as.character(object$Cstat[3]),
+      "and on", as.character(object$Cstat[2]), "degrees of freedom")
 
-  cat("\n\n---\nCoefficients:\n\n", captureTable(x$coefficients))
+  cat("\n\n---\nCoefficients:\n\n", captureTable(object$coefficients))
 
-  cat("\n  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘’ 1")
+  cat("\n  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05")
 
-  cat("\n\nIndividual R-squared:\n\n", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
+  cat("\n\nIndividual R-squared:\n\n", captureTable(object$R2[, c(1, 4:ncol(object$R2))]))
 
-  invisible(x)
+  invisible(object)
 
 }
 
