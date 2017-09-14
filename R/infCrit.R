@@ -2,9 +2,9 @@
 #'
 #' @param modelList a list of structural equations
 
-infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
+infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  if(is.null(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)
+  if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)
 
   modelList <- removeData(modelList, formulas = 1)
 
@@ -33,21 +33,21 @@ infCrit <- function(modelList, Cstat = NULL, add.claims = NULL, direction = NULL
 }
 
 #` Generalized function for extraction AIC(c) score
-AIC.psem <- function(x, y = NULL, aicc = FALSE) {
+AIC.psem <- function(object, ..., aicc = FALSE) {
 
-  aicx <- infCrit(x)
+  aicx <- infCrit(object)
 
   if(aicc == FALSE) AICx <- aicx$AIC else AICx <- aicx$AICc
 
-  if(is.null(y)) AICx else {
+  if(missing(...)) ret <- AICx else {
 
-    aicy <- infCrit(y)
+    aicy <- infCrit(...)
 
     if(aicc == FALSE) AICy <- aicy$AIC else AICy <- aicy$AICc
 
     dfx <- aicx$K; dfy <- aicy$K
 
-    data.frame(
+    ret <- data.frame(
       df = c(dfx, dfy),
       AIC = c(AICx, AICy),
       row.names = c(deparse(substitute(x)), deparse(substitute(y)))
@@ -55,7 +55,9 @@ AIC.psem <- function(x, y = NULL, aicc = FALSE) {
 
   }
 
+  return(ret)
+
 }
 
 #` Generalized function for extraction BIC score
-BIC.psem <- function(modelList) infCrit(modelList)$BIC
+BIC.psem <- function(object, ...) infCrit(object)$BIC
