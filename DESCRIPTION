@@ -4,13 +4,15 @@ Title: Local estimation of piecewise structural equation models
 Version: 2.0.0
 Date: 2017-09-01
 Author: Jon Lefcheck, Jim Grace, Jarrett Byrnes
-Maintainer: Jon Lefcheck <jslefche@vims.edu>
+Maintainer: Jon Lefcheck <jlefcheck@bigelow.org>
 Description:
     Implements piecewise structural equation modeling from a single list of structural equations, 
     with new methods for non-linear, latent, and composite variables, standardized coefficients,
     query-based prediction and indirect effects.
 Imports:
     lme4,
+    MASS,
+    nlme,
     methods,
     pbkrtest
 License: GPL-3
