@@ -10,6 +10,16 @@ Dag <- function(formulaList) {
 
   fList <- lapply(fList, all.vars.trans)
 
+  if(any(sapply(fList, length) == 1)) {
+
+    flag <- TRUE
+
+    vars. <- fList[sapply(fList, length) == 1]
+
+    fList <- fList[!sapply(fList, length) == 1]
+
+    } else flag <- FALSE
+
   vars <- unlist(fList)
 
   vars <- unname(vars[!duplicated(vars)])
@@ -33,6 +43,33 @@ Dag <- function(formulaList) {
   diag(amat) <- 0
 
   amat <- sortDag(amat, fList)
+
+  if(isTRUE(flag)) {
+
+    flag. <- TRUE
+
+    i <- 0
+
+    while(isTRUE(flag.)) {
+
+      amat <- rbind(cbind(amat, 0), 0)
+
+      dimnames(amat) <- lapply(dimnames(amat), function(j) c(j[-length(j)], vars.[[i + 1]]))
+
+      i <- i + 1
+
+      if(i == length(vars.)) flag. = FALSE
+
+    }
+
+    for(i in 1:length(vars.)) {
+
+      amat[n + i, n + i] <- 0
+
+    }
+
+
+  }
 
   if(cyclic(amat, fList)) stop("Model is recursive. Remove feedback loops and re-run model")
 
