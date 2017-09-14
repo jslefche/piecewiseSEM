@@ -118,7 +118,7 @@ evaluateClasses <- function(modelList) {
 }
 
 #' Print psem
-print.psem <- function(x) {
+print.psem <- function(x, ...) {
 
   formulas <- listFormula(x)
 
@@ -151,7 +151,7 @@ print.psem <- function(x) {
 }
 
 #' Update psem model object with additional values
-update.psem <- function(x, ...) {
+update.psem <- function(object, ...) {
 
   l <- list(...)
 
@@ -159,13 +159,13 @@ update.psem <- function(x, ...) {
 
     if(all(class(i) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))) {
 
-      idx <- which(names(x) == "data")
+      idx <- which(names(object) == "data")
 
-      if(length(idx) == 0) x$data = i else
+      if(length(idx) == 0) object$data = i else
 
-        x[[idx]] <- i
+        object[[idx]] <- i
 
-      x <- lapply(x, function(j) {
+      object <- lapply(object, function(j) {
 
         if(!any(class(j) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data", "formula", "formula.cerror")))
 
@@ -177,33 +177,35 @@ update.psem <- function(x, ...) {
 
       if(length(all.vars.merMod(i)) == 1) {
 
-        x[[length(x) + 1]] <- i
+        idx <- which(names(object) == "data")
+
+        object <- append(object[-idx], list(i, object[[idx]]))
 
       } else {
 
-        resp <- sapply(x, function(y) if(!any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")))
+        resp <- sapply(object, function(y) if(!any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")))
 
           all.vars.merMod(y)[1] else "")
 
         idx <- which(resp == all.vars.merMod(i)[1])
 
-        x[[idx]] <- update(x[[idx]], i)
+        object[[idx]] <- update(object[[idx]], i)
 
       }
 
     } else {
 
-      x[[length(x) + 1]] <- i
+      object[[length(object) + 1]] <- i
 
     }
 
   }
 
-  evaluateClasses(x)
+  evaluateClasses(object)
 
-  class(x) <- "psem"
+  class(object) <- "psem"
 
-  x
+  object
 
 }
 
