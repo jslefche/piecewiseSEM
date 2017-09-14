@@ -2,8 +2,10 @@ exportPattern("^[[:alpha:]]+")
 export("%~~%")
 exportClasses(psem, summary.psem, AIC.psem, BIC.psem)
 export(summary, AIC, BIC)
-import("lme4")
+importFrom("lme4", "findbars", "nobars")
+importFrom("MASS", "glmmPQL")
 importFrom("methods", "as")
+importFrom("nlme", "fixef", "getData")
 importFrom("pbkrtest", "KRmodcomp")
 importFrom("stats", "AIC", "BIC", "as.formula", "cor", "cor.test",
            "drop.terms", "formula", "gaussian", "model.matrix", "na.omit", "nobs", "pchisq",
