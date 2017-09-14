@@ -223,13 +223,13 @@ AICdat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(
 
 sem1 <- psem(
   lm(y1 ~ x1, AICdat),
-  lm(y2 ~ x1 + y1, AICdat),
+  lm(y2 ~ y1, AICdat),
   lm(y3 ~ y2, AICdat)
 )
 
 sem2 <- psem(
   lm(y1 ~ x1, AICdat),
-  lm(y2 ~ x1 + y1, AICdat)
+  lm(y2 ~ y1, AICdat)
 )
 
 AIC(sem1, sem2)
