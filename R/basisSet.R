@@ -4,7 +4,7 @@
 
 basisSet <- function(modelList, direction = NULL) {
 
-  formulaList <- listFormula(modelList, remove = FALSE)
+  formulaList <- listFormula(modelList)
 
   amat <- Dag(formulaList)
 
@@ -37,15 +37,15 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- filterExisting(b, formulaList)
 
-    b <- filterExogenous(b, amat, formulaList)
+    b <- filterExogenous(modelList, b, amat)
 
     b <- filterInteractions(b)
 
     b <- removeCerror(b, formulaList)
 
-    b <- reverseAddVars(b, amat, formulaList)
+    b <- reverseAddVars(modelList, b, amat)
 
-    b <- reverseNonLin(modelList, b, amat, formulaList)
+    b <- reverseNonLin(modelList, b, amat)
 
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
@@ -75,7 +75,9 @@ filterExisting <- function(b, formulaList) {
 }
 
 #' Filter relationships among exogenous variables from the basis set (ignoring add.vars)
-filterExogenous <- function(b, amat, formulaList) {
+filterExogenous <- function(modelList, b, amat) {
+
+  formulaList <- listFormula(modelList, formulas = 3)
 
   exo <- colnames(amat[, colSums(amat) == 0, drop = FALSE])
 
@@ -186,7 +188,9 @@ removeCerror <- function(b, formulaList) {
 # }
 
 #' Reverse added variables (e.g., y ~ 1)
-reverseAddVars <- function(b, amat, formulaList) {
+reverseAddVars <- function(modelList, b, amat) {
+
+  formulaList <- listFormula(modelList, formulas = 3)
 
   exo <- colnames(amat[, colSums(amat) == 0, drop = FALSE])
 
@@ -199,13 +203,13 @@ reverseAddVars <- function(b, amat, formulaList) {
 }
 
 #' If intermediate endogenous variables are nonlinear, return both directions
-reverseNonLin <- function(modelList, b, amat, formulaList) {
+reverseNonLin <- function(modelList, b, amat) {
 
   if(length(b) > 0) {
 
-    modelList <- removeData(modelList, formulas = 3)
+    modelList <- removeData(modelList, formulas = 1)
 
-    formulaList <- listFormula(modelList, remove = FALSE)
+    formulaList <- listFormula(modelList, formulas = 1)
 
     names(b) <- 1:length(b)
 

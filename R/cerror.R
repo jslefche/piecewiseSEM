@@ -41,7 +41,7 @@ getResidModels <- function(vars, modelList, data) {
   xvar <- sapply(listFormula(modelList), function(x) all(vars[[2]] %in% all.vars.merMod(x)[1]))
 
   if(all(yvar == FALSE) & all(xvar == FALSE)) {
-    
+
     rdata <- data[, colnames(data) %in% vars]
 
     ymod <- data[, vars[[1]]]
@@ -51,7 +51,7 @@ getResidModels <- function(vars, modelList, data) {
     xmod <- data[, vars[[2]]]
 
     names(xmod) <- rownames(data)
-        
+
   } else {
 
     if(all(xvar == FALSE)) {
@@ -69,13 +69,13 @@ getResidModels <- function(vars, modelList, data) {
     ymod <- modelList[[which(yvar)]]
 
     termlabels <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
-    
+
     if(length(termlabels) == 0) {
-      
+
       vars[[2]] <- rev(vars[[2]])
-      
+
       termlabels <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
-      
+
     }
 
     if(length(termlabels) > 0) ymod <- update(ymod, formula = drop.terms(terms(ymod), termlabels, keep.response = TRUE))
@@ -146,9 +146,9 @@ partialResid <- function(formula., modelList, data = NULL) {
       vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
 
   vars <- strsplit(vars, ":|\\*")
-  
+
   if(!all(unlist(vars) %in% colnames(data)))
-    
+
     stop("Variables not found in the model list. Ensure spelling is correct and remove all transformations!")
 
   residModList <- getResidModels(vars, modelList, data)

@@ -36,7 +36,7 @@ psem <- function(...) {
 
   evaluateClasses(x)
 
-  formulaList <- listFormula(removeData(x, formulas = 1))
+  formulaList <- listFormula(x, formulas = 1)
 
   if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
@@ -75,7 +75,7 @@ as.psem <- function(x) {
 
   evaluateClasses(x)
 
-  formulaList <- listFormula(removeData(x, formulas = 1))
+  formulaList <- listFormula(x, formulas = 1)
 
   if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
 
@@ -173,9 +173,9 @@ update.psem <- function(object, ...) {
 
       } )
 
-    } else if(all(class(i) %in% c("character", "formula"))) {
+    } else if(all(class(i) %in% c("character", "formula", "formula.cerror"))) {
 
-      if(length(all.vars.merMod(i)) == 1) {
+      if(length(all.vars.merMod(i)) == 1 | class(i) %in% "formula.cerror") {
 
         idx <- which(names(object) == "data")
 

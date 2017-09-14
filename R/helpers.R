@@ -220,23 +220,15 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
 #' Get list of formula from a `sem` object
 #' If remove = TRUE, take out non-evaluated formula
-listFormula <- function(modelList, remove = FALSE) {
+listFormula <- function(modelList, formulas = 0) {
 
-  modelList <- removeData(modelList, formulas = 0)
+  modelList <- removeData(modelList, formulas)
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
   fList <- lapply(modelList, function(i) if(any(class(i) %in% c("formula.cerror"))) i else formula(i) )
 
   fList <- lapply(fList, lme4::nobars)
-
-  if(remove == TRUE) {
-
-    l <- sapply(modelList, function(i) any(class(i) %in% c("formula", "formula.cerror")))
-
-    fList <- fList[!l]
-
-  }
 
   return(fList)
 

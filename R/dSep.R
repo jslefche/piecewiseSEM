@@ -24,7 +24,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
     modelList <- removeData(modelList, formulas = 1)
 
-    formulaList <- lapply(listFormula(modelList), all.vars.trans)
+    formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars.trans)
 
     if(.progressBar == T & length(b) > 0)
 
