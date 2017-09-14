@@ -179,7 +179,7 @@ update.psem <- function(object, ...) {
 
         idx <- which(names(object) == "data")
 
-        object <- append(object[-idx], list(i, object[[idx]]))
+        object <- append(object[-idx], list(i, data = object[[idx]]))
 
       } else {
 
@@ -205,7 +205,7 @@ update.psem <- function(object, ...) {
 
   class(object) <- "psem"
 
-  object
+  return(object)
 
 }
 
