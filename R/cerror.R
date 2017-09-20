@@ -165,7 +165,11 @@ partialResid <- function(formula., modelList, data = NULL) {
 
       xresid <- data.frame(.id = rownames(getData.(residModList$xmod)), xresid = as.numeric(resid(residModList$xmod))) #resid.lme(xmod)
 
-  rdata <- merge(yresid, xresid, by = ".id", all = TRUE)[, -1]
+  rdata <- merge(yresid, xresid, by = ".id", all = TRUE)
+  
+  rdata <- rdata[order(as.numeric(as.character(rdata$.id))), -1]
+  
+  rownames(rdata) <- NULL
 
   return(rdata)
 
