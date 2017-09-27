@@ -68,17 +68,17 @@ getResidModels <- function(vars, modelList, data) {
 
     ymod <- modelList[[which(yvar)]]
 
-    termlabels <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
+    termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
 
-    if(length(termlabels) == 0) {
+    if(length(termlabels.y) == 0) {
 
       vars[[2]] <- rev(vars[[2]])
 
-      termlabels <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
+      termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
 
     }
 
-    if(length(termlabels) > 0) ymod <- update(ymod, formula = drop.terms(terms(ymod), termlabels, keep.response = TRUE))
+    if(length(termlabels.y) > 0) ymod <- update(ymod, formula = drop.terms(terms(ymod), termlabels.y, keep.response = TRUE))
 
     if(all(xvar == FALSE)) {
 
@@ -116,9 +116,13 @@ getResidModels <- function(vars, modelList, data) {
 
       } else {
 
-        f <- paste(newyvar, " ~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))
+        if(length(termlabels.y) > 0) {
 
-        xmod <- update(xmod, formula = formula(f))
+          f <- paste(newyvar, " ~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))
+
+          xmod <- update(xmod, formula = formula(f))
+
+        }
 
       }
 
@@ -166,9 +170,9 @@ partialResid <- function(formula., modelList, data = NULL) {
       xresid <- data.frame(.id = rownames(getData.(residModList$xmod)), xresid = as.numeric(resid(residModList$xmod))) #resid.lme(xmod)
 
   rdata <- merge(yresid, xresid, by = ".id", all = TRUE)
-  
+
   rdata <- rdata[order(as.numeric(as.character(rdata$.id))), -1]
-  
+
   rownames(rdata) <- NULL
 
   return(rdata)
