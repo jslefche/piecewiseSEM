@@ -123,7 +123,9 @@ getData. <- function(modelList) {
 
   if(length(data.list) > 1) {
 
-    match.by <- names(data.list[[1]])
+    match.by <- unlist(sapply(data.list, names))
+
+    match.by <- match.by[!duplicated(match.by)]
 
     data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
 
