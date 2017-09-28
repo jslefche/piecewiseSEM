@@ -236,7 +236,7 @@ partialCorr <- function(formula., modelList, data = NULL) {
 
       t. <- rcor * sqrt(N/(1 - rcor^2))
 
-      P <- 1 - pt(t., N)
+      P <- pt(t., N)
 
       }
 
