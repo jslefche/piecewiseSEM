@@ -78,7 +78,7 @@ getResidModels <- function(vars, modelList, data) {
 
     }
 
-    if(length(termlabels.y) > 0) ymod <- update(ymod, formula = drop.terms(terms(ymod), termlabels.y, keep.response = TRUE))
+    if(length(termlabels.y) > 0) ymod <- update(ymod, drop.terms(terms(ymod), termlabels.y, keep.response = TRUE))
 
     if(all(xvar == FALSE)) {
 
@@ -120,7 +120,7 @@ getResidModels <- function(vars, modelList, data) {
 
           f <- paste(newyvar, " ~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))
 
-          xmod <- update(xmod, formula = formula(f))
+          xmod <- update(xmod, formula(f))
 
         }
 
