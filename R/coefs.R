@@ -77,13 +77,9 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
           ret <- as.data.frame(summary(i)$tTable)
 
-          if(ncol(ret) == 4 & class(i) %in% c("gls"))
+          if(ncol(ret) == 4 & all(class(i) %in% c("gls")))
 
             ret <- cbind(ret[, 1:2], DF = length(residuals(i)), ret[, 3:4])
-
-          if(ncol(ret) == 4 & class(i) %in% c("lme", "glmmPQL"))
-
-            ret <- cbind(ret[, 1:2], DF = summary(i)$fixDF$X[-1], ret[, 3:4])
 
           }
 
@@ -208,11 +204,17 @@ sdFam <- function(x, model, newdata) {
 
   .family = try(family(model), silent = TRUE)
 
-  if(class(.family) == "try-error") y <- newdata[, x] else
+  if(class(.family) == "try-error" & any(class(model) %in% c("glmerMod", "glmmPQL")))
 
-    if(.family$family == "gaussian") y <- newdata[, x] else
+     .family <-model$family
 
-      y <- NA
+  if(class(.family) == "try-error" & !any(class(model) %in% c("glmerMod", "glmmPQL")))
+
+    y <- newdata[, x] else
+
+      if(.family$family == "gaussian") y <- newdata[, x] else
+
+        y <- NA
 
   sd(y, na.rm = TRUE)
 
