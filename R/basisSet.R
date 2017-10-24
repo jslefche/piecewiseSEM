@@ -98,7 +98,11 @@ filterExogenous <- function(modelList, b, amat) {
 #' Filter interactions from the d-sep tests
 filterInteractions <- function(b) {
 
-  if(grepl("\\:", b[2])) NULL else b
+  b <- lapply(b, function(i) if(any(grepl("\\:", i[1:2]))) NULL else i )
+
+  b <- b[!sapply(b, is.null)]
+
+  return(b)
 
 }
 
