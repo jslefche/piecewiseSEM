@@ -105,9 +105,11 @@ getData. <- function(modelList) {
 
       data <- nlme::getData(model) else
 
-    if(all(class(model) %in% c("pgls")))
+    if(all(class(model) %in% c("pgls"))) {
 
-      data <- model$data$data else
+      data <- model$data
+
+      } else
 
     if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
 
@@ -119,25 +121,31 @@ getData. <- function(modelList) {
 
   } )
 
-  data.list <- data.list[order(sapply(data.list, nrow))]
+  if(all(sapply(data.list, class) == "comparative.data"))
 
-  if(length(data.list) > 1) {
+    data <- data.list[[1]] else {
 
-    match.by <- unlist(sapply(data.list, names))
+      data.list <- data.list[order(sapply(data.list, nrow))]
 
-    match.by <- match.by[!duplicated(match.by)]
+    if(length(data.list) > 1) {
 
-    data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
+      match.by <- unlist(sapply(data.list, names))
 
-    data <- Reduce(function(...) merge(..., all=T), data.list)
+      match.by <- match.by[!duplicated(match.by)]
 
-    } else data <- data.list[[1]]
+      data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
 
-  data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
+      data <- Reduce(function(...) merge(..., all=T), data.list)
 
-  colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+      } else data <- data.list[[1]]
 
-  data <- as.data.frame(data)
+    data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
+
+    colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+
+    data <- as.data.frame(data)
+
+    }
 
   return(data)
 

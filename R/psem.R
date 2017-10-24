@@ -14,7 +14,7 @@ psem <- function(...) {
 
     names(x)[idx] <- "data"
 
-    x$data <- as.data.frame(x$data)
+    x$data <- x$data
 
   } else {
 
