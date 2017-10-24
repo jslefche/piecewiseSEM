@@ -84,7 +84,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ct <- as.data.frame(summary(bNewMod)$Coef)
 
-        ret <- ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, , drop = FALSE]
+        ret <- ct[which(b[[i]][1] == rownames(ct)), , drop = FALSE]
 
         ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
 
