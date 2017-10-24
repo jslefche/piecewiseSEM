@@ -69,6 +69,8 @@ getResidModels <- function(vars, modelList, data) {
 
     ymod <- modelList[[which(yvar)]]
 
+    if(length(all.vars.merMod) < 3) stop("Variables are part of a simple linear regression: partial residuals cannot be calculated!")
+
     termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
 
     if(length(termlabels.y) == 0) {
