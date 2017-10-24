@@ -106,13 +106,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
         ret <- ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, , drop = FALSE]
 
-        if(ncol(ret) == 4 & class(bNewMod) %in% c("gls"))
+        if(ncol(ret) == 4 & all(class(bNewMod) %in% c("gls")))
 
           ret <- cbind(ret[, 1:2], DF = length(residuals(bNewMod)), ret[, 3:4])
-
-        if(ncol(ret) == 4 & class(bNewMod) %in% c("lme", "glmmPQL"))
-
-          ret <- cbind(ret[, 1:2], DF = summary(bNewMod)$fixDF$X[-1], ret[, 3:4])
 
       }
 
