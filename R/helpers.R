@@ -147,6 +147,8 @@ getData. <- function(modelList) {
 
     }
 
+  rownames(data) <- 1:nrow(data)
+
   return(data)
 
 }
