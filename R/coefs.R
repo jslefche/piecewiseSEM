@@ -206,23 +206,17 @@ sdFam <- function(x, model, newdata) {
 
   if(class(.family) == "try-error" & any(class(model) %in% c("glmerMod", "glmmPQL")))
 
-    .family <- model$family
+     .family <-model$family
 
-  if(class(family) == "try-error") sd(newdata[, x], na.rm = TRUE) else
+  if(class(.family) == "try-error" & !any(class(model) %in% c("glmerMod", "glmmPQL")))
 
-    if(.family$family == "gaussian") sd(newdata[, x], na.rm = TRUE)  else
+    y <- newdata[, x] else
 
-      if(.family$family == "binomial") {
+      if(.family$family == "gaussian") y <- newdata[, x] else
 
-        link <- .family$link
+        y <- NA
 
-        if(link == "logit") sdy <- sqrt(var(predict(model, type = "link")) + pi^2/3)
-
-        if(link == "probit") sdy <- sqrt(var(predict(model, type = "link")) + 1)
-
-        sdy
-
-        } else y <- NA
+  sd(y, na.rm = TRUE)
 
 }
 
