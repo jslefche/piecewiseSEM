@@ -2,30 +2,8 @@
 #'
 #' @param object a list of structural equations
 
-summary.psem <- function(object, groups = NULL,
-                         direction = NULL, conserve = FALSE, conditional = FALSE,
-                         add.claims = NULL,
-                         intercepts = FALSE, standardize = TRUE,
-                         .progressBar = TRUE) {
-
-  if(!is.null(groups)) {
-
-    data <- object$data
-
-    lvls <- unique(data[, colnames(data) %in% groups])
-
-    object2 <- lapply(lvls, function(i) update(object, data = data[data[, colnames(data) %in% groups] == i, ]))
-
-    names(object2) <- lvls
-
-    lapply(object2, function(i) summary2.psem(i, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar))
-
-  } else summary2.psem(object, direction, conserve, conditional, add.claims, intercepts, standardize, .progressBar)
-
-}
-
 #' Evaluate a list of structural equations
-summary2.psem <- function(object,
+summary.psem <- function(object,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          intercepts = FALSE, standardize = TRUE,
