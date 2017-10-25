@@ -2,7 +2,7 @@
 #'
 #' @param ... arguments passed to methods
 
-psem <- function(...) {
+psem <- function(..., data) {
 
   x <- list(...)
 
@@ -29,6 +29,9 @@ psem <- function(...) {
     names(x)[idx.] <- idx.
 
   }
+
+
+  if(any(sapply(x$data, is.na))) stop("NAs detected in the dataset! Remove before running `psem`.", call. = FALSE)
 
   # if(any(sapply(x$data, class) == "factor"))
   #
