@@ -176,11 +176,11 @@ dupOutput <- function(b, conserve = FALSE) {
 
                } ),
 
-               "\nOption 1: Specify directionality using argument 'direction = c()'.\n",
+               "\nOption 1: Specify directionality using argument 'direction = c()' in 'summary'.\n",
 
-               "\nOption 2: Remove path from the basis set by specifying as a correlated error using '%~~%'.\n",
+               "\nOption 2: Remove path from the basis set by specifying as a correlated error using '%~~%' in 'psem'.\n",
 
-               "\nOption 3: Use argument 'conserve = TRUE' to compute both tests, and return the most conservative P-value.\n"
+               "\nOption 3 (recommended): Use argument 'conserve = TRUE' in 'summary' to compute both tests, and return the most conservative P-value.\n"
 
                )
 
