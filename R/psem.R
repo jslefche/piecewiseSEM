@@ -30,8 +30,7 @@ psem <- function(..., data) {
 
   }
 
-
-  if(any(sapply(x$data, is.na))) stop("NAs detected in the dataset! Remove before running `psem`.", call. = FALSE)
+  # if(any(sapply(x$data, is.na))) stop("NAs detected in the dataset! Remove before running `psem`.", call. = FALSE)
 
   # if(any(sapply(x$data, class) == "factor"))
   #
