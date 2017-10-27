@@ -93,6 +93,8 @@ getData. <- function(modelList) {
 
   data.list <- lapply(modelList, function(model) {
 
+    if(any(class(model) %in% c("phylolm", "phyloglm"))) stop("Please provide data in `psem`")
+
     if(any(class(model) %in% c("lm", "negbin", "sarlm")))
 
       data <- eval(model$call$data) else
@@ -109,7 +111,7 @@ getData. <- function(modelList) {
 
       data <- model$data
 
-      } else
+      }
 
     if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
 

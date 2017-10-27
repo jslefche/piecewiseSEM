@@ -4,7 +4,7 @@
 
 coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
 
-  if(!class(modelList) %in% c("psem", "list")) modelList <- list(modelList)
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
   if(class(modelList) == "psem") data <- modelList$data else data <- getData.(modelList)
 
@@ -45,13 +45,15 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       ret <- cerror(i, modelList, data) else {
 
-        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "pgls"))) {
+        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "pgls", "phylolm", "phyloglm"))) {
 
           ret <- as.data.frame(summary(i)$coefficients)
 
           if(all(class(i) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
 
           if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
+
+          if(all(class(i) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = bNewMod$n, ret[, c(3, 6)])
 
           if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
 

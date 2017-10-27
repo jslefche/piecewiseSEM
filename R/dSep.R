@@ -2,7 +2,7 @@
 #'
 #' @param modelList a list of structural equations
 
-dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE) {
+dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
 
   b <- basisSet(modelList, direction)
 
@@ -42,15 +42,13 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
                  data = data)
         )
 
-      } else if(all(class(bMod) %in% c("pgls"))) {
+      } else
 
-        bNewMod <- update(bMod,
-                          formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
-                          data = data)
-
-        } else bNewMod <- update(bMod,
-                                 formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
-                                 data = data)
+        bNewMod <- suppressWarnings(
+          update(bMod,
+                 formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
+                 data = data)
+          )
 
       if(any(class(bNewMod) %in% c("lmerMod", "merModLmerTest"))) {
 
@@ -90,6 +88,16 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       }
 
+      if(any(class(bNewMod) %in% c("phylolm", "phyloglm"))) {
+
+        ct <- as.data.frame(summary(bNewMod)$coefficients)
+
+        ret <- ct[which(b[[i]][1] == rownames(ct)), , drop = FALSE]
+
+        ret <- cbind(ret[, 1:2], DF = bNewMod$n, ret[, c(3, 6)])
+
+      }
+
       if(all(class(bNewMod) %in% c("sarlm"))) {
 
         ct <- as.data.frame(summary(bNewMod)$Coef)
@@ -116,7 +124,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditional = FA
 
       rhs <- paste0(b[[i]][-2], " ", collapse = " + ")
 
-      if(conditional == FALSE)
+      if(conditioning == FALSE)
 
         rhs <- paste0(b[[i]][1], " + ...")
 

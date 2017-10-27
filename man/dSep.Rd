@@ -7,7 +7,7 @@ Tests of directed separation
 Evaluation of conditional independence claims to be used in determining the goodness-of-fit for piecewise structural equation models.
 }
 \usage{
-dSep(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = TRUE)
+dSep(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE)
 }
 \arguments{
   \item{modelList}{
@@ -19,7 +19,7 @@ dSep(modelList, direction = NULL, conserve = FALSE, conditional = FALSE, .progre
   \item{conserve}{
   Whether the most conservative P-value should be returned; for use in special cases (see Details). Default is FALSE.
 }
-  \item{conditional}{
+  \item{conditioning}{
   Whether the conditioning variables should be shown in the summary table. Default is FALSE.
 }
   \item{.progressBar}{
