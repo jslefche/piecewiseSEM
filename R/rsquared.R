@@ -20,6 +20,8 @@ rsquared <- function(modelList, method = NULL) {
 
     if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method)
 
+    if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
+
     if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i)
 
     if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) r <- rsquared.merMod(i)
@@ -112,6 +114,17 @@ rsquared.glm <- function(model, method = "nagelkerke") {
   }
 
   list(family = family., link = link, method = method, R.squared = r)
+
+}
+
+#' R^2 for phylolm objects
+rsquared.phylolm <- function(model) {
+
+  family. <- ifelse(class(model) == "phylolm", "gaussian", model$method)
+
+  link <- ifelse(class(model) == "phylolm", "identity", "?")
+
+  list(family = family., link = NA, method = NA, R.squared = NA)
 
 }
 
