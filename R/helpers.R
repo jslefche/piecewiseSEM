@@ -249,7 +249,7 @@ listFormula <- function(modelList, formulas = 0) {
 }
 
 #' Get number of observations from a model
-nobs. <- function(object, ...) if(all(class(object) == "sarlm")) length(fitted(object)) else nobs(object, ...)
+nobs. <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
 onlyBars <- function(formula., slopes = TRUE) {
