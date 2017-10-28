@@ -8,7 +8,9 @@ psem <- function(..., data) {
 
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
-  if(length(idx) > 0) {
+  if(sum(idx) == 0) idx <- which(names(x) == "data")
+
+  if(sum(idx) > 0) {
 
     if(is.null(names(x))) names(x) <- 1:length(x)
 
@@ -51,43 +53,7 @@ psem <- function(..., data) {
 }
 
 #' Convert list to psem object
-as.psem <- function(x) {
-
-  idx <- which(sapply(x, function(y) all(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame"))))
-
-  if(length(idx) > 0) {
-
-    x <- x[c((1:length(x))[!1:length(x) %in% idx], idx)]
-
-    names(x)[length(x)] <- "data"
-
-  } else {
-
-    x$data <- getData.(x)
-
-  }
-
-  if(any(is.na(names(x)))) {
-
-    idx. <- which(is.na(names(x)))
-
-    names(x)[idx.] <- idx.
-
-  }
-
-  evaluateClasses(x)
-
-  formulaList <- listFormula(x, formulas = 1)
-
-  if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
-
-    stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
-
-  class(x) <- "psem"
-
-  x
-
-}
+as.psem <- function(x) psem(x)
 
 #' Evaluate model classes and stop if unsupported model class
 evaluateClasses <- function(modelList) {

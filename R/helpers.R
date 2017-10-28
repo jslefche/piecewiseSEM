@@ -93,25 +93,29 @@ getData. <- function(modelList) {
 
   data.list <- lapply(modelList, function(model) {
 
-    if(any(class(model) %in% c("phylolm", "phyloglm"))) stop("Please provide data in `psem`")
+    if(any(class(model) %in% c("phylolm", "phyloglm")))
+
+      stop("Please provide `data =` argument to `psem`.", call. = FALSE) else
 
     if(any(class(model) %in% c("lm", "negbin", "sarlm")))
 
-      data <- eval(model$call$data) else
+      # data <- eval(getCall(model)$data, environment(formula(model)))
+
+      model$model else
 
     if(any(class(model) %in% c("glm", "glmmPQL")))
 
-      data <- model$data else
+      model$data else
 
     if(any(class(model) %in% c("gls", "lme")))
 
-      data <- nlme::getData(model) else
+      nlme::getData(model) else
 
     if(all(class(model) %in% c("pgls"))) {
 
-      data <- model$data
+      model$data
 
-      }
+      } else
 
     if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
 
