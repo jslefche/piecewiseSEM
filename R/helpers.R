@@ -84,48 +84,83 @@ findbars.lme <- function(model) {
 
 }
 
+#' Get data from one model
+getSingleModelData <- function(model){
+  #blank data frame
+  dat <- data.frame()
+  
+  #use the right method for the right model type
+  switch(class(model)[1], #what's the first class it shows you?
+         "phylolm" = {
+           stop("Please provide `data =` argument to `psem`.", call. = FALSE) 
+         },
+         
+         "phyloglm" = {
+           stop("Please provide `data =` argument to `psem`.", call. = FALSE)
+         },
+         
+         "lm" ={
+           dat <- eval(getCall(model)$data, environment(formula(model)))
+         }, 
+         
+         "negbin" = {
+           dat <- eval(getCall(model)$data, environment(formula(model)))
+         }, 
+         
+         "sarlm" = {
+           dat <- eval(getCall(model)$data, environment(formula(model)))
+         },
+         
+         "glm" = {
+           dat <- model$data
+         },
+         
+         "glmmPQL" = {
+           dat <- model$data
+         },
+         
+         "pgls" = {
+           dat <- model$data
+         },
+         
+         "lmerMod" = {
+           dat <- model@frame 
+         }, 
+         
+         "glmerMod" = {
+           dat <- model@frame 
+         }, 
+         
+         "merModLmerTest" = {
+           dat <- model@frame 
+         },
+         
+         "gls" = {
+           dat <-  nlme::getData(model)
+         },
+         
+         "lme" = {
+           dat <-  nlme::getData(model)
+         }
+         
+  )
+  
+  dat
+  
+}
+
+
+
 #' Get data from model list
 getData. <- function(modelList) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
+  #take data out if it's there already
   modelList <- removeData(modelList, formulas = 1)
 
-  data.list <- lapply(modelList, function(model) {
-
-    if(any(class(model) %in% c("phylolm", "phyloglm")))
-
-      stop("Please provide `data =` argument to `psem`.", call. = FALSE) else
-
-    if(any(class(model) %in% c("lm", "negbin", "sarlm")))
-
-      # data <- eval(getCall(model)$data, environment(formula(model)))
-
-      model$model else
-
-    if(any(class(model) %in% c("glm", "glmmPQL")))
-
-      model$data else
-
-    if(any(class(model) %in% c("gls", "lme")))
-
-      nlme::getData(model) else
-
-    if(all(class(model) %in% c("pgls"))) {
-
-      model$data
-
-      } else
-
-    if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod")))
-
-      data <- model@frame else
-
-        data <- data.frame()
-
-    return(data)
-
-  } )
+  #iterate through model list and get data frames
+  data.list <- lapply(modelList, getSingleModelData)
 
   if(all(sapply(data.list, class) == "comparative.data"))
 
