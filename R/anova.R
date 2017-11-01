@@ -14,7 +14,7 @@ anova.psem <- function(object, object2 = NULL, fun = Anova, ...) {
       object <- removeData(object, formulas = 1)
       
       #get residuals of relationships
-      ret <- lapply(object, fun, options)
+      ret <- lapply(object, fun, ...)
       
       #get column names
       formulaList <- listFormula(object)
