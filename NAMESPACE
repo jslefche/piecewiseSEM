@@ -1,7 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 export("%~~%")
 exportClasses(psem, summary.psem, AIC.psem, BIC.psem)
-export(summary, AIC, BIC)
+export(summary.psem, AIC, BIC, residuals.psem)
 importFrom("lme4", "findbars", "nobars")
 importFrom("MASS", "glmmPQL")
 importFrom("methods", "as")
