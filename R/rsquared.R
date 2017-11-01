@@ -1,6 +1,7 @@
 #' R^2 values from generalized linear mixed models
 #'
-#' @params a model or list of models
+#' @param modelList a model or list of models
+#' @param method a method for calculating R2 values for glms
 
 rsquared <- function(modelList, method = NULL) {
 
