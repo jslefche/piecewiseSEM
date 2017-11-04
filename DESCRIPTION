@@ -5,10 +5,10 @@ Version: 2.0.0
 Date: 2017-10-24
 Author: Jon Lefcheck, Jim Grace, Jarrett Byrnes
 Maintainer: Jon Lefcheck <jlefcheck@bigelow.org>
-Description:
-    Implements piecewise structural equation modeling from a single list of structural equations, 
-    with new methods for non-linear, latent, and composite variables, standardized coefficients,
-    query-based prediction and indirect effects.
+Description: Implements piecewise structural equation modeling from a single
+    list of structural equations, with new methods for non-linear, latent, and
+    composite variables, standardized coefficients, query-based prediction and
+    indirect effects.
 Imports:
     lme4,
     MASS,
@@ -18,7 +18,8 @@ Imports:
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
-Suggests: knitr,
+RoxygenNote: 5.0.1
+Suggests:
+    knitr,
     rmarkdown
 VignetteBuilder: knitr

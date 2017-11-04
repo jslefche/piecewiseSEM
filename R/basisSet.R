@@ -1,7 +1,45 @@
-#' Get basis set for test of directed separation
-
-#' @param modelList a list of structural equations
-
+#' Derivation of the basis set
+#' 
+#' Derivation of the set of independence claims--the basis set--for use in
+#' evaluating the goodness-of-fit for piecewise structural equation models.
+#' 
+#' The \code{basisSet} function returns a list of independence claims. Each
+#' claim is a vector of the predictor of interest, followed by the response,
+#' and (if present) any conditioning variables.
+#' 
+#' Relationships among exogenous variables are omitted from the basis set
+#' because the directionality is unclear (e.g., does temperature 
+#' cause latitude or does latitude cause temperature?), and the assumptions 
+#' of the variables are not specified in the list of structural equations, 
+#' so evaluating the relationship becomes challenging without further 
+#' input from the user. This creates a circular scenario whereby the 
+#' user specifies relationships among exogenous variables, raising the 
+#' issue of whether they should be included as directed paths if they can 
+#' be assigned directional relationships.
+#' 
+#' Paths can be ommitted from the basis set by specifying them as correlated
+#' errors using \code{%~~%} or by assigning a directionality using 
+#' the argument \code{direction}, e.g. \code{direction = c("X <- Y")}. 
+#' This can be done if post hoc examination of the d-sep tests reveals
+#' nonsensical independence claims (e.g., arthropod abundance predicting
+#'  photosynthetically-active radiation) that the user may wish to 
+#'  exclude from evaluation.
+#' 
+#' @param modelList A list of structural equations.
+#' @param direction A \code{vector} of claims defining the specific
+#' directionality of independence claims; for use in special cases (see
+#' Details).
+#' @return A \code{list} of independence claims.
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @seealso \code{\link{dSep}}, \code{\link{%~~%}}
+#' @references Shipley, Bill. "A new inferential test for path models based on
+#' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
+#' @examples
+#' 
+#' 
+#' 
+#' 
+#' @export basisSet
 basisSet <- function(modelList, direction = NULL) {
 
   formulaList <- listFormula(modelList)

@@ -1,7 +1,42 @@
-#' Retrieve tests of directed separation for a list of structural equations
-#'
-#' @param modelList a list of structural equations
-
+#' Tests of directed separation
+#' 
+#' Evaluation of conditional independence claims to be used in determining the
+#' goodness-of-fit for piecewise structural equation models.
+#' 
+#' In cases involving non-normally distributed responses in the independence
+#' claims that are modeled using generalized linear models, the significance of
+#' the independence claim is not reversable (e.g., the P-value of Y ~ X is not
+#' the same as X ~ Y). This is due to the transformation of the response via
+#' the link function. In extreme cases, this can bias the goodness-of-fit
+#' tests. \code{summary.psem} will issue a warning when this case is present
+#' and provide guidance for solutions.
+#' 
+#' One solution is to specify the directionality of the relationship using the
+#' \code{direction} argument, e.g. \code{direction = c("X <- Y")}. Another is
+#' to run both tests (Y ~ X, X ~ Y) and return the most conservative (i.e.,
+#' lowest) P-value, which can be toggled using the \code{conserve = TRUE}
+#' argument.
+#' 
+#' @param modelList A list of structural equations created using \code{psem}.
+#' @param direction A \code{vector} of claims defining the specific
+#' directionality of independence claims; for use in special cases (see
+#' Details).
+#' @param conserve Whether the most conservative P-value should be returned;
+#' for use in special cases (see Details). Default is FALSE.
+#' @param conditioning Whether the conditioning variables should be shown in
+#' the summary table. Default is FALSE.
+#' @param .progressBar An optional progress bar. Default is TRUE.
+#' @return Returns a \code{data.frame} of independence claims and their
+#' significance values.
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @seealso \code{\link{basisSet}}
+#' @references Shipley, Bill. "A new inferential test for path models based on
+#' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
+#' @examples
+#' 
+#' 
+#' 
+#' @export dSep
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
 
   b <- basisSet(modelList, direction)

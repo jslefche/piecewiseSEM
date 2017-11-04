@@ -1,7 +1,25 @@
-#' Get (standardized) coefficients from list of structural equations
-#'
-#' @param modelList a list of structural equations
-
+#' Extract path coefficients
+#' 
+#' Extracts (standardized) path coefficients from a \code{psem} object.
+#' 
+#' P-values for models constructed using \code{\link{lme4::lme4}} are obtained
+#' using the Kenward-Roger approximation of the denominator degrees of freedom
+#' as implemented in the \code{\link{pbkrtest::pbkrtest}} package.
+#' 
+#' @param modelList A list of structural equations.
+#' @param intercepts Whether intercepts should be included in the coefficients
+#' table. Default is FALSE.
+#' @param standardize Whether standardized path coefficients should be
+#' reported. Default is TRUE.  ~~Describe \code{standardize} here~~
+#' @return Returns a \code{data.frame} of coefficients, their standard errors,
+#' degrees of freedom, and significance tests.
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @seealso \code{\link{KRmodcomp}}
+#' @examples
+#' 
+#' 
+#' 
+#' @export coefs
 coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)

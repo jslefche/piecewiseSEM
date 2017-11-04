@@ -1,4 +1,46 @@
-#' Operator: correlated errors
+#' Correlated error operator
+#' 
+#' Specifies correlated errors among predictors
+#' 
+#' For use in \code{psem} to identify correlated sets of variables.
+#' 
+#' @return Returns a formula of class \code{formula.cerror}.
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @seealso \code{\link{cerror}}
+#' @examples
+#' 
+#' # Generate example data
+#' dat <- data.frame(x1 = runif(50),
+#'   x2 = runif(50), y1 = runif(50),
+#'     y2 = runif(50))
+#' 
+#' # Create list of structural equations
+#' sem <- psem(
+#'   lm(y1 ~ x1 + x2, dat),
+#'   lm(y2 ~ y1 + x1, dat)
+#' )
+#' 
+#' # Look at correlated error between x1 and x2
+#' # (exogenous)
+#' cerror(x1 %~~% x2, sem, dat)
+#' 
+#' # Same as cor.test
+#' with(dat, cor.test(x1, x2))
+#' 
+#' # Look at correlatde error between x1 and y1
+#' # (endogenous)
+#' cerror(y1 %~~% x1, sem, dat)
+#' 
+#' # Not the same as cor.test
+#' # (accounts for influence of x1 and x2 on y1)
+#' with(dat, cor.test(y1, x1))
+#' 
+#' # Specify in psem
+#' sem <- update(sem, x1 %~~% y1)
+#' 
+#' coefs(sem)
+#' 
+#' @export %~~%
 `%~~%` <- function(e1, e2) {
 
   x <- paste(deparse(substitute(e1)), "~~", deparse(substitute(e2)))
@@ -16,6 +58,67 @@
 #' @param formula. a formula
 #' @param modelList a list of structural equations
 
+
+
+#' Correlated errors
+#' 
+#' Calculates partial correlations and partial significance tests.
+#' 
+#' If the variables are exogenous, then the correlated error is the raw
+#' bivariate correlation.
+#' 
+#' If the variables are endogenous, then the correlated error is the partial
+#' correlation, accounting for the influence of any predictors.
+#' 
+#' The significance of the correlated error is conducted using \code{cor.test}
+#' if the variables are exogenous. Otherwise, a t-statistic is constructed and
+#' compared to a t-distribution with N - k - 2 degrees of freedom (where N is
+#' the total number of replicates, and k is the total number of variables
+#' informing the relationship) to derive a P-value.
+#' 
+#' @param formula.  A formula specifying the two correlated variables using
+#' \code{%~~%}.
+#' @param modelList A list of structural equations using \code{psem}.
+#' @param data A \code{data.frame} containing the data used in the list of
+#' equations.
+#' @return Returns a \code{data.frame} containing the (partial) correlation and
+#' associated significance test.
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @seealso \code{\link{cor.test}}, \code{\link{%~~%}}
+#' @examples
+#' 
+#' # Generate example data
+#' dat <- data.frame(x1 = runif(50),
+#'   x2 = runif(50), y1 = runif(50),
+#'     y2 = runif(50))
+#' 
+#' # Create list of structural equations
+#' sem <- psem(
+#'   lm(y1 ~ x1 + x2, dat),
+#'   lm(y2 ~ y1 + x1, dat)
+#' )
+#' 
+#' # Look at correlated error between x1 and x2
+#' # (exogenous)
+#' cerror(x1 %~~% x2, sem, dat)
+#' 
+#' # Same as cor.test
+#' with(dat, cor.test(x1, x2))
+#' 
+#' # Look at correlatde error between x1 and y1
+#' # (endogenous)
+#' cerror(y1 %~~% x1, sem, dat)
+#' 
+#' # Not the same as cor.test
+#' # (accounts for influence of x1 and x2 on y1)
+#' with(dat, cor.test(y1, x1))
+#' 
+#' # Specify in psem
+#' sem <- update(sem, x1 %~~% y1)
+#' 
+#' coefs(sem)
+#' 
+#' @export cerror
 cerror <- function(formula., modelList, data = NULL) {
 
   tab <- partialCorr(formula., modelList, data)
@@ -137,7 +240,47 @@ getResidModels <- function(vars, modelList, data) {
 
 }
 
-#' Extract partial residuals
+
+
+#' Computing partial effects
+#' 
+#' Extracts partial residuals from a model or \code{psem} object for a given
+#' \code{x} and \code{y}.
+#' 
+#' This function computes the partial residuals of \code{y ~ x + Z} in a
+#' two-step procedure to remove the variation explained by \code{Z}: (1) remove
+#' \code{x} from the equation and model \code{y ~ Z}, and (2) replace \code{y}
+#' with \code{x} and model \code{x ~ Z}.
+#' 
+#' @param formula.  A formula where the \code{lhs} is the response and the
+#' \code{rhs} is the predictor whose partial effect is desired.
+#' @param modelList A list of structural equations.
+#' @param data A \code{data.frame} used to fit the equations.
+#' @return Returns a \code{data.frame} of residuals of \code{y ~ Z} called
+#' \code{yresids}, of \code{x ~ Z} called \code{xresids}.
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @seealso \code{\link{cerror}}
+#' @examples
+#' 
+#' # Generate data
+#' dat <- data.frame(y = rnorm(100), x1 = rnorm(100), x2 = rnorm(100))
+#' 
+#' # Build model
+#' model <- lm(y ~ x1 + x2, dat)
+#' 
+#' # Compute partial residuals of y ~ x1
+#' yresid <- resid(lm(y ~ x2, dat))
+#' 
+#' xresid <- resid(lm(x1 ~ x2, dat))
+#' 
+#' plot(yresid, xresid)
+#' 
+#' # Use partialResid
+#' presid <- partialResid(y ~ x1, model)
+#' 
+#' plot(presid) # identical plot!
+#' 
+#' @export partialResid
 partialResid <- function(formula., modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
