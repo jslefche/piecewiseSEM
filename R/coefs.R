@@ -1,26 +1,39 @@
 #' Extract path coefficients
-#' 
+#'
 #' Extracts (standardized) path coefficients from a \code{psem} object.
-#' 
+#'
 #' P-values for models constructed using \code{\link{lme4::lme4}} are obtained
 #' using the Kenward-Roger approximation of the denominator degrees of freedom
 #' as implemented in the \code{\link{pbkrtest::pbkrtest}} package.
-#' 
+#'
+#' Standardized coefficients are obtained by multiplying the parameter estimates
+#' by the ratio of the standard deviation of x over the standard deviation of y.
+#'
+#' For binary response models (i.e., binomial responses), standardized coefficients
+#' are obtained in one of two ways:\itemize{
+#' \item{\code{latent} the latent theoretic approach,
+#' which is the square-root of the variance of the predictions (on the linear or
+#' 'link' scale) plus the distribution-specific variation (for logit links: pi^2/3, for
+#' probit links: 1).}
+#' \item{\code{observation} the observation error approach, where the square-root of the
+#' variance of the predictions (on the linear scale) are divided by the correlation
+#' between the observed and predicted (on th original or 'response' scale) values of y. }
+#' }
+#'
 #' @param modelList A list of structural equations.
+#' @param standardize Whether standardized coefficients should be reported.
+#' Default is TRUE.
+#' @param standardize.type The type of standardized for non-Gaussian responses.
+#' Current options are \code{latent} or \code{observation}. Default is \code{observation}.
 #' @param intercepts Whether intercepts should be included in the coefficients
 #' table. Default is FALSE.
-#' @param standardize Whether standardized path coefficients should be
-#' reported. Default is TRUE.  ~~Describe \code{standardize} here~~
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
 #' degrees of freedom, and significance tests.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{KRmodcomp}}
 #' @examples
-#' 
-#' 
-#' 
 #' @export coefs
-coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
+coefs <- function(modelList, standardize = TRUE, standardize.type = "observation", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -30,9 +43,7 @@ coefs <- function(modelList, intercepts = FALSE, standardize = TRUE) {
 
   if(class(data) %in% c("comparative.data")) data <- data$data
 
-  modelList <- removeData(modelList, formulas = 2)
-
-  if(standardize == TRUE) ret <- stdCoefs(modelList, data, intercepts) else
+  if(standardize == TRUE) ret <- stdCoefs(modelList, data, standardize.type, intercepts) else
 
     ret <- unstdCoefs(modelList, data, intercepts)
 
@@ -126,7 +137,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
+stdCoefs <- function(modelList, data = NULL, standardize.type = "observation", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
 
@@ -138,7 +149,7 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   ret <- unstdCoefs(modelList, data, intercepts)
 
-  Bnew <- do.call(c, lapply(1:length(modelList), function(i) {
+  Bnew <- do.call(rbind, lapply(1:length(modelList), function(i) {
 
     j <- modelList[[i]]
 
@@ -162,21 +173,27 @@ stdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       B <- subset(ret, Response == f.trans[1])$Estimate
 
+      B.se <- subset(ret, Response == f.trans[1])$Std.Error
+
       sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE))
 
       if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, sdInt(j, newdata.))
 
-      sd.y <- sdFam(f.notrans[1], j, newdata.)
+      sd.y <- sdFam(f.notrans[1], j, newdata., standardize.type)
 
-      if(intercepts == FALSE) Bnew <- B * (sd.x / sd.y) else
+      if(intercepts == FALSE)
 
-        Bnew <- c(0, B[-1] * (sd.x / sd.y))
+        data.frame(Std.Estimate = B * (sd.x / sd.y), Std.SE = B.se * (sd.x / sd.y)) else
 
-    }
+          data.frame(Std.Estimate = c(0, B[-1] * (sd.x / sd.y)), Std.SE = c(0, B.se[-1] * (sd.x / sd.y)))
+
+      }
 
   } ) )
 
-  ret <- data.frame(ret, Std.Estimate = unname(Bnew))
+  ret <- data.frame(ret, Bnew)
+
+  rownames(ret) <- NULL
 
   return(ret)
 
@@ -220,23 +237,56 @@ dataTrans <- function(formula., newdata) {
 }
 
 #' Properly scale standard deviations depending on the error distribution
-sdFam <- function(x, model, newdata) {
+sdFam <- function(x, model, newdata, standardize.type = "observation") {
 
-  .family = try(family(model), silent = TRUE)
+  .family <- try(family(model), silent = TRUE)
 
-  if(class(.family) == "try-error" & any(class(model) %in% c("glmerMod", "glmmPQL")))
+  if(class(.family) == "try-error") .family <- try(model$family, silent = TRUE)
 
-     .family <-model$family
+  if(class(.family) == "try-error") NA else {
 
-  if(class(.family) == "try-error" & !any(class(model) %in% c("glmerMod", "glmmPQL")))
+    if(.family$family == "gaussian") sd.y <- sd(newdata[, x], na.rm = TRUE)
 
-    y <- newdata[, x] else
+    if(.family$family == "binomial") sd.y <- sdGLM(model, standardize.type)
 
-      if(.family$family == "gaussian") y <- newdata[, x] else
+    # ... additional model types here
 
-        y <- NA
+  }
 
-  sd(y, na.rm = TRUE)
+  return(sd.y)
+
+}
+
+#' Compute standard deviation of response for GLMs
+sdGLM <- function(model, standardize.type = "observation") {
+
+  preds <- predict(model, type = "link")
+
+  if(standardize.type == "observation") {
+
+    y <- all.vars.notrans(model)[1]
+
+    data <- getSingleData(model)
+
+    R <- cor(data[, y], predict(model, type = "response"))
+
+    sd.y <- sqrt(var(preds)) / R
+
+  }
+
+  if(standardize.type == "latent") {
+
+    link. <- family(model)$link
+
+    if(link. == "logit") sigmaE <- pi^2/3 else
+
+      if(link == "probit") sigmaE <- 1
+
+    sd.y <- sqrt(var(preds) + sigmaE)
+
+  }
+
+  return(sd.y)
 
 }
 
