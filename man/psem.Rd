@@ -7,9 +7,9 @@
 psem(..., data)
 }
 \arguments{
-\item{data}{A \code{data.frame} used to fit the equations.}
-
 \item{\dots}{A list of structural equations.}
+
+\item{data}{A \code{data.frame} used to fit the equations.}
 }
 \value{
 Returns an object of class \code{psem}.
@@ -39,4 +39,3 @@ internally from the structural equations.
 \author{
 Jon Lefcheck <jlefcheck@bigelow.org>
 }
-

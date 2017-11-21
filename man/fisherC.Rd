@@ -13,4 +13,3 @@ fisherC(dTable, add.claims = NULL, direction = NULL, conserve = FALSE,
 \description{
 Summarize tests of directed separation using Fisher's C statistic
 }
-

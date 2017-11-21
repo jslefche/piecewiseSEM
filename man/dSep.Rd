@@ -50,9 +50,6 @@ argument.
 
 
 }
-\author{
-Jon Lefcheck <jlefcheck@bigelow.org>
-}
 \references{
 Shipley, Bill. "A new inferential test for path models based on
 directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
@@ -60,4 +57,6 @@ directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 \seealso{
 \code{\link{basisSet}}
 }
-
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}

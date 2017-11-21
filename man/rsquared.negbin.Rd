@@ -9,4 +9,3 @@ rsquared.negbin(model, method = "trigamma")
 \description{
 R^2 for negbin objects
 }
-

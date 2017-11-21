@@ -4,9 +4,8 @@
 \alias{sdFam}
 \title{Properly scale standard deviations depending on the error distribution}
 \usage{
-sdFam(x, model, newdata)
+sdFam(x, model, newdata, standardize.type = "observation")
 }
 \description{
 Properly scale standard deviations depending on the error distribution
 }
-

@@ -13,4 +13,3 @@ infCrit(modelList, Cstat, add.claims = NULL, direction = NULL,
 \description{
 Return information criterion values for piecewise SEM
 }
-

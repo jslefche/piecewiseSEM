@@ -12,4 +12,3 @@ Dag(formulaList)
 \description{
 Generate adjacency matrix from list of structural equations
 }
-

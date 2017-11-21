@@ -4,9 +4,8 @@
 \alias{print.psem}
 \title{Print psem}
 \usage{
-\method{print}{psem}(x, ...)
+print.psem(x, ...)
 }
 \description{
 Print psem
 }
-

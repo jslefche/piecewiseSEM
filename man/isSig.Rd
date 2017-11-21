@@ -9,4 +9,3 @@ isSig(p)
 \description{
 Assess significance
 }
-

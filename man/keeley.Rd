@@ -24,4 +24,3 @@ keeley
 head(keeley)
 }
 \keyword{data}
-

@@ -9,4 +9,3 @@ findbars.lme(model)
 \description{
 Get random effects from lme
 }
-

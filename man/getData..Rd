@@ -4,9 +4,8 @@
 \alias{getData.}
 \title{Get data from model list}
 \usage{
-getData.(modelList)
+\method{getData}{}(modelList)
 }
 \description{
 Get data from model list
 }
-

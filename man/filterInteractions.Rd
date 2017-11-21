@@ -9,4 +9,3 @@ filterInteractions(b)
 \description{
 Filter interactions from the d-sep tests
 }
-

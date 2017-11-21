@@ -13,4 +13,3 @@ Replace transformations in the basis set by cycling through neighbors and applyi
 transformations in order of how variables are treated in the child nearest to current node
 Reverse added variables (e.g., y ~ 1)
 }
-

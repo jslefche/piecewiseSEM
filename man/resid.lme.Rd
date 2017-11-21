@@ -9,4 +9,3 @@
 \description{
 Get residuals from innermost grouping of mixed models (replicate-level)
 }
-

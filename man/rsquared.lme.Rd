@@ -9,4 +9,3 @@ rsquared.lme(model)
 \description{
 R^2 for lme objects
 }
-

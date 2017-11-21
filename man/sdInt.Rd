@@ -9,4 +9,3 @@ sdInt(model, newdata)
 \description{
 Calculate standard deviations for interactions
 }
-

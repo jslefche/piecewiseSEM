@@ -9,4 +9,3 @@
 \description{
 Remove random effects from all.vars
 }
-

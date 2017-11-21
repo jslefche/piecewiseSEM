@@ -49,10 +49,9 @@ presid <- partialResid(y ~ x1, model)
 plot(presid) # identical plot!
 
 }
-\author{
-Jon Lefcheck <jlefcheck@bigelow.org>
-}
 \seealso{
 \code{\link{cerror}}
 }
-
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}

@@ -9,4 +9,3 @@ rsquared.glm(model, method = "nagelkerke")
 \description{
 R^2 for glm objects
 }
-

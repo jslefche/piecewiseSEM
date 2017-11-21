@@ -9,4 +9,3 @@
 \description{
 Get vector of transformed variables
 }
-

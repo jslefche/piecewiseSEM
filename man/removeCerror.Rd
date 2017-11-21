@@ -9,4 +9,3 @@ removeCerror(b, formulaList)
 \description{
 Remove correlated errors from the basis set
 }
-

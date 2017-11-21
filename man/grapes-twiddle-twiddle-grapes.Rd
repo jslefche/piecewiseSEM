@@ -49,10 +49,9 @@ sem <- update(sem, x1 \%~~\% y1)
 coefs(sem)
 
 }
-\author{
-Jon Lefcheck <jlefcheck@bigelow.org>
-}
 \seealso{
 \code{\link{cerror}}
 }
-
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}

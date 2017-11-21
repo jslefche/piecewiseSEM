@@ -12,4 +12,3 @@
 \description{
 Residual values from fit models
 }
-

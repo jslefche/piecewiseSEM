@@ -9,4 +9,3 @@ reverseNonLin(modelList, b, amat)
 \description{
 If intermediate endogenous variables are nonlinear, return both directions
 }
-

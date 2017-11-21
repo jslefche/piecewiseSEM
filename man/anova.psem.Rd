@@ -18,4 +18,3 @@
 \description{
 Compare models using Fisher's C scores
 }
-

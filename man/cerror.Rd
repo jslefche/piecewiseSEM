@@ -75,4 +75,3 @@ coefs(sem)
 \author{
 Jon Lefcheck <jlefcheck@bigelow.org>
 }
-

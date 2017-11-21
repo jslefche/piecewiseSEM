@@ -4,7 +4,7 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-\method{summary}{psem}(object, direction = NULL, conserve = FALSE,
+summary.psem(object, direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, intercepts = FALSE,
   standardize = TRUE, .progressBar = TRUE)
 }
@@ -81,9 +81,6 @@ Standardized path coefficients are scaled by standard deviations.
 
 
 }
-\author{
-Jon Lefcheck <jlefcheck@bigelow.org>
-}
 \references{
 Shipley, Bill. "A new inferential test for path models based on
 directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
@@ -101,4 +98,6 @@ models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 \seealso{
 The model fitting function \code{\link{psem}}.
 }
-
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}

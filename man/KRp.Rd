@@ -9,4 +9,3 @@ KRp(model, vars, data, intercepts = FALSE)
 \description{
 Recompute P-values using Kenward-Rogers approximation
 }
-

@@ -9,4 +9,3 @@ rsquared.phylolm(model)
 \description{
 R^2 for phylolm objects
 }
-

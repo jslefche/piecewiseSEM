@@ -9,4 +9,3 @@
 \description{
 Get number of observations from a model
 }
-

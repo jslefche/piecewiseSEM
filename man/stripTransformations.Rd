@@ -9,4 +9,3 @@ stripTransformations(x)
 \description{
 Strip transformations
 }
-

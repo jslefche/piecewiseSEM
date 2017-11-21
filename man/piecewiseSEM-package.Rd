@@ -2,8 +2,8 @@
 % Please edit documentation in R/piecewiseSEM-package.R
 \docType{package}
 \name{piecewiseSEM-package}
-\alias{piecewiseSEM}
 \alias{piecewiseSEM-package}
+\alias{piecewiseSEM}
 \title{Piecewise Structural Equation Modeling}
 \description{
 Fitting and evaluation of piecewise structural equation models, complete
@@ -29,9 +29,6 @@ interpretation.
 
 
 }
-\author{
-Jon Lefcheck <jslefche@vims.edu>
-}
 \references{
 Shipley, Bill. "A new inferential test for path models based on
 directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
@@ -46,5 +43,7 @@ context." Ecology 90.2 (2009): 363-368.
 Shipley, Bill. "The AIC model selection method applied to path analytic
 models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 }
+\author{
+Jon Lefcheck <jslefche@vims.edu>
+}
 \keyword{package}
-

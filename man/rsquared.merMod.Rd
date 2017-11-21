@@ -9,4 +9,3 @@ rsquared.merMod(model)
 \description{
 R^2 for merMod objects
 }
-

@@ -4,16 +4,20 @@
 \alias{coefs}
 \title{Extract path coefficients}
 \usage{
-coefs(modelList, intercepts = FALSE, standardize = TRUE)
+coefs(modelList, standardize = TRUE, standardize.type = "observation",
+  intercepts = FALSE)
 }
 \arguments{
 \item{modelList}{A list of structural equations.}
 
+\item{standardize}{Whether standardized coefficients should be reported.
+Default is TRUE.}
+
+\item{standardize.type}{The type of standardized for non-Gaussian responses.
+Current options are \code{latent} or \code{observation}. Default is \code{observation}.}
+
 \item{intercepts}{Whether intercepts should be included in the coefficients
 table. Default is FALSE.}
-
-\item{standardize}{Whether standardized path coefficients should be
-reported. Default is TRUE.  ~~Describe \code{standardize} here~~}
 }
 \value{
 Returns a \code{data.frame} of coefficients, their standard errors,
@@ -26,16 +30,23 @@ Extracts (standardized) path coefficients from a \code{psem} object.
 P-values for models constructed using \code{\link{lme4::lme4}} are obtained
 using the Kenward-Roger approximation of the denominator degrees of freedom
 as implemented in the \code{\link{pbkrtest::pbkrtest}} package.
+
+Standardized coefficients are obtained by multiplying the parameter estimates
+by the ratio of the standard deviation of x over the standard deviation of y.
+
+For binary response models (i.e., binomial responses), standardized coefficients
+are obtained in one of two ways:\itemize{
+\item{\code{latent} the latent theoretic approach,
+which is the square-root of the variance of the predictions (on the linear or
+'link' scale) plus the distribution-specific variation (for logit links, pi^2/3).}
+\item{\code{observation} the observation error approach, where the square-root of the
+variance of the predictions (on the linear scale) are divided by the correlation
+between the observed and predicted (on th original or 'response' scale) values of y. }
 }
-\examples{
-
-
-
-}
-\author{
-Jon Lefcheck <jlefcheck@bigelow.org>
 }
 \seealso{
 \code{\link{KRmodcomp}}
 }
-
+\author{
+Jon Lefcheck <jlefcheck@bigelow.org>
+}

@@ -4,9 +4,9 @@
 \alias{stdCoefs}
 \title{Calculate standardized regression coefficients}
 \usage{
-stdCoefs(modelList, data = NULL, intercepts = FALSE)
+stdCoefs(modelList, data = NULL, standardize.type = "observation",
+  intercepts = FALSE)
 }
 \description{
 Calculate standardized regression coefficients
 }
-

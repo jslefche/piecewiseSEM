@@ -11,4 +11,3 @@ endogenous.reverse(basis.set, modelList, add.vars = NULL)
 Functions from version 1.2 of piecewiseSEM
 For use in vignette()
 }
-
