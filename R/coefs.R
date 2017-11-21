@@ -280,7 +280,7 @@ sdGLM <- function(model, standardize.type = "observation") {
 
     if(link. == "logit") sigmaE <- pi^2/3 else
 
-      if(link == "probit") sigmaE <- 1
+      if(link. == "probit") sigmaE <- 1
 
     sd.y <- sqrt(var(preds) + sigmaE)
 
