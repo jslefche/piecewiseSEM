@@ -38,7 +38,8 @@ For binary response models (i.e., binomial responses), standardized coefficients
 are obtained in one of two ways:\itemize{
 \item{\code{latent} the latent theoretic approach,
 which is the square-root of the variance of the predictions (on the linear or
-'link' scale) plus the distribution-specific variation (for logit links, pi^2/3).}
+'link' scale) plus the distribution-specific variation (for logit links: pi^2/3, for
+probit links: 1).}
 \item{\code{observation} the observation error approach, where the square-root of the
 variance of the predictions (on the linear scale) are divided by the correlation
 between the observed and predicted (on th original or 'response' scale) values of y. }

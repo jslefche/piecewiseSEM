@@ -85,82 +85,77 @@ findbars.lme <- function(model) {
 }
 
 #' Get data from one model
-getSingleModelData <- function(model){
-  #blank data frame
+getSingleData <- function(model) {
+
   dat <- data.frame()
-  
-  #use the right method for the right model type
-  switch(class(model)[1], #what's the first class it shows you?
+
+  switch(class(model)[1],
          "phylolm" = {
-           stop("Please provide `data =` argument to `psem`.", call. = FALSE) 
+           stop("Please provide `data =` argument to `psem`.", call. = FALSE)
          },
-         
+
          "phyloglm" = {
            stop("Please provide `data =` argument to `psem`.", call. = FALSE)
          },
-         
+
          "lm" ={
            dat <- eval(getCall(model)$data, environment(formula(model)))
-         }, 
-         
+         },
+
          "negbin" = {
            dat <- eval(getCall(model)$data, environment(formula(model)))
-         }, 
-         
+         },
+
          "sarlm" = {
            dat <- eval(getCall(model)$data, environment(formula(model)))
          },
-         
+
          "glm" = {
            dat <- model$data
          },
-         
+
          "glmmPQL" = {
            dat <- model$data
          },
-         
+
          "pgls" = {
            dat <- model$data
          },
-         
+
          "lmerMod" = {
-           dat <- model@frame 
-         }, 
-         
-         "glmerMod" = {
-           dat <- model@frame 
-         }, 
-         
-         "merModLmerTest" = {
-           dat <- model@frame 
+           dat <- model@frame
          },
-         
+
+         "glmerMod" = {
+           dat <- model@frame
+         },
+
+         "merModLmerTest" = {
+           dat <- model@frame
+         },
+
          "gls" = {
            dat <-  nlme::getData(model)
          },
-         
+
          "lme" = {
            dat <-  nlme::getData(model)
          }
-         
+
   )
-  
+
   dat
-  
+
 }
-
-
 
 #' Get data from model list
 getData. <- function(modelList) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  #take data out if it's there already
   modelList <- removeData(modelList, formulas = 1)
 
-  #iterate through model list and get data frames
-  data.list <- lapply(modelList, getSingleModelData)
+  data.list <- lapply(modelList, getSingleData)
 
   if(all(sapply(data.list, class) == "comparative.data"))
 
@@ -168,25 +163,25 @@ getData. <- function(modelList) {
 
       data.list <- data.list[order(sapply(data.list, nrow))]
 
-    if(length(data.list) > 1) {
+      if(length(data.list) > 1) {
 
-      match.by <- unlist(sapply(data.list, names))
+        match.by <- unlist(sapply(data.list, names))
 
-      match.by <- match.by[!duplicated(match.by)]
+        match.by <- match.by[!duplicated(match.by)]
 
-      data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
+        data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
 
-      data <- Reduce(function(...) merge(..., all=T), data.list)
+        data <- Reduce(function(...) merge(..., all=T), data.list)
 
-      } else data <- data.list[[1]]
+        } else data <- data.list[[1]]
 
-    data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
+        data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
 
-    colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+        colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
 
-    data <- as.data.frame(data)
+        data <- as.data.frame(data)
 
-    }
+      }
 
   rownames(data) <- 1:nrow(data)
 
