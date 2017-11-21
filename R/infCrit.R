@@ -33,6 +33,8 @@ infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conse
 }
 
 #` Generalized function for extraction AIC(c) score
+
+#' @export AIC.psem
 AIC.psem <- function(object, ..., aicc = FALSE) {
 
   aicx <- infCrit(object)
