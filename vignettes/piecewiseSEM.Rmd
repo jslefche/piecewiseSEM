@@ -11,41 +11,41 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Structural equation modeling (SEM) is among the fastest growing statistical techniques in ecology and evolution, and provides a new way to explore and quantify ecological systems. SEM unites multiple variables in a single causal network. Causality is central to SEM as the technique implicitly assumes that the relationships among variables represent causal links. Because variables can be both predictors and responses, SEM is a useful tool for quantifying both direct and indirect (cascading) effects.
+Structural equation modeling (SEM) is among the fastest growing statistical techniques in ecology and evolution, and provides a new way to explore and quantify ecological systems. SEM unites multiple variables in a single causal network, thereby allowing simultaneous tests of multiple hypotheses. The idea of causality is central to SEM as the technique implicitly assumes that the relationships among variables represent causal links. Because variables can be both predictors and responses, SEM is also a useful tool for quantifying both direct and indirect (cascading) effects.
 
 Piecewise SEM (or confirmatory path analysis) expands upon traditional SEM by introducing a flexible mathematical framework that can incorporate a wide variety of model structures, distributions, and assumptions. These include: interactions and non-normal responses, random effects and hierarchical models, and alternate correlation structures (including phylogenetic, spatial, and temporal).
 
 This release is version 2.0 of the package and contains substantial updates to both the syntax and the underlying calculations. All functions have been replaced and rewritten from the ground up. 
 
-The first part of this vignette will briefly introduce the concepts behind piecewise SEM. The second part will introduce the new syntax using a worked example. The third and final part will briefly compare the old and new versions of the package.
+The first part of this vignette will briefly introduce the concepts behind piecewise SEM. The second part will introduce the new syntax using a worked example. The final part will briefly compare the old and new versions of the package.
 
 ## 1. An Introduction to Structural Equation Modeling
 
-Broadly, structural equation modeling (SEM) unites multiple variables in a single causal network. They are generally presented using box-and-arrow diagrams denoting directed relationships among variables:
+Broadly, structural equation modeling (SEM) unites a suite of variables in a single  network. They are generally presented using box-and-arrow diagrams denoting directed (causal) relationships among variables:
 
 ![1.1 Example SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/example_sem.jpg?raw=true) 
 
 Those variables that exist only as predictors in the network are referred to as exogenous, and those that are predicted (at any point) as endogenous. Exogenous variables therefore only ever have arrows coming out of them, while endogenous arrows have arrows coming into them (which does not preclude them from having arrows come out of them as well). This vocabulary is important when considering some special cases later.
 
-In traditional SEM, the relationships among variables (i.e., their linear coefficients) are estimated simultaneously in a single  variance-covariance matrix. This approach is well developed but can be computationally intensive (depending on the sizes of the vcov matrix) and additionally assumes independence and normality of errors, two assumptions that are generally violated in ecological research.
+In traditional SEM, the relationships among variables (i.e., their linear coefficients) are estimated simultaneously in a single variance-covariance matrix. This approach is well developed but can be computationally intensive (depending on the sizes of the v-cov matrix) and additionally assumes independence and normality of errors, two assumptions that are generally violated in ecological research.
 
-Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This proces decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are modeled separately, and then whose inferences are combined later for the entire SEM. This approach has two consequences: 
-1. Increasingly large networks can be estimated with ease compared to a single vcov matrix, and 
-2. Specific assumptions about the distribution and covariance of the replicates can be addressed using typical extensions of linear regression, such as fixed covariance structures, random effects, and other sophisticated modeling techniques. 
+Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This proces decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are evaluated separately, and then combined later to generate inferences about the entire SEM. This approach has two consequences: 
+1. Increasingly large networks can be estimated with ease compared to a single vcov matrix (because the approach is modularized), and 
+2. Specific assumptions about the distribution and covariance of the responses can be addressed using typical extensions of linear regression, such as fixed covariance structures, random effects, and other sophisticated modeling techniques. 
 
-Unlike traditional SEM, which uses a $\chi^2$ test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed a priori to be biologically or mechanistically insigificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant) or whether  some causal relationship may exist as captured by the data.
+Unlike traditional SEM, which uses a $\chi^2$ test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed to be biologically or mechanistically insigificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant within some threshold of acceptable error, typically $\alpha$=0.05) or whether  some causal relationship may exist as indicated by the data.
 
 For instance, the preceding example SEM contains 4 specified paths (solid, black) and 2 unspecified paths (dashed, red), the latter of which constitute the basis set:
 
 ![1.2 Missing Paths](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_missing_paths.jpg?raw=true)
 
-In this case, there are two relationships that need to be evaluated: `y3` and `x1`, and `y3` and `y2`. However, there are additional influences on `y3`, specifically the directed path from `y2`. Thus, the claims need to be evaluated for 'conditional independence,' i.e. that the two variables are independent *conditional* on the known influences on both of them. This also pertains to the influences on `y2`,  including the potential contributions of `x1`. So the full claim would be: `y2 | y3 (y1, x1)`, with the claim of interest separated by the `|` bar and the conditioning variable(s) following in parentheses.
+In this case, there are two relationships that need to be evaluated: `y3` and `x1`, and `y3` and `y2`. However, there are additional influences on `y3`, specifically the directed path from `y2`. Thus, the claims need to be evaluated for 'conditional independence,' i.e. that the two variables are independent *conditional* on the already specified influences on both of them. This also pertains to the predictors of `y2`,  including the potential contributions of `x1`. So the full claim would be: `y2 | y3 (y1, x1)`, with the claim of interest separated by the `|` bar and the conditioning variable(s) following in parentheses.
 
-As the network grows more complex, however, the independence claims only consider variables that are *immediately ancestral* to the primary claim. For example, if there was another variable predicting `x1`, it would not be considered in the independence claim between `y3` and `y2` since it is >1 node away in the network.
+As the network grows more complex, however, the independence claims only consider variables that are *immediately ancestral* to the primary claim (i.e., the parent nodes). For example, if there was another variable predicting `x1`, it would not be considered in the independence claim between `y3` and `y2` since it is >1 node away in the network.
 
-The independence claims are evaluating by fitting a regression between the two variables of interest with any conditioning variables included as covariates, and then extracting the P-value from the significance test that the relationship between the two variables is equal to 0. Thus, the claim above `y2 | y3 (y1, x1)` would be modeled as `y3 ~ y2 + y1 + x1` . These regressions are constructed using the same assumptions about `y3` as specified in the actual structural equation model. So, for instance, if `y3` is a hierarchically sampled variable predicted by `y1`, then same hierarchical structure would carry over to the test of directed separation of `y3` predicted by `y2`.
+The independence claims are evaluated by fitting a regression between the two variables of interest with any conditioning variables included as covariates. Thus, the claim above `y2 | y3 (y1, x1)` would be modeled as `y3 ~ y2 + y1 + x1` . These regressions are constructed using the same assumptions about `y3` as specified in the actual structural equation model. So, for instance, if `y3` is a hierarchically sampled variable predicted by `y1`, then same hierarchical structure would carry over to the test of directed separation of `y3` predicted by `y2`.
 
-The P-values of the significance tests are then combined in a single Fisher's C statistic using the following equation:
+The P-values of the conditional independence tests are then combined in a single Fisher's C statistic using the following equation:
 
   $$C = -2\sum_{i=1}^{k}ln(p_{i})$$
 
@@ -59,7 +59,7 @@ where K is the likelihood degrees of freedom. A further variant, $AIC_c$, can be
 
   $$AIC_c = C + 2K\frac{n}{(n - K - 1)}$$
   
-The `piecewiseSEM` package automates the derivation of the basis set and the tests of directed separation, as well as extraction of path coefficients.
+The `piecewiseSEM` package automates the derivation of the basis set and the tests of directed separation, as well as extraction of path coefficients based on the user-specified input.
 
 ## 2. An Example using piecewiseSEM
 
@@ -70,7 +70,7 @@ Let's make up some fake data corresponding to the path diagram above:
 dat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
 ```
 
-And we will use `piecewiseSEM` to fit the model. The function is `psem` and we supply the regressions corresponding to the relationships specified in the path diagram
+And we will use `piecewiseSEM` to fit the model. The primary function is `psem` and we supply the regressions corresponding to the relationships specified in the path diagram, separated by commas as in a `list`:
 
 ```{r, error = T}
 # Load required libraries
@@ -79,7 +79,7 @@ library(piecewiseSEM)
 model <- psem(lm(y1 ~ x1, dat), lm(y1 ~ y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
 ```
 
-You'll note that this produces an error because we have incorrectly broken down the component regressions. A common mistake is to list each path separately, but the proper specification is to collapse multiple pathways into a single multiple regression if the response is the same. Thus, the model becomes:
+You'll note that this formulation produces an error because we have incorrectly broken down the component regressions. A common mistake is to list each path separately, but the proper specification is to collapse multiple pathways into a single multiple regression if the response is the same. Thus, the properly specified SEM becomes:
 
 ```{r}
 model <- psem(lm(y1 ~ x1 + y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
@@ -90,9 +90,11 @@ To evaluate the model, we call `summary` on the `psem` object.
 summary(model, .progressBar = F)
 ```
 
-The output shows the call of the model (the component equations), the AIC and BIC scores (derived from that C statistic), and then the tests of directed separation. The last column of the table reports the P-values, which are summarized using the above equation to yield the global goodness-of-fit below. The next table reports the path coefficients, including the standardized values (scaled by standardized deviations). Finally, the individual R-squared values of each regression is given, to aid in evaluation of the model fit.
+The output should be familiar to anyone who has evaluated a linear model in R previously.
 
-### 2.2 Standardized coefficients for GLMs
+It shows the call of the model (the component equations), the AIC and BIC scores (derived from that C statistic), and then the tests of directed separation. The last column of the table reports the P-values, which are summarized using the above equation to yield the global goodness-of-fit below. The next table reports the path coefficients, including the standardized values (scaled by standardized deviations). Finally, the individual R-squared values of each regression is given, to aid in evaluation of the model fit.
+
+### 2.2 Standardized coefficients
 
 Standardized coefficients are automatically calculated by multiplying the path coefficients $\beta$ and multiplying by the ratio of the standard deviations of x and y:
 
@@ -109,9 +111,84 @@ coefs(lm.mod)
 coef(lm.mod)[2] * (sd(dat$x1)/sd(dat$y1))
 ```
 
+For generalized linear models, the response variables are inherently non-linear. The common solution is to apply a link function to linearize the response, and derive the parameter estimate $\beta$ on this new linear (link) scale. Common link functions include logit and probit for binary responses, and log for Poisson, although many others exist.
+
+This transformation, however, means that the modeled response is not actually observed, and thus the true error is not known. Obtaining the standard deviation of the response used in the calculation of standardized coefficients requires further assumptions about the distribution-specific variance. 
+
+In version 2.0, we implement two solutions for obtaining the error variance to produce standardized coefficients for GLM, focusing for the moment on binary response models: the latent theoretic and the observation error approach.
+
+In the latent theoretic approach, we assume a fixed error variance for the binomial distribution based on the link function: for logit, it is $\pi$^2/3 and for the probit, it is 1. This value is added to the predicted fits on the linear (link) scale and then the square-root of the variance of these values is taken to obtain the standard deviation.
+
+In the observation error approach, a rough estimate of the error variance is obtained through the calculation of a pseudo-R^2, which is simply the correlation between the observed and predicted fits (in this case, in the original units). The error variance is again added to the variance of the predicted fits and the square-root is taken to obtain the standard deviation.
+
+Let's work through a simple example where we first compute the standardized coefficient by hand, then compare to the output of `piecewiseSEM`:
+
+```{r}
+# Create fake binomial data
+binom.data <- data.frame(y = rbinom(100, 1, 0.5))
+
+binom.data$x <- binom.data$y + runif(100, 0, 5)
+
+# Fit using GLM
+glm.mod <- glm(y ~ x, "binomial", binom.data)
+
+# Extract linear beta
+Beta <- summary(glm.mod)$coefficients[2, 1]
+```
+
+And apply the latent theoretic approach:
+```{r}
+# Extract predicted values on the link scale
+preds <- predict(glm.mod, type = "link")
+
+# Compute sd of error variance using theoretical variances
+sd.y.LT <- sqrt(var(preds) + pi^2/3)
+
+# Compute sd of x
+sd.x <- sd(binom.data$x)
+
+# Get standardized coefficient
+Beta * sd.x / sd.y.LT
+
+# Compare to piecewiseSEM output
+coefs(glm.mod, standardize.type = "latent")
+
+```
+You will note that the `coefs` function has an argument `standardize.type` that currently accepts either the `'latent'` or `'observation'` values.
+
+This approach also works for probit links:
+```{r}
+glm.mod2 <- update(glm.mod, family = binomial(link = "probit"))
+
+Beta2 <- summary(glm.mod2)$coefficients[2, 1]
+
+preds2 <- predict(glm.mod2, type = "link")
+
+sd.y.LT2 <- sqrt(var(preds2) + 1)
+
+Beta2 * sd.x / sd.y.LT2
+
+coefs(glm.mod2, standardize.type = "latent")
+```
+
+To conduct the observation error approach:
+```{r}
+# Compute R based on correlation between predicted and observed
+R <- cor(binom.data$y, predict(glm.mod, type = "response"))
+
+sd.y.OE <- sqrt(var(preds)) / R
+
+# Get standardized coefficient
+Beta * sd.x / sd.y.OE
+
+# Compare to piecewiseSEM output
+coefs(glm.mod, standardize.type = "observation")
+```
+At the moment, standardized coefficients for GLMs are only obtainable for binary responses, and for fixed-effect only models. In the future, we hope to extend this technique to additional responses and hierarchical models.
+
 ### 2.3 GLMs in pSEM
 
-A problematic case arises when intermediate endogenous variables are non-normally distributed. Consider the following SEM.
+A problematic case arises when intermediate endogenous variables are non-normally distributed. Consider the following SEM:
 
 ![2.2 GLM SEM](https://github.com/jslefche/jslefche.github.io/blob/master/img/GLM_sem.jpg?raw=true)
 
@@ -121,7 +198,7 @@ In this SEM, there are two independence claims:
 
 (2) y2 | y1 (x1)
 
-Considering the second independence claim, in a Gaussian world, the significance value is the same whether the test is conducted as y2 | y1 (x1) or y1 | y2 (x1). This is NOT true, however, when one or both of the variables are modeled using a generalized linear model (GLM) fit to a non-normal distribution. This is because the response is now transformed via the link function (e.g., log-link for Poisson GLM, logit-link for binomigla GLM, probit-link for logistic regression, and so on). This transformations means the P-value obtained by regressing y1 against y2 is NOT the same as the one obtained by regressing y2 against y1.
+Considering the second independence claim, in a Gaussian world, the significance value is the same whether the test is conducted as y2 | y1 (x1) or y1 | y2 (x1). This is NOT true, however, when one or both of the variables are modeled using a generalized linear model (GLM) fit to a non-normal distribution. This is because the response is now transformed via the link function (see Section 2.2). This transformations means the P-value obtained by regressing y1 against y2 is NOT the same as the one obtained by regressing y2 against y1.
 
 The following example will show this is the case:
 ```{r, messages = F}
@@ -139,9 +216,9 @@ summary(glm(y1 ~ y2 + x1, "poisson", glmdat))$coefficients[2, 4]
 summary(glm(y2 ~ y1 + x1, "poisson", glmdat))$coefficients[2, 4]
 ```
 
-This is problematic because the d-sep tests are dependent on the significance value. If the P-value is biased based on the direction of the test, then the goodness-of-fit of the model can be over- or underestimated.
+This effect is problematic because the d-sep tests are wholly dependent on the significance value. If the P-value is biased based on the direction of the test, then the goodness-of-fit of the model can be over- or underestimated.
 
-`piecewiseSEM` version 2.0 solves this by providing three options. 
+`piecewiseSEM` version 2.0 solves this by providing three options to the user. 
 
 (1) One can specify the directionality of the test if, for instance, it makes greater biological sense to test `y1` against `y2` instead of the reverse.
 
