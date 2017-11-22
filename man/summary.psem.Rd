@@ -6,7 +6,8 @@
 \usage{
 summary.psem(object, direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, intercepts = FALSE,
-  standardize = TRUE, .progressBar = TRUE)
+  standardize = TRUE, standardize.type = "observation",
+  .progressBar = TRUE)
 }
 \arguments{
 \item{direction}{A \code{vector} of claims defining the specific
@@ -27,6 +28,9 @@ table. Default is FALSE.}
 
 \item{standardize}{Whether standardized path coefficients should be
 reported. Default is TRUE.}
+
+\item{standardize.type}{The type of standardized for non-Gaussian responses.
+Current options are \code{latent} or \code{observation}. Default is \code{observation}.}
 
 \item{.progressBar}{An optional progress bar. Default is TRUE.}
 

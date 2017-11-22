@@ -45,6 +45,8 @@
 #' table. Default is FALSE.
 #' @param standardize Whether standardized path coefficients should be
 #' reported. Default is TRUE.
+#' @param standardize.type The type of standardized for non-Gaussian responses.
+#' Current options are \code{latent} or \code{observation}. Default is \code{observation}.
 #' @param .progressBar An optional progress bar. Default is TRUE.
 #' @return The function \code{summary.psem} returns a list of summary
 #' statistics: \item{dTable}{ A summary table of the tests of directed
@@ -69,15 +71,12 @@
 #' Shipley, Bill. "The AIC model selection method applied to path analytic
 #' models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 #' @examples
-#'
-#'
-#'
-#'
 #' @export summary.psem
+#'
 summary.psem <- function(object,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
-                         intercepts = FALSE, standardize = TRUE,
+                         intercepts = FALSE, standardize = TRUE, standardize.type = "observation",
                          .progressBar = TRUE) {
 
   name <- deparse(substitute(object))
@@ -90,7 +89,7 @@ summary.psem <- function(object,
 
   IC <- infCrit(object, Cstat, add.claims, direction, conserve, conditional, .progressBar)
 
-  coefficients <- coefs(object, intercepts, standardize)
+  coefficients <- coefs(object, standardize, standardize.type, intercepts)
 
   R2 <- rsquared(object)
 
