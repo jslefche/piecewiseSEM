@@ -255,15 +255,17 @@ Finally, option 3 can be invoked by specifying `conserve = T` as an additional a
 summary(glmsem, conserve = T, .progressBar = F)$dTable
 ```
 
-The user should be vigilant for these kinds of situations and ensure that both the specified paths AND the independence claims all make biological sense. In the case where the underlying assumptions of the d-sep tests can bias the goodness-of-fit statistic, `piecewiseSEM` will automatically alert the user.
+The user should be vigilant for these kinds of situations and ensure that both the specified paths AND the independence claims all make biological sense. In the case where the underlying assumptions of the d-sep tests can bias the goodness-of-fit statistic, `piecewiseSEM` should automatically alert the user.
 
 ### 2.4 Correlated errors
 
-Correlated errors are bivariate relationships where it is presumed that the relationship among variables is not causal and unidirectional, but rather that both are being driven by some underlying driver and are therefore correlated. This is denoted by using a double-headed arrow:
+Correlated errors reflect the situation where the relationship among the two variables is not presumed to be causal and unidirectional, but rather that both are being driven by some underlying driver and are therefore *appear* correlated. 
+
+Such a relationship is denoted by using a double-headed arrow:
 
 ![2.4 Correlated error](https://github.com/jslefche/jslefche.github.io/blob/master/img/sem_correlated_error.jpg?raw=true) 
 
-This behavior is specified in `piecewiseSEM` using the operator `%~~%` in the `psem` function. We can fit the above SEM:
+This behavior is specified in `piecewiseSEM` using the new operator `%~~%` in the `psem` function. We can fit the above SEM:
 ```{r}
 cordat <- data.frame(x1 = runif(50), y1 = runif(50), y2 = runif(50), y3 = runif(50))
 
@@ -277,7 +279,7 @@ corsem <- psem(
 summary(corsem, .progressBar = F)
 ```
 
-In the case where the correlated error occurs between two exogenous variables, it is simply the raw bivariate correlation whose P-value is determined using the function `cor.test`. In the event the correlated error includes an endogenous variable, it is the partial correlation that removes the effect of influencing variables.
+In the case where the correlated error occurs between two exogenous variables, it is simply the raw bivariate correlation whose P-value is determined using modifications to the function `cor.test`. In the event the correlated error includes an endogenous variable, it is the partial correlation that removes the effect of any covariates.
 
 In the above example, the correlated error removes the influence of `x1` on both `y1` and `y2` before computing their correlation.
 ```{r}
@@ -324,7 +326,9 @@ sem2new <- update(sem2, y3 ~ 1)
 AIC(sem1, sem2new)
 ```
 
-Now the comparison is fair and the model selection procedure is robust.
+Now the comparison is fair and the model selection procedure is robust. In this case, the models have equivalent support (i.e., $\delta$AIC < 2).
+
+Comparison of saturated models--ones that have *no* missing paths--and unsaturated ones using AIC is currently not possible, although we are looking into possible likelihood formulations in the absence of a C statistic.
 
 ## 3. Comparing Package Versions
 
@@ -467,8 +471,8 @@ coefs(shipley.psem)
 ```
 
 Note two items: 
-*the standardized estimates are now reported by default at the end of the coefficients table (column `Std.Estimate`).
-*the standardized estimate for the logistic regression is different, based on new calculations (see `?coefs`)
+*the standardized estimates and their standard errors are now reported by default at the end of the coefficients table (column `Std.Estimate`).
+*the standardized estimate for the logistic regression is different, based on new calculations (see Section 2.2)
 
 For the moment, version 2.0 only reports the scaled estimates (based on the standard deviations of the response and predictor). Future versions will include a range standardization.
 
