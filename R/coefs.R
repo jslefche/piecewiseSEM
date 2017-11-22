@@ -244,11 +244,11 @@ sdFam <- function(x, model, newdata, standardize.type = "observation") {
 
   if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
 
-  if(class(family.) == "try-error" | is.null(family.) & class(model) %in% "lme")
+  if(class(family.) == "try-error" | is.null(family.) & all(class(model) == "lme"))
 
     family. <- list(family = "gaussian", link = "identity")
 
-  if(class(family.) == "try-error" | is.null(family.) | class(model) %in% c("glmerMod", "glmmPQL")) sd.y <- NA else {
+  if(class(family.) == "try-error" | is.null(family.) | any(class(model) %in% c("glmerMod", "glmmPQL"))) sd.y <- NA else {
 
     if(family.$family == "gaussian") sd.y <- sd(newdata[, x], na.rm = TRUE) else
 
