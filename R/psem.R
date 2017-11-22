@@ -27,7 +27,13 @@
 #' @export psem
 psem <- function(..., data) {
 
-  if(class(...) != "list") x <- list(...)
+  x <- list(...)
+
+  formatpsem(x)
+
+}
+
+formatpsem <- function(x) {
 
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
@@ -76,7 +82,7 @@ psem <- function(..., data) {
 }
 
 #' Convert list to psem object
-as.psem <- function(x) psem(x)
+as.psem <- function(x) formatpsem(x)
 
 #' Evaluate model classes and stop if unsupported model class
 evaluateClasses <- function(modelList) {
