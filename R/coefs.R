@@ -163,7 +163,8 @@ stdCoefs <- function(modelList, data = NULL, standardize.type = "observation", i
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
-      Bnew <- subset(ret, Response == paste0("~~", f.trans[1]) & Predictor == paste0("~~", f.trans[2]))$Estimate
+      data.frame(Std.Estimate = subset(ret, Response == paste0("~~", f.trans[1]) & Predictor == paste0("~~", f.trans[2]))$Estimate,
+                 Std.SE = NA)
 
     } else {
 
@@ -239,15 +240,21 @@ dataTrans <- function(formula., newdata) {
 #' Properly scale standard deviations depending on the error distribution
 sdFam <- function(x, model, newdata, standardize.type = "observation") {
 
-  .family <- try(family(model), silent = TRUE)
+  family. <- try(family(model), silent = TRUE)
 
-  if(class(.family) == "try-error") .family <- try(model$family, silent = TRUE)
+  if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
 
-  if(class(.family) == "try-error") NA else {
+  if(class(family.) == "try-error" | is.null(family.) & class(model) %in% "lme")
 
-    if(.family$family == "gaussian") sd.y <- sd(newdata[, x], na.rm = TRUE)
+    family. <- list(family = "gaussian", link = "identity")
 
-    if(.family$family == "binomial") sd.y <- sdGLM(model, standardize.type)
+  if(class(family.) == "try-error" | is.null(family.) | class(model) %in% c("glmerMod", "glmmPQL")) sd.y <- NA else {
+
+    if(family.$family == "gaussian") sd.y <- sd(newdata[, x], na.rm = TRUE) else
+
+    if(family.$family == "binomial") sd.y <- sdGLM(model, standardize.type) else
+
+      sd.y <- NA
 
     # ... additional model types here
 
