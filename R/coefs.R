@@ -31,8 +31,8 @@
 #' degrees of freedom, and significance tests.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{KRmodcomp}}
-#' @examples
 #' @export coefs
+#'
 coefs <- function(modelList, standardize = TRUE, standardize.type = "observation", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
