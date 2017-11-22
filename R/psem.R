@@ -1,33 +1,33 @@
 #' Fitting piecewise structural equation models
-#' 
+#'
 #' \code{psem} is used to unite a list of structural equations into a single
 #' structural equation model.
-#' 
+#'
 #' \code{psem} takes a list of structural equations, which can be model objects
 #' of classes: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
 #' merModLmerTest, glmerMod}.
-#' 
+#'
 #' It also takes objects of class \code{formula, formula.cerror}, corresponding
 #' to additional variables to be included in the tests of directed separation
 #' (\code{X ~ 1}) or correlated errors (\code{X1 ~~ X2}).
-#' 
+#'
 #' The function optionally accepts data objects of classes: \code{matrix,
 #' data.frame, SpatialPointsDataFrame, comparative.data}, or these are derived
 #' internally from the structural equations.
-#' 
+#'
 #' @param \dots A list of structural equations.
 #' @param data A \code{data.frame} used to fit the equations.
 #' @return Returns an object of class \code{psem}.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{summary.psem}}, \code{\link{%~~%}}
 #' @examples
-#' 
-#' 
-#' 
+#'
+#'
+#'
 #' @export psem
 psem <- function(..., data) {
 
-  x <- list(...)
+  if(class(...) != "list") x <- list(...)
 
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
@@ -135,7 +135,9 @@ print.psem <- function(x, ...) {
 
   print(data.print)
 
-  cat("\n")
+  cat(paste("...with ", dim(data)[1], " more rows"))
+
+  cat("\n\n")
 
   print(class.print)
 
