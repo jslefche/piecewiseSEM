@@ -4,7 +4,7 @@
 \alias{getVarCov.}
 \title{Get random effects variance-covariance from lme}
 \usage{
-\method{getVarCov}{}(model)
+getVarCov.(model)
 }
 \description{
 Get random effects variance-covariance from lme

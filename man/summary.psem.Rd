@@ -4,7 +4,7 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-summary.psem(object, direction = NULL, conserve = FALSE,
+\method{summary}{psem}(object, direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, intercepts = FALSE,
   standardize = TRUE, standardize.type = "observation",
   .progressBar = TRUE)
@@ -78,12 +78,6 @@ instance, independence claims among exogenous variables. See Details in
 \code{\link{basisSet}}.
 
 Standardized path coefficients are scaled by standard deviations.
-}
-\examples{
-
-
-
-
 }
 \references{
 Shipley, Bill. "A new inferential test for path models based on
