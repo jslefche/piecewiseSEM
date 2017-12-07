@@ -1,5 +1,5 @@
-#' Data set from Keeley et al. 
-#' 
+#' Data set from Keeley et al.
+#'
 #' \itemize{
 #' \item{distance}{Distance to coast}
 #' \item{elev}{Elevation from sea level}
@@ -15,4 +15,3 @@
 #' @docType data
 #' @keywords data
 #' @examples head(keeley)
-"keeley"

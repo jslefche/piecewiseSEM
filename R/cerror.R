@@ -278,7 +278,7 @@ partialResid <- function(formula., modelList, data = NULL) {
 
   data <- modelList$data
 
-  if(is.null(data)) data <- getData.(modelList)
+  if(is.null(data)) data <- GetData(modelList)
 
   modelList <- removeData(modelList, formulas = 1)
 
@@ -298,13 +298,13 @@ partialResid <- function(formula., modelList, data = NULL) {
 
     yresid <- data.frame(.id = names(residModList$ymod), yresid = residModList$ymod) else
 
-      yresid <- data.frame(.id = rownames(getData.(residModList$ymod)), yresid = as.numeric(resid(residModList$ymod))) #resid.lme(ymod)
+      yresid <- data.frame(.id = rownames(GetData(residModList$ymod)), yresid = as.numeric(resid(residModList$ymod))) #resid.lme(ymod)
 
   if(all(class(residModList$xmod) == "numeric"))
 
     xresid <- data.frame(.id = names(residModList$xmod), xresid = residModList$xmod) else
 
-      xresid <- data.frame(.id = rownames(getData.(residModList$xmod)), xresid = as.numeric(resid(residModList$xmod))) #resid.lme(xmod)
+      xresid <- data.frame(.id = rownames(GetData(residModList$xmod)), xresid = as.numeric(resid(residModList$xmod))) #resid.lme(xmod)
 
   rdata <- merge(yresid, xresid, by = ".id", all = TRUE)
 
@@ -323,7 +323,7 @@ partialCorr <- function(formula., modelList, data = NULL) {
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
-  if(is.null(data)) data <- getData.(modelList)
+  if(is.null(data)) data <- GetData(modelList)
 
   modelList <- removeData(modelList, formulas = 1)
 

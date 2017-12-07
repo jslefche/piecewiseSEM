@@ -49,7 +49,7 @@ formatpsem <- function(x) {
 
   } else {
 
-    x$data <- getData.(x)
+    x$data <- GetData(x)
 
   }
 
@@ -129,7 +129,7 @@ print.psem <- function(x, ...) {
 
   } )
 
-  data.print <- if(!is.null(x$data)) head(x$data) else head(getData.(x))
+  data.print <- if(!is.null(x$data)) head(x$data) else head(GetData(x))
 
   class.print <- paste0("class(", class(x), ")")
 

@@ -2,18 +2,24 @@
 % Please edit documentation in R/cerror.R
 \name{cerror}
 \alias{cerror}
-\title{Calculating (partial) correlations}
+\title{Correlated errors}
 \usage{
 cerror(formula., modelList, data = NULL)
 }
 \arguments{
-\item{formula.}{a formula}
+\item{modelList}{A list of structural equations using \code{psem}.}
 
-\item{modelList}{a list of structural equations
-Correlated errors
-
+\item{data}{A \code{data.frame} containing the data used in the list of
+equations.}
+}
+\value{
+Returns a \code{data.frame} containing the (partial) correlation and
+associated significance test.
+}
+\description{
 Calculates partial correlations and partial significance tests.
-
+}
+\details{
 If the variables are exogenous, then the correlated error is the raw
 bivariate correlation.
 
@@ -24,19 +30,7 @@ The significance of the correlated error is conducted using \code{cor.test}
 if the variables are exogenous. Otherwise, a t-statistic is constructed and
 compared to a t-distribution with N - k - 2 degrees of freedom (where N is
 the total number of replicates, and k is the total number of variables
-informing the relationship) to derive a P-value.}
-
-\item{data}{A \code{data.frame} containing the data used in the list of
-equations.}
-
-\item{modelList}{A list of structural equations using \code{psem}.}
-}
-\value{
-Returns a \code{data.frame} containing the (partial) correlation and
-associated significance test.
-}
-\description{
-Calculating (partial) correlations
+informing the relationship) to derive a P-value.
 }
 \examples{
 

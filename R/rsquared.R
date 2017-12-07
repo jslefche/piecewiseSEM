@@ -1,40 +1,40 @@
 #' R-squared for linear regression
-#' 
+#'
 #' Returns (pseudo)-R2 values for all linear, general(ized) linear, and
 #' general(ized) linear mixed effects models.
-#' 
+#'
 #' For mixed models, marginal R2 considers only the variance by the fixed
 #' effects, and the conditional R2 by both the fixed and random effects.
-#' 
+#'
 #' For GLMs (\code{glm}), supported methods include: \itemize{
 #' \item\code{mcfadden} 1 - ratio of likelihoods of full vs. null models
-#' 
+#'
 #' \item\code{coxsnell} McFadden's R2 but raised to 2/N. Upper limit is < 1
-#' 
+#'
 #' \item\code{nagelkerke} Adjust's Cox-Snell R2 so that upper limit = 1. The
 #' DEFAULT method
-#' 
+#'
 #' } For GLMERs fit to Poisson, Gamma, and negative binomial distributions
 #' (\code{glmer}, \code{glmmPQL}, \code{glmer.nb}), supported methods include
 #' \itemize{ \item\code{delta} Approximates the observation variance based on
 #' second-order Taylor series expansion. Can be used with many families and
 #' link functions
-#' 
+#'
 #' \item\code{lognormal} Observation variance is the variance of the log-normal
 #' distribution
-#' 
+#'
 #' \item\code{trigamma} Provides most accurate estimate of the observation
 #' variance but is limited to only the log link. The DEFAULT method
-#' 
+#'
 #' } For GLMERs fit to the binomial distribution (\code{glmer},
 #' \code{glmmPQL}), supported methods include: \itemize{
 #' \item\code{theoretical} Assumes observation variance is pi^2/3
-#' 
+#'
 #' \item\code{delta} Approximates the observation variance as above. The
 #' DEFAULT method
-#' 
+#'
 #' }
-#' 
+#'
 #' @param modelList A regression, or a list of structural equations.
 #' @param method The method used to compute the R2 value (see Details).
 #' @return Returns a \code{data.frame} with the response, its family and link,
@@ -46,7 +46,7 @@
 #' from generalized linear mixed-effects models revisted and expanded." bioRxiv
 #' 095851 (2017).
 #' @examples
-#' 
+#'
 #'   \dontrun{
 #'     # Create data
 #'     dat <- data.frame(
@@ -55,33 +55,33 @@
 #'       x1 = rnorm(100),
 #'       random = letters[1:5]
 #'     )
-#' 
+#'
 #'     # Get R2 for linear model
 #'     rsquared(lm(ynorm ~ x1, dat))
-#' 
+#'
 #'     # Get R2 for generalized linear model
 #'     rsquared(glm(ypois ~ x1, "poisson", dat))
-#' 
+#'
 #'     rsquared(glm(ypois ~ x1, "poisson", dat), method = "mcfadden") # McFadden R2
-#' 
+#'
 #'     # Get R2 for generalized least-squares model
 #'     rsquared(gls(ynorm ~ x1, dat))
-#' 
+#'
 #'     # Get R2 for linear mixed effects model (nlme)
 #'     rsquared(nlme::lme(ynorm ~ x1, random = ~ 1 | random, dat))
-#' 
+#'
 #'     # Get R2 for linear mixed effects model (lme4)
 #'     rsquared(lme4::lmer(ynorm ~ x1 + (1 | random), dat))
-#' 
+#'
 #'     # Get R2 for generalized linear mixed effects model (lme4)
 #'     rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat))
-#' 
+#'
 #'     rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat), method = "delta") # Delta method
-#' 
+#'
 #'     # Get R2 for generalized linear mixed effects model (glmmPQL)
 #'     rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))
 #'   }
-#' 
+#'
 #' @export rsquared
 rsquared <- function(modelList, method = NULL) {
 
@@ -155,7 +155,7 @@ rsquared.lm <- function(model)
 #' R^2 for gls objects
 rsquared.gls <- function(model) {
 
-  X <- model.matrix(eval(model$call$model[-2]), getData.(model))
+  X <- model.matrix(eval(model$call$model[-2]), GetData(model))
 
   sigmaF <- var(as.vector(model$coefficients %*% t(X)))
 
@@ -245,7 +245,7 @@ rsquared.lme <- function(model) {
 
   sigmaF <- var(as.vector(nlme::fixef(model) %*% t(X)))
 
-  sigma <- getVarCov.(model)
+  sigma <- GetVarCov(model)
 
   sigmaL <- sum(sapply(sigma, function(i) {
 
@@ -288,7 +288,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     rand <- rand[!duplicated(rand)]
 
-    data <- getData.(model)
+    data <- GetData(model)
 
     idx <- sapply(strsplit(rand, "\\:"), function(x) {
 
@@ -418,7 +418,7 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
   rand <- rand[!duplicated(rand)]
 
-  data <- getData.(model)
+  data <- GetData(model)
 
   idx <- sapply(strsplit(rand, "\\:"), function(x) {
 
@@ -493,7 +493,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   sigmaL <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
 
-  data <- getData.(model)
+  data <- GetData(model)
 
   if(family. %in% c("poisson", "quasipoisson")) {
 
@@ -505,7 +505,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
         nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasipoisson(link = link), data = data, verbose = FALSE))
 
-    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(getVarCov.(nullmodel)))))
+    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(GetVarCov(nullmodel)))))
 
     if(family. == "poisson") omega <- 1 else omega <- as.numeric(sigma[nrow(sigma), 1])
 
@@ -543,7 +543,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
           nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasibinomial(link = link), data = data, verbose = FALSE))
 
-      vt <- sum(unlist(getVarCov.(nullmodel)))
+      vt <- sum(unlist(GetVarCov(nullmodel)))
 
       pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
                         tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))

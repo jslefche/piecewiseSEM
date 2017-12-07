@@ -4,7 +4,7 @@
 \alias{print.attr}
 \title{Do not print attributes with custom functions}
 \usage{
-\method{print}{attr}(x)
+print.attr(x)
 }
 \description{
 Do not print attributes with custom functions

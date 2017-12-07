@@ -37,7 +37,7 @@ coefs <- function(modelList, standardize = TRUE, standardize.type = "observation
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  if(class(modelList) == "psem") data <- modelList$data else data <- getData.(modelList)
+  if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
 
   if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
 
@@ -64,7 +64,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
-  if(is.null(data)) data <- getData.(modelList)
+  if(is.null(data)) data <- GetData(modelList)
 
   modelList <- removeData(modelList, formulas = 2)
 
@@ -143,7 +143,7 @@ stdCoefs <- function(modelList, data = NULL, standardize.type = "observation", i
 
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
 
-  if(is.null(data)) data <- getData.(modelList)
+  if(is.null(data)) data <- GetData(modelList)
 
   modelList <- removeData(modelList, formulas = 2)
 

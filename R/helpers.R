@@ -149,7 +149,7 @@ getSingleData <- function(model) {
 }
 
 #' Get data from model list
-getData. <- function(modelList) {
+GetData <- function(modelList) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -190,7 +190,7 @@ getData. <- function(modelList) {
 }
 
 #' Get random effects variance-covariance from lme
-getVarCov. <- function(model) {
+GetVarCov <- function(model) {
 
   vc <- try(getVarCov(model), silent = TRUE)
 
@@ -283,7 +283,7 @@ listFormula <- function(modelList, formulas = 0) {
 }
 
 #' Get number of observations from a model
-nobs. <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
+nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
 onlyBars <- function(formula., slopes = TRUE) {
