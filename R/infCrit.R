@@ -10,7 +10,7 @@ infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conse
 
   K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
 
-  n.obs <- min(sapply(modelList, nobs.))
+  n.obs <- min(sapply(modelList, nObs))
 
   pwAIC <- as.numeric(Cstat[1] + 2*K)
 
