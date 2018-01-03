@@ -2,9 +2,9 @@
 #'
 #' Extracts (standardized) path coefficients from a \code{psem} object.
 #'
-#' P-values for models constructed using \code{\link{lme4::lme4}} are obtained
+#' P-values for models constructed using \code{lme4} are obtained
 #' using the Kenward-Roger approximation of the denominator degrees of freedom
-#' as implemented in the \code{\link{pbkrtest::pbkrtest}} package.
+#' as implemented in the \code{pbkrtest} package.
 #'
 #' Different forms of standardization can be implemented using the \code{standardize}
 #' argument:\itemize{
@@ -12,8 +12,9 @@
 #' \item{\code{scale} Raw coefficients are scaled by the ratio of the standard deviation
 #' of x divided by the standard deviation of y. See below for cases pertaining to GLM. }
 #' \item{\code{range} Raw coefficients are scaled by a pre-selected range of x
-#' divided by a preselected range of y. Arguments must a named \code{list} where the
-#' x and y entries each contain a vector of length 2 corresponding to the ranges to be
+#' divided by a preselected range of y. The default argument is \code{range} which takes the
+#' two extremes of the data, otherwise the user must supply must a named \code{list} where
+#' the x and y entries each contain a vector of length 2 corresponding to the ranges to be
 #' used in standardization.}
 #' }
 #'
@@ -48,7 +49,7 @@
 #' @seealso \code{\link{KRmodcomp}}
 #' @export coefs
 #'
-coefs <- function(modelList, standardize = "scale", standardize.type = "observation", intercepts = FALSE) {
+coefs <- function(modelList, standardize = "scale", standardize.type = "Menard.OE", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -58,7 +59,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "observat
 
   if(class(data) %in% c("comparative.data")) data <- data$data
 
-  if(standardize == "none") ret <- stdCoefs(modelList, data, standardize.type, intercepts) else
+  if(all(standardize != "none")) ret <- stdCoefs(modelList, data, standardize, standardize.type, intercepts) else
 
     ret <- unstdCoefs(modelList, data, intercepts)
 
@@ -152,7 +153,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, data = NULL, standardize.type = "observation", intercepts = FALSE) {
+stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "Menard.OE", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
 
@@ -189,23 +190,45 @@ stdCoefs <- function(modelList, data = NULL, standardize.type = "observation", i
 
       B <- subset(ret, Response == f.trans[1])$Estimate
 
-      B.se <- subset(ret, Response == f.trans[1])$Std.Error
+      # B.se <- subset(ret, Response == f.trans[1])$Std.Error
 
-      sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE))
+      if(all(standardize == "scale")) {
 
-      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, sdInt(j, newdata.))
+        sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE))
 
-      sd.y <- sdFam(f.notrans[1], j, newdata., standardize.type)
+        if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata.))
 
-      if(intercepts == FALSE)
+        sd.y <- scaleFam(f.notrans[1], j, newdata., standardize, standardize.type)
 
-        data.frame(Std.Estimate = B * (sd.x / sd.y), Std.SE = B.se * (sd.x / sd.y)) else
+      } else {
 
-          data.frame(Std.Estimate = c(0, B[-1] * (sd.x / sd.y)), Std.SE = c(0, B.se[-1] * (sd.x / sd.y)))
+        if(all(standardize == "range")) {
+
+          sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata.[, x], na.rm = TRUE)))
+
+          if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata.))
+
+          sd.y <- diff(range(newdata.[, f.notrans[1]], na.rm = TRUE))
+
+        } else if(is.list(standardize)) {
+
+          sd.x <- diff(range(standardize[["x"]]))
+
+          sd.y <- diff(range(standardize[["y"]]))
+
+          } else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
 
       }
 
-  } ) )
+      if(intercepts == FALSE)
+
+        data.frame(Std.Estimate = B * (sd.x / sd.y)) else
+
+          data.frame(Std.Estimate = c(0, B[-1] * (sd.x / sd.y)))
+
+      }
+
+    } ) )
 
   ret <- data.frame(ret, Bnew)
 
@@ -253,7 +276,7 @@ dataTrans <- function(formula., newdata) {
 }
 
 #' Properly scale standard deviations depending on the error distribution
-sdFam <- function(x, model, newdata, standardize.type = "observation") {
+scaleFam <- function(x, model, newdata, standardize = "scale", standardize.type = "observation") {
 
   family. <- try(family(model), silent = TRUE)
 
@@ -267,7 +290,7 @@ sdFam <- function(x, model, newdata, standardize.type = "observation") {
 
     if(family.$family == "gaussian") sd.y <- sd(newdata[, x], na.rm = TRUE) else
 
-    if(family.$family == "binomial") sd.y <- sdGLM(model, standardize.type) else
+    if(family.$family == "binomial") sd.y <- scaleGLM(model, standardize, standardize.type) else
 
       sd.y <- NA
 
@@ -279,12 +302,12 @@ sdFam <- function(x, model, newdata, standardize.type = "observation") {
 
 }
 
-#' Compute standard deviation of response for GLMs
-sdGLM <- function(model, standardize.type = "observation") {
+#' Compute standard deviation or relevant range of response for GLMs
+scaleGLM <- function(model, standardize = "scale", standardize.type = "Menard.OE") {
 
   preds <- predict(model, type = "link")
 
-  if(standardize.type == "observation") {
+  if(standardize.type == "Menard.OE") {
 
     y <- all.vars.notrans(model)[1]
 
@@ -296,7 +319,7 @@ sdGLM <- function(model, standardize.type = "observation") {
 
   }
 
-  if(standardize.type == "latent") {
+  if(standardize.type == "latent.linear") {
 
     link. <- family(model)$link
 
@@ -308,12 +331,14 @@ sdGLM <- function(model, standardize.type = "observation") {
 
   }
 
+  if(standardize == "range") sd.y <- sd.y * 6
+
   return(sd.y)
 
 }
 
-#' Calculate standard deviations for interactions
-sdInt <- function(model, newdata) {
+#' Calculate standard deviation or relevant range for interaction terms
+scaleInt <- function(model, newdata) {
 
   v <- attr(terms(model), "term.labels")
 
@@ -325,7 +350,11 @@ sdInt <- function(model, newdata) {
 
     x <- gsub("(.*) \\+.*", "\\1", gsub(".*\\((.*)\\)", "\\1", x))
 
-    sd(apply(newdata[, x], 1, prod, na.rm = TRUE))
+    p <- apply(newdata[, x], 1, prod, na.rm = TRUE)
+
+    if(standardize == "scale") sd(p) else if(standardize == "range")
+
+      diff(range(p, na.rm = TRUE))
 
   } )
 
