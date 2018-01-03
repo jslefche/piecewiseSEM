@@ -4,7 +4,7 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-\method{summary}{psem}(object, direction = NULL, conserve = FALSE,
+summary.psem(object, direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, intercepts = FALSE,
   standardize = TRUE, standardize.type = "observation",
   .progressBar = TRUE)

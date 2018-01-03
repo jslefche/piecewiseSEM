@@ -17,7 +17,7 @@ merModLmerTest, glmerMod}.
 }
 \details{
 \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-\tab 2.0.0\cr Date: \tab 2017-11-22\cr Depends: \tab R (3.4), nlme,
+\tab 2.0.0\cr Date: \tab 2017-12-07\cr Depends: \tab R (>= 3.4.1), nlme,
 pbkrtest\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr } The primary
 functions in the package are \code{\link{psem}} which unites structural
 equations in a single model. \code{summary.psem} can be used on an object of

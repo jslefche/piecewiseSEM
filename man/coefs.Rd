@@ -4,17 +4,17 @@
 \alias{coefs}
 \title{Extract path coefficients}
 \usage{
-coefs(modelList, standardize = TRUE, standardize.type = "observation",
+coefs(modelList, standardize = "scale", standardize.type = "Menard.OE",
   intercepts = FALSE)
 }
 \arguments{
 \item{modelList}{A list of structural equations.}
 
-\item{standardize}{Whether standardized coefficients should be reported.
-Default is TRUE.}
+\item{standardize}{The type of standardization: \code{none}, \code{scale}, \code{range}.
+Default is \code{scale}.}
 
-\item{standardize.type}{The type of standardized for non-Gaussian responses.
-Current options are \code{latent} or \code{observation}. Default is \code{observation}.}
+\item{standardize.type}{The type of standardized for non-Gaussian responses:
+\code{latent.linear}, \code{Menard.OE}. Default is \code{Menard.OE}.}
 
 \item{intercepts}{Whether intercepts should be included in the coefficients
 table. Default is FALSE.}
@@ -27,27 +27,45 @@ degrees of freedom, and significance tests.
 Extracts (standardized) path coefficients from a \code{psem} object.
 }
 \details{
-P-values for models constructed using \code{\link{lme4::lme4}} are obtained
+P-values for models constructed using \code{lme4} are obtained
 using the Kenward-Roger approximation of the denominator degrees of freedom
-as implemented in the \code{\link{pbkrtest::pbkrtest}} package.
+as implemented in the \code{pbkrtest} package.
 
-Standardized coefficients are obtained by multiplying the parameter estimates
-by the ratio of the standard deviation of x over the standard deviation of y.
+Different forms of standardization can be implemented using the \code{standardize}
+argument:\itemize{
+\item{\code{none} No standardized coefficients are reported.}
+\item{\code{scale} Raw coefficients are scaled by the ratio of the standard deviation
+of x divided by the standard deviation of y. See below for cases pertaining to GLM. }
+\item{\code{range} Raw coefficients are scaled by a pre-selected range of x
+divided by a preselected range of y. The default argument is \code{range} which takes the
+two extremes of the data, otherwise the user must supply must a named \code{list} where
+the x and y entries each contain a vector of length 2 corresponding to the ranges to be
+used in standardization.}
+}
 
 For binary response models (i.e., binomial responses), standardized coefficients
 are obtained in one of two ways:\itemize{
-\item{\code{latent} the latent theoretic approach,
-which is the square-root of the variance of the predictions (on the linear or
-'link' scale) plus the distribution-specific variation (for logit links: pi^2/3, for
-probit links: 1).}
-\item{\code{observation} the observation error approach, where the square-root of the
-variance of the predictions (on the linear scale) are divided by the correlation
-between the observed and predicted (on th original or 'response' scale) values of y. }
+\item{\code{latent.linear} Referred to in Grace et al. (in review) as the standard form of
+the latent-theoretic (LT) approach. In this method, there is assumed to be a continuous
+latent propensity, y*, that underlies the observed binary responses. The standard
+deviation of y* is computed as the square-root of the variance of the predictions
+(on the linear or 'link' scale) plus the distribution-specific assumed variance
+(for logit links: pi^2/3, for probit links: 1).}
+\item{\code{Menard.OE} Referred to in Grace et al. (in review) as the standard form of
+the observed-empirical (OE) approach. In this method, error variance is based on the
+differences between predicted scores and the observed binary data. The standard
+deviation used for standardization is computed as the square-root of the variance of
+the predictions (on the linear scale) plus the correlation between the observed and
+predicted (on the original or 'response' scale) values of y.}
 }
+}
+\references{
+Grace, J.B., Johnson, D.A., Lefcheck, J., and Byrnes, J.E. in review.
+Standardized Coefficients in Regression and Structural Models with Binary Outcomes.
 }
 \seealso{
 \code{\link{KRmodcomp}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <jlefcheck@bigelow.org>, Jim Grace
 }
