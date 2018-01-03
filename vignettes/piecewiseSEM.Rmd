@@ -197,7 +197,7 @@ relrange.y <- 0.6-0.3
 B.relrange <- B * relrange.x/relrange.y
 
 # Compare to automated calculation
-coefs(model, standardize = list(x = c(0.1, 0.8), y = c(0.3, 0.6)))
+coefs(model, standardize = list(x1 = c(0.1, 0.8), y = c(0.3, 0.6)))
 
 B.relrange
 ```

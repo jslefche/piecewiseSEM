@@ -202,15 +202,21 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
               if(is.list(standardize))
 
-                sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
+                if(!all(names(standardize) %in% f.notrans[!grepl(":", f.notrans)][-1])) {
 
-                  nm <- which(names(standardize) == x)
+                  stop("Names in standardize list must match those in the model formula!")
 
-                  if(is.na(nm)) diff(range(newdata.[, x], na.rm = TRUE)) else
+                  sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
 
-                    diff(range(standardize[[nm]]))
+                    nm <- which(names(standardize) == x)
 
-                } ) else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
+                    if(sum(nm) == 0) diff(range(newdata.[, x], na.rm = TRUE)) else
+
+                      diff(range(standardize[[nm]]))
+
+                    } )
+
+                } else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
 
       if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, sdInt(j, newdata.))
 
@@ -290,13 +296,13 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
 
         if(standardize == "scale") sd.y <- sd(newdata[, y], na.rm = TRUE) else
 
-          if(standardize == "range") sd.y <- diff(range(newdata.[, y], na.rm = TRUE)) else
+          if(standardize == "range") sd.y <- diff(range(newdata[, y], na.rm = TRUE)) else
 
             if(is.list(standardize)) {
 
               nm <- which(names(standardize) == y)
 
-              if(is.na(nm)) diff(range(newdata.[, y], na.rm = TRUE)) else
+              if(sum(nm) == 0) diff(range(newdata[, y], na.rm = TRUE)) else
 
                 diff(range(standardize[[nm]]))
 
