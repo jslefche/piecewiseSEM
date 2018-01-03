@@ -101,12 +101,6 @@ Standardization of model coefficients is useful for making comparisons about the
 #### 2.2.1 The null example: no standardization
 
 Let's first create an example dataset:
-```{r, message = FALSE}
-devtools::install_github("jslefche/piecewiseSEM@2.0", vignette = TRUE)
-# Load required library
-library(piecewiseSEM)
-```
-
 ```{r}
 # Create fake data.frame
 coefs.data <- data.frame(
