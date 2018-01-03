@@ -14,8 +14,8 @@
 #' \item{\code{range} Raw coefficients are scaled by a pre-selected range of x
 #' divided by a preselected range of y. The default argument is \code{range} which takes the
 #' two extremes of the data, otherwise the user must supply must a named \code{list} where
-#' the x and y entries each contain a vector of length 2 corresponding to the ranges to be
-#' used in standardization.}
+#' the names are the variables to be standardized, and each entry contains a vector of length 2
+#' to the ranges to be used in standardization.}
 #' }
 #'
 #' For binary response models (i.e., binomial responses), standardized coefficients
@@ -44,7 +44,7 @@
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
 #' degrees of freedom, and significance tests.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>, Jim Grace
-#' @references Grace, J.B., Johnson, D.A., Lefcheck, J., and Byrnes, J.E. in review.
+#' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E. in review.
 #' Standardized Coefficients in Regression and Structural Models with Binary Outcomes.
 #' @seealso \code{\link{KRmodcomp}}
 #' @export coefs
@@ -192,33 +192,29 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
       # B.se <- subset(ret, Response == f.trans[1])$Std.Error
 
-      if(all(standardize == "scale")) {
+      if(all(standardize == "scale"))
 
-        sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE))
+        sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE)) else
 
-        if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata.))
+          if(all(standardize == "range"))
 
-        sd.y <- scaleFam(f.notrans[1], j, newdata., standardize, standardize.type)
+            sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata.[, x], na.rm = TRUE))) else
 
-      } else {
+              if(is.list(standardize))
 
-        if(all(standardize == "range")) {
+                sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
 
-          sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata.[, x], na.rm = TRUE)))
+                  nm <- which(names(standardize) == x)
 
-          if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata.))
+                  if(is.na(nm)) diff(range(newdata.[, x], na.rm = TRUE)) else
 
-          sd.y <- diff(range(newdata.[, f.notrans[1]], na.rm = TRUE))
+                    diff(range(standardize[[nm]]))
 
-        } else if(is.list(standardize)) {
+                } ) else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
 
-          sd.x <- diff(range(standardize[["x"]]))
+      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, sdInt(j, newdata.))
 
-          sd.y <- diff(range(standardize[["y"]]))
-
-          } else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
-
-      }
+      sd.y <- scaleFam(f.notrans[1], j, newdata., standardize, standardize.type)
 
       if(intercepts == FALSE)
 
@@ -276,7 +272,7 @@ dataTrans <- function(formula., newdata) {
 }
 
 #' Properly scale standard deviations depending on the error distribution
-scaleFam <- function(x, model, newdata, standardize = "scale", standardize.type = "observation") {
+scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type = "Menard.OE") {
 
   family. <- try(family(model), silent = TRUE)
 
@@ -286,17 +282,33 @@ scaleFam <- function(x, model, newdata, standardize = "scale", standardize.type 
 
     family. <- list(family = "gaussian", link = "identity")
 
-  if(class(family.) == "try-error" | is.null(family.) | any(class(model) %in% c("glmerMod", "glmmPQL"))) sd.y <- NA else {
+  if(class(family.) == "try-error" | is.null(family.) | any(class(model) %in% c("glmerMod", "glmmPQL")))
 
-    if(family.$family == "gaussian") sd.y <- sd(newdata[, x], na.rm = TRUE) else
+    sd.y <- NA else {
 
-    if(family.$family == "binomial") sd.y <- scaleGLM(model, standardize, standardize.type) else
+      if(family.$family == "gaussian") {
 
-      sd.y <- NA
+        if(standardize == "scale") sd.y <- sd(newdata[, y], na.rm = TRUE) else
 
-    # ... additional model types here
+          if(standardize == "range") sd.y <- diff(range(newdata.[, y], na.rm = TRUE)) else
 
-  }
+            if(is.list(standardize)) {
+
+              nm <- which(names(standardize) == y)
+
+              if(is.na(nm)) diff(range(newdata.[, y], na.rm = TRUE)) else
+
+                diff(range(standardize[[nm]]))
+
+            }
+
+          } else if(family.$family == "binomial")
+
+              sd.y <- scaleGLM(model, standardize, standardize.type) else
+
+                sd.y <- NA
+
+    }
 
   return(sd.y)
 
