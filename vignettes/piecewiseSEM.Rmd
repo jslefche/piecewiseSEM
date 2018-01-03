@@ -96,95 +96,160 @@ It shows the call of the model (the component equations), the AIC and BIC scores
 
 ### 2.2 Standardized coefficients
 
-Standardized coefficients are automatically calculated by multiplying the path coefficients $\beta$ and multiplying by the ratio of the standard deviations of x and y:
+Standardization of model coefficients is useful for making comparisons about the relative strengths of predictors in a multiple regression. In a network approach, it allows effects to also be compared across multiple responses. Standardized coefficients are also necessary for the calculation of indirect and total effects (because predictors may occur on wildly different scales). Because of their utility, a variety of approaches to coefficient standardization have been proposed, many of which are implemented here. 
 
-  $$\beta_{std} = \beta*\left( \frac{sd_x}{sd_y} \right)$$
+#### 2.2.1 The null example: no standardization
 
-Performing this exercise manually generates the same standardized coefficients as the function `coefs`:
+Let's first create an example dataset:
+```{r, message = FALSE}
+devtools::install_github("jslefche/piecewiseSEM@2.0", vignette = TRUE)
+# Load required library
+library(piecewiseSEM)
+```
 
 ```{r}
-# Create model from example data
-lm.mod <- lm(y1 ~ x1 + y2, dat)
-# Extract coefficients
-coefs(lm.mod)
-# Compute standardized coefficient from Beta and raw data, and compare to coefs output
-coef(lm.mod)[2] * (sd(dat$x1)/sd(dat$y1))
+# Create fake data.frame
+coefs.data <- data.frame(
+  y = runif(100),
+  x1 = runif(100),
+  x2 = runif(100)
+)
+
+# Evaluate linear model
+model <- lm(y ~ x1, coefs.data)
 ```
+
+The function for returning coefficients in *piecewiseSEM* is `coefs`.
+
+While standardization is useful, it may be unnecessary or unwanted in certain circumstances. In these cases, one can specify `standardize = "none"` as an argument to `coefs`, which will return the raw (unstandardized) coefficients.
+
+```{r}
+coefs(model, standardize = "none")
+
+# These coefficients are identical to those returned by summmary
+summary(model)$coefficients
+```
+
+To return the intercepts using `coefs`, specify the `intercepts = TRUE` argument:
+```{r}
+coefs(model, standardize = "none", intercepts = TRUE)
+```
+
+#### 2.2.2 Standardization: scaling by standard deviations
+
+The most typical implementation of standardization is placing the coefficients in units of standard deviations of the mean. This is accomplished by scaling the coefficients $\beta$ by the ratio of the standard deviation of x over the standard deviation of y:
+
+  $$\beta_{std} = \beta*\left( \frac{sd_x}{sd_y} \right)$$
+We can do this manually for our example dataset:
+```{r}
+# Obtain the raw coefficient from the coefficient table
+B <- summary(model)$coefficients[2, 1]
+
+# Compute the standard deviation of the independent variable
+sd.x <- sd(coefs.data$x1)
+
+# Compute the standard deviation of the dependent variable
+sd.y <- sd(coefs.data$y)
+
+# Scale Beta
+B.sdscaled <- B * sd.x/sd.y
+
+```
+
+The argument for standardization based on standard deviations is `standardize = "scale"`:
+```{r}
+coefs(model, standardize = "scale")
+
+# Compare to hand-calculated value
+B.sdscaled
+```
+
+Note that the `coefs` function will return both standardized and unstandardized coefficients when specifying any argument other than `standardize = "none"`.
+
+#### 2.2.3 Standardization: scaling by relevant ranges
+
+Instead of scaling by the ratio of the standard deviations, one can scale by the 'relevant' range of the data.
+
+The default range standardization considers the full range of variation exhibited by the data. We can again compute the range standardization by hand:
+```{r}
+# Calculate range for the independent variable
+range.x <- diff(range(coefs.data$x1))
+
+# Calculate range for the independent variable
+range.y <- diff(range(coefs.data$y))
+
+# Scale Beta
+B.range <- B * range.x/range.y
+
+```
+
+The argument for standardization based on ranges is `standardize = "range"`:
+```{r}
+coefs(model, standardize = "range")
+
+# Compare to hand-calculated value
+B.range
+```
+
+If one does not wish to use the full range of the data, and instead restrict the range to a more 'relevant' subset of the data, this can be accomplished by providing a named `list` to the `standardize =` argument. The names should be `x` and `y` and each entry should be a `vector` of length 2 with the first entry being the minimum and the second entry being the maximum values of the relevant range.
+```{r}
+# Consider the range 0.1 - 0.8 for x
+relrange.x <- 0.8-0.1
+
+# Consider the range 0.3-0.6 for y
+relrange.y <- 0.6-0.3
+
+# Scale Beta
+B.relrange <- B * relrange.x/relrange.y
+
+# Compare to automated calculation
+coefs(model, standardize = list(x = c(0.1, 0.8), y = c(0.3, 0.6)))
+
+B.relrange
+```
+
+#### 2.2.4 Standardization for Binary Response Models
 
 For generalized linear models, the response variables are inherently non-linear. The common solution is to apply a link function to linearize the response, and derive the parameter estimate $\beta$ on this new linear (link) scale. Common link functions include logit and probit for binary responses, and log for Poisson, although many others exist.
 
 This transformation, however, means that the modeled response is not actually observed, and thus the true error is not known. Obtaining the standard deviation of the response used in the calculation of standardized coefficients requires further assumptions about the distribution-specific variance. 
 
-In version 2.0, we implement two solutions for obtaining the error variance to produce standardized coefficients for GLM, focusing for the moment on binary response models: the latent theoretic and the observation error approach.
+We implement two solutions for obtaining the error variance to produce standardized coefficients for GLM, focusing for the moment on binary response models: the latent theoretic (`standardize.type = "latent.linear"`) and the observation error approach (`standardize.type = "Menard.OE"`).
 
-In the latent theoretic approach, we assume a fixed error variance for the binomial distribution based on the link function: for logit, it is $\pi$^2/3 and for the probit, it is 1. This value is added to the predicted fits on the linear (link) scale and then the square-root of the variance of these values is taken to obtain the standard deviation.
+In the latent theoretic approach, we assume a fixed error variance for the binomial distribution based on the link function: for logit, it is $\pi$^2/3 and for the probit, it is 1. This value is added to the predicted fits on the linear (link) scale and then the square-root of the variance of these values is taken to obtain the standard deviation of y.
 
-In the observation error approach, a rough estimate of the error variance is obtained through the calculation of a pseudo-R^2, which is simply the correlation between the observed and predicted fits (in this case, in the original units). The error variance is again added to the variance of the predicted fits and the square-root is taken to obtain the standard deviation.
+In the observation error approach, a rough estimate of the error variance is obtained through the calculation of a pseudo-R^2, which is simply the correlation between the observed and predicted fits (in this case, in the original units). The error variance is again added to the variance of the predicted fits and the square-root is taken to obtain the standard deviation of y.
 
 Let's work through a simple example where we first compute the standardized coefficient by hand, then compare to the output of `piecewiseSEM`:
 
-```{r}
-# Create fake binomial data
-binom.data <- data.frame(y = rbinom(100, 1, 0.5))
-
-binom.data$x <- binom.data$y + runif(100, 0, 5)
+```{r, warning = FALSE, message = FALSE}
+# Create fake binomial response
+coefs.data$y.binom <- rbinom(100, 1, 0.5)
 
 # Fit using GLM
-glm.mod <- glm(y ~ x, "binomial", binom.data)
+glm.model <- glm(y ~ x1, "binomial", coefs.data)
 
 # Extract linear beta
-Beta <- summary(glm.mod)$coefficients[2, 1]
+Beta.glm <- summary(glm.model)$coefficients[2, 1]
 ```
 
-And apply the latent theoretic approach:
+And apply the latent theoretic (`standardize.type = "latent.linear"`) approach:
 ```{r}
 # Extract predicted values on the link scale
-preds <- predict(glm.mod, type = "link")
+preds <- predict(glm.model, type = "link")
 
 # Compute sd of error variance using theoretical variances
 sd.y.LT <- sqrt(var(preds) + pi^2/3)
 
 # Compute sd of x
-sd.x <- sd(binom.data$x)
+sd.x <- sd(coefs.data$x1)
 
-# Get standardized coefficient
-Beta * sd.x / sd.y.LT
+# Compare to automated output
+coefs(glm.model, standardize.type = "latent.linear")
 
-# Compare to piecewiseSEM output
-coefs(glm.mod, standardize.type = "latent")
+Beta.glm * sd.x / sd.y.LT
 
 ```
-You will note that the `coefs` function has an argument `standardize.type` that currently accepts either the `'latent'` or `'observation'` values.
-
-This approach also works for probit links:
-```{r}
-glm.mod2 <- update(glm.mod, family = binomial(link = "probit"))
-
-Beta2 <- summary(glm.mod2)$coefficients[2, 1]
-
-preds2 <- predict(glm.mod2, type = "link")
-
-sd.y.LT2 <- sqrt(var(preds2) + 1)
-
-Beta2 * sd.x / sd.y.LT2
-
-coefs(glm.mod2, standardize.type = "latent")
-```
-
-To conduct the observation error approach:
-```{r}
-# Compute R based on correlation between predicted and observed
-R <- cor(binom.data$y, predict(glm.mod, type = "response"))
-
-sd.y.OE <- sqrt(var(preds)) / R
-
-# Get standardized coefficient
-Beta * sd.x / sd.y.OE
-
-# Compare to piecewiseSEM output
-coefs(glm.mod, standardize.type = "observation")
-```
-At the moment, standardized coefficients for GLMs are only obtainable for binary responses, and for fixed-effect only models. In the future, we hope to extend this technique to additional responses and hierarchical models.
 
 ### 2.3 GLMs in pSEM
 
