@@ -200,21 +200,21 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
             sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata.[, x], na.rm = TRUE))) else
 
-              if(is.list(standardize))
+              if(is.list(standardize)) {
 
-                if(!all(names(standardize) %in% f.notrans[!grepl(":", f.notrans)][-1])) {
+                if(!all(names(standardize) %in% f.notrans[!grepl(":", f.notrans)]))
 
                   stop("Names in standardize list must match those in the model formula!")
 
-                  sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
+                sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
 
-                    nm <- which(names(standardize) == x)
+                nm <- which(names(standardize) == x)
 
-                    if(sum(nm) == 0) diff(range(newdata.[, x], na.rm = TRUE)) else
+                if(sum(nm) == 0) diff(range(newdata.[, x], na.rm = TRUE)) else
 
-                      diff(range(standardize[[nm]]))
+                  diff(range(standardize[[nm]]))
 
-                    } )
+                } )
 
                 } else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
 
@@ -294,9 +294,9 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
 
       if(family.$family == "gaussian") {
 
-        if(standardize == "scale") sd.y <- sd(newdata[, y], na.rm = TRUE) else
+        if(all(standardize == "scale")) sd.y <- sd(newdata[, y], na.rm = TRUE) else
 
-          if(standardize == "range") sd.y <- diff(range(newdata[, y], na.rm = TRUE)) else
+          if(all(standardize == "range")) sd.y <- diff(range(newdata[, y], na.rm = TRUE)) else
 
             if(is.list(standardize)) {
 
@@ -304,7 +304,7 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
 
               if(sum(nm) == 0) diff(range(newdata[, y], na.rm = TRUE)) else
 
-                diff(range(standardize[[nm]]))
+                sd.y <- diff(range(standardize[[nm]]))
 
             }
 
@@ -349,7 +349,7 @@ scaleGLM <- function(model, standardize = "scale", standardize.type = "Menard.OE
 
   }
 
-  if(standardize == "range") sd.y <- sd.y * 6
+  if(all(standardize == "range")) sd.y <- sd.y * 6
 
   return(sd.y)
 
