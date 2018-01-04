@@ -129,7 +129,14 @@ rsquared <- function(modelList, method = NULL) {
 
       if(ncol(i) == nc) i else {
 
-        data.frame(i[, 1:3], Marginal = i[, 4], Conditional = NA)
+        data.frame(
+          Response = i$Response,
+          family = i$family,
+          link = i$link,
+          method = i$method,
+          Marginal = i$R.squared,
+          Conditional = NA
+        )
 
       }
 
@@ -150,7 +157,7 @@ rsquared <- function(modelList, method = NULL) {
 #' R^2 for lm objects
 rsquared.lm <- function(model)
 
-  list(family = "gaussian", link = "identity", method = NA, R.squared = summary(model)$r.squared)
+  list(family = "gaussian", link = "identity", method = "none", R.squared = summary(model)$r.squared)
 
 #' R^2 for gls objects
 rsquared.gls <- function(model) {
@@ -161,7 +168,7 @@ rsquared.gls <- function(model) {
 
   sigmaE <- var(resid(model))
 
-  list(family = "gaussian", link = "identity", method = NA, R.squared = sigmaF / (sigmaF + sigmaE))
+  list(family = "gaussian", link = "identity", method = "none", R.squared = sigmaF / (sigmaF + sigmaE))
 
 }
 
@@ -205,7 +212,7 @@ rsquared.phylolm <- function(model) {
 
   link <- ifelse(class(model) == "phylolm", "identity", "?")
 
-  list(family = family., link = NA, method = NA, R.squared = NA)
+  list(family = family., link = NA, method = "none", R.squared = NA)
 
 }
 
@@ -234,7 +241,7 @@ rsquared.merMod <- function(model) {
 
   con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
-  list(family = "gaussian", link = "identity", method = NA, Marginal = mar, Conditional = con)
+  list(family = "gaussian", link = "identity", method = "none", Marginal = mar, Conditional = con)
 
 }
 
@@ -261,7 +268,7 @@ rsquared.lme <- function(model) {
 
   con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
 
-  list(family = "gaussian", link = "identity", method = NA, Marginal = mar, Conditional = con)
+  list(family = "gaussian", link = "identity", method = "none", Marginal = mar, Conditional = con)
 
 }
 
