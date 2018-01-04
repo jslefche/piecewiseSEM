@@ -215,9 +215,9 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
                 } )
 
-                } else stop("`standardize` must be either 'none', 'scale', or 'range' (or a list of ranges).")
+                } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).")
 
-      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, sdInt(j, newdata.))
+      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata., standardize))
 
       sd.y <- scaleFam(f.notrans[1], j, newdata., standardize, standardize.type)
 
@@ -355,7 +355,7 @@ scaleGLM <- function(model, standardize = "scale", standardize.type = "Menard.OE
 }
 
 #' Calculate standard deviation or relevant range for interaction terms
-scaleInt <- function(model, newdata) {
+scaleInt <- function(model, newdata, standardize) {
 
   v <- attr(terms(model), "term.labels")
 
