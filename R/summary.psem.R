@@ -76,7 +76,8 @@
 summary.psem <- function(object,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
-                         intercepts = FALSE, standardize = TRUE, standardize.type = "observation",
+                         standardize = "scale", standardize.type = "Menard.OE",
+                         intercepts = FALSE,
                          .progressBar = TRUE) {
 
   name <- deparse(substitute(object))

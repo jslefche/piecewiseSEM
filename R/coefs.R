@@ -179,8 +179,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
-      data.frame(Std.Estimate = subset(ret, Response == paste0("~~", f.trans[1]) & Predictor == paste0("~~", f.trans[2]))$Estimate,
-                 Std.SE = NA)
+      data.frame(Std.Estimate = subset(ret, Response == paste0("~~", f.trans[1]) & Predictor == paste0("~~", f.trans[2]))$Estimate)
 
     } else {
 
