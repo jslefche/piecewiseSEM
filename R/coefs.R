@@ -38,7 +38,7 @@
 #' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
 #' Default is \code{scale}.
 #' @param standardize.type The type of standardized for non-Gaussian responses:
-#' \code{latent.linear}, \code{Menard.OE}. Default is \code{Menard.OE}.
+#' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
 #' @param intercepts Whether intercepts should be included in the coefficients
 #' table. Default is FALSE.
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
@@ -49,7 +49,7 @@
 #' @seealso \code{\link{KRmodcomp}}
 #' @export coefs
 #'
-coefs <- function(modelList, standardize = "scale", standardize.type = "Menard.OE", intercepts = FALSE) {
+coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -153,7 +153,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 }
 
 #' Calculate standardized regression coefficients
-stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "Menard.OE", intercepts = FALSE) {
+stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
 
@@ -207,15 +207,19 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
                 sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
 
-                nm <- which(names(standardize) == x)
-
-                if(sum(nm) == 0) diff(range(newdata.[, x], na.rm = TRUE)) else
-
-                  diff(range(standardize[[nm]]))
+                  nm <- which(names(standardize) == x)
+  
+                  if(sum(nm) == 0) {
+                    
+                    warning(paste0("Relevant range not specified for variable '", x, "'. Using observed range instead"), call. = FALSE)
+                    
+                    diff(range(newdata.[, x], na.rm = TRUE)) 
+                    
+                    } else  diff(range(standardize[[nm]]))
 
                 } )
 
-                } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).")
+                } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
 
       if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata., standardize))
 
@@ -277,7 +281,7 @@ dataTrans <- function(formula., newdata) {
 }
 
 #' Properly scale standard deviations depending on the error distribution
-scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type = "Menard.OE") {
+scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type = "latent.linear") {
 
   family. <- try(family(model), silent = TRUE)
 
@@ -300,11 +304,15 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
             if(is.list(standardize)) {
 
               nm <- which(names(standardize) == y)
-
-              if(sum(nm) == 0) diff(range(newdata[, y], na.rm = TRUE)) else
-
-                sd.y <- diff(range(standardize[[nm]]))
-
+              
+              if(sum(nm) == 0) {
+                
+                warning(paste0("Relevant range not specified for variable '", x, "'. Using observed range instead"), call. = FALSE)
+                
+                diff(range(newdata.[, x], na.rm = TRUE)) 
+                
+              } else diff(range(standardize[[nm]]))
+              
             }
 
           } else if(family.$family == "binomial")
@@ -320,7 +328,7 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
 }
 
 #' Compute standard deviation or relevant range of response for GLMs
-scaleGLM <- function(model, standardize = "scale", standardize.type = "Menard.OE") {
+scaleGLM <- function(model, standardize = "scale", standardize.type = "latent.linear") {
 
   preds <- predict(model, type = "link")
 
@@ -348,7 +356,7 @@ scaleGLM <- function(model, standardize = "scale", standardize.type = "Menard.OE
 
   }
 
-  if(all(standardize == "range")) sd.y <- sd.y * 6
+  if(all(standardize == "range") | is.list(standardize)) sd.y <- sd.y * 6
 
   return(sd.y)
 
