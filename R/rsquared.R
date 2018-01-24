@@ -297,7 +297,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     data <- GetData(model)
 
-    idx <- sapply(strsplit(rand, "\\:"), function(x) {
+    idx <- sapply(sapply(strsplit(rand, "\\:"), function(x) gsub("\\(|\\)", "", x)), function(x) {
 
       length(unique(data[, x])) == nrow(data)
 
