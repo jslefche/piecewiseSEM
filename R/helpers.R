@@ -84,6 +84,47 @@ findbars.lme <- function(model) {
 
 }
 
+#' Get data from model list
+GetData <- function(modelList) {
+  
+  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
+  
+  modelList <- removeData(modelList, formulas = 1)
+  
+  data.list <- lapply(modelList, getSingleData)
+  
+  if(all(sapply(data.list, class) == "comparative.data"))
+    
+    data <- data.list[[1]] else {
+      
+      data.list <- data.list[order(sapply(data.list, nrow))]
+      
+      if(length(data.list) > 1) {
+        
+        match.by <- unlist(sapply(data.list, names))
+        
+        match.by <- match.by[!duplicated(match.by)]
+        
+        data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
+        
+        data <- Reduce(function(...) merge(..., all=T), data.list)
+        
+      } else data <- data.list[[1]]
+      
+      data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
+      
+      colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+      
+      data <- as.data.frame(data)
+      
+    }
+  
+  rownames(data) <- 1:nrow(data)
+  
+  return(data)
+  
+}
+
 #' Get data from one model
 getSingleData <- function(model) {
 
@@ -148,45 +189,48 @@ getSingleData <- function(model) {
 
 }
 
-#' Get data from model list
-GetData <- function(modelList) {
-
-  if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
-
-  modelList <- removeData(modelList, formulas = 1)
-
-  data.list <- lapply(modelList, getSingleData)
-
-  if(all(sapply(data.list, class) == "comparative.data"))
-
-    data <- data.list[[1]] else {
-
-      data.list <- data.list[order(sapply(data.list, nrow))]
-
-      if(length(data.list) > 1) {
-
-        match.by <- unlist(sapply(data.list, names))
-
-        match.by <- match.by[!duplicated(match.by)]
-
-        data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
-
-        data <- Reduce(function(...) merge(..., all=T), data.list)
-
-        } else data <- data.list[[1]]
-
-        data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
-
-        colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
-
-        data <- as.data.frame(data)
-
+#' Obtain (observation-level) random effects from a generalized linear mixed model
+getOLRE <- function(sigma, model, data, OLRE = FALSE) {
+  
+  if(class(model) %in% c("lmerMod", "glmerMod")) {
+    
+    rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
+    
+    rand <- rand[!duplicated(rand)] } else
+      
+      if(class(model) %in% c()) {
+        
+        
       }
-
-  rownames(data) <- 1:nrow(data)
-
-  return(data)
-
+  
+  idx <- sapply(sapply(strsplit(rand, "\\:"), function(x) gsub("\\(|\\)", "", x)), function(x) {
+    
+    length(unique(data[, x])) == nrow(data)
+    
+  } )
+  
+  sigma.names <- unlist(strsplit(names(sigma), "\\."))
+  
+  idx. <- sapply(sigma.names, function(x) !any(x %in% rand[idx]))
+  
+  if(OLRE == FALSE) 
+    
+    sapply(sigma[idx.], function(i) {
+      
+      Z <- as.matrix(X[, rownames(i), drop = FALSE])
+      
+      sum(rowSums(Z %*% i) * Z) / nrow(X)
+      
+    } ) else
+      
+      sapply(sigma[idx], function(i) {
+        
+        Z <- as.matrix(X[, rownames(i), drop = FALSE])
+        
+        sum(rowSums(Z %*% i) * Z) / nrow(X)
+        
+      } )
+  
 }
 
 #' Get random effects variance-covariance from lme

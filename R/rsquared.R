@@ -291,49 +291,39 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     sigma <- unclass(lme4::VarCorr(model))
 
-    rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
-
-    rand <- rand[!duplicated(rand)]
-
     data <- GetData(model)
-
-    idx <- sapply(sapply(strsplit(rand, "\\:"), function(x) gsub("\\(|\\)", "", x)), function(x) {
-
-      length(unique(data[, x])) == nrow(data)
-
-    } )
-
-    sigma.names <- strsplit(names(sigma), "\\.")
-
-    idx. <- sapply(sigma.names, function(x) !any(x %in% rand[idx]))
-
-    sigmaL <- sum(sapply(sigma[idx.], function(i) {
-
-      Z <- as.matrix(X[, rownames(i), drop = FALSE])
-
-      sum(rowSums(Z %*% i) * Z) / nrow(X)
-
-    } ) )
+    
+    sigmaL <- sum(getOLRE(sigma, model, data, OLRE = FALSE))
+  
+    sigmaE <- sum(getOLRE(sigma, model, data, OLRE = TRUE))
 
     if(family. == "poisson") {
 
       if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
-      lambda <- attr(VarCorr(model), "sc")^2
+      rand <- onlyBars(formula(model))
+      
+      f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+      
+      nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = poisson(link = link), data = data))
+      
+      # lambda <- attr(VarCorr(model), "sc")^2
+      
+      lambda <- exp(fixef(nullmodel)[1] + (sigmaL + sigmaE)/2)
 
       omega <- 1
 
-      if(link == "mu^0.5") sigmaE <- 0.25 * omega else {
+      if(link == "mu^0.5") sigmaD <- 0.25 * omega else {
 
         if(link == "log") {
 
           nu <- omega / lambda
 
-          if(method == "delta") sigmaE <- nu
+          if(method == "delta") sigmaD <- nu
 
-          if(method == "lognormal") sigmaE <- log(1 + nu)
+          if(method == "lognormal") sigmaD <- log(1 + nu)
 
-          if(method == "trigamma") sigmaE <- trigamma(nu)
+          if(method == "trigamma") sigmaD <- trigamma(1/nu)
 
         } else stop("Unsupported link function!")
 
@@ -347,22 +337,22 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
         if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
 
-        if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
+        if(method == "theoretical") sigmaD <- pi^2/3
 
         if(method == "delta") {
-
+          
           rand <- onlyBars(formula(model))
-
+          
           f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
-
+          
           nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = binomial(link = link), data = data))
-
+          
           vt <- sum(unlist(VarCorr(nullmodel)))
 
           pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
                             tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
 
-          sigmaE <- 1/(pmean * (1 - pmean))
+          sigmaD <- 1/(pmean * (1 - pmean))
 
           }
 
@@ -380,11 +370,11 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
               nu <- omega / lambda
 
-              if(method == "delta") sigmaE <- 1/nu
+              if(method == "delta") sigmaD <- 1/nu
 
-              if(method == "lognormal") sigmaE <- log(1 + 1/nu)
+              if(method == "lognormal") sigmaD <- log(1 + 1/nu)
 
-              if(method == "trigamma") sigmaE <- trigamma(nu)
+              if(method == "trigamma") sigmaD <- trigamma(nu)
 
               } else
 
@@ -394,9 +384,9 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
           } else stop("Unsupported family!")
 
-    mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
-
-    con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
+    mar <- (sigmaF) / (sigmaF + sigmaL + sigmaD + sigmaE)
+    
+    con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaD + sigmaE)
 
     list(family = family., link = link, method = method, Marginal = mar, Conditional = con)
 
@@ -522,11 +512,13 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
         if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
-        if(method == "delta") sigmaE <- omega / lambda
+        nu <- omega / lambda
+        
+        if(method == "delta") sigmaE <- nu
 
-        if(method == "lognormal") sigmaE <- log(1 + (omega / lambda))
+        if(method == "lognormal") sigmaE <- log(1 + (nu))
 
-        if(method == "trigamma") sigmaE <- trigamma(lambda/omega)
+        if(method == "trigamma") sigmaE <- trigamma(1/nu)
 
       } else stop("Unsupported link function!")
 
