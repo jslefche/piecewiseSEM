@@ -206,15 +206,15 @@ rsquared.glm <- function(model, method = "nagelkerke") {
 }
 
 #' R^2 for phylolm objects
-rsquared.phylolm <- function(model) {
-
-  family. <- ifelse(class(model) == "phylolm", "gaussian", model$method)
-
-  link <- ifelse(class(model) == "phylolm", "identity", "?")
-
-  list(family = family., link = NA, method = "none", R.squared = NA)
-
-}
+# rsquared.phylolm <- function(model) {
+# 
+#   family. <- ifelse(class(model) == "phylolm", "gaussian", model$method)
+# 
+#   link <- ifelse(class(model) == "phylolm", "identity", "?")
+# 
+#   list(family = family., link = NA, method = "none", R.squared = NA)
+# 
+# }
 
 #' R^2 for merMod objects
 rsquared.merMod <- function(model) {
@@ -293,14 +293,14 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
     data <- GetData(model)
     
-    sigmaL <- sum(getOLRE(sigma, model, data, OLRE = FALSE))
-  
-    sigmaE <- sum(getOLRE(sigma, model, data, OLRE = TRUE))
-
     if(family. == "poisson") {
 
       if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
+      sigmaL <- sum(GetOLRE(sigma, model, data, RE = "RE"))
+      
+      sigmaE <- sum(GetOLRE(sigma, model, data, RE = "OLRE"))
+      
       rand <- onlyBars(formula(model))
       
       f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
@@ -336,6 +336,10 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
         if(method == "trigamma") method <- "delta"
 
         if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
+        
+        sigmaL <- sum(GetOLRE(sigma, model, data, RE = "all"))
+        
+        sigmaE <- 0
 
         if(method == "theoretical") sigmaD <- pi^2/3
 
@@ -362,6 +366,10 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
             if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
+            sigmaL <- sum(GetOLRE(sigma, model, data, RE = "all"))
+            
+            sigmaE <- 0
+            
             lambda <- attr(VarCorr(model), "sc")^2
 
             omega <- 1

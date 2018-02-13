@@ -190,7 +190,10 @@ getSingleData <- function(model) {
 }
 
 #' Obtain (observation-level) random effects from a generalized linear mixed model
-getOLRE <- function(sigma, model, data, OLRE = FALSE) {
+#' RE = "all" all random effects are reported
+#' RE = "RE" just group effects are reported
+#' RE = "OLRE" just observation-level effects are reported
+GetOLRE <- function(sigma, model, data, RE = c("all", "RE", "OLRE")) {
   
   if(class(model) %in% c("lmerMod", "glmerMod")) {
     
@@ -198,7 +201,7 @@ getOLRE <- function(sigma, model, data, OLRE = FALSE) {
     
     rand <- rand[!duplicated(rand)] } else
       
-      if(class(model) %in% c()) {
+      if(class(model) %in% c("lme", "glmmPQL")) {
         
         
       }
@@ -213,7 +216,7 @@ getOLRE <- function(sigma, model, data, OLRE = FALSE) {
   
   idx. <- sapply(sigma.names, function(x) !any(x %in% rand[idx]))
   
-  if(OLRE == FALSE) 
+  if(RE == "RE") 
     
     sapply(sigma[idx.], function(i) {
       
@@ -221,7 +224,7 @@ getOLRE <- function(sigma, model, data, OLRE = FALSE) {
       
       sum(rowSums(Z %*% i) * Z) / nrow(X)
       
-    } ) else
+    } ) else if(RE == "OLRE") 
       
       sapply(sigma[idx], function(i) {
         
@@ -229,7 +232,15 @@ getOLRE <- function(sigma, model, data, OLRE = FALSE) {
         
         sum(rowSums(Z %*% i) * Z) / nrow(X)
         
-      } )
+      } ) else if(RE == "all")
+        
+        sapply(sigma, function(i) {
+          
+          Z <- as.matrix(X[, rownames(i), drop = FALSE])
+          
+          sum(rowSums(Z %*% i) * Z) / nrow(X)
+          
+        } )
   
 }
 
