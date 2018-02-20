@@ -193,9 +193,11 @@ getSingleData <- function(model) {
 #' RE = "all" all random effects are reported
 #' RE = "RE" just group effects are reported
 #' RE = "OLRE" just observation-level effects are reported
-GetOLRE <- function(sigma, model, data, RE = c("all", "RE", "OLRE")) {
+GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
   
   if(class(model) %in% c("lmerMod", "glmerMod")) {
+    
+    if(is.null(X)) X <- model.matrix(model)
     
     rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
     

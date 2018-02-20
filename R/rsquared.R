@@ -297,9 +297,9 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
       if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
-      sigmaL <- sum(GetOLRE(sigma, model, data, RE = "RE"))
+      sigmaL <- sum(GetOLRE(sigma, model, X, data, RE = "RE"))
       
-      sigmaE <- sum(GetOLRE(sigma, model, data, RE = "OLRE"))
+      sigmaE <- sum(GetOLRE(sigma, model, X, data, RE = "OLRE"))
       
       rand <- onlyBars(formula(model))
       
@@ -337,7 +337,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
         if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
         
-        sigmaL <- sum(GetOLRE(sigma, model, data, RE = "all"))
+        sigmaL <- sum(GetOLRE(sigma, model, X, data, RE = "all"))
         
         sigmaE <- 0
 
@@ -366,7 +366,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
             if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
 
-            sigmaL <- sum(GetOLRE(sigma, model, data, RE = "all"))
+            sigmaL <- sum(GetOLRE(sigma, model, X, data, RE = "all"))
             
             sigmaE <- 0
             
