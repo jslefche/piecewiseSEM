@@ -14,17 +14,17 @@ Supported model classes include:
 
   `lm`, `glm`, `rq`, `glm.nb`, `gls`, `pgls`, `merMod`, `merModLmerTest`, `lme`, `glmmPQL`, `glmmadmb`, and `glmmTMB`.
   
-###WARNING
+### WARNING
 
 ***Some tests of directed separation are non-symmetrical -- the partial slope of a ~ b is not the same as b ~ a -- when the variables are non-linear (i.e., are transformed via a link function when fit to a non-normal distribution). We are currently investigating the phenomenon, but in the interim, the latest version of the package returns the lowest P-value. This the more conservative route. Stay tuned for more updates...***
 
 ***This is only a problem if you are fitting generalized linear models!!***
 
-##Examples
+## Examples
 
-###Load package
+### Load package
 
-```
+```r
 # Install latest version from CRAN
 install.packages("piecewiseSEM")
 
@@ -35,14 +35,14 @@ install.packages("piecewiseSEM")
 library(piecewiseSEM)
 ```
 
-###Load data from Shipley 2009
+### Load data from Shipley 2009
 
 ```
 data(shipley2009)
 ```
 The data is alternately hosted in Ecological Archives E090-028-S1 (DOI: 10.1890/08-1034.1).
 
-###Create model set
+### Create model set
 
 The model corresponds to the following hypothesis (Fig. 2, Shipley 2009);
 
@@ -50,7 +50,7 @@ The model corresponds to the following hypothesis (Fig. 2, Shipley 2009);
 
 Models are constructed using a mix of the `nlme` and `lmerTest` packages, as in the supplements of Shipley 2009. 
 
-```
+```r
 # Load required libraries for linear mixed effects models
 library(lme4)
 library(nlme)
@@ -76,7 +76,7 @@ shipley2009.modlist = list(
   )
 ```
 
-###Run Shipley tests
+### Run Shipley tests
 
 `sem.fit` returns a list of the following:
 (1) the missing paths (omitting conditional variables), the estimate, standard error, degrees of freedom, and associated p-values;
@@ -89,7 +89,7 @@ The argument `adjust.p` allows you to adjust the p-values returned by the functi
 
 (See ["p-values and all that"](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) for a discussion of p-values from mixed models using the `lmer` package.)
 
-```
+```r
 sem.fit(shipley2009.modlist, shipley2009)
 
 # Conditional variables have been omitted from output table for clarity (or use argument conditional = T)
@@ -113,11 +113,11 @@ sem.fit(shipley2009.modlist, shipley2009)
 
 The missing paths output differs from Table 2 in Shipley 2009. However, running each d-sep model by hand yields the same answers as this function, leading me to believe that updates to the `lme4` and `nlme` packages are the cause of the discrepancy. Qualitatively, the interpretations are the same.
 
-###Extract path coefficients
+### Extract path coefficients
 
 Path coefficients can be either unstandardized or standardized (centered and scaled in units of standard deviation of the mean, or scaled by the range the data). Default is `none`. The function returns a `data.frame` sorted by increasing significance.
 
-```
+```r
 sem.coefs(shipley2009.modlist, shipley2009)
 
 #   response predictor   estimate   std.error p.value    
@@ -145,11 +145,11 @@ sem.plot(shipley2009.modlist, shipley2009)
 ```
 ![pathdiagram](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley2009_plot.png)
 
-###Generate variance-covariance SEM using `lavaan`
+### Generate variance-covariance SEM using `lavaan`
 
 Generate variance-covariance based SEM from the list of linear mixed models. The resulting object can be treated like any other model object constructed using the package `lavaan`.
 
-```
+```r
 (lavaan.model = sem.lavaan(shipley2009.modlist, shipley2009))
 
 # lavaan (0.5-18) converged normally after  27 iterations
@@ -165,11 +165,11 @@ Generate variance-covariance based SEM from the list of linear mixed models. The
 ```
 The output shows that the variance-covariance SEM is a worse fit, indicating that a hierarchical piecewise approach is justified given the hierarchical structure of the data.
 
-###Plot partial effect between two variables
+### Plot partial effect between two variables
 
 One might be interested in the partial effects of one variable on another given covariates in the SEM. The function `partial.resid` returns a `data.frame` of the partial residuals of `y ~ x` and plots the partial effect (if `plotit = T`).
 
-```
+```r
 # Load model package
 library(nlme)
 
@@ -194,11 +194,11 @@ resids.df = partial.resid(x5 ~ x3, shipley2013.modlist, list(lmeControl(opt = "o
 ```
 ![partialplot](https://raw.githubusercontent.com/jslefche/jslefche.github.io/master/img/shipley2013_pplot.jpeg)
 
-###Get R<sup>2</sup> for individual models 
+### Get R<sup>2</sup> for individual models 
 
 Return R<sup>2</sup> and AIC values for component models in the SEM.
 
-```
+```r
 sem.model.fits(shipley2009.modlist)
 
 #      Class   Family     Link    N  Marginal Conditional
@@ -207,11 +207,11 @@ sem.model.fits(shipley2009.modlist)
 # 3      lme gaussian identity 1431 0.1070265   0.8364736
 # 4 glmerMod binomial    logit 1431 0.5589205   0.6291980
 ```
-###Return model predictions
+### Return model predictions
 
 Generate model predictions from new data.
 
-```
+```r
 # Create new data for predictions
 shipley2009.new = data.frame(
   
