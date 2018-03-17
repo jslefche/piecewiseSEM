@@ -20,7 +20,7 @@ fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALS
 
     if(!is.null(add.claims)) {
 
-      ps <- ps + add.claims
+      ps <- c(ps,add.claims)
 
       message("Fisher's C has been adjusted to include additional claims not shown in the tests of directed separation.")
 
