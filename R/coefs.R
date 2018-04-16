@@ -201,7 +201,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
               if(is.list(standardize)) {
 
-                if(!all(names(standardize) %in% f.notrans[!grepl(":", f.notrans)]))
+                if(!all(names(standardize) %in% unlist(lapply(modelList, all.vars.notrans))))
 
                   stop("Names in standardize list must match those in the model formula!")
 
