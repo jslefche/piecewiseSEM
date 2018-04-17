@@ -200,8 +200,12 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
             sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata.[, x], na.rm = TRUE))) else
 
               if(is.list(standardize)) {
+                
+                vars <- unlist(sapply(modelList, all.vars.notrans))
+                
+                vars <- vars[!grepl(":", vars)]
 
-                if(!all(names(standardize) %in% unlist(lapply(modelList, all.vars.notrans))))
+                if(!all(names(standardize) %in% vars))
 
                   stop("Names in standardize list must match those in the model formula!")
 
@@ -307,11 +311,11 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
               
               if(sum(nm) == 0) {
                 
-                warning(paste0("Relevant range not specified for variable '", x, "'. Using observed range instead"), call. = FALSE)
+                warning(paste0("Relevant range not specified for variable '", y, "'. Using observed range instead"), call. = FALSE)
                 
-                diff(range(newdata.[, x], na.rm = TRUE)) 
+                sd.y <- diff(range(newdata.[, y], na.rm = TRUE)) 
                 
-              } else diff(range(standardize[[nm]]))
+              } else sd.y <- diff(range(standardize[[nm]]))
               
             }
 
@@ -379,7 +383,9 @@ scaleInt <- function(model, newdata, standardize) {
 
     if(standardize == "scale") sd(p) else if(standardize == "range")
 
-      diff(range(p, na.rm = TRUE))
+      diff(range(p, na.rm = TRUE)) else if(is.list(standardize))
+        
+        stop("Relevant range standardization not applicable to models with interactions!")
 
   } )
 
