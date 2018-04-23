@@ -248,7 +248,7 @@ rsquared.merMod <- function(model) {
 #' R^2 for lme objects
 rsquared.lme <- function(model) {
 
-  X <- model.matrix(eval(model$call$fixed)[-2], model$data)
+  X <- model.matrix(eval(model$call$fixed)[-2], droplevels(model$data))
 
   sigmaF <- var(as.vector(nlme::fixef(model) %*% t(X)))
 
@@ -490,7 +490,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   family. <- model$family$family
 
-  X <- model.matrix(eval(model$call$fixed)[-2], model$data)
+  X <- model.matrix(eval(model$call$fixed)[-2], droplevels(model$data))
 
   sigmaF <- var(as.vector(nlme::fixef(model) %*% t(X)))
 
