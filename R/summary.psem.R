@@ -70,6 +70,7 @@
 #'
 #' Shipley, Bill. "The AIC model selection method applied to path analytic
 #' models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
+#' 
 #' @export summary.psem
 #'
 summary.psem <- function(object, ...) {
@@ -103,6 +104,9 @@ summary.psem <- function(object, ...) {
 }
 
 #' @export print.summary.psem
+#' 
+#' @keywords internal
+#' 
 print.summary.psem <- function(object, ...) {
 
   cat("\nStructural Equation Model of", as.character(object$name), "\n")

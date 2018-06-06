@@ -20,7 +20,9 @@
 #' @return Returns an object of class \code{psem}.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
+#' 
 #' @export psem
+#' 
 psem <- function(..., data) {
 
   x <- list(...)
@@ -78,9 +80,15 @@ formatpsem <- function(x) {
 }
 
 #' Convert list to psem object
+#' 
+#' @keywords internal
+#' 
 as.psem <- function(x) formatpsem(x)
 
 #' Evaluate model classes and stop if unsupported model class
+#' 
+#' @keywords internal
+#' 
 evaluateClasses <- function(modelList) {
 
   classes <- unlist(sapply(modelList, class))
@@ -111,6 +119,9 @@ evaluateClasses <- function(modelList) {
 }
 
 #' Print psem
+#' 
+#' @keywords internal
+#' 
 print.psem <- function(x, ...) {
 
   formulas <- listFormula(x)
@@ -145,7 +156,8 @@ print.psem <- function(x, ...) {
 
 }
 
-#' Update psem model object with additional values
+#' Update psem model object with additional values.
+#' 
 update.psem <- function(object, ...) {
 
   l <- list(...)

@@ -11,3 +11,4 @@ listFormula(modelList, formulas = 0)
 Get list of formula from a `sem` object
 If remove = TRUE, take out non-evaluated formula
 }
+\keyword{internal}

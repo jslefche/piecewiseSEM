@@ -1,8 +1,7 @@
 #' Residual values from fit models
 #'
 #' @param object a \code{\link{psem}} object
-
-# Extract residuals
+#' 
 residuals.psem <- function(object, ...) {
   
   object <- removeData(object, formulas = 1)

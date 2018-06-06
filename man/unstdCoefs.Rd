@@ -9,3 +9,4 @@ unstdCoefs(modelList, data = NULL, intercepts = FALSE)
 \description{
 Get raw (understandardized) coefficients from model
 }
+\keyword{internal}

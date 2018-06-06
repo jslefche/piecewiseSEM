@@ -9,3 +9,4 @@ partialCorr(formula., modelList, data = NULL)
 \description{
 Calculate partial correlations from partial residuals
 }
+\keyword{internal}

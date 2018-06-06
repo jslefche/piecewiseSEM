@@ -37,6 +37,15 @@ context." Ecology 90.2 (2009): 363-368.
 
 Shipley, Bill. "The AIC model selection method applied to path analytic
 models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
+
+Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
+"Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
+Ecosphere 9(6): e02283.
+
+Nakagawa, Shinichi, Paul CD Johnson, and Holger Schielzeth. "The coefficient 
+of determination R2 and intra-class correlation coefficient from generalized 
+linear mixed-effects models revisited and expanded." 
+Journal of the Royal Society Interface 14.134 (2017): 20170213.
 }
 \author{
 Jon Lefcheck <jslefche@vims.edu>

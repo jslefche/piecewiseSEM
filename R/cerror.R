@@ -121,6 +121,9 @@ cerror <- function(formula., modelList, data = NULL) {
 }
 
 #' Identify models with correlated errors and return modified versions
+#' 
+#' @keywords internal
+#' 
 getResidModels <- function(vars, modelList, data) {
 
   yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all.vars.merMod(x)[1])
@@ -270,6 +273,7 @@ getResidModels <- function(vars, modelList, data) {
 #' plot(presid) # identical plot!
 #'
 #' @export partialResid
+#' 
 partialResid <- function(formula., modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
@@ -315,6 +319,9 @@ partialResid <- function(formula., modelList, data = NULL) {
 }
 
 #' Calculate partial correlations from partial residuals
+#' 
+#' @keywords internal
+#' 
 partialCorr <- function(formula., modelList, data = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
@@ -390,6 +397,9 @@ partialCorr <- function(formula., modelList, data = NULL) {
 }
 
 #' Get residuals from innermost grouping of mixed models (replicate-level)
+#' 
+#' @keywords internal
+#' 
 resid.lme <- function(model) {
 
   if(any(class(model) %in% c("lme", "glmmPQL"))) {

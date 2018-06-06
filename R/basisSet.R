@@ -35,6 +35,7 @@
 #' @references Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #' 
 #' @export basisSet
+#' 
 basisSet <- function(modelList, direction = NULL) {
 
   formulaList <- listFormula(modelList)
@@ -91,6 +92,9 @@ basisSet <- function(modelList, direction = NULL) {
 }
 
 #' Remove existing paths from the basis set
+#' 
+#' @keywords internal
+#' 
 filterExisting <- function(b, formulaList) {
 
   b <- lapply(b, function(i) {
@@ -108,6 +112,9 @@ filterExisting <- function(b, formulaList) {
 }
 
 #' Filter relationships among exogenous variables from the basis set (ignoring add.vars)
+#' 
+#' @keywords internal
+#' 
 filterExogenous <- function(modelList, b, amat) {
 
   formulaList <- listFormula(modelList, formulas = 3)
@@ -129,6 +136,9 @@ filterExogenous <- function(modelList, b, amat) {
 }
 
 #' Filter interactions from the d-sep tests
+#' 
+#' @keywords internal
+#' 
 filterInteractions <- function(b) {
 
   b <- lapply(b, function(i) if(any(grepl("\\:", i[1:2]))) NULL else i )
@@ -140,6 +150,9 @@ filterInteractions <- function(b) {
 }
 
 #' Remove correlated errors from the basis set
+#' 
+#' @keywords internal
+#' 
 removeCerror <- function(b, formulaList) {
 
   ceList <- lapply(formulaList, function(i) if(any(class(i) == "formula.cerror")) {
@@ -170,6 +183,9 @@ removeCerror <- function(b, formulaList) {
 
 #' Replace transformations in the basis set by cycling through neighbors and applying
 #' transformations in order of how variables are treated in the child nearest to current node
+#' 
+#' @keywords internal
+#' 
 # replaceTrans <- function(modelList, b, amat) {
 #
 #   if(length(b) > 0) {
@@ -225,6 +241,9 @@ removeCerror <- function(b, formulaList) {
 # }
 
 #' Reverse added variables (e.g., y ~ 1)
+#' 
+#' @keywords internal
+#' 
 reverseAddVars <- function(modelList, b, amat) {
 
   formulaList <- listFormula(modelList, formulas = 3)
@@ -240,6 +259,9 @@ reverseAddVars <- function(modelList, b, amat) {
 }
 
 #' If intermediate endogenous variables are nonlinear, return both directions
+#' 
+#' @keywords internal
+#' 
 reverseNonLin <- function(modelList, b, amat) {
 
   if(length(b) > 0) {
@@ -303,6 +325,9 @@ reverseNonLin <- function(modelList, b, amat) {
 }
 
 #' Remove items from the basis set whose direction is a priori specified
+#' 
+#' @keywords internal
+#' 
 specifyDir <- function(b, direction) {
 
   vars <- gsub(" ", "", unlist(strsplit(direction, "\\->|<\\-")))

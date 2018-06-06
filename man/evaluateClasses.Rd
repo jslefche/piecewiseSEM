@@ -9,3 +9,4 @@ evaluateClasses(modelList)
 \description{
 Evaluate model classes and stop if unsupported model class
 }
+\keyword{internal}

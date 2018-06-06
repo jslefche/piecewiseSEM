@@ -34,6 +34,7 @@
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #' 
 #' @export dSep
+#' 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
 
   b <- basisSet(modelList, direction)

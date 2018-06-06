@@ -9,3 +9,4 @@ getResidModels(vars, modelList, data)
 \description{
 Identify models with correlated errors and return modified versions
 }
+\keyword{internal}

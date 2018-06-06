@@ -1,7 +1,8 @@
-#' Return information criterion values for piecewise SEM
-#'
+#' Information criterion values for SEM
+#' 
 #' @param modelList a list of structural equations
-
+#' @param ... additional arguments 
+#' 
 infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)
@@ -32,9 +33,10 @@ infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conse
 
 }
 
-#` Generalized function for extraction AIC(c) score
-
+#' Generalized function for extraction AIC(c) score
+#'
 #' @export AIC.psem
+#' 
 AIC.psem <- function(object, ..., aicc = FALSE) {
 
   aicx <- infCrit(object)
@@ -61,5 +63,8 @@ AIC.psem <- function(object, ..., aicc = FALSE) {
 
 }
 
-#` Generalized function for extraction BIC score
+#' Generalized function for extraction BIC score
+#'
+#' @export BIC.psem
+#' 
 BIC.psem <- function(object, ...) infCrit(object)$BIC

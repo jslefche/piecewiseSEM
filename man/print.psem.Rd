@@ -9,3 +9,4 @@ print.psem(x, ...)
 \description{
 Print psem
 }
+\keyword{internal}

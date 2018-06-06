@@ -9,3 +9,4 @@ scaleGLM(model, standardize = "scale", standardize.type = "latent.linear")
 \description{
 Compute standard deviation or relevant range of response for GLMs
 }
+\keyword{internal}

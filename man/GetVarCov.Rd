@@ -9,3 +9,4 @@ GetVarCov(model)
 \description{
 Get random effects variance-covariance from lme
 }
+\keyword{internal}

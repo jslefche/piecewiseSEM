@@ -9,3 +9,4 @@ scaleInt(model, newdata, standardize)
 \description{
 Calculate standard deviation or relevant range for interaction terms
 }
+\keyword{internal}

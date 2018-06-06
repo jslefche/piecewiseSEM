@@ -9,3 +9,4 @@ filterExogenous(modelList, b, amat)
 \description{
 Filter relationships among exogenous variables from the basis set (ignoring add.vars)
 }
+\keyword{internal}

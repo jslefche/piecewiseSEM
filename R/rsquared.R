@@ -83,6 +83,7 @@
 #'   }
 #'
 #' @export rsquared
+#' 
 rsquared <- function(modelList, method = NULL) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList = list(modelList)
@@ -155,11 +156,17 @@ rsquared <- function(modelList, method = NULL) {
 }
 
 #' R^2 for lm objects
+#' 
+#' @keywords internal
+#' 
 rsquared.lm <- function(model)
 
   list(family = "gaussian", link = "identity", method = "none", R.squared = summary(model)$r.squared)
 
 #' R^2 for gls objects
+#' 
+#' @keywords internal
+#' 
 rsquared.gls <- function(model) {
 
   X <- model.matrix(eval(model$call$model[-2]), GetData(model))
@@ -173,6 +180,9 @@ rsquared.gls <- function(model) {
 }
 
 #' R^2 for glm objects
+#' 
+#' @keywords internal
+#' 
 rsquared.glm <- function(model, method = "nagelkerke") {
 
   if(is.null(method)) method <- "nagelkerke"
@@ -206,6 +216,9 @@ rsquared.glm <- function(model, method = "nagelkerke") {
 }
 
 #' R^2 for phylolm objects
+#' 
+#' @keywords internal
+#' 
 # rsquared.phylolm <- function(model) {
 # 
 #   family. <- ifelse(class(model) == "phylolm", "gaussian", model$method)
@@ -217,6 +230,9 @@ rsquared.glm <- function(model, method = "nagelkerke") {
 # }
 
 #' R^2 for merMod objects
+#' 
+#' @keywords internal
+#' 
 rsquared.merMod <- function(model) {
 
   X <- model.matrix(model)
@@ -246,6 +262,9 @@ rsquared.merMod <- function(model) {
 }
 
 #' R^2 for lme objects
+#' 
+#' @keywords internal
+#' 
 rsquared.lme <- function(model) {
 
   X <- model.matrix(eval(model$call$fixed)[-2], droplevels(model$data))
@@ -273,6 +292,9 @@ rsquared.lme <- function(model) {
 }
 
 #' R^2 for glmer objects
+#' 
+#' @keywords internal
+#' 
 rsquared.glmerMod <- function(model, method = "trigamma") {
 
   if(is.null(method)) method <- "trigamma"
@@ -403,6 +425,9 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 }
 
 #' R^2 for negbin objects
+#' 
+#' @keywords internal
+#' 
 rsquared.negbin <- function(model, method = "trigamma") {
 
   if(is.null(method)) method <- "trigamma"
@@ -482,6 +507,9 @@ rsquared.negbin <- function(model, method = "trigamma") {
 }
 
 #' R^2 for glmmPQL objects
+#' 
+#' @keywords internal
+#' 
 rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   if(is.null(method)) method <- "trigamma"
@@ -586,4 +614,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 }
 
 #' R^2 for glmmadmb objects
+#' 
+#' @keywords internal
+#' 
 

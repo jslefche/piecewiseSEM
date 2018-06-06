@@ -45,8 +45,10 @@
 #' degrees of freedom, and significance tests.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>, Jim Grace
 #' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
-#' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes" Ecosphere 9(6): e02283.
+#' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
+#' Ecosphere 9(6): e02283.
 #' @seealso \code{\link{KRmodcomp}}
+#' 
 #' @export coefs
 #'
 coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
@@ -74,6 +76,9 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 }
 
 #' Get raw (understandardized) coefficients from model
+#' 
+#' @keywords internal
+#' 
 unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
@@ -153,6 +158,9 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 }
 
 #' Calculate standardized regression coefficients
+#' 
+#' @keywords internal
+#' 
 stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
@@ -249,6 +257,9 @@ return(ret)
 }
 
 #' Transform variables based on model formula and store in new data frame
+#' 
+#' @keywords internal
+#' 
 dataTrans <- function(formula., newdata) {
 
   notrans <- all.vars.merMod(formula.)
@@ -286,6 +297,9 @@ dataTrans <- function(formula., newdata) {
 }
 
 #' Properly scale standard deviations depending on the error distribution
+#' 
+#' @keywords internal
+#' 
 scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type = "latent.linear") {
 
   family. <- try(family(model), silent = TRUE)
@@ -333,6 +347,9 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
 }
 
 #' Compute standard deviation or relevant range of response for GLMs
+#' 
+#' @keywords internal
+#' 
 scaleGLM <- function(model, standardize = "scale", standardize.type = "latent.linear") {
 
   preds <- predict(model, type = "link")
@@ -368,6 +385,9 @@ scaleGLM <- function(model, standardize = "scale", standardize.type = "latent.li
 }
 
 #' Calculate standard deviation or relevant range for interaction terms
+#' 
+#' @keywords internal
+#' 
 scaleInt <- function(model, newdata, standardize) {
 
   v <- attr(terms(model), "term.labels")

@@ -9,3 +9,4 @@ isSig(p)
 \description{
 Assess significance
 }
+\keyword{internal}

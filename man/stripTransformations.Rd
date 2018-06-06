@@ -9,3 +9,4 @@ stripTransformations(x)
 \description{
 Strip transformations
 }
+\keyword{internal}

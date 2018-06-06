@@ -1,4 +1,7 @@
 #' Remove random effects from all.vars
+#' 
+#' @keywords internal
+#' 
 all.vars.merMod <- function(formula.) {
 
   if(!any(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
@@ -20,6 +23,9 @@ all.vars.merMod <- function(formula.) {
 }
 
 #' Get vector of untransformed variables
+#' 
+#' @keywords internal
+#' 
 all.vars_notrans <- function(formula.) {
 
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
@@ -51,6 +57,9 @@ all.vars_notrans <- function(formula.) {
 }
 
 #' Get vector of transformed variables
+#' 
+#' @keywords internal
+#' 
 all.vars_trans <- function(formula.) {
 
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
@@ -70,6 +79,9 @@ all.vars_trans <- function(formula.) {
 }
 
 #' Get random effects from lme
+#' 
+#' @keywords internal
+#' 
 findbars.lme <- function(model) {
 
   rand <- model$call$random
@@ -85,6 +97,9 @@ findbars.lme <- function(model) {
 }
 
 #' Get data from model list
+#' 
+#' @keywords internal
+#' 
 GetData <- function(modelList) {
   
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
@@ -126,6 +141,9 @@ GetData <- function(modelList) {
 }
 
 #' Get data from one model
+#' 
+#' @keywords internal
+#' 
 getSingleData <- function(model) {
 
   dat <- data.frame()
@@ -193,6 +211,9 @@ getSingleData <- function(model) {
 #' RE = "all" all random effects are reported
 #' RE = "RE" just group effects are reported
 #' RE = "OLRE" just observation-level effects are reported
+#' 
+#' @keywords internal
+#' 
 GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
   
   if(class(model) %in% c("lmerMod", "glmerMod")) {
@@ -247,6 +268,9 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
 }
 
 #' Get random effects variance-covariance from lme
+#' 
+#' @keywords internal
+#' 
 GetVarCov <- function(model) {
 
   vc <- try(getVarCov(model), silent = TRUE)
@@ -272,6 +296,9 @@ GetVarCov <- function(model) {
 }
 
 #' Assess significance
+#' 
+#' @keywords internal
+#' 
 isSig <- function(p) {
 
   ifelse(p > 0.01 & p < 0.05, "*",
@@ -281,6 +308,9 @@ isSig <- function(p) {
 }
 
 #' Recompute P-values using Kenward-Rogers approximation
+#' 
+#' @keywords internal
+#' 
 KRp <- function(model, vars, data, intercepts = FALSE) {
 
   if(grepl("\\*", deparse(formula(model))) & !all(grepl("\\*", vars))) {
@@ -325,6 +355,9 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
 #' Get list of formula from a `sem` object
 #' If remove = TRUE, take out non-evaluated formula
+#' 
+#' @keywords internal
+#' 
 listFormula <- function(modelList, formulas = 0) {
 
   modelList <- removeData(modelList, formulas)
@@ -340,9 +373,13 @@ listFormula <- function(modelList, formulas = 0) {
 }
 
 #' Get number of observations from a model
+#' @keywords internal
 nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
+#' 
+#' @keywords internal
+#' 
 onlyBars <- function(formula., slopes = TRUE) {
 
   f <- lme4::findbars(formula.)
@@ -358,6 +395,9 @@ onlyBars <- function(formula., slopes = TRUE) {
 }
 
 #' Do not print attributes with custom functions
+#' 
+#' @keywords internal
+#' 
 print.attr <- function(x) {
 
   attributes(x) <- NULL
@@ -371,6 +411,9 @@ print.attr <- function(x) {
 #' formulas = 1, remove all formulas including correlated errors
 #' formulas = 2, remove only formula but keep correlated errors
 #' formulas = 3, remove correlated errors but keep formula
+#' 
+#' @keywords internal
+#' 
 removeData <- function(modelList, formulas = 0) {
 
   remove <- c("character", "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")
@@ -386,6 +429,9 @@ removeData <- function(modelList, formulas = 0) {
 }
 
 #' Strip transformations
+#' 
+#' @keywords internal
+#' 
 stripTransformations <- function(x) {
 
   x <- gsub(".*\\((.*)\\).*", "\\1", x)

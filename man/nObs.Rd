@@ -9,3 +9,4 @@ nObs(object, ...)
 \description{
 Get number of observations from a model
 }
+\keyword{internal}

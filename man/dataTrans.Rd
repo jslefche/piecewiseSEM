@@ -9,3 +9,4 @@ dataTrans(formula., newdata)
 \description{
 Transform variables based on model formula and store in new data frame
 }
+\keyword{internal}

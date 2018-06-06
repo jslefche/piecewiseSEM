@@ -10,3 +10,4 @@ stdCoefs(modelList, data = NULL, standardize = "scale",
 \description{
 Calculate standardized regression coefficients
 }
+\keyword{internal}

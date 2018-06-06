@@ -9,3 +9,4 @@ filterExisting(b, formulaList)
 \description{
 Remove existing paths from the basis set
 }
+\keyword{internal}

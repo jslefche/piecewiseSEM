@@ -9,3 +9,4 @@ rsquared.glmerMod(model, method = "trigamma")
 \description{
 R^2 for glmer objects
 }
+\keyword{internal}

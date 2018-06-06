@@ -9,3 +9,4 @@ specifyDir(b, direction)
 \description{
 Remove items from the basis set whose direction is a priori specified
 }
+\keyword{internal}

@@ -2,10 +2,10 @@
 % Please edit documentation in R/psem.R
 \name{update.psem}
 \alias{update.psem}
-\title{Update psem model object with additional values}
+\title{Update psem model object with additional values.}
 \usage{
 update.psem(object, ...)
 }
 \description{
-Update psem model object with additional values
+Update psem model object with additional values.
 }

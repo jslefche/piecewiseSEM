@@ -9,3 +9,4 @@ getSingleData(model)
 \description{
 Get data from one model
 }
+\keyword{internal}

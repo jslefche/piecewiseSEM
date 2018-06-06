@@ -17,3 +17,4 @@ formulas = 1, remove all formulas including correlated errors
 formulas = 2, remove only formula but keep correlated errors
 formulas = 3, remove correlated errors but keep formula
 }
+\keyword{internal}

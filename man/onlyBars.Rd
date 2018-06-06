@@ -9,3 +9,4 @@ onlyBars(formula., slopes = TRUE)
 \description{
 Get random effects from merMod
 }
+\keyword{internal}

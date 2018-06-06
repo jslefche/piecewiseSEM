@@ -9,3 +9,4 @@ findbars.lme(model)
 \description{
 Get random effects from lme
 }
+\keyword{internal}

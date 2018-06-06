@@ -2,14 +2,16 @@
 % Please edit documentation in R/infCrit.R
 \name{infCrit}
 \alias{infCrit}
-\title{Return information criterion values for piecewise SEM}
+\title{Information criterion values for SEM}
 \usage{
 infCrit(modelList, Cstat, add.claims = NULL, direction = NULL,
   conserve = FALSE, conditional = FALSE, .progressBar = FALSE)
 }
 \arguments{
 \item{modelList}{a list of structural equations}
+
+\item{...}{additional arguments}
 }
 \description{
-Return information criterion values for piecewise SEM
+Information criterion values for SEM
 }

@@ -10,3 +10,4 @@ scaleFam(y, model, newdata, standardize = "scale",
 \description{
 Properly scale standard deviations depending on the error distribution
 }
+\keyword{internal}

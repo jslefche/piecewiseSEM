@@ -9,3 +9,4 @@ rsquared.glmmPQL(model, method = "trigamma")
 \description{
 R^2 for glmmPQL objects
 }
+\keyword{internal}

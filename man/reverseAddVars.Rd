@@ -3,13 +3,19 @@
 \name{reverseAddVars}
 \alias{reverseAddVars}
 \title{Replace transformations in the basis set by cycling through neighbors and applying
-transformations in order of how variables are treated in the child nearest to current node
-Reverse added variables (e.g., y ~ 1)}
+transformations in order of how variables are treated in the child nearest to current node}
 \usage{
 reverseAddVars(modelList, b, amat)
 }
 \description{
 Replace transformations in the basis set by cycling through neighbors and applying
 transformations in order of how variables are treated in the child nearest to current node
-Reverse added variables (e.g., y ~ 1)
 }
+\keyword{(e.g.,}
+\keyword{1)}
+\keyword{Reverse}
+\keyword{added}
+\keyword{internal}
+\keyword{variables}
+\keyword{y}
+\keyword{~}
