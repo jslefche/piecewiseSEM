@@ -1,9 +1,11 @@
 # piecewiseSEM: Piecewise Structural Equation Modeling in R
 
-## Version 2.0
-## Last updated: 23 April 2018
+## Version 2.0.0
+## Last updated: 06 June 2018
 
-This is a major update to the `piecewiseSEM` package that includes new functionality, and a completely revised syntax that better reproduces the base R syntax and output. It is advised that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
+This version is a major update to the `piecewiseSEM` package that usesa completely revised syntax that better reproduces the base R syntax and output. It is highly recommended that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
+
+It also incorporates new functionality in the form of coefficient standardization and updated methods for R^2 for mixed models. 
 
 Currently supported model classes: `lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod`
 
@@ -11,7 +13,7 @@ Currently supported model classes: `lm, glm, gls, pgls, sarlm, lme, glmmPQL, lme
 ```
 # Install from github
 library(devtools)
-install_github("jslefche/piecewiseSEM@2.0", build_vignette = TRUE)
+install_github("jslefche/piecewiseSEM", build_vignette = TRUE)
 
 # Load library
 library(piecewiseSEM)

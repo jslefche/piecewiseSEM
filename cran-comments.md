@@ -1,11 +1,11 @@
 ## Update package
-This is a bug fix update.
+This is a major update introducing new functionality.
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
 ## NOTES 
-* There were no notes.
+1 NOTE corresponding to cran-comments.md in the top level.
 
 ## Test environments
 * local OS X install, R 3.4.1
