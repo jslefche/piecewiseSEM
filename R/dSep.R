@@ -59,7 +59,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
 
     modelList <- removeData(modelList, formulas = 1)
 
-    formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars.trans)
+    formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
 
     if(.progressBar == T & length(b) > 0)
 

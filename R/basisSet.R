@@ -100,9 +100,9 @@ filterExisting <- function(b, formulaList) {
 
   b <- lapply(b, function(i) {
 
-    f <- formulaList[sapply(formulaList, function(x) all.vars.trans(x)[1] == i[1])]
+    f <- formulaList[sapply(formulaList, function(x) all.vars_trans(x)[1] == i[1])]
 
-    if(any(sapply(f, function(x) any(all.vars.trans(x)[-1] %in% i[2])))) NULL else i
+    if(any(sapply(f, function(x) any(all.vars_trans(x)[-1] %in% i[2])))) NULL else i
 
   } )
 
@@ -185,11 +185,11 @@ removeCerror <- function(b, formulaList) {
 #
 #     amat <- amat[, colSums(amat) > 0]
 #
-#     formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars.notrans(x)[1] == colnames(amat)))]
+#     formulaList <- formulaList[sapply(formulaList, function(x) which(all.vars_notrans(x)[1] == colnames(amat)))]
 #
-#     trans <- lapply(formulaList, all.vars.trans)
+#     trans <- lapply(formulaList, all.vars_trans)
 #
-#     notrans <- lapply(formulaList, all.vars.notrans)
+#     notrans <- lapply(formulaList, all.vars_notrans)
 #
 #     b <- lapply(rev(b), function(i) {
 #
@@ -261,7 +261,7 @@ reverseNonLin <- function(modelList, b, amat) {
 
     idx <- names(idx)
 
-    idm <- sapply(formulaList, function(i) all.vars.trans(i)[1] %in% idx)
+    idm <- sapply(formulaList, function(i) all.vars_trans(i)[1] %in% idx)
 
     idm <- idm[
 
@@ -297,7 +297,7 @@ reverseNonLin <- function(modelList, b, amat) {
 
     }
 
-    r <- sapply(formulaList, function(x) all.vars.trans(x)[1])
+    r <- sapply(formulaList, function(x) all.vars_trans(x)[1])
 
     b <- b[sapply(b, function(x) any(x[2] %in% r))]
 

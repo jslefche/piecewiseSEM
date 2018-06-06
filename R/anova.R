@@ -2,7 +2,7 @@
 
 #' @param object a \code{\link{psem}} object
 #' @param object2 an optional second \code{\link{psem}} object
-#' @param fun what anova function to use?
+#' @param fun what anova function to use. Default is car::Anova
 #' @param ... options for anova functions
 
 anova.psem <- function(object, object2 = NULL, fun = Anova, ...) {

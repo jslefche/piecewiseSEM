@@ -167,13 +167,13 @@ getResidModels <- function(vars, modelList, data) {
 
     # if(length(all.vars.merMod) < 3) stop("Variables are part of a simple linear regression: partial residuals cannot be calculated!")
 
-    termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
+    termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars_notrans(ymod)[-1]))
 
     if(length(termlabels.y) == 0) {
 
       vars[[2]] <- rev(vars[[2]])
 
-      termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars.notrans(ymod)[-1]))
+      termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars_notrans(ymod)[-1]))
 
     }
 
@@ -189,7 +189,7 @@ getResidModels <- function(vars, modelList, data) {
 
       xmod <- modelList[[which(xvar)]]
 
-      newyvar <- all.vars.trans(xmod)[which(paste(vars[[2]], collapse = ":") == all.vars.notrans(xmod))]
+      newyvar <- all.vars_trans(xmod)[which(paste(vars[[2]], collapse = ":") == all.vars_notrans(xmod))]
 
       if(length(vars[[2]]) > 1) {
 
@@ -210,14 +210,14 @@ getResidModels <- function(vars, modelList, data) {
         names(data)[ncol(data)] <- paste(vars[[2]], collapse = "......")
 
         xmod <- update(xmod,
-                       formula(paste(paste(vars[[2]], collapse = "......"), "~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))),
+                       formula(paste(paste(vars[[2]], collapse = "......"), "~ ", paste(all.vars_trans(ymod)[-1], collapse = " + "))),
                        data = data)
 
       } else {
 
         if(length(termlabels.y) > 0) {
 
-          f <- paste(newyvar, " ~ ", paste(all.vars.trans(ymod)[-1], collapse = " + "))
+          f <- paste(newyvar, " ~ ", paste(all.vars_trans(ymod)[-1], collapse = " + "))
 
           xmod <- update(xmod, formula(f))
 

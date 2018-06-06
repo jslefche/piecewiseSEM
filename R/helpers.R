@@ -20,7 +20,7 @@ all.vars.merMod <- function(formula.) {
 }
 
 #' Get vector of untransformed variables
-all.vars.notrans <- function(formula.) {
+all.vars_notrans <- function(formula.) {
 
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
@@ -28,7 +28,7 @@ all.vars.notrans <- function(formula.) {
 
     if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
 
-    formula. <- all.vars.trans(formula.)
+    formula. <- all.vars_trans(formula.)
 
     if(any(grepl(":", formula.))) {
 
@@ -51,7 +51,7 @@ all.vars.notrans <- function(formula.) {
 }
 
 #' Get vector of transformed variables
-all.vars.trans <- function(formula.) {
+all.vars_trans <- function(formula.) {
 
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
@@ -285,7 +285,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
   if(grepl("\\*", deparse(formula(model))) & !all(grepl("\\*", vars))) {
 
-    f <- all.vars.trans(formula(model))
+    f <- all.vars_trans(formula(model))
 
     model <- update(model, as.formula(paste(f[1], " ~ ", paste(f[-1], collapse = " + "), " + ", paste(onlyBars(formula(model)), collapse = " + "))))
 

@@ -303,7 +303,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
       
       rand <- onlyBars(formula(model))
       
-      f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+      f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
       
       nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = poisson(link = link), data = data))
       
@@ -347,7 +347,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
           
           rand <- onlyBars(formula(model))
           
-          f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+          f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
           
           nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = binomial(link = link), data = data))
           
@@ -447,7 +447,7 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
     rand <- onlyBars(formula(model))
 
-    f <- paste(all.vars.trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+    f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
 
     nullmodel <- suppressWarnings(lme4::glmer.nb(formula(f), family=negative.binomial(link = link), data))
 
@@ -502,7 +502,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   if(family. %in% c("poisson", "quasipoisson")) {
 
-    f <- paste(all.vars.trans(formula(model))[1], " ~ 1")
+    f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
 
     if(family. == "poisson")
 
@@ -542,7 +542,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
     if(method == "delta") {
 
-      f <- paste(all.vars.trans(formula(model))[1], " ~ 1")
+      f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
 
       if(family. == "binomial")
 

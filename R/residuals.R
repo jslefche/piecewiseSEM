@@ -11,7 +11,9 @@ residuals.psem <- function(object, ...){
   
   #get column names
   formulaList <- listFormula(object)
-  resp <- sapply(formulaList, function(x) all.vars(x)[1])
+  
+  resp <- sapply(formulaList, function(x) all.vars_notrans(x)[1])
+  
   names(ret) <- paste(resp, "residuals", sep="_")
   
   do.call(cbind, ret)

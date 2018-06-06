@@ -102,7 +102,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
           if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
 
-            krp <- KRp(i, all.vars.trans(formula(i))[-1], data, intercepts = TRUE)
+            krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = TRUE)
 
             ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
 
@@ -131,7 +131,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           }
 
         ret <- data.frame(
-          Response = all.vars.trans(listFormula(list(i))[[1]])[1],
+          Response = all.vars_trans(listFormula(list(i))[[1]])[1],
           Predictor = rownames(ret),
           ret
           )
@@ -173,9 +173,9 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
     newdata <- data[, all.vars.merMod(f)]
 
-    f.trans <- all.vars.trans(f)
+    f.trans <- all.vars_trans(f)
 
-    f.notrans <- all.vars.notrans(f)
+    f.notrans <- all.vars_notrans(f)
 
     if(all(class(j) %in% c("formula.cerror"))) {
 
@@ -201,7 +201,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
               if(is.list(standardize)) {
                 
-                vars <- unlist(sapply(modelList, all.vars.notrans))
+                vars <- unlist(sapply(modelList, all.vars_notrans))
                 
                 vars <- vars[!grepl(":", vars)]
 
@@ -252,7 +252,7 @@ dataTrans <- function(formula., newdata) {
 
   notrans <- all.vars.merMod(formula.)
 
-  trans <- all.vars.trans(formula.)
+  trans <- all.vars_trans(formula.)
 
   trans <- unlist(strsplit(trans, "\\:"))
 
@@ -338,7 +338,7 @@ scaleGLM <- function(model, standardize = "scale", standardize.type = "latent.li
 
   if(standardize.type == "Menard.OE") {
 
-    y <- all.vars.notrans(model)[1]
+    y <- all.vars_notrans(model)[1]
 
     data <- getSingleData(model)
 

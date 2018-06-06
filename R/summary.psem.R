@@ -30,7 +30,7 @@
 #'
 #' Standardized path coefficients are scaled by standard deviations.
 #'
-#' @param modelList A list of structural equations.
+#' @param object A list of structural equations.
 #' @param groups A vector of grouping variables (see Details).
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
@@ -73,12 +73,7 @@
 #' @examples
 #' @export summary.psem
 #'
-summary.psem <- function(object,
-                         direction = NULL, conserve = FALSE, conditional = FALSE,
-                         add.claims = NULL,
-                         standardize = "scale", standardize.type = "Menard.OE",
-                         intercepts = FALSE,
-                         .progressBar = TRUE) {
+summary.psem <- function(object, ...) {
 
   name <- deparse(substitute(object))
 
