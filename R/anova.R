@@ -4,7 +4,9 @@
 #' @param object2 an optional second \code{\link{psem}} object
 #' @param fun what anova function to use. Default is car::Anova
 #' @param ... options for anova functions
-
+#' 
+#' @export anova.psem
+#' 
 anova.psem <- function(object, object2 = NULL, fun = Anova, ...) {
 
   require(car)
@@ -23,26 +25,18 @@ anova.psem <- function(object, object2 = NULL, fun = Anova, ...) {
 
     names(ret) <- sapply(formulaList, function(x) all.vars(x)[1])
 
-    ret
-
     } else {
 
-     anova.psemlist(object, object2)
+      ret <- rbind(fisherC(object), fisherC(object2))
+      
+      ret <- rbind(ret, abs(ret[1, ] - ret[2, ]))
+      
+      ret[3, 3] <- 1 - pchisq(ret[3,1], df = ret[3, 2])
+      
+      rownames(ret) <- c(1, 2, "Difference")
 
-   }
+    }
+  
+  return(ret)
 
   }
-
-anova.psemlist <- function(mod1, mod2){
-
-  ret <- rbind(fisherC(mod1), fisherC(mod2))
-
-  ret <- rbind(ret, abs(ret[1,] - ret[2,]))
-
-  ret[3,3] <- 1-pchisq(ret[3,1], df = ret[3,2])
-
-  rownames(ret) <- c(1, 2, "Difference")
-
-  ret
-
-}

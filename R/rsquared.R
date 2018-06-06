@@ -102,7 +102,7 @@ rsquared <- function(modelList, method = NULL) {
 
     if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method)
 
-    if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
+    # if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
 
     if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i)
 

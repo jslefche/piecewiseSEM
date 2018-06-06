@@ -31,6 +31,7 @@
 #' Standardized path coefficients are scaled by standard deviations.
 #'
 #' @param object A list of structural equations.
+#' @param ... additional arguments to summary
 #' @param groups A vector of grouping variables (see Details).
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
@@ -73,7 +74,7 @@
 #' 
 #' @export summary.psem
 #'
-summary.psem <- function(object,
+summary.psem <- function(object, ..., 
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          standardize = "scale", standardize.type = "Menard.OE",
@@ -112,32 +113,32 @@ summary.psem <- function(object,
 #' 
 #' @keywords internal
 #' 
-print.summary.psem <- function(object, ...) {
+print.summary.psem <- function(x, ...) {
 
-  cat("\nStructural Equation Model of", as.character(object$name), "\n")
+  cat("\nStructural Equation Model of", as.character(x$name), "\n")
 
-  cat("\nCall:\n ", object$call)
+  cat("\nCall:\n ", x$call)
 
   cat("\n")
 
   cat("\n    AIC      BIC")
-  cat("\n", as.character(sprintf("%.3f", object$IC[1])), " ", as.character(object$IC[3]))
+  cat("\n", as.character(sprintf("%.3f", x$IC[1])), " ", as.character(x$IC[3]))
 
   cat("\n")
 
-  cat("\n---\nTests of directed separation:\n\n", captureTable(object$dTable))
+  cat("\n---\nTests of directed separation:\n\n", captureTable(x$dTable))
 
-  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(object$Cstat[1]),
-      "with P-value =", as.character(object$Cstat[3]),
-      "and on", as.character(object$Cstat[2]), "degrees of freedom")
+  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(x$Cstat[1]),
+      "with P-value =", as.character(x$Cstat[3]),
+      "and on", as.character(x$Cstat[2]), "degrees of freedom")
 
-  cat("\n\n---\nCoefficients:\n\n", captureTable(object$coefficients))
+  cat("\n\n---\nCoefficients:\n\n", captureTable(x$coefficients))
 
   cat("\n  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05")
 
-  cat("\n\nIndividual R-squared:\n\n", captureTable(object$R2[, c(1, 4:ncol(object$R2))]))
+  cat("\n\nIndividual R-squared:\n\n", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
 
-  invisible(object)
+  invisible(x)
 
 }
 

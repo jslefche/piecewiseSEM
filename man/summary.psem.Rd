@@ -4,12 +4,14 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-summary.psem(object, direction = NULL, conserve = FALSE,
+summary.psem(object, ..., direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, standardize = "scale",
   standardize.type = "Menard.OE", intercepts = FALSE, .progressBar = TRUE)
 }
 \arguments{
 \item{object}{A list of structural equations.}
+
+\item{...}{additional arguments to summary}
 
 \item{direction}{A \code{vector} of claims defining the specific
 directionality of independence claims; for use in special cases (see

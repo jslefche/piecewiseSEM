@@ -398,7 +398,7 @@ onlyBars <- function(formula., slopes = TRUE) {
 #' 
 #' @keywords internal
 #' 
-print.attr <- function(x) {
+print.attr <- function(x, ...) {
 
   attributes(x) <- NULL
 
