@@ -13,4 +13,3 @@ importFrom("stats", "AIC", "BIC", "as.formula", "binomial", "cor", "cor.test", "
            "na.omit", "nobs", "pchisq", "poisson", "predict", "pt", "quasibinomial", "quasipoisson", "reformulate", 
            "residuals", "sd", "setNames", "terms", "update", "var", "vcov", "aggregate")
 importFrom("utils", "capture.output", "head", "setTxtProgressBar", "txtProgressBar")
-importFrom("lavaan", "sem")

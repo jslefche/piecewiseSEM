@@ -73,7 +73,12 @@
 #' 
 #' @export summary.psem
 #'
-summary.psem <- function(object, ...) {
+summary.psem <- function(object,
+                         direction = NULL, conserve = FALSE, conditional = FALSE,
+                         add.claims = NULL,
+                         standardize = "scale", standardize.type = "Menard.OE",
+                         intercepts = FALSE,
+                         .progressBar = TRUE) {
 
   name <- deparse(substitute(object))
 
