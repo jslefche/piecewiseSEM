@@ -34,10 +34,6 @@
 #' @seealso \code{\link{dSep}}, \code{\link{%~~%}}
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
-#' @examples
-#' 
-#' 
-#' 
 #' 
 #' @export basisSet
 basisSet <- function(modelList, direction = NULL) {

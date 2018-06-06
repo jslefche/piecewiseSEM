@@ -3,20 +3,14 @@ export("%~~%")
 exportClasses(psem, psemlist)
 export(summary, AIC, BIC, residuals, anova, print, update)
 importFrom("car", "Anova")
-# old functions
-importFrom("lavaan", "sem") 
-importFrom("lme4", "findbars", "nobars", "glmerControl", "lmerControl", "ranef", "residuals", "VarCorr")
-importFrom("MASS", "glm.nb", "glmmPQL", "residuals")
+importFrom("lme4", "findbars", "nobars", "glmerControl", "lmerControl", "ranef", "VarCorr")
+importFrom("MASS", "glm.nb", "glmmPQL")
 importFrom("methods", "as")
-importFrom("nlme", "fixef", "getData", "getVarCov", "lmeControl", "residuals", "ranef", "VarCorr")
+importFrom("nlme", "fixef", "getData", "getVarCov", "glsControl", "lmeControl", "ranef", "VarCorr")
 importFrom("pbkrtest", "KRmodcomp")
-importFrom("phylolm", "fitted", "residuals")
-importFrom("stats", 
-           "AIC", "BIC", "as.formula", "binomial", "cor", "cor.test", "drop.terms", "family", "formula", "gaussian", 
-           "getCall", "glm.control",, "glsControl", "Logistic", "logLik", "model.matrix", "na.omit", 
-           "nobs", "pchisq", "poisson", "predict", "pt", "quasibinomial", "quasipoisson", "reformulate", "residuals",
-           "sd",
-           "setNames", "terms", "update", "var", "vcov",
-           # old functions
-           "aggregate")
+importFrom("stats", "AIC", "BIC", "as.formula", "binomial", "cor", "cor.test", "drop.terms", "family", "fitted", 
+           "formula","gaussian", "getCall", "glm.control", "logLik", "model.matrix", 
+           "na.omit", "nobs", "pchisq", "poisson", "predict", "pt", "quasibinomial", "quasipoisson", "reformulate", 
+           "residuals", "sd", "setNames", "terms", "update", "var", "vcov", "aggregate")
 importFrom("utils", "capture.output", "head", "setTxtProgressBar", "txtProgressBar")
+importFrom("lavaan", "sem")

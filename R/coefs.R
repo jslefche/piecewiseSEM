@@ -44,8 +44,8 @@
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
 #' degrees of freedom, and significance tests.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>, Jim Grace
-#' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E. in review.
-#' Standardized Coefficients in Regression and Structural Models with Binary Outcomes.
+#' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
+#' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes" Ecosphere 9(6): e02283.
 #' @seealso \code{\link{KRmodcomp}}
 #' @export coefs
 #'
