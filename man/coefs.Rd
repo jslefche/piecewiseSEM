@@ -4,7 +4,7 @@
 \alias{coefs}
 \title{Extract path coefficients}
 \usage{
-coefs(modelList, standardize = "scale", standardize.type = "Menard.OE",
+coefs(modelList, standardize = "scale", standardize.type = "latent.linear",
   intercepts = FALSE)
 }
 \arguments{
@@ -14,7 +14,7 @@ coefs(modelList, standardize = "scale", standardize.type = "Menard.OE",
 Default is \code{scale}.}
 
 \item{standardize.type}{The type of standardized for non-Gaussian responses:
-\code{latent.linear}, \code{Menard.OE}. Default is \code{Menard.OE}.}
+\code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.}
 
 \item{intercepts}{Whether intercepts should be included in the coefficients
 table. Default is FALSE.}
@@ -39,8 +39,8 @@ of x divided by the standard deviation of y. See below for cases pertaining to G
 \item{\code{range} Raw coefficients are scaled by a pre-selected range of x
 divided by a preselected range of y. The default argument is \code{range} which takes the
 two extremes of the data, otherwise the user must supply must a named \code{list} where
-the x and y entries each contain a vector of length 2 corresponding to the ranges to be
-used in standardization.}
+the names are the variables to be standardized, and each entry contains a vector of length 2
+to the ranges to be used in standardization.}
 }
 
 For binary response models (i.e., binomial responses), standardized coefficients
@@ -60,8 +60,8 @@ predicted (on the original or 'response' scale) values of y.}
 }
 }
 \references{
-Grace, J.B., Johnson, D.A., Lefcheck, J., and Byrnes, J.E. in review.
-Standardized Coefficients in Regression and Structural Models with Binary Outcomes.
+Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
+"Standardized Coefficients in Regression and Structural Models with Binary Outcomes" Ecosphere 9(6): e02283.
 }
 \seealso{
 \code{\link{KRmodcomp}}

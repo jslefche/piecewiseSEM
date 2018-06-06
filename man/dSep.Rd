@@ -45,11 +45,6 @@ to run both tests (Y ~ X, X ~ Y) and return the most conservative (i.e.,
 lowest) P-value, which can be toggled using the \code{conserve = TRUE}
 argument.
 }
-\examples{
-
-
-
-}
 \references{
 Shipley, Bill. "A new inferential test for path models based on
 directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.

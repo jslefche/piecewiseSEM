@@ -4,7 +4,7 @@
 \alias{scaleInt}
 \title{Calculate standard deviation or relevant range for interaction terms}
 \usage{
-scaleInt(model, newdata)
+scaleInt(model, newdata, standardize)
 }
 \description{
 Calculate standard deviation or relevant range for interaction terms

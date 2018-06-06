@@ -6,6 +6,11 @@
 \usage{
 e1 \%~~\% e2
 }
+\arguments{
+\item{e1}{variable 1}
+
+\item{e2}{variable 2}
+}
 \value{
 Returns a formula of class \code{formula.cerror}.
 }

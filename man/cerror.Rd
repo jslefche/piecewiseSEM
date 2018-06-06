@@ -7,10 +7,11 @@
 cerror(formula., modelList, data = NULL)
 }
 \arguments{
-\item{modelList}{A list of structural equations using \code{psem}.}
+\item{formula.}{A formula specifying the two correlated variables using \code{\%~~\%}.}
 
-\item{data}{A \code{data.frame} containing the data used in the list of
-equations.}
+\item{modelList}{A list of structural equations.}
+
+\item{data}{A \code{data.frame} containing the data used in the list of equations.}
 }
 \value{
 Returns a \code{data.frame} containing the (partial) correlation and
@@ -33,7 +34,6 @@ the total number of replicates, and k is the total number of variables
 informing the relationship) to derive a P-value.
 }
 \examples{
-
 # Generate example data
 dat <- data.frame(x1 = runif(50),
   x2 = runif(50), y1 = runif(50),
@@ -65,6 +65,9 @@ sem <- update(sem, x1 \%~~\% y1)
 
 coefs(sem)
 
+}
+\seealso{
+\code{\link{\%~~\%}}
 }
 \author{
 Jon Lefcheck <jlefcheck@bigelow.org>

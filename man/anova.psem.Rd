@@ -11,7 +11,7 @@
 
 \item{object2}{an optional second \code{\link{psem}} object}
 
-\item{fun}{what anova function to use?}
+\item{fun}{what anova function to use. Default is car::Anova}
 
 \item{...}{options for anova functions}
 }

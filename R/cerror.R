@@ -3,7 +3,8 @@
 #' Specifies correlated errors among predictors
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
-#'
+#' @param e1 variable 1
+#' @param e2 variable 2
 #' @return Returns a formula of class \code{formula.cerror}.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{cerror}}
@@ -69,17 +70,14 @@
 #' the total number of replicates, and k is the total number of variables
 #' informing the relationship) to derive a P-value.
 #'
-#' @param formula.  A formula specifying the two correlated variables using
-#' \code{%~~%}.
-#' @param modelList A list of structural equations using \code{psem}.
-#' @param data A \code{data.frame} containing the data used in the list of
-#' equations.
+#' @param formula.  A formula specifying the two correlated variables using \code{\%~~\%}.
+#' @param modelList A list of structural equations.
+#' @param data A \code{data.frame} containing the data used in the list of equations.
 #' @return Returns a \code{data.frame} containing the (partial) correlation and
 #' associated significance test.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
-#' @seealso \code{\link{cor.test}}, \code{\link{%~~%}}
+#' @seealso \code{\link{\%~~\%}}
 #' @examples
-#'
 #' # Generate example data
 #' dat <- data.frame(x1 = runif(50),
 #'   x2 = runif(50), y1 = runif(50),

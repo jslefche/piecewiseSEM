@@ -84,7 +84,7 @@ DEFAULT method
     # Get R2 for generalized linear mixed effects model (lme4)
     rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat))
 
-    rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat), method = "delta") # Delta method
+    rsquared(lme4::glmer(ypois ~ x1 + (1 | random), family = poisson, dat), method = "delta")
 
     # Get R2 for generalized linear mixed effects model (glmmPQL)
     rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))

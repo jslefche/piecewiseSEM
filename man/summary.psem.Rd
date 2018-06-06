@@ -4,12 +4,13 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-summary.psem(object, direction = NULL, conserve = FALSE,
-  conditional = FALSE, add.claims = NULL, intercepts = FALSE,
-  standardize = TRUE, standardize.type = "observation",
-  .progressBar = TRUE)
+summary.psem(object, ...)
 }
 \arguments{
+\item{object}{A list of structural equations.}
+
+\item{groups}{A vector of grouping variables (see Details).}
+
 \item{direction}{A \code{vector} of claims defining the specific
 directionality of independence claims; for use in special cases (see
 Details).}
@@ -33,10 +34,6 @@ reported. Default is TRUE.}
 Current options are \code{latent} or \code{observation}. Default is \code{observation}.}
 
 \item{.progressBar}{An optional progress bar. Default is TRUE.}
-
-\item{modelList}{A list of structural equations.}
-
-\item{groups}{A vector of grouping variables (see Details).}
 }
 \value{
 The function \code{summary.psem} returns a list of summary

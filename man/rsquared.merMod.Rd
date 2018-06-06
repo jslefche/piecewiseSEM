@@ -2,10 +2,12 @@
 % Please edit documentation in R/rsquared.R
 \name{rsquared.merMod}
 \alias{rsquared.merMod}
-\title{R^2 for merMod objects}
+\title{R^2 for phylolm objects
+R^2 for merMod objects}
 \usage{
 rsquared.merMod(model)
 }
 \description{
+R^2 for phylolm objects
 R^2 for merMod objects
 }

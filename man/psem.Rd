@@ -25,16 +25,14 @@ merModLmerTest, glmerMod}.
 
 It also takes objects of class \code{formula, formula.cerror}, corresponding
 to additional variables to be included in the tests of directed separation
-(\code{X ~ 1}) or correlated errors (\code{X1 ~~ X2}).
+(\code{X ~ 1}) or correlated errors (\code{X1 \%~~\% X2}).
 
 The function optionally accepts data objects of classes: \code{matrix,
 data.frame, SpatialPointsDataFrame, comparative.data}, or these are derived
 internally from the structural equations.
 }
-\examples{
-
-
-
+\seealso{
+\code{\link{summary.psem}}, \code{\link{\%~~\%}}
 }
 \author{
 Jon Lefcheck <jlefcheck@bigelow.org>
