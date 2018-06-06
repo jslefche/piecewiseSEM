@@ -85,6 +85,7 @@ partialResid <- function(formula., modelList, data = NULL) {
 #' Calculate partial correlations from partial residuals
 #' 
 #' @noRd
+#' @keywords internal
 #' 
 partialCorr <- function(formula., modelList, data = NULL) {
   
@@ -160,9 +161,125 @@ partialCorr <- function(formula., modelList, data = NULL) {
   
 }
 
+#' Identify models with correlated errors and return modified versions
+#' 
+#' @noRd
+#' @keywords internal
+#' 
+getResidModels <- function(vars, modelList, data) {
+  
+  yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all.vars.merMod(x)[1])
+  
+  if(all(yvar == FALSE)) {
+    
+    vars <- rev(vars)
+    
+    yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all.vars.merMod(x)[1])
+    
+  }
+  
+  xvar <- sapply(listFormula(modelList), function(x) all(vars[[2]] %in% all.vars.merMod(x)[1]))
+  
+  if(all(yvar == FALSE) & all(xvar == FALSE)) {
+    
+    rdata <- data[, colnames(data) %in% vars]
+    
+    ymod <- as.numeric(data[, vars[[1]]])
+    
+    names(ymod) <- rownames(data)
+    
+    xmod <- as.numeric(data[, vars[[2]]])
+    
+    names(xmod) <- rownames(data)
+    
+  } else {
+    
+    if(all(xvar == FALSE)) {
+      
+      xvar <- sapply(listFormula(modelList), function(x) {
+        
+        f <- all.vars.merMod(x)
+        
+        any(f[1] == vars[[1]] & f[-1] %in% vars[[2]])
+        
+      } )
+      
+    }
+    
+    ymod <- modelList[[which(yvar)]]
+    
+    # if(length(all.vars.merMod) < 3) stop("Variables are part of a simple linear regression: partial residuals cannot be calculated!")
+    
+    termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars_notrans(ymod)[-1]))
+    
+    if(length(termlabels.y) == 0) {
+      
+      vars[[2]] <- rev(vars[[2]])
+      
+      termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars_notrans(ymod)[-1]))
+      
+    }
+    
+    if(length(termlabels.y) > 0) ymod <- update(ymod, drop.terms(terms(ymod), termlabels.y, keep.response = TRUE))
+    
+    if(all(xvar == FALSE)) {
+      
+      xmod <- as.numeric(data[, vars[[2]]])
+      
+      names(xmod) <- rownames(data)
+      
+    } else {
+      
+      xmod <- modelList[[which(xvar)]]
+      
+      newyvar <- all.vars_trans(xmod)[which(paste(vars[[2]], collapse = ":") == all.vars_notrans(xmod))]
+      
+      if(length(vars[[2]]) > 1) {
+        
+        splitxvar <- unlist(strsplit(newyvar, ":"))
+        
+        newdata <- data
+        
+        for(i in 1:length(splitxvar)) {
+          
+          newdata[, vars[[2]][i]] <- sapply(newdata[, vars[[2]][i]], function(x) eval(parse(text = gsub(vars[[2]][i], x, splitxvar[i]))))
+          
+        }
+        
+        newdata <- data.frame(newdata, apply(newdata[, vars[[2]]], 1, prod, na.rm = TRUE))
+        
+        data <- data.frame(data, newdata[, ncol(newdata)])
+        
+        names(data)[ncol(data)] <- paste(vars[[2]], collapse = "......")
+        
+        xmod <- update(xmod,
+                       formula(paste(paste(vars[[2]], collapse = "......"), "~ ", paste(all.vars_trans(ymod)[-1], collapse = " + "))),
+                       data = data)
+        
+      } else {
+        
+        if(length(termlabels.y) > 0) {
+          
+          f <- paste(newyvar, " ~ ", paste(all.vars_trans(ymod)[-1], collapse = " + "))
+          
+          xmod <- update(xmod, formula(f))
+          
+        }
+        
+      }
+      
+    }
+    
+  }
+  
+  list(ymod = ymod, xmod = xmod)
+  
+}
+
 #' Get residuals from innermost grouping of mixed models (replicate-level)
 #' 
 #' @noRd
+#' @keywords internal
 #' 
 resid.lme <- function(model) {
   

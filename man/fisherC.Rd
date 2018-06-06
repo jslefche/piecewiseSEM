@@ -7,9 +7,6 @@
 fisherC(dTable, add.claims = NULL, direction = NULL, conserve = FALSE,
   conditional = FALSE, .progressBar = FALSE)
 }
-\arguments{
-\item{dTable}{a data.frame of evaluated independence claims}
-}
 \description{
 Summarize tests of directed separation using Fisher's C statistic
 }

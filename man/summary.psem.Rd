@@ -4,7 +4,7 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-\method{summary}{psem}(object, direction = NULL, conserve = FALSE,
+summary.psem(object, direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, standardize = "scale",
   standardize.type = "Menard.OE", intercepts = FALSE, .progressBar = TRUE)
 }
@@ -34,8 +34,6 @@ Current options are \code{latent} or \code{observation}. Default is \code{observ
 table. Default is FALSE.}
 
 \item{.progressBar}{An optional progress bar. Default is TRUE.}
-
-\item{groups}{A vector of grouping variables (see Details).}
 }
 \value{
 The function \code{summary.psem} returns a list of summary
@@ -51,13 +49,12 @@ summary table of the path coefficients, from \code{link{coefs}}.  }
 Returns information necessary to interpret piecewise structural equation
 models, including tests of directed separation, path coefficients,
 information criterion values, and R-squared values of individual models.
-Also estimates separate SEMs by an optional grouping variable.
 }
 \details{
-The argument \code{groups} splits the analysis based on an optional grouping
+The forthcomiing argument \code{groups} splits the analysis based on an optional grouping
 factor, conducts separate d-sep tests, and reports goodness-of-fit and path
 coefficients for each submodel. The procedure is approximately similar to a
-multigroup analysis in traditional variance-covariance SEM.
+multigroup analysis in traditional variance-covariance SEM. Coming in version 2.1.
 
 In cases involving non-normally distributed responses in the independence
 claims that are modeled using generalized linear models, the significance of

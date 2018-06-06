@@ -7,11 +7,6 @@
 infCrit(modelList, Cstat, add.claims = NULL, direction = NULL,
   conserve = FALSE, conditional = FALSE, .progressBar = FALSE)
 }
-\arguments{
-\item{modelList}{a list of structural equations}
-
-\item{...}{additional arguments}
-}
 \description{
 Information criterion values for SEM
 }

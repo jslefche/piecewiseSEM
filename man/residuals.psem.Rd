@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{a \code{\link{psem}} object}
+
+\item{...}{additional arguments to residuals}
 }
 \description{
 Residual values from fit models

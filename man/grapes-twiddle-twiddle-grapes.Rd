@@ -5,7 +5,7 @@
 \alias{`~~`}
 \title{Correlated error operator}
 \usage{
-e1 \%~~\% e2
+e1 %~~% e2
 }
 \description{
 Specifies correlated errors among predictors

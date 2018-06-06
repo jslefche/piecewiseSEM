@@ -1386,9 +1386,7 @@ sem.lavaan = function(modelList, data, compute.int = TRUE, corr.errors = NULL, a
           sep = "\n", collapse = "\n")
 
   # Run lavaan SEM
-  require(lavaan)
-  
-  model = sem(sem.model, data, ...)
+  model = lavaan::sem(sem.model, data, ...)
 
   return(model)
 
