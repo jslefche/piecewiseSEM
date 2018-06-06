@@ -84,7 +84,7 @@ partialResid <- function(formula., modelList, data = NULL) {
 
 #' Calculate partial correlations from partial residuals
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 partialCorr <- function(formula., modelList, data = NULL) {
   
@@ -162,7 +162,7 @@ partialCorr <- function(formula., modelList, data = NULL) {
 
 #' Get residuals from innermost grouping of mixed models (replicate-level)
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 resid.lme <- function(model) {
   

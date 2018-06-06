@@ -3,13 +3,11 @@
 #' Returns information necessary to interpret piecewise structural equation
 #' models, including tests of directed separation, path coefficients,
 #' information criterion values, and R-squared values of individual models.
-#' Also estimates separate SEMs by an optional grouping variable.
 #'
-#'
-#' The argument \code{groups} splits the analysis based on an optional grouping
+#' The forthcomiing argument \code{groups} splits the analysis based on an optional grouping
 #' factor, conducts separate d-sep tests, and reports goodness-of-fit and path
 #' coefficients for each submodel. The procedure is approximately similar to a
-#' multigroup analysis in traditional variance-covariance SEM.
+#' multigroup analysis in traditional variance-covariance SEM. Coming in version 2.1.
 #'
 #' In cases involving non-normally distributed responses in the independence
 #' claims that are modeled using generalized linear models, the significance of
@@ -31,8 +29,6 @@
 #' Standardized path coefficients are scaled by standard deviations.
 #'
 #' @param object A list of structural equations.
-#' @param ... additional arguments to summary
-#' @param groups A vector of grouping variables (see Details).
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #' Details).
@@ -72,9 +68,9 @@
 #' Shipley, Bill. "The AIC model selection method applied to path analytic
 #' models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 #' 
-#' @export summary.psem
+#' @export
 #'
-summary.psem <- function(object, ..., 
+summary.psem <- function(object, 
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
                          standardize = "scale", standardize.type = "Menard.OE",
@@ -111,7 +107,9 @@ summary.psem <- function(object, ...,
 
 #' @export print.summary.psem
 #' 
-#' @keywords internal
+#' @noRd
+#' 
+#' @export
 #' 
 print.summary.psem <- function(x, ...) {
 

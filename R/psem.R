@@ -81,13 +81,13 @@ formatpsem <- function(x) {
 
 #' Convert list to psem object
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 as.psem <- function(x) formatpsem(x)
 
 #' Evaluate model classes and stop if unsupported model class
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 evaluateClasses <- function(modelList) {
 
@@ -120,7 +120,9 @@ evaluateClasses <- function(modelList) {
 
 #' Print psem
 #' 
-#' @keywords internal
+#' @noRd
+#' 
+#' @export
 #' 
 print.psem <- function(x, ...) {
 
@@ -157,6 +159,11 @@ print.psem <- function(x, ...) {
 }
 
 #' Update psem model object with additional values.
+#' 
+#' @param object a psem object to update
+#' @param ... additional arguments to update
+#' 
+#' @export
 #' 
 update.psem <- function(object, ...) {
 

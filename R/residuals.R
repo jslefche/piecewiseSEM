@@ -1,6 +1,9 @@
 #' Residual values from fit models
 #'
 #' @param object a \code{\link{psem}} object
+#' @param ... additional arguments to residuals
+#' 
+#' @export
 #' 
 residuals.psem <- function(object, ...) {
   

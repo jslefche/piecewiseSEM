@@ -5,11 +5,11 @@
 #' @param fun what anova function to use. Default is car::Anova
 #' @param ... options for anova functions
 #' 
-#' @export anova.psem
-#' 
+#' @export
+#'
 anova.psem <- function(object, object2 = NULL, fun = Anova, ...) {
 
-  require(car)
+  # require(car)
   # dots <- list(...)
 
   #are we getting the LRT/F tables from
@@ -39,4 +39,4 @@ anova.psem <- function(object, object2 = NULL, fun = Anova, ...) {
   
   return(ret)
 
-  }
+}

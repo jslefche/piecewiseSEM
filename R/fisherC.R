@@ -1,7 +1,5 @@
 #' Summarize tests of directed separation using Fisher's C statistic
 #'
-#' @param dTable a data.frame of evaluated independence claims
-
 fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   if(class(dTable) == "psem") dTable <- dSep(dTable, direction, conserve, conditional, .progressBar)

@@ -3,10 +3,10 @@
 #' Specifies correlated errors among predictors
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
-#' @param e1 variable 1
-#' @param e2 variable 2
-#' @return Returns a formula of class \code{formula.cerror}.
+#' 
+#' @usage e1 %~~% e2
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @aliases `~~`
 #' @seealso \code{\link{cerror}}
 #' @examples
 #'

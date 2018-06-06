@@ -1,6 +1,9 @@
 #' Remove random effects from all.vars
 #' 
+#' @noRd
 #' @keywords internal
+#' 
+#' @export
 #' 
 all.vars.merMod <- function(formula.) {
 
@@ -24,7 +27,10 @@ all.vars.merMod <- function(formula.) {
 
 #' Get vector of untransformed variables
 #' 
+#' @noRd
 #' @keywords internal
+#' 
+#' @export
 #' 
 all.vars_notrans <- function(formula.) {
 
@@ -58,7 +64,10 @@ all.vars_notrans <- function(formula.) {
 
 #' Get vector of transformed variables
 #' 
+#' @noRd
 #' @keywords internal
+#' 
+#' @export 
 #' 
 all.vars_trans <- function(formula.) {
 
@@ -80,6 +89,7 @@ all.vars_trans <- function(formula.) {
 
 #' Get random effects from lme
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 findbars.lme <- function(model) {
@@ -98,6 +108,7 @@ findbars.lme <- function(model) {
 
 #' Get data from model list
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 GetData <- function(modelList) {
@@ -142,6 +153,7 @@ GetData <- function(modelList) {
 
 #' Get data from one model
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 getSingleData <- function(model) {
@@ -212,6 +224,7 @@ getSingleData <- function(model) {
 #' RE = "RE" just group effects are reported
 #' RE = "OLRE" just observation-level effects are reported
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
@@ -269,6 +282,7 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
 
 #' Get random effects variance-covariance from lme
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 GetVarCov <- function(model) {
@@ -297,6 +311,7 @@ GetVarCov <- function(model) {
 
 #' Assess significance
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 isSig <- function(p) {
@@ -309,7 +324,7 @@ isSig <- function(p) {
 
 #' Recompute P-values using Kenward-Rogers approximation
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 KRp <- function(model, vars, data, intercepts = FALSE) {
 
@@ -356,6 +371,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 #' Get list of formula from a `sem` object
 #' If remove = TRUE, take out non-evaluated formula
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 listFormula <- function(modelList, formulas = 0) {
@@ -373,11 +389,12 @@ listFormula <- function(modelList, formulas = 0) {
 }
 
 #' Get number of observations from a model
-#' @keywords internal
+#' @noRd
 nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 onlyBars <- function(formula., slopes = TRUE) {
@@ -396,7 +413,10 @@ onlyBars <- function(formula., slopes = TRUE) {
 
 #' Do not print attributes with custom functions
 #' 
+#' @noRd
 #' @keywords internal
+#' 
+#' @export
 #' 
 print.attr <- function(x, ...) {
 
@@ -412,6 +432,7 @@ print.attr <- function(x, ...) {
 #' formulas = 2, remove only formula but keep correlated errors
 #' formulas = 3, remove correlated errors but keep formula
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 removeData <- function(modelList, formulas = 0) {
@@ -430,6 +451,7 @@ removeData <- function(modelList, formulas = 0) {
 
 #' Strip transformations
 #' 
+#' @noRd
 #' @keywords internal
 #' 
 stripTransformations <- function(x) {

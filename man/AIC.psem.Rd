@@ -2,10 +2,10 @@
 % Please edit documentation in R/infCrit.R
 \name{AIC.psem}
 \alias{AIC.psem}
-\title{Generalized function for extraction AIC(c) score}
+\title{Generalized function for SEM AIC(c) score}
 \usage{
 \method{AIC}{psem}(object, ..., aicc = FALSE)
 }
 \description{
-Generalized function for extraction AIC(c) score
+Generalized function for SEM AIC(c) score
 }

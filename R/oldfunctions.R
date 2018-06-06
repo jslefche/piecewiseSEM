@@ -1,6 +1,8 @@
 # Functions from version 1.2 of piecewiseSEM
 # For use in vignette()
 
+#' @noRd
+#' @keywords internal
 endogenous.reverse = function(basis.set, modelList, add.vars = NULL) {
 
   # Remove NULLs from basis set
@@ -63,6 +65,8 @@ endogenous.reverse = function(basis.set, modelList, add.vars = NULL) {
 
 }
 
+#' @noRd
+#' @keywords internal
 filter.exogenous = function(modelList, basis.set, corr.errors = NULL, add.vars = NULL) {
 
   # Covnert model list into list of vectors
@@ -126,6 +130,8 @@ filter.exogenous = function(modelList, basis.set, corr.errors = NULL, add.vars =
 
 }
 
+#' @noRd
+#' @keywords internal
 get.dag = function(formulaList) {
 
   # Insert placeholder for interaction symbol
@@ -196,6 +202,8 @@ get.dag = function(formulaList) {
 
 }
 
+#' @noRd
+#' @keywords internal
 get.basis.set = function(amat) {
 
   ret = lapply(1:ncol(amat), function(i) {
@@ -256,6 +264,8 @@ get.basis.set = function(amat) {
 
 }
 
+#' @noRd
+#' @keywords internal
 get.formula.list = function(modelList, add.vars = NULL) {
 
   # Get list of formula from model list
@@ -322,6 +332,8 @@ get.formula.list = function(modelList, add.vars = NULL) {
 
 }
 
+#' @noRd
+#' @keywords internal
 get.model.control = function(model, model.control) {
 
   model.class = if(inherits(model, "merModLmerTest")) "lmerMod" else class(model)
@@ -366,6 +378,8 @@ get.model.control = function(model, model.control) {
 
 }
 
+#' @noRd
+#' @keywords internal
 get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
 
   if(class(rhs) == "formula") rhs = Reduce(paste, deparse(rhs))
@@ -498,6 +512,8 @@ get.random.formula = function(model, rhs, modelList, dropterms = NULL) {
 
 }
 
+#' @noRd
+#' @keywords internal
 get.scaled.data = function(modelList, data, standardize) {
 
   if(is.null(data)) stop("Must supply data if calculating standardized coefficients!")
@@ -643,6 +659,8 @@ get.scaled.data = function(modelList, data, standardize) {
 
 }
 
+#' @noRd
+#' @keywords internal
 get.scaled.model = function(model, newdata, modelList) {
 
   if(any(class(model) %in% c("lmerMod", "merModLmerTest", "glmerMod", "glmmTMB"))) {
@@ -687,6 +705,7 @@ get.scaled.model = function(model, newdata, modelList) {
 
 }
 
+#' @noRd
 get.sort.dag = function(formulaList) {
 
   # Get adjaceny matrix
@@ -716,12 +735,14 @@ get.sort.dag = function(formulaList) {
 
 }
 
+#' @noRd
 partial.resid <- function(...) {
 
   warning("`partial.resid` has been replaced by `partialResid`", call. = FALSE)
 
 }
 
+#' @noRd
 sem.aic = function(
 
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, grouping.fun = mean,
@@ -773,6 +794,7 @@ sem.aic = function(
 
 }
 
+#' @noRd
 sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
 
   # Get list of formula from model list
@@ -996,6 +1018,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
 
 }
 
+#' @noRd
 sem.fisher.c = function(
 
   modelList, data, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL, grouping.fun = mean,
@@ -1025,6 +1048,7 @@ sem.fisher.c = function(
 
 }
 
+#' @noRd
 sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors = NULL, intercept = FALSE) {
 
   warning("`sem.coefs` has been replaced. Use `psem` instead of `list`, and then call `summary` or `coefs` on that object", call. = FALSE)
@@ -1233,6 +1257,7 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
 
 }
 
+#' @noRd
 sem.fit = function(
 
   modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL,
@@ -1300,6 +1325,7 @@ sem.fit = function(
 
 }
 
+#' @noRd
 sem.lavaan = function(modelList, data, compute.int = TRUE, corr.errors = NULL, add.vars = NULL, ...) {
 
   if(is.null(data)) stop("Must supply dataset to function")
@@ -1360,12 +1386,15 @@ sem.lavaan = function(modelList, data, compute.int = TRUE, corr.errors = NULL, a
           sep = "\n", collapse = "\n")
 
   # Run lavaan SEM
-  model = lavaan::sem(sem.model, data, ...)
+  require(lavaan)
+  
+  model = sem(sem.model, data, ...)
 
   return(model)
 
 }
 
+#' @noRd
 sem.missing.paths = function(
 
   modelList, data, conditional = FALSE, corr.errors = NULL, add.vars = NULL, grouping.vars = NULL,
@@ -1655,6 +1684,7 @@ sem.missing.paths = function(
 
 }
 
+#' @noRd
 sem.model.fits <- function(...) {
 
   warning("`sem.model.fits` has been replaced by `rsquared`", call. = FALSE)

@@ -2,10 +2,10 @@
 % Please edit documentation in R/infCrit.R
 \name{BIC.psem}
 \alias{BIC.psem}
-\title{Generalized function for extraction BIC score}
+\title{Generalized function for SEM BIC score}
 \usage{
 \method{BIC}{psem}(object, ...)
 }
 \description{
-Generalized function for extraction BIC score
+Generalized function for SEM BIC score
 }
