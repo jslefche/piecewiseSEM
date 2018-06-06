@@ -2,12 +2,21 @@ exportPattern("^[[:alpha:]]+")
 export("%~~%")
 exportClasses(psem, psemlist)
 export(summary, AIC, BIC, residuals, anova, print, update)
-importFrom("lme4", "findbars", "nobars")
-importFrom("MASS", "glmmPQL")
+importFrom("car", "Anova")
+# old functions
+importFrom("lavaan", "sem") 
+importFrom("lme4", "findbars", "nobars", "glmerControl", "lmerControl", "ranef", "residuals", "VarCorr")
+importFrom("MASS", "glm.nb", "glmmPQL", "residuals")
 importFrom("methods", "as")
-importFrom("nlme", "fixef", "getData")
+importFrom("nlme", "fixef", "getData", "getVarCov", "lmeControl", "residuals", "ranef", "VarCorr")
 importFrom("pbkrtest", "KRmodcomp")
-importFrom("stats", "AIC", "BIC", "as.formula", "cor", "cor.test",
-           "drop.terms", "formula", "gaussian", "model.matrix", "na.omit", "nobs", "pchisq",
-           "pt", "reformulate", "resid", "terms", "update", "vcov")
-importFrom("utils", "setTxtProgressBar", "txtProgressBar")
+importFrom("phylolm", "fitted", "residuals")
+importFrom("stats", 
+           "AIC", "BIC", "as.formula", "binomial", "cor", "cor.test", "drop.terms", "family", "formula", "gaussian", 
+           "getCall", "glm.control",, "glsControl", "Logistic", "logLik", "model.matrix", "na.omit", 
+           "nobs", "pchisq", "poisson", "predict", "pt", "quasibinomial", "quasipoisson", "reformulate", "residuals",
+           "sd",
+           "setNames", "terms", "update", "var", "vcov",
+           # old functions
+           "aggregate")
+importFrom("utils", "capture.output", "head", "setTxtProgressBar", "txtProgressBar")

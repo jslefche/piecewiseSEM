@@ -119,7 +119,7 @@ print.psem <- function(x, ...) {
 
   formulas <- listFormula(x)
 
-  formulas.print <- sapply(1:length(formulas), function(i) {
+  formulas_print <- sapply(1:length(formulas), function(i) {
 
     if(class(formulas[[i]]) == "formula.cerror")
 
@@ -129,23 +129,23 @@ print.psem <- function(x, ...) {
 
   } )
 
-  data.print <- if(!is.null(x$data)) head(x$data) else head(GetData(x))
+  data_print <- if(!is.null(x$data)) head(x$data) else head(GetData(x))
 
-  class.print <- paste0("class(", class(x), ")")
+  class_print <- paste0("class(", class(x), ")")
 
   cat("Structural Equations:\n")
 
-  cat(paste(formulas.print, collapse = "\n"))
+  cat(paste(formulas_print, collapse = "\n"))
 
   cat("\n\nData:\n")
 
-  print(data.print)
+  print(data_print)
 
   cat(paste("...with ", dim(data)[1], " more rows"))
 
   cat("\n\n")
 
-  print(class.print)
+  print(class_print)
 
 }
 

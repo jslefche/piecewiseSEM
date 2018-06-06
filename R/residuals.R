@@ -3,7 +3,8 @@
 #' @param object a \code{\link{psem}} object
 
 # Extract residuals
-residuals.psem <- function(object, ...){
+residuals.psem <- function(object, ...) {
+  
   object <- removeData(object, formulas = 1)
   
   #get residuals of relationships

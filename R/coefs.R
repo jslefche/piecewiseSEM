@@ -75,175 +75,176 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
 #' Get raw (understandardized) coefficients from model
 unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
-
+  
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
-
+  
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
-
+  
   if(is.null(data)) data <- GetData(modelList)
-
+  
   modelList <- removeData(modelList, formulas = 2)
-
+  
   ret <- do.call(rbind, lapply(modelList, function(i) {
-
+    
     if(all(class(i) %in% c("formula.cerror")))
-
+      
       ret <- cerror(i, modelList, data) else {
-
+        
         if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "pgls", "phylolm", "phyloglm"))) {
-
+          
           ret <- as.data.frame(summary(i)$coefficients)
-
+          
           if(all(class(i) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
-
+          
           if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
-
-          if(all(class(i) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = bNewMod$n, ret[, c(3, 6)])
-
+          
+          if(all(class(i) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = i$n, ret[, c(3, 6)])
+          
           if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
-
+            
             krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = TRUE)
-
+            
             ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
-
+            
             ret[, "Pr(>|t|)"] <- krp[2, ]
-
+            
           }
-
+          
         }
-
+        
         if(all(class(i) %in% c("sarlm"))) {
-
+          
           ret <- as.data.frame(summary(i)$Coef)
-
+          
           ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
-
+          
         }
-
+        
         if(all(class(i) %in% c("gls", "lme", "glmmPQL"))) {
-
+          
           ret <- as.data.frame(summary(i)$tTable)
-
+          
           if(ncol(ret) == 4 & all(class(i) %in% c("gls")))
-
+            
             ret <- cbind(ret[, 1:2], DF = length(residuals(i)), ret[, 3:4])
-
-          }
-
+          
+        }
+        
         ret <- data.frame(
           Response = all.vars_trans(listFormula(list(i))[[1]])[1],
           Predictor = rownames(ret),
           ret
-          )
-
+        )
+        
         names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
-
-        }
-
-    if(intercepts == FALSE) ret <- subset(ret, Predictor != "(Intercept)")
-
+        
+      }
+    
+    if(intercepts == FALSE) ret <- ret[ret$Predictor != "(Intercept)", ]
+    
     return(ret)
-
-    } ) )
-
+    
+  } ) )
+  
   rownames(ret) <- NULL
-
+  
   return(ret)
-
+  
 }
 
 #' Calculate standardized regression coefficients
 stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
-
+  
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
-
+  
   if(is.null(data) & class(modelList) == "psem") data <- modelList$data
-
+  
   if(is.null(data)) data <- GetData(modelList)
-
+  
   modelList <- removeData(modelList, formulas = 2)
-
+  
   ret <- unstdCoefs(modelList, data, intercepts)
-
+  
   Bnew <- do.call(rbind, lapply(1:length(modelList), function(i) {
-
+    
     j <- modelList[[i]]
-
+    
     f <- listFormula(list(j))[[1]]
-
+    
     newdata <- data[, all.vars.merMod(f)]
-
+    
     f.trans <- all.vars_trans(f)
-
+    
     f.notrans <- all.vars_notrans(f)
-
+    
     if(all(class(j) %in% c("formula.cerror"))) {
-
-      data.frame(Std.Estimate = subset(ret, Response == paste0("~~", f.trans[1]) & Predictor == paste0("~~", f.trans[2]))$Estimate)
-
+      
+      data.frame(Std.Estimate = ret[ret$Response == paste0("~~", f.trans[1]) & 
+                                      ret$Predictor == paste0("~~", f.trans[2]), "Estimate"])
+      
     } else {
-
+      
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
-
-      newdata. <- dataTrans(formula(j), newdata)
-
-      B <- subset(ret, Response == f.trans[1])$Estimate
-
-      # B.se <- subset(ret, Response == f.trans[1])$Std.Error
-
+      
+      newdata <- dataTrans(formula(j), newdata)
+      
+      B <- ret[ret$Response == f.trans[1], "Estimate"]
+      
+      # B.se <- ret[ret$Response == f.trans[1]), "Std.Error"]
+      
       if(all(standardize == "scale"))
-
-        sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata.[, x], na.rm = TRUE)) else
-
+        
+        sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata[, x], na.rm = TRUE)) else
+          
           if(all(standardize == "range"))
-
-            sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata.[, x], na.rm = TRUE))) else
-
+            
+            sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata[, x], na.rm = TRUE))) else
+              
               if(is.list(standardize)) {
                 
                 vars <- unlist(sapply(modelList, all.vars_notrans))
                 
                 vars <- vars[!grepl(":", vars)]
-
+                
                 if(!all(names(standardize) %in% vars))
-
+                  
                   stop("Names in standardize list must match those in the model formula!")
-
+                
                 sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
-
+                  
                   nm <- which(names(standardize) == x)
-  
+                  
                   if(sum(nm) == 0) {
                     
                     warning(paste0("Relevant range not specified for variable '", x, "'. Using observed range instead"), call. = FALSE)
                     
-                    diff(range(newdata.[, x], na.rm = TRUE)) 
+                    diff(range(newdata[, x], na.rm = TRUE)) 
                     
-                    } else  diff(range(standardize[[nm]]))
-
+                  } else  diff(range(standardize[[nm]]))
+                  
                 } )
-
-                } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
-
-      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata., standardize))
-
-      sd.y <- scaleFam(f.notrans[1], j, newdata., standardize, standardize.type)
-
+                
+              } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
+      
+      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata, standardize))
+      
+      sd.y <- scaleFam(f.notrans[1], j, newdata, standardize, standardize.type)
+      
       if(intercepts == FALSE)
-
+        
         data.frame(Std.Estimate = B * (sd.x / sd.y)) else
-
+          
           data.frame(Std.Estimate = c(0, B[-1] * (sd.x / sd.y)))
+      
+    }
+    
+  } ) )
 
-      }
+ret <- data.frame(ret, Bnew)
 
-    } ) )
+rownames(ret) <- NULL
 
-  ret <- data.frame(ret, Bnew)
-
-  rownames(ret) <- NULL
-
-  return(ret)
+return(ret)
 
 }
 
@@ -313,7 +314,7 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
                 
                 warning(paste0("Relevant range not specified for variable '", y, "'. Using observed range instead"), call. = FALSE)
                 
-                sd.y <- diff(range(newdata.[, y], na.rm = TRUE)) 
+                sd.y <- diff(range(newdata[, y], na.rm = TRUE)) 
                 
               } else sd.y <- diff(range(standardize[[nm]]))
               
