@@ -9,14 +9,15 @@
 #' Default is FALSE
 #' @param conditional whether the conditioning variables should be shown in the table. 
 #' Default is FALSE
-#' @param .progressBar optional progress bar.
+#' @param .progressBar an optional progress bar. Default is FALSE
+#' 
 #' @return a vector corresponding to the C statistic, d.f., and P-value
 #' 
 #' @export
 #'
-fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALSE, .progressBar = FALSE) {
+fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  if(class(dTable) == "psem") dTable <- dSep(dTable, direction, conserve, conditional = FALSE, .progressBar)
+  if(class(dTable) == "psem") dTable <- dSep(dTable, direction, conserve, conditional = FALSE, .progressBar = FALSE)
 
   if(length(dTable) == 0) {
 

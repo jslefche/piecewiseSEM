@@ -7,9 +7,9 @@
 rsquared(modelList, method = NULL)
 }
 \arguments{
-\item{modelList}{A regression, or a list of structural equations.}
+\item{modelList}{a regression, or a list of structural equations.}
 
-\item{method}{The method used to compute the R2 value (see Details).}
+\item{method}{The method used to compute the R2 value (See Details)}
 }
 \value{
 Returns a \code{data.frame} with the response, its family and link,
@@ -17,7 +17,7 @@ the method used to estimate R2, and the R2 value itself. Mixed models also
 return marginal and conditional R2 values.
 }
 \description{
-Returns (pseudo)-R2 values for all linear, general(ized) linear, and
+Returns (pseudo)-R^2 values for all linear, general(ized) linear, and
 general(ized) linear mixed effects models.
 }
 \details{

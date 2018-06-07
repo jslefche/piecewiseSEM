@@ -11,6 +11,9 @@
 
 \item{...}{additional arguments to residuals}
 }
+\value{
+a \code{data.frame} of residuals for endogenous variables as columns
+}
 \description{
 Residual values from fit models
 }

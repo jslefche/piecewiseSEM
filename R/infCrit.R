@@ -8,10 +8,13 @@
 #' claim(s)
 #' @param conserve whether the most conservative P-value should be returned (See Details) 
 #' Default is FALSE
+#' @param conditional whether the conditioning variables should be shown in the table. 
+#' Default is FALSE
+#' @param .progressBar an optional progress bar. Default is FALSE
 #' 
 #' @return a vector of AIC, AICc, BIC, d.f., and sample size
 #' 
-infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE) {
+infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional = FALSE, .progressBar = FALSE)
 

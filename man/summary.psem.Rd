@@ -10,33 +10,32 @@
   .progressBar = TRUE)
 }
 \arguments{
-\item{object}{A list of structural equations.}
+\item{object}{a list of structural equations}
 
 \item{...}{additional arguments to summary}
 
-\item{direction}{A \code{vector} of claims defining the specific
-directionality of independence claims; for use in special cases (see
-Details).}
+\item{direction}{a vector of claims defining the specific directionality of any independence 
+claim(s)}
 
-\item{conserve}{Whether the most conservative P-value should be returned;
-for use in special cases (see Details). Default is FALSE.}
+\item{conserve}{whether the most conservative P-value should be returned (See Details) 
+Default is FALSE}
 
-\item{conditional}{Whether the conditioning variables should be shown in the
-d-sep table. Default is FALSE.}
+\item{conditional}{whether all conditioning variables should be shown in the table
+Default is FALSE}
 
-\item{add.claims}{An optional \code{vector} of additional independence
-claims to be added to the basis set.}
+\item{add.claims}{an optional vector of additional independence claims (P-values) 
+to be added to the basis set}
 
-\item{standardize}{Whether standardized path coefficients should be
-reported. Default is TRUE.}
+\item{standardize}{whether standardized path coefficients should be reported 
+Default is "scale"}
 
-\item{standardize.type}{The type of standardized for non-Gaussian responses:
-\code{latent.linear} or \code{Mendard.OE}. Default is \code{latent.linear}.}
+\item{standardize.type}{the type of standardized for non-Gaussian responses: 
+\code{latent.linear} (default), \code{Mendard.OE}}
 
-\item{intercepts}{Whether intercepts should be included in the coefficients
-table. Default is FALSE.}
+\item{intercepts}{whether intercepts should be included in the coefficient  table
+Default is FALSE}
 
-\item{.progressBar}{An optional progress bar. Default is TRUE.}
+\item{.progressBar}{an optional progress bar. Default is TRUE}
 }
 \value{
 The function \code{summary.psem} returns a list of summary

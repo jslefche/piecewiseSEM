@@ -310,7 +310,7 @@ isSig <- function(p) {
 
 #' Recompute P-values using Kenward-Rogers approximation
 #' 
-#' @keywrods internal
+#' @keywords internal
 #' 
 KRp <- function(model, vars, data, intercepts = FALSE) {
 

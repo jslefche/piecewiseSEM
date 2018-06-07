@@ -9,9 +9,8 @@ basisSet(modelList, direction = NULL)
 \arguments{
 \item{modelList}{A list of structural equations.}
 
-\item{direction}{A \code{vector} of claims defining the specific
-directionality of independence claims; for use in special cases (see
-Details).}
+\item{direction}{a vector of claims defining the specific directionality of any independence 
+claim(s)}
 }
 \value{
 A \code{list} of independence claims.
