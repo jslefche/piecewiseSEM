@@ -16,7 +16,7 @@
 #' 
 infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional = FALSE, .progressBar = FALSE)
+  if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)
 
   modelList <- removeData(modelList, formulas = 1)
 
