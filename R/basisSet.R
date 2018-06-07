@@ -26,9 +26,8 @@
 #'  exclude from evaluation.
 #' 
 #' @param modelList A list of structural equations.
-#' @param direction A \code{vector} of claims defining the specific
-#' directionality of independence claims; for use in special cases (see
-#' Details).
+#' @param direction a vector of claims defining the specific directionality of any independence 
+#' claim(s) 
 #' @return A \code{list} of independence claims.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{dSep}}

@@ -1,6 +1,6 @@
 #' R-squared for linear regression
 #'
-#' Returns (pseudo)-R2 values for all linear, general(ized) linear, and
+#' Returns (pseudo)-R^2 values for all linear, general(ized) linear, and
 #' general(ized) linear mixed effects models.
 #'
 #' For mixed models, marginal R2 considers only the variance by the fixed
@@ -35,8 +35,9 @@
 #'
 #' }
 #'
-#' @param modelList A regression, or a list of structural equations.
-#' @param method The method used to compute the R2 value (see Details).
+#' @param modelList a regression, or a list of structural equations.
+#' @param method The method used to compute the R2 value (See Details)
+#' 
 #' @return Returns a \code{data.frame} with the response, its family and link,
 #' the method used to estimate R2, and the R2 value itself. Mixed models also
 #' return marginal and conditional R2 values.
@@ -613,8 +614,8 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
 }
 
-#' R^2 for glmmadmb objects
-#' 
-#' @keywords internal
-#' 
+# R^2 for glmmadmb objects
+# 
+# @keywords internal
+#
 

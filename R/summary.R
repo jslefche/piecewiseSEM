@@ -28,24 +28,24 @@
 #'
 #' Standardized path coefficients are scaled by standard deviations.
 #'
-#' @param object A list of structural equations.
+#' @param object a list of structural equations
 #' @param ... additional arguments to summary
-#' @param direction A \code{vector} of claims defining the specific
-#' directionality of independence claims; for use in special cases (see
-#' Details).
-#' @param conserve Whether the most conservative P-value should be returned;
-#' for use in special cases (see Details). Default is FALSE.
-#' @param conditional Whether the conditioning variables should be shown in the
-#' d-sep table. Default is FALSE.
-#' @param add.claims An optional \code{vector} of additional independence
-#' claims to be added to the basis set.
-#' @param intercepts Whether intercepts should be included in the coefficients
-#' table. Default is FALSE.
-#' @param standardize Whether standardized path coefficients should be
-#' reported. Default is TRUE.
-#' @param standardize.type The type of standardized for non-Gaussian responses:
-#' \code{latent.linear} or \code{Mendard.OE}. Default is \code{latent.linear}.
-#' @param .progressBar An optional progress bar. Default is TRUE.
+#' @param direction a vector of claims defining the specific directionality of any independence 
+#' claim(s)
+#' @param conserve whether the most conservative P-value should be returned (See Details) 
+#' Default is FALSE
+#' @param conditional whether all conditioning variables should be shown in the table
+#' Default is FALSE
+#' @param add.claims an optional vector of additional independence claims (P-values) 
+#' to be added to the basis set
+#' @param intercepts whether intercepts should be included in the coefficient  table
+#' Default is FALSE
+#' @param standardize whether standardized path coefficients should be reported 
+#' Default is "scale"
+#' @param standardize.type the type of standardized for non-Gaussian responses: 
+#' \code{latent.linear} (default), \code{Mendard.OE}
+#' @param .progressBar an optional progress bar. Default is TRUE
+#' 
 #' @return The function \code{summary.psem} returns a list of summary
 #' statistics: \item{dTable}{ A summary table of the tests of directed
 #' separation, from \code{\link{dSep}}.  } \item{CStat}{ Fisher's C statistic,
@@ -108,9 +108,9 @@ summary.psem <- function(object, ...,
 
 } 
 
-#' @export print.summary.psem
+#' Print summary
 #' 
-#' @noRd
+#' @method print summary.psem
 #' 
 #' @export
 #' 
@@ -143,6 +143,10 @@ print.summary.psem <- function(x, ...) {
 
 }
 
+#' Captures output table
+#' 
+#' @keywords internal
+#' 
 captureTable <- function(g) {
 
   g1 <- capture.output(print(g, row.names = FALSE))

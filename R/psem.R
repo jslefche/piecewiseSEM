@@ -31,6 +31,10 @@ psem <- function(..., data) {
 
 }
 
+#' Format for psem
+#' 
+#' @keywords internal
+#' 
 formatpsem <- function(x) {
 
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
@@ -81,13 +85,13 @@ formatpsem <- function(x) {
 
 #' Convert list to psem object
 #' 
-#' @noRd
+#' @keywords internal
 #' 
 as.psem <- function(x) formatpsem(x)
 
 #' Evaluate model classes and stop if unsupported model class
 #' 
-#' @noRd
+#' @keywords internal
 #' 
 evaluateClasses <- function(modelList) {
 
@@ -119,8 +123,6 @@ evaluateClasses <- function(modelList) {
 }
 
 #' Print psem
-#' 
-#' @noRd
 #' 
 #' @export
 #' 

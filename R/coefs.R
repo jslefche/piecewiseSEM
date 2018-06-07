@@ -49,7 +49,7 @@
 #' Ecosphere 9(6): e02283.
 #' @seealso \code{\link{KRmodcomp}}
 #' 
-#' @export coefs
+#' @export
 #'
 coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
 

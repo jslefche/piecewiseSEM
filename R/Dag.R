@@ -1,7 +1,9 @@
 #' Generate adjacency matrix from list of structural equations
 #'
 #' @param formulaList a list of formulae corresponding to structural equations
-
+#' 
+#' @export
+#' 
 Dag <- function(formulaList) {
 
   fList <- lapply(formulaList, function(i) if(any(class(i) %in% "formula.cerror")) NULL else i)
@@ -40,6 +42,10 @@ Dag <- function(formulaList) {
 
 }
 
+#' Sort DAG based on ancestry
+#' 
+#' @keywords internal
+#' 
 sortDag <- function(amat, formulaList) {
 
   counter <- sapply(rownames(amat), function(i) {
@@ -76,6 +82,10 @@ sortDag <- function(amat, formulaList) {
 
 }
 
+#' Determine whether graph is cylic
+#' 
+#' @keywords internal
+#' 
 cyclic <- function(amat, formulaList) {
 
   vars <- colnames(amat[, colSums(amat) > 0, drop = FALSE])

@@ -42,6 +42,7 @@
 #' coefs(sem)
 #'
 #' @export `%~~%`
+#' 
 `%~~%` <- function(e1, e2) {
 
   x <- paste(deparse(substitute(e1)), "~~", deparse(substitute(e2)))
@@ -109,7 +110,8 @@
 #'
 #' coefs(sem)
 #'
-#' @export cerror
+#' @export 
+#' 
 cerror <- function(formula., modelList, data = NULL) {
 
   tab <- partialCorr(formula., modelList, data)

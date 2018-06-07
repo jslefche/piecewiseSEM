@@ -33,7 +33,7 @@
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #' 
-#' @export dSep
+#' @export 
 #' 
 dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
 
@@ -195,6 +195,10 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
 
 }
 
+#' Identify duplicate output
+#' 
+#' @keywords internal
+#' 
 dupOutput <- function(b, conserve = FALSE) {
 
   dup <- names(b)[which(duplicated(names(b)))]

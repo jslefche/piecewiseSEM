@@ -3,6 +3,8 @@
 #' @param object a \code{\link{psem}} object
 #' @param ... additional arguments to residuals
 #' 
+#' @return a \code{data.frame} of residuals for endogenous variables as columns
+#' 
 #' @export
 #' 
 residuals.psem <- function(object, ...) {
