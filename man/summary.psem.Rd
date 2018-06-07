@@ -4,12 +4,15 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-summary.psem(object, direction = NULL, conserve = FALSE,
+\method{summary}{psem}(object, ..., direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, standardize = "scale",
-  standardize.type = "Menard.OE", intercepts = FALSE, .progressBar = TRUE)
+  standardize.type = "latent.linear", intercepts = FALSE,
+  .progressBar = TRUE)
 }
 \arguments{
 \item{object}{A list of structural equations.}
+
+\item{...}{additional arguments to summary}
 
 \item{direction}{A \code{vector} of claims defining the specific
 directionality of independence claims; for use in special cases (see
@@ -27,8 +30,8 @@ claims to be added to the basis set.}
 \item{standardize}{Whether standardized path coefficients should be
 reported. Default is TRUE.}
 
-\item{standardize.type}{The type of standardized for non-Gaussian responses.
-Current options are \code{latent} or \code{observation}. Default is \code{observation}.}
+\item{standardize.type}{The type of standardized for non-Gaussian responses:
+\code{latent.linear} or \code{Mendard.OE}. Default is \code{latent.linear}.}
 
 \item{intercepts}{Whether intercepts should be included in the coefficients
 table. Default is FALSE.}

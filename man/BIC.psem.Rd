@@ -6,6 +6,11 @@
 \usage{
 \method{BIC}{psem}(object, ...)
 }
+\arguments{
+\item{object}{a psem object}
+
+\item{...}{additional arguments to BIC}
+}
 \description{
 Generalized function for SEM BIC score
 }

@@ -32,6 +32,12 @@ infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conse
 
 #' Generalized function for SEM AIC(c) score
 #'
+#' @param object a psem object
+#' @param ... additional arguments to AIC
+#' @param aicc whether correction for small sample size should be applied. Default is \code{FALSE}
+#'  
+#' @method AIC psem
+#'  
 #' @export
 #' 
 AIC.psem <- function(object, ..., aicc = FALSE) {
@@ -62,6 +68,11 @@ AIC.psem <- function(object, ..., aicc = FALSE) {
 
 #' Generalized function for SEM BIC score
 #'
+#' @param object a psem object
+#' @param ... additional arguments to BIC
+#' 
+#' @method BIC psem
+#' 
 #' @export
 #' 
 BIC.psem <- function(object, ...) infCrit(object)$BIC

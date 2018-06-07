@@ -4,7 +4,7 @@
 \alias{update.psem}
 \title{Update psem model object with additional values.}
 \usage{
-update.psem(object, ...)
+\method{update}{psem}(object, ...)
 }
 \arguments{
 \item{object}{a psem object to update}

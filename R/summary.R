@@ -29,6 +29,7 @@
 #' Standardized path coefficients are scaled by standard deviations.
 #'
 #' @param object A list of structural equations.
+#' @param ... additional arguments to summary
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #' Details).
@@ -42,8 +43,8 @@
 #' table. Default is FALSE.
 #' @param standardize Whether standardized path coefficients should be
 #' reported. Default is TRUE.
-#' @param standardize.type The type of standardized for non-Gaussian responses.
-#' Current options are \code{latent} or \code{observation}. Default is \code{observation}.
+#' @param standardize.type The type of standardized for non-Gaussian responses:
+#' \code{latent.linear} or \code{Mendard.OE}. Default is \code{latent.linear}.
 #' @param .progressBar An optional progress bar. Default is TRUE.
 #' @return The function \code{summary.psem} returns a list of summary
 #' statistics: \item{dTable}{ A summary table of the tests of directed
@@ -68,12 +69,14 @@
 #' Shipley, Bill. "The AIC model selection method applied to path analytic
 #' models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 #' 
-#' @export
+#' @method summary psem
 #'
-summary.psem <- function(object, 
+#' @export
+#' 
+summary.psem <- function(object, ...,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
-                         standardize = "scale", standardize.type = "Menard.OE",
+                         standardize = "scale", standardize.type = "latent.linear",
                          intercepts = FALSE,
                          .progressBar = TRUE) {
 
@@ -103,7 +106,7 @@ summary.psem <- function(object,
 
   l
 
-}
+} 
 
 #' @export print.summary.psem
 #' 

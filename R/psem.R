@@ -163,6 +163,8 @@ print.psem <- function(x, ...) {
 #' @param object a psem object to update
 #' @param ... additional arguments to update
 #' 
+#' @method update psem
+#' 
 #' @export
 #' 
 update.psem <- function(object, ...) {

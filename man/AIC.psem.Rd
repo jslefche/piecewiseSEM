@@ -6,6 +6,13 @@
 \usage{
 \method{AIC}{psem}(object, ..., aicc = FALSE)
 }
+\arguments{
+\item{object}{a psem object}
+
+\item{...}{additional arguments to AIC}
+
+\item{aicc}{whether correction for small sample size should be applied. Default is \code{FALSE}}
+}
 \description{
 Generalized function for SEM AIC(c) score
 }
