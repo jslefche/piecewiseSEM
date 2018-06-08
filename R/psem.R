@@ -27,8 +27,12 @@ psem <- function(..., data) {
 
   x <- list(...)
 
-  formatpsem(x)
+  x <- formatpsem(x)
 
+  class(x) <- "psem"
+  
+  x
+  
 }
 
 #' Format for psem
@@ -77,19 +81,23 @@ formatpsem <- function(x) {
 
     stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
 
-  class(x) <- "psem"
-
   x
 
 }
 
 #' Convert list to psem object
 #' 
-#' @method as psem
-#' 
 #' @export
 #' 
-as.psem <- function(x) formatpsem(x)
+as.psem <- function(object, Class = "psem") { 
+  
+  object <- formatpsem(object)
+  
+  class(object) <- Class
+  
+  object
+  
+}
 
 #' Evaluate model classes and stop if unsupported model class
 #' 
@@ -130,6 +138,8 @@ evaluateClasses <- function(modelList) {
 #' @param ... further arguments passed to or from other methods
 #' 
 #' @method print psem
+#' 
+#' @export
 #' 
 print.psem <- function(x, ...) {
 

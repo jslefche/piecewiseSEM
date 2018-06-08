@@ -4,7 +4,7 @@
 \alias{as.psem}
 \title{Convert list to psem object}
 \usage{
-\method{as}{psem}(x)
+as.psem(object, Class = "psem")
 }
 \description{
 Convert list to psem object
