@@ -12,4 +12,3 @@ sem.aic(modelList, data, corr.errors = NULL, add.vars = NULL,
 \description{
 sem.aic
 }
-\keyword{internal}

@@ -12,4 +12,3 @@ sem.missing.paths(modelList, data, conditional = FALSE, corr.errors = NULL,
 \description{
 sem.missing.paths
 }
-\keyword{internal}

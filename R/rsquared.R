@@ -83,7 +83,7 @@
 #'     rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))
 #'   }
 #'
-#' @export rsquared
+#' @export
 #' 
 rsquared <- function(modelList, method = NULL) {
 

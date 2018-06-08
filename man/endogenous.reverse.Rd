@@ -7,5 +7,6 @@
 endogenous.reverse(basis.set, modelList, add.vars = NULL)
 }
 \description{
-@keywords internal
+endogenous.reverse
 }
+\keyword{internal}

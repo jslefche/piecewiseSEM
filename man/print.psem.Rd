@@ -4,7 +4,12 @@
 \alias{print.psem}
 \title{Print psem}
 \usage{
-print.psem(x, ...)
+\method{print}{psem}(x, ...)
+}
+\arguments{
+\item{x}{an object of class pse,}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Print psem

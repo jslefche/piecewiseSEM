@@ -21,7 +21,7 @@
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 #' 
-#' @export psem
+#' @export
 #' 
 psem <- function(..., data) {
 
@@ -85,7 +85,9 @@ formatpsem <- function(x) {
 
 #' Convert list to psem object
 #' 
-#' @keywords internal
+#' @method as psem
+#' 
+#' @export
 #' 
 as.psem <- function(x) formatpsem(x)
 
@@ -124,7 +126,10 @@ evaluateClasses <- function(modelList) {
 
 #' Print psem
 #' 
-#' @export
+#' @param x an object of class pse,
+#' @param ... further arguments passed to or from other methods
+#' 
+#' @method print psem
 #' 
 print.psem <- function(x, ...) {
 

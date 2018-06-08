@@ -12,4 +12,3 @@ sem.fisher.c(modelList, data, corr.errors = NULL, add.vars = NULL,
 \description{
 sem.fisher.c
 }
-\keyword{internal}

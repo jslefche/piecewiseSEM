@@ -402,7 +402,7 @@ onlyBars <- function(formula., slopes = TRUE) {
 #' 
 #' @keywords internal
 #' 
-#' @export
+#' @method print attr
 #' 
 print.attr <- function(x, ...) {
 

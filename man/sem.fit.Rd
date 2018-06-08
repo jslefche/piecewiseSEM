@@ -12,4 +12,3 @@ sem.fit(modelList, data, conditional = FALSE, corr.errors = NULL,
 \description{
 sem.fit
 }
-\keyword{internal}

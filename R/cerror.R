@@ -41,7 +41,7 @@
 #'
 #' coefs(sem)
 #'
-#' @export `%~~%`
+#' @export
 #' 
 `%~~%` <- function(e1, e2) {
 
@@ -74,10 +74,12 @@
 #' @param formula.  A formula specifying the two correlated variables using \code{\%~~\%}.
 #' @param modelList A list of structural equations.
 #' @param data A \code{data.frame} containing the data used in the list of equations.
+#' 
 #' @return Returns a \code{data.frame} containing the (partial) correlation and
 #' associated significance test.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{\%~~\%}}
+#' 
 #' @examples
 #' # Generate example data
 #' dat <- data.frame(x1 = runif(50),

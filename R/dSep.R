@@ -26,6 +26,7 @@
 #' @param conditioning Whether the conditioning variables should be shown in
 #' the summary table. Default is FALSE.
 #' @param .progressBar An optional progress bar. Default is TRUE.
+#' 
 #' @return Returns a \code{data.frame} of independence claims and their
 #' significance values.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>

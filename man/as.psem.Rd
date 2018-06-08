@@ -4,9 +4,8 @@
 \alias{as.psem}
 \title{Convert list to psem object}
 \usage{
-as.psem(x)
+\method{as}{psem}(x)
 }
 \description{
 Convert list to psem object
 }
-\keyword{internal}

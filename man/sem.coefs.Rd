@@ -10,4 +10,3 @@ sem.coefs(modelList, data = NULL, standardize = "none",
 \description{
 sem.coefs
 }
-\keyword{internal}

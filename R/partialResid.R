@@ -12,6 +12,7 @@
 #' \code{rhs} is the predictor whose partial effect is desired.
 #' @param modelList A list of structural equations.
 #' @param data A \code{data.frame} used to fit the equations.
+#' 
 #' @return Returns a \code{data.frame} of residuals of \code{y ~ Z} called
 #' \code{yresids}, of \code{x ~ Z} called \code{xresids}.
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
@@ -36,7 +37,7 @@
 #'
 #' plot(presid) # identical plot!
 #'
-#' @export partialResid
+#' @export 
 #' 
 partialResid <- function(formula., modelList, data = NULL) {
   
@@ -84,8 +85,9 @@ partialResid <- function(formula., modelList, data = NULL) {
 
 #' Calculate partial correlations from partial residuals
 #' 
-#' @noRd
 #' @keywords internal
+#' 
+#' @export
 #' 
 partialCorr <- function(formula., modelList, data = NULL) {
   
@@ -163,7 +165,6 @@ partialCorr <- function(formula., modelList, data = NULL) {
 
 #' Identify models with correlated errors and return modified versions
 #' 
-#' @noRd
 #' @keywords internal
 #' 
 getResidModels <- function(vars, modelList, data) {
@@ -278,7 +279,6 @@ getResidModels <- function(vars, modelList, data) {
 
 #' Get residuals from innermost grouping of mixed models (replicate-level)
 #' 
-#' @noRd
 #' @keywords internal
 #' 
 resid.lme <- function(model) {

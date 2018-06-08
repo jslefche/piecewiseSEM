@@ -1,9 +1,6 @@
-## Functions from version 1.2 of piecewiseSEM
-## For use in vignette()
-
 #' endogenous.reverse
 #'
-#'  @keywords internal
+#' @keywords internal
 #'  
 endogenous.reverse = function(basis.set, modelList, add.vars = NULL) {
 
@@ -727,6 +724,7 @@ get.scaled.model = function(model, newdata, modelList) {
 #' get.sort.dag
 #' 
 #' @keywords internal
+#' 
 get.sort.dag = function(formulaList) {
 
   # Get adjaceny matrix
@@ -758,7 +756,13 @@ get.sort.dag = function(formulaList) {
 
 #' partial.resid
 #' 
-#' @keywords internal
+#' Obtains partial residuals
+#' 
+#' @param ... any input
+#' 
+#' @return a warning
+#' 
+#' @export partial.resid
 #' 
 partial.resid <- function(...) {
 
@@ -768,7 +772,7 @@ partial.resid <- function(...) {
 
 #' sem.aic
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.aic = function(
 
@@ -823,7 +827,7 @@ sem.aic = function(
 
 #' sem.basis.set
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
 
@@ -1050,7 +1054,7 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
 
 #' sem.fisher.c
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.fisher.c = function(
 
@@ -1083,7 +1087,7 @@ sem.fisher.c = function(
 
 #' sem.coefs
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors = NULL, intercept = FALSE) {
 
@@ -1295,7 +1299,7 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
 
 #' sem.fit
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.fit = function(
 
@@ -1366,7 +1370,7 @@ sem.fit = function(
 
 #' sem.missing.paths
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.missing.paths = function(
 
@@ -1659,10 +1663,10 @@ sem.missing.paths = function(
 
 #' sem.model.fits
 #' 
-#' @keywords internal
+#' @export
 #' 
 sem.model.fits <- function(...) {
 
   warning("`sem.model.fits` has been replaced by `rsquared`", call. = FALSE)
-
+ 
 }

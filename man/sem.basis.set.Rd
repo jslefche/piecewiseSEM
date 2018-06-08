@@ -9,4 +9,3 @@ sem.basis.set(modelList, corr.errors = NULL, add.vars = NULL)
 \description{
 sem.basis.set
 }
-\keyword{internal}

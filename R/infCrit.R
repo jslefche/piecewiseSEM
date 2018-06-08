@@ -14,6 +14,8 @@
 #' 
 #' @return a vector of AIC, AICc, BIC, d.f., and sample size
 #' 
+#' @export
+#' 
 infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)

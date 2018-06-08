@@ -79,6 +79,8 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 #' 
 #' @keywords internal
 #' 
+#' @export
+#' 
 unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
@@ -160,6 +162,8 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 #' Calculate standardized regression coefficients
 #' 
 #' @keywords internal
+#' 
+#' @export
 #' 
 stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
   

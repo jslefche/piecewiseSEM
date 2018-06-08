@@ -22,4 +22,5 @@ residuals.psem <- function(object, ...) {
   names(ret) <- paste(resp, "residuals", sep="_")
   
   do.call(cbind, ret)
+  
 }

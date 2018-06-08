@@ -6,7 +6,12 @@
 \usage{
 partial.resid(...)
 }
-\description{
-partial.resid
+\arguments{
+\item{...}{any input}
 }
-\keyword{internal}
+\value{
+a warning
+}
+\description{
+Obtains partial residuals
+}

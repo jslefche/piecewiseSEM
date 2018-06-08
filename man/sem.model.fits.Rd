@@ -9,4 +9,3 @@ sem.model.fits(...)
 \description{
 sem.model.fits
 }
-\keyword{internal}
