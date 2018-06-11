@@ -9,4 +9,4 @@ There were no NOTES.
 
 ## Test environments
 * local OS X install, R 3.5.0
-* win-builder (R-devel and R-release)
+* local Windows 10 install, R 3.5.0
