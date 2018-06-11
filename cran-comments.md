@@ -5,7 +5,7 @@ This is a major update introducing new and enhanced functionality.
 There were no ERRORS or WARNINGS. 
 
 ## NOTES 
-There were no NOTES.
+Maintainer has changed email from <jslefche@vims.edu> to <jlefcheck@bigelow.org>.
 
 ## Test environments
 * local OS X install, R 3.5.0
