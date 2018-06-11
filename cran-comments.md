@@ -2,10 +2,10 @@
 This is a major update introducing new and enhanced functionality.
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+There were no ERRORS or WARNINGS. 
 
 ## NOTES 
-1 NOTE corresponding to cran-comments.md in the top level.
+There were no NOTES.
 
 ## Test environments
 * local OS X install, R 3.5.0
