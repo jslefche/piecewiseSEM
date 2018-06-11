@@ -1157,7 +1157,7 @@ sem.fisher.c = function(
 #' 
 #' @param modelList a \code{list} of regressions representing the structural equation model
 #' @param data a \code{data.frame} used to construct the structured equations
-#' @standardize whether coefficients should be scaled by their standard deviations ("scale") or by
+#' @param standardize whether coefficients should be scaled by their standard deviations ("scale") or by
 #' their ranges ("range")
 #' @param corr.errors a vector of variables with correlated errors (separated by "~~")
 #' @param intercept whether intercepts should also be returned. Default is \code{FALSE}
