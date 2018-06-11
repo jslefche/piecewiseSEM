@@ -87,6 +87,9 @@ formatpsem <- function(x) {
 
 #' Convert list to psem object
 #' 
+#' @param object any \code{R} object
+#' @param Class the name of the class to which \code{object} should be coerced
+#' 
 #' @export
 #' 
 as.psem <- function(object, Class = "psem") { 
