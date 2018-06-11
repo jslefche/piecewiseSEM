@@ -10,7 +10,7 @@
 #' merModLmerTest, glmerMod}.
 #'
 #' \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-#' \tab 2.0.0\cr Date: \tab 2018-01-18\cr Depends: \tab R (>= 3.4.1), nlme,
+#' \tab 2.0.0\cr Date: \tab 2018-06-11\cr Depends: \tab R (>= 3.5.0), nlme,
 #' pbkrtest\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr } The primary
 #' functions in the package are \code{\link{psem}} which unites structural
 #' equations in a single model. \code{summary.psem} can be used on an object of
@@ -20,7 +20,7 @@
 #' @name piecewiseSEM-package
 #' @aliases piecewiseSEM-package piecewiseSEM
 #' @docType package
-#' @author Jon Lefcheck <jslefche@@vims.edu>
+#' @author Jon Lefcheck <jslefche@@bigelow.org>
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #'

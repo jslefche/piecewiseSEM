@@ -12,6 +12,9 @@ sem.coefs(modelList, data = NULL, standardize = "none",
 
 \item{data}{a \code{data.frame} used to construct the structured equations}
 
+\item{standardize}{whether coefficients should be scaled by their standard deviations ("scale") or by
+their ranges ("range")}
+
 \item{corr.errors}{a vector of variables with correlated errors (separated by "~~")}
 
 \item{intercept}{whether intercepts should also be returned. Default is \code{FALSE}}
