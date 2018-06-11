@@ -1103,6 +1103,23 @@ sem.basis.set = function(modelList, corr.errors = NULL, add.vars = NULL) {
 
 #' sem.fisher.c
 #' 
+#' Fisher's C test for SEM (old)
+#' 
+#' @param modelList a \code{list} of regressions representing the structural equation model
+#' @param data a \code{data.frame} used to construct the structured equations
+#' @param corr.errors a vector of variables with correlated errors (separated by "~~")
+#' @param add.vars a vector of additional variables whose independence claims should be 
+#' evaluated, but which do not appear in the model list
+#' @param grouping.vars an optional variable that represents the levels of data aggregation 
+#' for a multi-level dataset
+#' @param grouping.fun a function defining how variables are aggregated in \code{grouping.vars}. 
+#' Default is \code{mean}
+#' @param adjust.p whether p-values degrees of freedom should be adjusted. Default is \code{FALSE}
+#' @param basis.set provide an optional basis set
+#' @param pvalues.df an optional \code{data.frame} corresponding to p-values for independence claims
+#' @param model.control a \code{list} of model control arguments to be passed to d-sep models
+#' @param .progressBar enable optional text progress bar. Default is \code{TRUE}
+#' 
 #' @export
 #' 
 sem.fisher.c = function(
@@ -1135,6 +1152,15 @@ sem.fisher.c = function(
 }
 
 #' sem.coefs
+#' 
+#' Standardized coefficients for linear models (old)
+#' 
+#' @param modelList a \code{list} of regressions representing the structural equation model
+#' @param data a \code{data.frame} used to construct the structured equations
+#' @standardize whether coefficients should be scaled by their standard deviations ("scale") or by
+#' their ranges ("range")
+#' @param corr.errors a vector of variables with correlated errors (separated by "~~")
+#' @param intercept whether intercepts should also be returned. Default is \code{FALSE}
 #' 
 #' @export
 #' 
@@ -1355,6 +1381,8 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
 #' 
 #' @param modelList a \code{list} of regressions representing the structural equation model
 #' @param data a \code{data.frame} used to construct the structured equations
+#' @param conditional whether the full set of conditioning variables should be returned.
+#' Default is \code{FALSE}
 #' @param corr.errors a vector of variables with correlated errors (separated by "~~")
 #' @param add.vars a vector of additional variables whose independence claims should be 
 #' evaluated, but which do not appear in the model list
@@ -1441,6 +1469,24 @@ sem.fit = function(
 }
 
 #' sem.missing.paths
+#' 
+#' Tests of directed separation (old) 
+#' 
+#' @param modelList a \code{list} of regressions representing the structural equation model
+#' @param data a \code{data.frame} used to construct the structured equations
+#' @param conditional whether the full set of conditioning variables should be returned.
+#' Default is \code{FALSE}
+#' @param corr.errors a vector of variables with correlated errors (separated by "~~")
+#' @param add.vars a vector of additional variables whose independence claims should be 
+#' evaluated, but which do not appear in the model list
+#' @param grouping.vars an optional variable that represents the levels of data aggregation 
+#' for a multi-level dataset
+#' @param grouping.fun a function defining how variables are aggregated in \code{grouping.vars}. 
+#' Default is \code{mean}
+#' @param adjust.p whether p-values degrees of freedom should be adjusted. Default is \code{FALSE}
+#' @param basis.set provide an optional basis set
+#' @param model.control a \code{list} of model control arguments to be passed to d-sep models
+#' @param .progressBar enable optional text progress bar. Default is \code{TRUE}
 #' 
 #' @export
 #' 

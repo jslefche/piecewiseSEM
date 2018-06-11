@@ -9,6 +9,33 @@ sem.missing.paths(modelList, data, conditional = FALSE, corr.errors = NULL,
   adjust.p = FALSE, basis.set = NULL, model.control = NULL,
   .progressBar = TRUE)
 }
+\arguments{
+\item{modelList}{a \code{list} of regressions representing the structural equation model}
+
+\item{data}{a \code{data.frame} used to construct the structured equations}
+
+\item{conditional}{whether the full set of conditioning variables should be returned.
+Default is \code{FALSE}}
+
+\item{corr.errors}{a vector of variables with correlated errors (separated by "~~")}
+
+\item{add.vars}{a vector of additional variables whose independence claims should be 
+evaluated, but which do not appear in the model list}
+
+\item{grouping.vars}{an optional variable that represents the levels of data aggregation 
+for a multi-level dataset}
+
+\item{grouping.fun}{a function defining how variables are aggregated in \code{grouping.vars}. 
+Default is \code{mean}}
+
+\item{adjust.p}{whether p-values degrees of freedom should be adjusted. Default is \code{FALSE}}
+
+\item{basis.set}{provide an optional basis set}
+
+\item{model.control}{a \code{list} of model control arguments to be passed to d-sep models}
+
+\item{.progressBar}{enable optional text progress bar. Default is \code{TRUE}}
+}
 \description{
-sem.missing.paths
+Tests of directed separation (old)
 }

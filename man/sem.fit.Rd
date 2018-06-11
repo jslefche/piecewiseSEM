@@ -14,6 +14,9 @@ sem.fit(modelList, data, conditional = FALSE, corr.errors = NULL,
 
 \item{data}{a \code{data.frame} used to construct the structured equations}
 
+\item{conditional}{whether the full set of conditioning variables should be returned.
+Default is \code{FALSE}}
+
 \item{corr.errors}{a vector of variables with correlated errors (separated by "~~")}
 
 \item{add.vars}{a vector of additional variables whose independence claims should be 

@@ -7,6 +7,15 @@
 sem.coefs(modelList, data = NULL, standardize = "none",
   corr.errors = NULL, intercept = FALSE)
 }
+\arguments{
+\item{modelList}{a \code{list} of regressions representing the structural equation model}
+
+\item{data}{a \code{data.frame} used to construct the structured equations}
+
+\item{corr.errors}{a vector of variables with correlated errors (separated by "~~")}
+
+\item{intercept}{whether intercepts should also be returned. Default is \code{FALSE}}
+}
 \description{
-sem.coefs
+Standardized coefficients for linear models (old)
 }
