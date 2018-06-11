@@ -1,5 +1,5 @@
 ## Update package
-This is a major update introducing new functionality.
+This is a major update introducing new and enhanced functionality.
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
@@ -8,5 +8,5 @@ There were no ERRORs or WARNINGs.
 1 NOTE corresponding to cran-comments.md in the top level.
 
 ## Test environments
-* local OS X install, R 3.4.1
+* local OS X install, R 3.5.0
 * win-builder (R-devel and R-release)
