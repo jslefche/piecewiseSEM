@@ -772,6 +772,32 @@ partial.resid <- function(...) {
 
 #' sem.aic
 #' 
+#' AIC for piecewiseSEM (old)
+#' 
+#' This function calculates AIC and AICc (corrected for small sample sizes) values for a piecewise structural 
+#' equation model (SEM).
+#' 
+#' For linear mixed effects models, p-values can be adjusted to accommodate the full model degrees of freedom 
+#' using the argument \code{p.adjust = TRUE}. For more information, see Shipley 2013.
+#' 
+#' @param modelList a \code{list} of regressions representing the structural equation model
+#' @param data a \code{data.frame} used to construct the structured equations
+#' @param corr.errors a vector of variables with correlated errors (separated by "~~")
+#' @param add.vars a vector of additional variables whose independence claims should be 
+#' evaluated, but which do not appear in the model list
+#' @param grouping.vars an optional variable that represents the levels of data aggregation 
+#' for a multi-level dataset
+#' @param grouping.fun a function defining how variables are aggregated in \code{grouping.vars}. 
+#' Default is \code{mean}
+#' @param adjust.p whether p-values degrees of freedom should be adjusted. Default is \code{FALSE}
+#' @param basis.set provide an optional basis set
+#' @param pvalues.df an optional \code{data.frame} corresponding to p-values for independence claims
+#' @param model.control a \code{list} of model control arguments to be passed to d-sep models
+#' @param .progressBar enable optional text progress bar. Default is \code{TRUE}
+#' 
+#' @return Returns a \code{data.frame} where the first entry is the AIC score, and the second is 
+#' the AICc score, and the third is the likelihood degrees of freedom (K)
+#' 
 #' @export
 #' 
 sem.aic = function(
@@ -826,6 +852,29 @@ sem.aic = function(
 }
 
 #' sem.basis.set
+#' 
+#' Derive independence claims for SEM (old)
+#' 
+#' Variables with correlated errors have no direct relationship but rather are hypothesized to be driven 
+#' by the same underlying factor. This covariance should be reflected as correlated errors 
+#' (double-headed arrow). 
+#' Correlated errors are specified using the same syntax as the \code{lavaan} package: 
+#' \code{var1 ~~ var2}. Variables with correlated errors are ignored in the basis set under the 
+#' assumption that their correlations will be quantified later using the function \code{sem.coefs}. 
+#' The argument \code{add.vars} requires a vector of character strings corresponding to column names
+#' in the dataset used to construct the models in \code{modelList}. This is useful if comparing 
+#' nested SEMs where one wishes to account for additional variables whose independence claims should 
+#' be evaluated, but which do not have any hypothesized paths in the current SEM. The default assumes
+#'  there is no additional independence claims that do not appear in the model list.
+#' 
+#' @param modelList a \code{list} of regressions representing the structural equation model
+#' @param corr.errors a vector of variables with correlated errors (separated by "~~")
+#' @param add.vars a vector of additional variables whose independence claims should be 
+#' 
+#' @return eturns a \code{list} of independence claims. Each entry in the \code{list} is a vector 
+#' where the first entry is the predictor whose independence from the response is being evaluated, 
+#' the second is the response, and remaining entries represent the variables on which the independence 
+#' claim are conditional
 #' 
 #' @export
 #' 
@@ -1299,6 +1348,29 @@ sem.coefs = function(modelList, data = NULL, standardize = "none", corr.errors =
 
 #' sem.fit
 #' 
+#' Goodness-of-fit tests for piecewise SEM (old)
+#' 
+#' Tests independence claims and calculates Fisher's C statistic and associated p-value, and AIC
+#' and AICc, for a piecewise structural equation model (SEM).
+#' 
+#' @param modelList a \code{list} of regressions representing the structural equation model
+#' @param data a \code{data.frame} used to construct the structured equations
+#' @param corr.errors a vector of variables with correlated errors (separated by "~~")
+#' @param add.vars a vector of additional variables whose independence claims should be 
+#' evaluated, but which do not appear in the model list
+#' @param grouping.vars an optional variable that represents the levels of data aggregation 
+#' for a multi-level dataset
+#' @param grouping.fun a function defining how variables are aggregated in \code{grouping.vars}. 
+#' Default is \code{mean}
+#' @param adjust.p whether p-values degrees of freedom should be adjusted. Default is \code{FALSE}
+#' @param basis.set provide an optional basis set
+#' @param pvalues.df an optional \code{data.frame} corresponding to p-values for independence claims
+#' @param model.control a \code{list} of model control arguments to be passed to d-sep models
+#' @param .progressBar enable optional text progress bar. Default is \code{TRUE}
+#' 
+#' @return a \code{list} corresponding to: the tests of directed separation, the Fisher's C statistic,
+#' and the AIC of the model
+#' 
 #' @export
 #' 
 sem.fit = function(
@@ -1662,6 +1734,10 @@ sem.missing.paths = function(
 }
 
 #' sem.model.fits
+#' 
+#' Goodness-of-fit statistics for linear models (old)
+#' 
+#' @param ... a linear model or list of models
 #' 
 #' @export
 #' 

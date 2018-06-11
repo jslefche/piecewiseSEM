@@ -6,6 +6,11 @@
 \usage{
 as.psem(object, Class = "psem")
 }
+\arguments{
+\item{object}{any \code{R} object}
+
+\item{Class}{the name of the class to which \code{object} should be coerced}
+}
 \description{
 Convert list to psem object
 }

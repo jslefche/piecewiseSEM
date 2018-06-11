@@ -6,6 +6,9 @@
 \usage{
 sem.model.fits(...)
 }
+\arguments{
+\item{...}{a linear model or list of models}
+}
 \description{
-sem.model.fits
+Goodness-of-fit statistics for linear models (old)
 }
