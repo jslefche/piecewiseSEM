@@ -6,7 +6,9 @@
 \usage{
 evaluateClasses(modelList)
 }
+\arguments{
+\item{modelList}{a list of structural equations or a model object}
+}
 \description{
 Evaluate model classes and stop if unsupported model class
 }
-\keyword{internal}

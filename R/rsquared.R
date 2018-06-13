@@ -410,6 +410,12 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
               } else
 
                 if(link == "inverse") {
+                  
+                  if(method != "delta") method <- "delta"
+                  
+                  nu <- omega / lambda
+                  
+                  sigmaD <- 1/(nu * lambda^2)
 
                   } else stop("Unsupported link function!")
 

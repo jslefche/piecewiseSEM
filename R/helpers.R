@@ -223,12 +223,11 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
     
     rand <- sapply(lme4::findbars(formula(model)), function(x) as.character(x)[3])
     
-    rand <- rand[!duplicated(rand)] } else
-      
-      if(class(model) %in% c("lme", "glmmPQL")) {
-        
-        
-      }
+    rand <- rand[!duplicated(rand)] 
+    
+  } 
+  
+  # else if(class(model) %in% c("lme", "glmmPQL")) { }
   
   idx <- sapply(sapply(strsplit(rand, "\\:"), function(x) gsub("\\(|\\)", "", x)), function(x) {
     
@@ -248,25 +247,27 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
       
       sum(rowSums(Z %*% i) * Z) / nrow(X)
       
-    } ) else if(RE == "OLRE") 
+    } ) else if(RE == "OLRE") {
       
-      sapply(sigma[idx], function(i) {
+      if(all(idx == FALSE)) 0 else {
         
-        Z <- as.matrix(X[, rownames(i), drop = FALSE])
-        
-        sum(rowSums(Z %*% i) * Z) / nrow(X)
-        
-      } ) else if(RE == "all")
-        
-        sapply(sigma, function(i) {
+        sapply(sigma[idx], function(i) {
           
           Z <- as.matrix(X[, rownames(i), drop = FALSE])
           
           sum(rowSums(Z %*% i) * Z) / nrow(X)
           
-        } )
-  
-}
+          } ) } } else if(RE == "all")
+            
+            sapply(sigma, function(i) {
+              
+              Z <- as.matrix(X[, rownames(i), drop = FALSE])
+          
+              sum(rowSums(Z %*% i) * Z) / nrow(X)
+              
+            } )
+      
+      }
 
 #' Get random effects variance-covariance from lme
 #' 

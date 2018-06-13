@@ -104,7 +104,9 @@ as.psem <- function(object, Class = "psem") {
 
 #' Evaluate model classes and stop if unsupported model class
 #' 
-#' @keywords internal
+#' @param modelList a list of structural equations or a model object
+#' 
+#' @export
 #' 
 evaluateClasses <- function(modelList) {
 
