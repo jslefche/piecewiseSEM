@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^build.R
 cran-comments.md
+^build\.R$
+^\.git$
+^\.gitignore$
+^R/anova\.R$
