@@ -15,15 +15,14 @@
 #' data.frame, SpatialPointsDataFrame, comparative.data}, or these are derived
 #' internally from the structural equations.
 #'
-#' @param \dots A list of structural equations.
-#' @param data A \code{data.frame} used to fit the equations.
-#' @return Returns an object of class \code{psem}.
+#' @param \dots A list of structural equations
+#' @return Returns an object of class \code{psem}
 #' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 #' 
 #' @export
 #' 
-psem <- function(..., data) {
+psem <- function(...) {
 
   x <- list(...)
 
@@ -67,7 +66,7 @@ formatpsem <- function(x) {
 
   }
 
-  # if(any(sapply(x$data, is.na))) stop("NAs detected in the dataset! Remove before running `psem`.", call. = FALSE)
+  if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE)
 
   # if(any(sapply(x$data, class) == "factor"))
   #

@@ -106,7 +106,7 @@ GetData <- function(modelList) {
   
   modelList <- removeData(modelList, formulas = 1)
   
-  data.list <- lapply(modelList, getSingleData)
+  data.list <- lapply(modelList, GetSingleData)
   
   if(all(sapply(data.list, class) == "comparative.data"))
     
@@ -122,7 +122,7 @@ GetData <- function(modelList) {
         
         data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
         
-        data <- Reduce(function(...) merge(..., all=T), data.list)
+        data <- Reduce(function(...) merge(..., all = TRUE), data.list)
         
       } else data <- data.list[[1]]
       
@@ -144,7 +144,7 @@ GetData <- function(modelList) {
 #' 
 #' @keywords internal
 #' 
-getSingleData <- function(model) {
+GetSingleData <- function(model) {
 
   dat <- data.frame()
 
