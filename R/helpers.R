@@ -192,6 +192,10 @@ GetSingleData <- function(model) {
          "lmerModLmerTest" = {
            dat <- model@frame
          },
+         
+         "merModLmerTest" = {
+           dat <- model@frame
+         },
 
          "gls" = {
            dat <-  nlme::getData(model)
