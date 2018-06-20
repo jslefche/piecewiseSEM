@@ -107,11 +107,13 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           
           if(all(class(i) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = i$n, ret[, c(3, 6)])
           
+          if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
+          
           if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
             
             krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = intercepts)
             
-            ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
+            ret <- data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
             
             ret[, "Pr(>|t|)"] <- krp[2, ]
             
@@ -146,8 +148,6 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
         names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
         
       }
-    
-    if(intercepts == FALSE) ret <- ret[ret$Predictor != "(Intercept)", ]
     
     return(ret)
     
