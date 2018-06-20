@@ -4,9 +4,9 @@ Title: Piecewise Structural Equation Modeling
 Version: 2.0.2
 Date: 2018-06-20
 Authors@R: c(
-    person(c("Lefcheck", "J"), "Lefcheck", role = c("aut", "cre"), email = "jlefcheck@bigelow.org"),
-    person(c("Byrnes", "J"), "Byrnes", role = "aut", email = "jarrett.byrnes@umb.edu"),
-    person(c("Grace", "J"), "Grace", role = "aut", email = "gracej@usgs.gov")
+    person(c("Lefcheck", "Jon"),  role = c("aut", "cre"), email = "jlefcheck@bigelow.org"),
+    person(c("Byrnes", "Jarrett"), role = "aut", email = "jarrett.byrnes@umb.edu"),
+    person(c("Grace", "James"), role = "aut", email = "gracej@usgs.gov")
     )
 Maintainer: Jon Lefcheck <jlefcheck@bigelow.org>
 Description: Implements piecewise structural equation modeling from a single
