@@ -315,19 +315,21 @@ isSig <- function(p) {
 #' 
 KRp <- function(model, vars, data, intercepts = FALSE) {
 
-  if(grepl("\\*", deparse(formula(model))) & !all(grepl("\\*", vars))) {
+  # if(any(grepl("\\*", all.vars_notrans(formula(model)))) & !all(grepl("\\*", vars))) {
 
     f <- all.vars_trans(formula(model))
 
     model <- update(model, as.formula(paste(f[1], " ~ ", paste(f[-1], collapse = " + "), " + ", paste(onlyBars(formula(model)), collapse = " + "))))
 
-  }
+  # }
 
   ret <- sapply(vars, function(x) {
 
-    reducMod <- update(model, as.formula(paste(". ~ . -", x)), data = data)
+    reduceMod <- update(model, as.formula(paste(". ~ . -", x)), data = data)
 
-    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
+    if(nobs(model) != nobs(reduceMod)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
+    
+    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reduceMod))
 
     d <- round(kr$stats$ddf, 2)
 
