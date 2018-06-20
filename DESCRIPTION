@@ -4,9 +4,9 @@ Title: Piecewise Structural Equation Modeling
 Version: 2.0.2
 Date: 2018-06-20
 Authors@R: c(
-    person(c("Lefcheck", "Jon"),  role = c("aut", "cre"), email = "jlefcheck@bigelow.org"),
-    person(c("Byrnes", "Jarrett"), role = "aut", email = "jarrett.byrnes@umb.edu"),
-    person(c("Grace", "James"), role = "aut", email = "gracej@usgs.gov")
+    person("Jon", "Lefcheck",   role = c("aut", "cre"), email = "jlefcheck@bigelow.org"),
+    person("Jarrett", "Byrnes",  role = "aut", email = "jarrett.byrnes@umb.edu"),
+    person("James", "Grace",  role = "aut", email = "gracej@usgs.gov")
     )
 Maintainer: Jon Lefcheck <jlefcheck@bigelow.org>
 Description: Implements piecewise structural equation modeling from a single
@@ -14,6 +14,8 @@ Description: Implements piecewise structural equation modeling from a single
     composite variables, standardized coefficients, query-based prediction and
     indirect effects.
 Depends: R (>= 3.5.0)
+URL: https://github.com/jslefche/
+BugReports: https://github.com/jslefche/piecewiseSEM/issues
 Imports:
     car,
     lme4,
