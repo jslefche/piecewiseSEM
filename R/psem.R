@@ -5,7 +5,7 @@
 #'
 #' \code{psem} takes a list of structural equations, which can be model objects
 #' of classes: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
-#' merModLmerTest, glmerMod}.
+#' lmerModLmerTest, glmerMod}.
 #'
 #' It also takes objects of class \code{formula, formula.cerror}, corresponding
 #' to additional variables to be included in the tests of directed separation

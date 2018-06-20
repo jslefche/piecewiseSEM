@@ -97,7 +97,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
       
       ret <- cerror(i, modelList, data) else {
         
-        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "pgls", "phylolm", "phyloglm"))) {
+        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
           
           ret <- as.data.frame(summary(i)$coefficients)
           
@@ -109,7 +109,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           
           if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
           
-          if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
+          if(all(class(i) %in% c("lmerMod", "merModLmerTest",  "lmerModLmerTest"))) {
             
             krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = intercepts)
             

@@ -107,7 +107,7 @@ rsquared <- function(modelList, method = NULL) {
 
     if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i)
 
-    if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) r <- rsquared.merMod(i)
+    if(all(class(i) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest"))) r <- rsquared.merMod(i)
 
     if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method)
 
