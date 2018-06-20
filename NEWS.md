@@ -1,3 +1,10 @@
+## Version 2.0.2
+* Added pkgdown website
+
+## Version 2.0.1
+* fixed bug thowing errors with calls to `lmer`
+* fixed bug creating errors with objects fit using `lmerTest`
+
 ## Version 2.0 Release Notes
 
 ### New syntax

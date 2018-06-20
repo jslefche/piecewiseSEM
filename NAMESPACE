@@ -2,7 +2,6 @@
 
 S3method(AIC,psem)
 S3method(BIC,psem)
-S3method(anova,psem)
 S3method(print,psem)
 S3method(residuals,psem)
 S3method(summary,psem)
