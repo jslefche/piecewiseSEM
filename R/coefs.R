@@ -109,7 +109,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           
           if(all(class(i) %in% c("lmerMod", "merModLmerTest"))) {
             
-            krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = TRUE)
+            krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = intercepts)
             
             ret <- as.data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
             
