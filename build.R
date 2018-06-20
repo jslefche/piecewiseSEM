@@ -46,3 +46,27 @@ mod2 <- psem(
 )
 
 anova(mod, mod2)
+
+
+#test mixed models
+library(lme4)
+
+
+# Create list of structural equations
+shipley.sem <- psem(
+  
+  lmer(DD ~ lat + (1|site/tree), na.action = na.omit,
+       data = shipley),
+  
+  lmer(Date ~ DD + (1|site/tree), na.action = na.omit,
+       data = shipley),
+  
+  data = shipley
+  
+  
+  
+)
+
+coefs(shipley.sem)
+#problem is in KRp
+#intercepts = FALSE works, not TRUE
