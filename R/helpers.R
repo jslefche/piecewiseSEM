@@ -189,7 +189,7 @@ GetSingleData <- function(model) {
            dat <- model@frame
          },
 
-         "merModLmerTest" = {
+         "lmerModLmerTest" = {
            dat <- model@frame
          },
 
