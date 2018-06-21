@@ -48,7 +48,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
 
   if(length(b) == 0) {
 
-    warning("No independence claims present. Tests of directed separation not possible.", call. = FALSE)
+    # warning("No independence claims present. Tests of directed separation not possible.", call. = FALSE)
 
     data.frame()
 

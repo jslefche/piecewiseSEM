@@ -110,10 +110,12 @@ summary.psem <- function(object, ...,
 
 #' Print summary
 #' 
-#' @param x an object of class psem
+#' @param x an object of class summary.psem
 #' @param ... further arguments passed to or from other methods
 #' 
 #' @method print summary.psem
+#' 
+#' @export
 #' 
 print.summary.psem <- function(x, ...) {
 
@@ -151,6 +153,10 @@ print.summary.psem <- function(x, ...) {
 captureTable <- function(g) {
 
   g1 <- capture.output(print(g, row.names = FALSE))
+  
+  if(all(g1 == "data frame with 0 columns and 0 rows")) 
+    
+    g1 <- "No independence claims present. Tests of directed separation not possible."
 
   g1 <- paste0(g1, "\n")
 
