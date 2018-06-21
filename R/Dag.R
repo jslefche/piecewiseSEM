@@ -34,9 +34,9 @@ Dag <- function(formulaList) {
 
   diag(amat) <- 0
 
+  if(cyclic(amat, fList)) stop("Model is recursive. Remove feedback loops!", call. = FALSE)
+  
   amat <- sortDag(amat, fList)
-
-  if(cyclic(amat, fList)) stop("Model is recursive. Remove feedback loops and re-run model")
 
   return(amat)
 
@@ -90,25 +90,27 @@ cyclic <- function(amat, formulaList) {
 
   vars <- colnames(amat[, colSums(amat) > 0, drop = FALSE])
 
-  cyc = sapply(vars, function(i) {
-
+  cyc <- sapply(vars, function(i) {
+    
     indicated <- i
-
+    
     indicated_sum <- c()
-
+    
+    fList <- formulaList
+    
     flag <- TRUE
-
-    counter <- FALSE
-
+    
     while(flag == TRUE) {
 
-      pos <- sapply(formulaList, function(k) k[1] %in% indicated)
+      pos <- sapply(fList, function(k) k[1] %in% indicated)
 
       if(all(pos == FALSE)) flag <- FALSE else {
 
         indicated <- formulaList[pos][[1]][-1]
 
         indicated_sum <- c(indicated_sum, indicated)
+        
+        fList <- fList[!pos]
 
         flag <- TRUE
 
