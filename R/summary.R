@@ -110,7 +110,7 @@ summary.psem <- function(object, ...,
 
 #' Print summary
 #' 
-#' @param x an object of class pse,
+#' @param x an object of class psem
 #' @param ... further arguments passed to or from other methods
 #' 
 #' @method print summary.psem

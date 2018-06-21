@@ -4,15 +4,13 @@
 \alias{psem}
 \title{Fitting piecewise structural equation models}
 \usage{
-psem(..., data)
+psem(...)
 }
 \arguments{
-\item{\dots}{A list of structural equations.}
-
-\item{data}{A \code{data.frame} used to fit the equations.}
+\item{\dots}{A list of structural equations}
 }
 \value{
-Returns an object of class \code{psem}.
+Returns an object of class \code{psem}
 }
 \description{
 \code{psem} is used to unite a list of structural equations into a single
@@ -21,7 +19,7 @@ structural equation model.
 \details{
 \code{psem} takes a list of structural equations, which can be model objects
 of classes: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
-merModLmerTest, glmerMod}.
+lmerModLmerTest, glmerMod}.
 
 It also takes objects of class \code{formula, formula.cerror}, corresponding
 to additional variables to be included in the tests of directed separation
