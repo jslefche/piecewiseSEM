@@ -11,9 +11,9 @@ Currently supported model classes: `lm, glm, gls, pgls, sarlm, lme, glmmPQL, lme
 
 ### Example
 ```
-# Install from github
+# Install development branch from github
 library(devtools)
-install_github("jslefche/piecewiseSEM", build_vignette = TRUE)
+install_github("jslefche/piecewiseSEM@devel", build_vignette = TRUE)
 
 # Load library
 library(piecewiseSEM)
