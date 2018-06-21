@@ -66,8 +66,10 @@ formatpsem <- function(x) {
 
   }
 
-  if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE)
-
+  if(class(x$data) == "comparative.data") { if(any(sapply(x$data$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE) } else
+    
+    if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE)
+  
   # if(any(sapply(x$data, class) == "factor"))
   #
   #   stop("Some predictors in the model are factors. Respecify as binary or ordered numeric!", call. = FALSE)
