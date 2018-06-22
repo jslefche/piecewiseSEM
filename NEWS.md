@@ -1,8 +1,11 @@
 ## Version 2.0.1 Release Notes
--Fixed bug with `KRp` and uneven sample size
--New warning issued when NAs present in the dataset
--Added Gamma distribution to `rsquared`
--Fixed bug to determine whether graph is cyclic
+- Fixed bug with `KRp` and uneven sample size
+- New warning issued when NAs present in the dataset
+- Added Gamma distribution to `rsquared`
+- Fixed bug to determine whether graph is cyclic
+- Fixed bug thowing errors with calls to `lmer`
+- Fixed bug creating errors with objects fit using `lmerTest`
+- Added pkgdown website
 
 ## Version 2.0 Release Notes
 
