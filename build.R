@@ -9,18 +9,30 @@ piecewiseSEM <- as.package("./piecewiseSEM")
 devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "R/anova.R"),
                            pkg = "./piecewiseSEM")
 
-document(piecewiseSEM) # build documentation files
+### Build documentation and vignettes
+document(piecewiseSEM)
 #clean_vignettes(piecewiseSEM)
 #build_vignettes(piecewiseSEM)
+
+
+### Load package
 load_all(piecewiseSEM, reset=T)
 
-
+### Check and build
 #check(piecewiseSEM, cran=TRUE)
 #build(piecewiseSEM, path="./piecewiseSEM/builds")
 #devtools::check_built("./piecewiseSEM_2.0.tar.gz")
 install(piecewiseSEM) 
 #run_examples(multifunc) 
 
+### Build pkgdown site
+library(pkgdown)
+setwd("piecewiseSEM")
+build_site()
+
+
+
+### Examples to verify
 library(piecewiseSEM)
 data(keeley)
 
