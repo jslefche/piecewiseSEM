@@ -62,9 +62,10 @@ anova(mod, mod2)
 
 #test mixed models
 library(lme4)
+library(nlme)
 
 # Create list of structural equations
-shipley.psem <- psem(
+shipley_psem <- psem(
 
   lme(DD ~ lat, random = ~ 1 | site / tree, na.action = na.omit,
   data = shipley),
@@ -80,4 +81,49 @@ shipley.psem <- psem(
 
   )
 
-summary(shipley.psem)
+summary(shipley_psem)
+
+
+
+# Create list of structural equations
+shipley_psem_lme4 <- psem(
+  
+  lmer(DD ~ lat + (1 | site / tree), 
+      data = shipley),
+  
+  lmer(Date ~ DD + (1 | site / tree), 
+      data = shipley),
+  
+  lmer(Growth ~ Date + (1 | site / tree),
+      data = shipley),
+  
+  glmer(Live ~ Growth + (1 | site) + (1 | tree),
+        family = binomial(link = "logit"), data = shipley),
+  
+  data = shipley
+  
+)
+
+summary(shipley_psem_lme4)
+
+#lmerTest
+library(lmerTest)
+shipley_psem_lmerTest <- psem(
+  
+  lmer(DD ~ lat + (1 | site / tree), 
+       data = shipley),
+  
+  lmer(Date ~ DD + (1 | site / tree), 
+       data = shipley),
+  
+  lmer(Growth ~ Date + (1 | site / tree),
+       data = shipley),
+  
+  glmer(Live ~ Growth + (1 | site) + (1 | tree),
+        family = binomial(link = "logit"), data = shipley),
+  
+  data = shipley
+  
+)
+
+summary(shipley_psem_lmerTest)
