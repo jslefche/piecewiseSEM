@@ -362,7 +362,7 @@ scaleGLM <- function(model, standardize = "scale", standardize.type = "latent.li
 
     y <- all.vars_notrans(model)[1]
 
-    data <- getSingleData(model)
+    data <- GetSingleData(model)
 
     R <- cor(data[, y], predict(model, type = "response"))
 
