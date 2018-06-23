@@ -329,7 +329,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
   ret <- sapply(vars, function(x) {
 
-    reduceMod <- update(model, as.formula(paste(". ~ . -", x)), data = data)
+    reduceMod <- update(model, as.formula(paste(". ~ . -", x)))
 
     if(nobs(model) != nobs(reduceMod)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
     
