@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^build.R
 cran-comments.md
+inst/docs
