@@ -7,7 +7,7 @@
 \method{print}{psem}(x, ...)
 }
 \arguments{
-\item{x}{an object of class pse,}
+\item{x}{an object of class psem}
 
 \item{...}{further arguments passed to or from other methods}
 }

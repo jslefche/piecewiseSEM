@@ -2,11 +2,11 @@
 % Please edit documentation in R/coefs.R
 \name{unstdCoefs}
 \alias{unstdCoefs}
-\title{Get raw (understandardized) coefficients from model}
+\title{Get raw (undstandardized) coefficients from model}
 \usage{
 unstdCoefs(modelList, data = NULL, intercepts = FALSE)
 }
 \description{
-Get raw (understandardized) coefficients from model
+Get raw (undstandardized) coefficients from model
 }
 \keyword{internal}

@@ -42,7 +42,7 @@ The function \code{summary.psem} returns a list of summary
 statistics: \item{dTable}{ A summary table of the tests of directed
 separation, from \code{\link{dSep}}.  } \item{CStat}{ Fisher's C statistic,
 degrees of freedom, and significance value based on a Chi-square test.  }
-\item{IC}{ Information criterion (Akaike, Bayesianm, corrected Akaike) as
+\item{IC}{ Information criterion (Akaike, Bayesian, corrected Akaike) as
 well as degrees of freedom and sample size.  } \item{coefficients}{ A
 summary table of the path coefficients, from \code{link{coefs}}.  }
 \item{R2}{ (Pseudo)-R2 values, from \code{\link{rsquared}}.  }
@@ -53,7 +53,7 @@ models, including tests of directed separation, path coefficients,
 information criterion values, and R-squared values of individual models.
 }
 \details{
-The forthcomiing argument \code{groups} splits the analysis based on an optional grouping
+The forthcoming argument \code{groups} splits the analysis based on an optional grouping
 factor, conducts separate d-sep tests, and reports goodness-of-fit and path
 coefficients for each submodel. The procedure is approximately similar to a
 multigroup analysis in traditional variance-covariance SEM. Coming in version 2.1.

@@ -17,8 +17,8 @@ the method used to estimate R2, and the R2 value itself. Mixed models also
 return marginal and conditional R2 values.
 }
 \description{
-Returns (pseudo)-R^2 values for all linear, general(ized) linear, and
-general(ized) linear mixed effects models.
+Returns (pseudo)-R^2 values for all linear, generalized linear, and
+generalized linear mixed effects models.
 }
 \details{
 For mixed models, marginal R2 considers only the variance by the fixed
@@ -29,7 +29,7 @@ For GLMs (\code{glm}), supported methods include: \itemize{
 
 \item\code{coxsnell} McFadden's R2 but raised to 2/N. Upper limit is < 1
 
-\item\code{nagelkerke} Adjust's Cox-Snell R2 so that upper limit = 1. The
+\item\code{nagelkerke} Adjusts Cox-Snell R2 so that upper limit = 1. The
 DEFAULT method
 
 } For GLMERs fit to Poisson, Gamma, and negative binomial distributions
