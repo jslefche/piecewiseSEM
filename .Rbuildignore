@@ -1,5 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^build.R
-cran-comments.md
-inst/docs
+^build\.R$
+^cran-comments\.md$
+^inst/docs$
