@@ -1,6 +1,6 @@
 # piecewiseSEM: Piecewise Structural Equation Modeling in R
 http://jslefche.github.io/piecewiseSEM/
-\\ 
+  
 ## Version 2.0.1
 ## Last updated: 25 June 2018
 
