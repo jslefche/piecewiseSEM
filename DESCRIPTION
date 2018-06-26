@@ -12,7 +12,7 @@ Maintainer: Jon Lefcheck <jlefcheck@bigelow.org>
 Description: Implements piecewise structural equation modeling from a single
     list of structural equations, with new methods for non-linear, latent, and
     composite variables, standardized coefficients, query-based prediction and
-    indirect effects.
+    indirect effects. See http://jslefche.github.io/piecewiseSEM/ for more.
 Depends: R (>= 3.5.0)
 URL: https://github.com/jslefche/
 BugReports: https://github.com/jslefche/piecewiseSEM/issues
