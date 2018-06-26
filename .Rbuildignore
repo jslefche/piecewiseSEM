@@ -3,3 +3,7 @@
 ^build\.R$
 ^cran-comments\.md$
 ^inst/docs$
+^\.git$
+^\.gitignore$
+^R/anova\.R$
+^docs$
