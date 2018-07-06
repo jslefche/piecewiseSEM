@@ -1,7 +1,7 @@
 # piecewiseSEM: Piecewise Structural Equation Modeling in R
 
-## Version 2.0.1
-## Last updated: 21 June 2018
+## Version 2.0.2
+## Last updated: 06 July 2018
 
 This version is a major update to the `piecewiseSEM` package that usesa completely revised syntax that better reproduces the base R syntax and output. It is highly recommended that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
 
