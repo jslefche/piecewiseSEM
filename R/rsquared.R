@@ -95,23 +95,23 @@ rsquared <- function(modelList, method = NULL) {
 
   ret <- lapply(modelList, function(i) {
 
-    if(all(class(i) %in% c("lm", "pgls"))) r <- rsquared.lm(i)
+    if(all(class(i) %in% c("lm", "pgls"))) r <- rsquared.lm(i) else
 
-    if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i)
+    if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i) else
 
-    if(all(class(i) %in% c("sarlm"))) r <- list(family = "gaussian", identity = "link", R.squared = NA)
-
-    if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method)
+    if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method) else
 
     # if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
 
-    if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i)
+    if(all(class(i) %in% c("lme"))) r <- rsquared.lme(i) else
 
-    if(all(class(i) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest"))) r <- rsquared.merMod(i)
+    if(all(class(i) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest"))) r <- rsquared.merMod(i) else
 
-    if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method)
+    if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method) else
 
-    if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method)
+    if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method) else
+      
+      r <- list(family = "gaussian", link = "identity", method = "none", R.squared = NA)
 
     ret <- do.call(data.frame, r)
 
