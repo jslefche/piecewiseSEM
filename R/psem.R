@@ -121,7 +121,7 @@ evaluateClasses <- function(modelList) {
     "formula", "formula.cerror",
     "lm", "glm", "gls", "negbin",
     "lme", "glmmPQL",
-    "lmerMod", "merModLmerTest","lmerModLmerTest", "glmerMod",
+    "lmerMod", "lmerModLmerTest", "glmerMod",
     "sarlm",
     "pgls", "phylolm", "phyloglm"
   )
