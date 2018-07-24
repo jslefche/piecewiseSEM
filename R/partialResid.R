@@ -141,11 +141,11 @@ partialCorr <- function(formula., modelList, data = NULL) {
     
     k <- length(k)
     
-    N <- N - k - 2
+    n <- N - k - 2
     
-    t. <- rcor * sqrt(N/(1 - rcor^2))
+    t. <- rcor * sqrt(n/(1 - rcor^2))
     
-    P <- 1 - pt(t., N)
+    P <- 1 - pt(abs(t.), n)
     
   }
   

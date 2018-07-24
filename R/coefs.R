@@ -97,7 +97,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
       
       ret <- cerror(i, modelList, data) else {
         
-        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "merModLmerTest", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
+        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
           
           ret <- as.data.frame(summary(i)$coefficients)
           
@@ -106,10 +106,8 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
           
           if(all(class(i) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = i$n, ret[, c(3, 6)])
-          
-          if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
-          
-          if(all(class(i) %in% c("lmerMod", "merModLmerTest",  "lmerModLmerTest"))) {
+
+          if(all(class(i) %in% c("lmerMod"))) {
             
             krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = intercepts)
             
@@ -144,6 +142,8 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
           Predictor = rownames(ret),
           ret
         )
+        
+        if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
         
         names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
         
@@ -310,7 +310,7 @@ scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type 
 
   if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
 
-  if(class(family.) == "try-error" | is.null(family.) & all(class(model) == "lme"))
+  if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "lme")))
 
     family. <- list(family = "gaussian", link = "identity")
 
