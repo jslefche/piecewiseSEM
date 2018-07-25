@@ -78,6 +78,34 @@ all.vars_trans <- function(formula.) {
 
 }
 
+#' Bind data.frames of differing dimensions
+#'
+#' From: https://stackoverflow.com/a/31678079
+#' 
+#'  @keywords internal
+#'   
+cbind_fill <- function(...) {
+  
+  nm <- list(...) 
+  
+  dfdetect <- grepl("data.frame|matrix", unlist(lapply(nm, function(cl) paste(class(cl), collapse = " ") )))
+  
+  vec <- data.frame(nm[!dfdetect])
+  
+  n <- max(sapply(nm[dfdetect], nrow)) 
+  
+  vec <- data.frame(lapply(vec, function(x) rep(x, n)))
+  
+  if (nrow(vec) > 0) nm <- c(nm[dfdetect], list(vec))
+  
+  nm <- lapply(nm, as.data.frame)
+  
+  do.call(cbind, lapply(nm, function (df1) 
+    
+    rbind(df1, as.data.frame(matrix(NA, ncol = ncol(df1), nrow = n-nrow(df1), dimnames = list(NULL, names(df1))))) )) 
+
+  }
+
 #' Get random effects from lme
 #' 
 #' @keywords internal
@@ -112,23 +140,13 @@ GetData <- function(modelList) {
     
     data <- data.list[[1]] else {
       
-      data.list <- data.list[order(sapply(data.list, nrow))]
+      data <- do.call(cbind_fill, data.list)
       
-      if(length(data.list) > 1) {
-        
-        match.by <- unlist(sapply(data.list, names))
-        
-        match.by <- match.by[!duplicated(match.by)]
-        
-        data.list <- Map(function(x, i) setNames(x, ifelse(names(x) %in% match.by, names(x), sprintf('%s.%d', names(x), i))), data.list, seq_along(data.list))
-        
-        data <- Reduce(function(...) merge(..., all = TRUE), data.list)
-        
       } else data <- data.list[[1]]
       
       data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
       
-      colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+      # colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
       
       data <- as.data.frame(data)
       
