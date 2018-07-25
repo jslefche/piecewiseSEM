@@ -54,7 +54,7 @@ formatpsem <- function(x) {
 
   } else {
     
-    warning("Missing data argument to psem.")
+    # warning("Missing data argument to psem.", call. = FALSE)
 
     x$data <- GetData(x)
 
