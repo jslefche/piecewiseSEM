@@ -1,3 +1,6 @@
+## Version 2.0.3 Release Notes
+- Fixed bug with `getOLRE` and single observation-level random effects glmerMods
+
 ## Version 2.0.2 Release Notes
 - Fixed bug with `partialCorr` and negative correlations returning wrong P-value 
 - Fixed with `coefs` and standardization with mixed models
