@@ -239,13 +239,13 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
     
   } )
   
-  sigma.names <- unlist(strsplit(names(sigma), "\\."))
+  sigma.names <- unlist(names(sigma)) # unlist(strsplit(names(sigma), "\\."))
   
   idx. <- sapply(sigma.names, function(x) !any(x %in% rand[idx]))
   
   if(RE == "RE") 
     
-    sapply(sigma[idx.], function(i) {
+    out <- sapply(sigma[idx.], function(i) {
       
       Z <- as.matrix(X[, rownames(i), drop = FALSE])
       
@@ -253,25 +253,29 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
       
     } ) else if(RE == "OLRE") {
       
-      if(all(idx == FALSE)) 0 else {
+      if(all(idx == FALSE)) out <- 0 else {
         
-        sapply(sigma[idx], function(i) {
+        out <- sapply(sigma[idx], function(i) {
           
           Z <- as.matrix(X[, rownames(i), drop = FALSE])
           
           sum(rowSums(Z %*% i) * Z) / nrow(X)
           
-          } ) } } else if(RE == "all")
-            
-            sapply(sigma, function(i) {
-              
-              Z <- as.matrix(X[, rownames(i), drop = FALSE])
+        } ) } } else if(RE == "all")
           
-              sum(rowSums(Z %*% i) * Z) / nrow(X)
-              
-            } )
-      
-      }
+          out <- sapply(sigma, function(i) {
+            
+            Z <- as.matrix(X[, rownames(i), drop = FALSE])
+            
+            sum(rowSums(Z %*% i) * Z) / nrow(X)
+            
+          } )
+  
+  if(length(out) == 0) out <- 0
+  
+  return(out)
+  
+}
 
 #' Get random effects variance-covariance from lme
 #' 
