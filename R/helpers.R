@@ -138,19 +138,15 @@ GetData <- function(modelList) {
   
   if(all(sapply(data.list, class) == "comparative.data"))
     
-    data <- data.list[[1]] else {
+    data <- data.list[[1]] else 
       
       data <- do.call(cbind_fill, data.list)
+  
+  data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
       
-      } else data <- data.list[[1]]
-      
-      data <- data[, !duplicated(colnames(data), fromLast = TRUE)]
-      
-      # colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
-      
-      data <- as.data.frame(data)
-      
-    }
+  # colnames(data) <- gsub(".*\\((.*)\\).*", "\\1", colnames(data))
+
+  data <- as.data.frame(data)
   
   rownames(data) <- 1:nrow(data)
   
