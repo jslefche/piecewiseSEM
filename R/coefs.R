@@ -75,7 +75,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
 }
 
-#' Get raw (understandardized) coefficients from model
+#' Get raw (undstandardized) coefficients from model
 #' 
 #' @keywords internal
 #' 

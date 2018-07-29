@@ -6,7 +6,7 @@ setwd("../")
 
 
 piecewiseSEM <- as.package("./piecewiseSEM") 
-devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "R/anova.R"),
+devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "R/anova.R", "docs"),
                            pkg = "./piecewiseSEM")
 
 ### Build documentation and vignettes

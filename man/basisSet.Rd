@@ -34,7 +34,7 @@ user specifies relationships among exogenous variables, raising the
 issue of whether they should be included as directed paths if they can 
 be assigned directional relationships.
 
-Paths can be ommitted from the basis set by specifying them as correlated
+Paths can be omitted from the basis set by specifying them as correlated
 errors using \code{\%~~\%} or by assigning a directionality using 
 the argument \code{direction}, e.g. \code{direction = c("X <- Y")}. 
 This can be done if post hoc examination of the d-sep tests reveals

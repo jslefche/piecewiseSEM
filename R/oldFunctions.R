@@ -871,7 +871,7 @@ sem.aic = function(
 #' @param corr.errors a vector of variables with correlated errors (separated by "~~")
 #' @param add.vars a vector of additional variables whose independence claims should be 
 #' 
-#' @return eturns a \code{list} of independence claims. Each entry in the \code{list} is a vector 
+#' @return Returns a \code{list} of independence claims. Each entry in the \code{list} is a vector 
 #' where the first entry is the predictor whose independence from the response is being evaluated, 
 #' the second is the response, and remaining entries represent the variables on which the independence 
 #' claim are conditional

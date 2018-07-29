@@ -142,7 +142,7 @@ evaluateClasses <- function(modelList) {
 
 #' Print psem
 #' 
-#' @param x an object of class pse,
+#' @param x an object of class psem
 #' @param ... further arguments passed to or from other methods
 #' 
 #' @method print psem
