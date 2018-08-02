@@ -34,7 +34,7 @@ Dag <- function(formulaList) {
 
   diag(amat) <- 0
 
-  if(cyclic(amat, fList)) stop("Model is recursive. Remove feedback loops!", call. = FALSE)
+  if(cyclic(amat, fList)) stop("Model is non-recursive. Remove feedback loops!", call. = FALSE)
   
   amat <- sortDag(amat, fList)
 
