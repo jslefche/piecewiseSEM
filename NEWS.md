@@ -1,4 +1,5 @@
 ## Version 2.0.3 Release Notes
+- Fixed bug with `KRp` and `lmerMod` models with intercepts
 - Fixed bug with `getOLRE` and single observation-level random effects glmerMods
 
 ## Version 2.0.2 Release Notes
