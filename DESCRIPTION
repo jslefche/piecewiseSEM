@@ -8,7 +8,7 @@ Authors@R: c(
     person("Jarrett", "Byrnes",  role = "aut", email = "jarrett.byrnes@umb.edu"),
     person("James", "Grace",  role = "aut", email = "gracej@usgs.gov")
     )
-Maintainer: Jon Lefcheck <jlefcheck@bigelow.org>
+Maintainer: Jon Lefcheck <lefcheckj@si.edu>
 Description: Implements piecewise structural equation modeling from a single
     list of structural equations, with new methods for non-linear, latent, and
     composite variables, standardized coefficients, query-based prediction and
