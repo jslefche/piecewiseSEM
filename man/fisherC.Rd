@@ -4,8 +4,8 @@
 \alias{fisherC}
 \title{Summarize tests of directed separation using Fisher's C statistic}
 \usage{
-fisherC(dTable, add.claims = NULL, direction = NULL, conserve = FALSE,
-  conditional = FALSE, .progressBar = FALSE)
+fisherC(dTable, add.claims = NULL, direction = NULL,
+  conserve = FALSE, conditional = FALSE, .progressBar = FALSE)
 }
 \arguments{
 \item{dTable}{a \code{data.frame} containing tests of directed separation from \code{dSep}}

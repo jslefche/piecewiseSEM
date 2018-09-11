@@ -4,10 +4,10 @@
 \alias{sem.missing.paths}
 \title{sem.missing.paths}
 \usage{
-sem.missing.paths(modelList, data, conditional = FALSE, corr.errors = NULL,
-  add.vars = NULL, grouping.vars = NULL, grouping.fun = mean,
-  adjust.p = FALSE, basis.set = NULL, model.control = NULL,
-  .progressBar = TRUE)
+sem.missing.paths(modelList, data, conditional = FALSE,
+  corr.errors = NULL, add.vars = NULL, grouping.vars = NULL,
+  grouping.fun = mean, adjust.p = FALSE, basis.set = NULL,
+  model.control = NULL, .progressBar = TRUE)
 }
 \arguments{
 \item{modelList}{a \code{list} of regressions representing the structural equation model}

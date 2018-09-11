@@ -4,8 +4,8 @@
 \alias{coefs}
 \title{Extract path coefficients}
 \usage{
-coefs(modelList, standardize = "scale", standardize.type = "latent.linear",
-  intercepts = FALSE)
+coefs(modelList, standardize = "scale",
+  standardize.type = "latent.linear", intercepts = FALSE)
 }
 \arguments{
 \item{modelList}{A list of structural equations.}

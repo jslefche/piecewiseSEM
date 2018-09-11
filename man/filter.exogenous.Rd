@@ -4,7 +4,8 @@
 \alias{filter.exogenous}
 \title{filter.exogenous}
 \usage{
-filter.exogenous(modelList, basis.set, corr.errors = NULL, add.vars = NULL)
+filter.exogenous(modelList, basis.set, corr.errors = NULL,
+  add.vars = NULL)
 }
 \description{
 filter.exogenous

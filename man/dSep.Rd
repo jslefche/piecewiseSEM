@@ -4,8 +4,8 @@
 \alias{dSep}
 \title{Tests of directed separation}
 \usage{
-dSep(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE,
-  .progressBar = TRUE)
+dSep(modelList, direction = NULL, conserve = FALSE,
+  conditioning = FALSE, .progressBar = TRUE)
 }
 \arguments{
 \item{modelList}{A list of structural equations created using \code{psem}.}
