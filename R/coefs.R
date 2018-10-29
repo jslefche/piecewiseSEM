@@ -69,7 +69,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   if(class(data) %in% c("comparative.data")) data <- data$data
 
-  if(all(standardize != "none")) ret <- stdCoefs(modelList, data, standardize, standardize.type, intercepts) else
+  if(all(standardize != "none")) ret <- stdCoefs(modelList, data, standardize, standardize.type, test.type, intercepts) else
 
     ret <- unstdCoefs(modelList, data, test.type, intercepts)
 
