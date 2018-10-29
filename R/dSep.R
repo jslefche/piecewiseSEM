@@ -92,9 +92,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
 
         ret <- data.frame(
           t(ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, 1:2]),
-          kr[1, ],
+          kr[, 1],
           ct[which(b[[i]][1] == labels(terms(bNewMod))) + 1, 3],
-          kr[2, ],
+          kr[, 2],
           row.names = NULL
         )
 
