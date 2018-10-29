@@ -123,7 +123,7 @@ getCoefficients <- function(model) {
   
   vars <- all.vars.merMod(formula(model))
   
-  fvars <- vars[which(sapply(data[, vars], class) == "factor")]
+  factorVars <- vars[which(sapply(data[, vars], class) == "factor")]
 
   if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
     
@@ -167,9 +167,9 @@ getCoefficients <- function(model) {
   
   ret <- cbind(ret, isSig(ret[, 5]))
   
-  if(length(fvars) > 0) {
+  if(length(factorVars) > 0) {
     
-    levs <- lapply(fvars, function(j) lsmeans::lsmeans(model, list(formula(paste("pairwise ~", j)))))
+    levs <- lapply(factorVars, function(j) lsmeans::lsmeans(model, list(formula(paste("pairwise ~", j)))))
   
     ret <- do.call(rbind, lapply(levs, function(j) {
       
@@ -213,40 +213,38 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
   ret <- unstdCoefs(modelList, data, intercepts)
   
-  Bnew <- do.call(rbind, lapply(1:length(modelList), function(i) {
+  ret <- do.call(rbind, lapply(modelList, function(i) {
     
-    j <- modelList[[i]]
-    
-    f <- listFormula(list(j))[[1]]
-    
-    newdata <- data[, all.vars.merMod(f)]
-    
-    f.trans <- all.vars_trans(f)
-    
-    f.notrans <- all.vars_notrans(f)
-    
-    if(all(class(j) %in% c("formula.cerror"))) {
+    if(all(class(i) %in% c("formula.cerror"))) {
       
-      data.frame(Std.Estimate = ret[ret$Response == paste0("~~", f.trans[1]) & 
-                                      ret$Predictor == paste0("~~", f.trans[2]), "Estimate"])
+      rowN <- which(ret$Response == paste0("~~", gsub(" ", "", strsplit(i, "~~")[[1]]))[1] &
+                      ret$Predictor == paste0("~~", gsub(" ", "", strsplit(i, "~~")[[1]]))[2])
+      
+      Std.Estimate <- ret[rowN, "Estimate"] 
+      
+      cbind.data.frame(ret[rowN, 1:3], Std.Estimate, ret[rowN, 4:8])
       
     } else {
       
+      numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
+      
+      ret.sub <- ret[ret$Response == numVars[1], ]
+      
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
       
-      newdata <- dataTrans(formula(j), newdata)
+      newdata <- dataTrans(formula(i), newdata)
       
-      B <- ret[ret$Response == f.trans[1], "Estimate"]
+      B <- ret.sub[ret.sub$Response == numVars[1], "Estimate"]
       
-      # B.se <- ret[ret$Response == f.trans[1]), "Std.Error"]
+      names(B) <- ret.sub[ret.sub$Response == numVars[1], "Predictor"]
       
       if(all(standardize == "scale"))
         
-        sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) sd(newdata[, x], na.rm = TRUE)) else
+        sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) sd(newdata[, x], na.rm = TRUE)) else
           
           if(all(standardize == "range"))
             
-            sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) diff(range(newdata[, x], na.rm = TRUE))) else
+            sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) diff(range(newdata[, x], na.rm = TRUE))) else
               
               if(is.list(standardize)) {
                 
@@ -258,7 +256,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
                   
                   stop("Names in standardize list must match those in the model formula!")
                 
-                sd.x <- sapply(f.notrans[!grepl(":", f.notrans)][-1], function(x) {
+                sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) {
                   
                   nm <- which(names(standardize) == x)
                   
@@ -274,26 +272,31 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
                 
               } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
       
-      if(any(grepl(":", f.notrans))) sd.x <- c(sd.x, scaleInt(j, newdata, standardize))
+      if(any(grepl(":", numVars))) sd.x <- c(sd.x, scaleInt(j, newdata, standardize))
       
-      sd.y <- scaleFam(f.notrans[1], j, newdata, standardize, standardize.type)
+      if(length(sd.x) == 0) sd.x <- NA
+      
+      sd.y <- scaleFam(numVars[1], j, newdata, standardize, standardize.type)
       
       if(intercepts == FALSE)
         
-        data.frame(Std.Estimate = B * (sd.x / sd.y)) else
+        Std.Estimate = B * (sd.x / sd.y) else
           
-          data.frame(Std.Estimate = c(0, B[-1] * (sd.x / sd.y)))
+          Std.Estimate = c(0, B[-1] * (sd.x / sd.y))
+      
+      
+      cbind.data.frame(ret.sub[, 1:3], Std.Estimate, ret.sub[, 4:8])
       
     }
     
   } ) )
-
-ret <- data.frame(ret, Bnew)
-
-rownames(ret) <- NULL
-
-return(ret)
-
+  
+  rownames(ret) <- NULL
+  
+  names(ret)[ncol(ret)] <- ""
+  
+  return(ret)
+  
 }
 
 #' Transform variables based on model formula and store in new data frame
