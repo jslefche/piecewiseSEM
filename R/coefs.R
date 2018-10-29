@@ -235,10 +235,10 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
       
       ret.sub <- ret[ret$Response == numVars[1], ]
+
+      newdata <- data[, all.vars_notrans(i)]
       
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
-      
-      newdata <- data[, all.vars_notrans(i)]
       
       newdata <- dataTrans(formula(i), newdata)
       
@@ -280,11 +280,11 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
                 
               } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
       
-      if(any(grepl(":", numVars))) sd.x <- c(sd.x, scaleInt(j, newdata, standardize))
+      if(any(grepl(":", numVars))) sd.x <- c(sd.x, scaleInt(i, newdata, standardize))
       
       if(length(sd.x) == 0) sd.x <- NA
       
-      sd.y <- scaleFam(numVars[1], j, newdata, standardize, standardize.type)
+      sd.y <- scaleFam(numVars[1], i, newdata, standardize, standardize.type)
       
       if(intercepts == FALSE)
         
