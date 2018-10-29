@@ -237,8 +237,8 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
                       ret$Predictor == paste0("~~", gsub(" ", "", strsplit(i, "~~")[[1]]))[2])
       
       Std.Estimate <- ret[rowN, "Estimate"] 
-      
-      cbind.data.frame(ret[rowN, 1:7], Std.Estimate, sig = ret[rowN, 8])
+ 
+      cbind.data.frame(ret[rowN, 1:7], Std.Estimate, sig = ret[rowN, 8:9])
       
     } else {
       
@@ -304,7 +304,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Std.Estimate"] <- Std.Estimate
       
-      cbind.data.frame(ret.sub[, 1:7], ret.sub[, 9, drop = FALSE], sig = ret.sub[, 8])
+      cbind.data.frame(ret.sub[, 1:7], ret.sub[, 10, drop = FALSE], sig = ret.sub[, 8:9])
       
     }
     
@@ -312,7 +312,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
   rownames(ret) <- NULL
   
-  names(ret)[ncol(ret)] <- ""
+  names(ret)[9:10] <- ""
   
   return(ret)
   
