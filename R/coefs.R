@@ -45,6 +45,8 @@
 #' Default is \code{scale}.
 #' @param standardize.type The type of standardized for non-Gaussian responses:
 #' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
+#' @param test.type the type of test ("II" or "III") for significance of categorical
+#' variables (from \code{\link{car::Anova}})
 #' @param intercepts Whether intercepts should be included in the coefficients
 #' table. Default is FALSE.
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
@@ -57,7 +59,7 @@
 #' 
 #' @export
 #'
-coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
+coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", test.type = "II", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -97,15 +99,19 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
   
   ret <- do.call(rbind, lapply(modelList, function(i) {
     
-    if(all(class(i) %in% c("formula.cerror")))
+    if(all(class(i) %in% c("formula.cerror"))) {
       
-      ret <- cerror(i, modelList, data) else {
+      ret <- cbind.data.frame(cerror(i, modelList, data), "") 
+      
+      names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "", "")
+
+      } else {
         
         ret <- getCoefficients(i)
         
         if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
         
-        names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
+        names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "", "")
         
       }
     
@@ -171,9 +177,11 @@ getCoefficients <- function(model) {
     
   }
   
-  ret <- cbind(ret, isSig(ret[, 5]))
+  ret <- cbind(ret, isSig(ret[, 5]), "")
   
   if(length(factorVars) > 0) {
+    
+    anovaTable <- as.data.frame(car::Anova(model, type = test.type))
     
     levs <- lapply(factorVars, function(j) lsmeans::lsmeans(model, list(formula(paste("pairwise ~", j)))))
   
@@ -183,7 +191,9 @@ getCoefficients <- function(model) {
      
        rownames(out) <- paste0(names(out)[1], "[", out[, 1], "]")
        
-       out <- data.frame(out[, 2:4], NA, NA, out[, 7])
+       atab <- anovaTable[which(rownames(anovaTable) == names(out)[1]), ]
+       
+       out <- data.frame(out[, 2:3], DF = atab$Df, NA, P.value = atab[, ncol(atab)], isSig(atab[ncol(atab)]), out[, 7])
       
        names(out) <- names(ret)
        
