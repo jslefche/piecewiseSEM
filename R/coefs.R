@@ -228,23 +228,23 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       Std.Estimate <- ret[rowN, "Estimate"] 
       
-      cbind.data.frame(ret[rowN, 1:7], Std.Estimate, ret[rowN, 8])
+      cbind.data.frame(ret[rowN, 1:7], Std.Estimate, sig = ret[rowN, 8])
       
     } else {
       
       numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
       
-      newdata <- data[, numVars]
-      
       ret.sub <- ret[ret$Response == numVars[1], ]
       
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
       
+      newdata <- data[, all.vars_notrans(i)]
+      
       newdata <- dataTrans(formula(i), newdata)
       
-      B <- ret.sub[ret.sub$Response == numVars[1], "Estimate"]
+      B <- ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Estimate"]
       
-      names(B) <- ret.sub[ret.sub$Response == numVars[1], "Predictor"]
+      names(B) <- ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Predictor"]
       
       if(all(standardize == "scale"))
         
@@ -288,12 +288,13 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       if(intercepts == FALSE)
         
-        Std.Estimate = B * (sd.x / sd.y) else
+        Std.Estimate <- B * (sd.x / sd.y) else
           
-          Std.Estimate = c(0, B[-1] * (sd.x / sd.y))
+          Std.Estimate <- c(0, B[-1] * (sd.x / sd.y))
       
+      ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Std.Estimate"] <- Std.Estimate
       
-      cbind.data.frame(ret.sub[, 1:7], Std.Estimate, ret.sub[, 8])
+      cbind.data.frame(ret.sub[, 1:7], ret.sub[, 9, drop = FALSE], sig = ret.sub[, 8])
       
     }
     
