@@ -5,7 +5,8 @@
 \title{Extract path coefficients}
 \usage{
 coefs(modelList, standardize = "scale",
-  standardize.type = "latent.linear", intercepts = FALSE)
+  standardize.type = "latent.linear", test.type = "II",
+  intercepts = FALSE)
 }
 \arguments{
 \item{modelList}{A list of structural equations.}
@@ -15,6 +16,9 @@ Default is \code{scale}.}
 
 \item{standardize.type}{The type of standardized for non-Gaussian responses:
 \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.}
+
+\item{test.type}{the type of test ("II" or "III") for significance of categorical
+variables (from \code{\link{car::Anova}})}
 
 \item{intercepts}{Whether intercepts should be included in the coefficients
 table. Default is FALSE.}
@@ -39,8 +43,8 @@ of x divided by the standard deviation of y. See below for cases pertaining to G
 \item{\code{range} Raw coefficients are scaled by a pre-selected range of x
 divided by a preselected range of y. The default argument is \code{range} which takes the
 two extremes of the data, otherwise the user must supply must a named \code{list} where
-the names are the variables to be standardized, and each entry contains a vector of length 2
-to the ranges to be used in standardization.}
+the names are the variables to be standardized, and each entry contains a vector of 
+length == 2 to the ranges to be used in standardization.}
 }
 
 For binary response models (i.e., binomial responses), standardized coefficients
@@ -58,6 +62,12 @@ deviation used for standardization is computed as the square-root of the varianc
 the predictions (on the linear scale) plus the correlation between the observed and
 predicted (on the original or 'response' scale) values of y.}
 }
+
+Model-estimated means are reported for each level of categorical variables using the 
+\code{lsmeans} package. Pairwise contrasts are conducted among all levels using the
+default correction for multiple testing. The results of those comparisons are given
+in the significance codes (e.g., "a", "b", "ab") as reported in the \code{\link{cld}} 
+function.
 }
 \references{
 Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.

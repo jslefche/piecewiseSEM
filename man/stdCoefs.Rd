@@ -5,7 +5,8 @@
 \title{Calculate standardized regression coefficients}
 \usage{
 stdCoefs(modelList, data = NULL, standardize = "scale",
-  standardize.type = "latent.linear", intercepts = FALSE)
+  standardize.type = "latent.linear", test.type = "II",
+  intercepts = FALSE)
 }
 \description{
 Calculate standardized regression coefficients
