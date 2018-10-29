@@ -65,8 +65,6 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
     ret <- unstdCoefs(modelList, data, intercepts)
 
-  ret <- cbind(ret, isSig(ret$P.Value))
-
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
   names(ret)[length(ret)] <- ""
@@ -97,55 +95,11 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
       
       ret <- cerror(i, modelList, data) else {
         
-        if(all(class(i) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
-          
-          ret <- as.data.frame(summary(i)$coefficients)
-          
-          if(all(class(i) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(i)$df[2], ret[, 3:4])
-          
-          if(all(class(i) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(i)$residuals), ret[, 3:4])
-          
-          if(all(class(i) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = i$n, ret[, c(3, 6)])
-
-          if(all(class(i) %in% c("lmerMod"))) {
-            
-            krp <- KRp(i, all.vars_trans(formula(i))[-1], data, intercepts = TRUE)
-            
-            ret <- data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
-            
-            ret[, "Pr(>|t|)"] <- krp[2, ]
-            
-          }
-          
-        }
-        
-        if(all(class(i) %in% c("sarlm"))) {
-          
-          ret <- as.data.frame(summary(i)$Coef)
-          
-          ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
-          
-        }
-        
-        if(all(class(i) %in% c("gls", "lme", "glmmPQL"))) {
-          
-          ret <- as.data.frame(summary(i)$tTable)
-          
-          if(ncol(ret) == 4 & all(class(i) %in% c("gls")))
-            
-            ret <- cbind(ret[, 1:2], DF = length(residuals(i)), ret[, 3:4])
-          
-        }
-        
-        ret <- data.frame(
-          Response = all.vars_trans(listFormula(list(i))[[1]])[1],
-          Predictor = rownames(ret),
-          ret
-        )
+        ret <- getCoefficients(i)
         
         if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
         
-        names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value")
+        names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
         
       }
     
@@ -157,6 +111,88 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
   
   return(ret)
   
+}
+
+#' Get coefficients from linear regression
+#' 
+#' @keyword internal
+#' 
+#' @export
+#' 
+getCoefficients <- function(model) {
+  
+  vars <- all.vars.merMod(formula(model))
+  
+  fvars <- vars[which(sapply(data[, vars], class) == "factor")]
+
+  if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
+    
+    ret <- as.data.frame(summary(model)$coefficients)[rownames(summary(model)$coefficients) %in% c("(Intercept)", vars), ]
+    
+    if(all(class(model) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(model)$df[2], ret[, 3:4])
+    
+    if(all(class(model) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(model)$residuals), ret[, 3:4])
+    
+    if(all(class(model) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = model$n, ret[, c(3, 6)])
+  
+    if(all(class(model) %in% c("lmerMod"))) {
+
+      krp <- KRp(model, vars[-1], data, intercepts = TRUE)
+      
+      ret <- data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
+      
+      ret[, "Pr(>|t|)"] <- krp[2, ]
+      
+    }
+    
+  }
+  
+  if(all(class(model) %in% c("sarlm"))) {
+    
+    ret <- as.data.frame(summary(model)$Coef)
+    
+    ret <- cbind(ret[, 1:2], DF = NA, ret[, 3:4])
+    
+  }
+  
+  if(all(class(model) %in% c("gls", "lme", "glmmPQL"))) {
+    
+    ret <- as.data.frame(summary(model)$tTable)[rownames(summary(model)$tTable) %in% c("(Intercept)", vars), ]
+    
+    if(ncol(ret) == 4 & all(class(model) %in% c("gls")))
+      
+      ret <- cbind(ret[, 1:2], DF = length(residuals(model)), ret[, 3:4])
+    
+  }
+  
+  ret <- cbind(ret, isSig(ret[, 5]))
+  
+  if(length(fvars) > 0) {
+    
+    levs <- lapply(fvars, function(j) lsmeans::lsmeans(model, list(formula(paste("pairwise ~", j)))))
+  
+    ret <- do.call(rbind, lapply(levs, function(j) {
+      
+       out <- as.data.frame(lsmeans::cld(j, Letters = letters[1:26]))
+     
+       rownames(out) <- paste0(names(out)[1], "[", out[, 1], "]")
+       
+       out <- data.frame(out[, 2:4], NA, NA, out[, 7])
+      
+       names(out) <- names(ret)
+       
+       ret <- rbind(ret, out)
+       
+       } ) )
+    
+  }
+  
+  data.frame(
+    Response = all.vars_trans(listFormula(list(model))[[1]])[1],
+    Predictor = rownames(ret),
+    ret
+  )
+     
 }
 
 #' Calculate standardized regression coefficients

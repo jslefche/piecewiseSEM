@@ -116,10 +116,14 @@
 #' 
 cerror <- function(formula., modelList, data = NULL) {
 
-  tab <- partialCorr(formula., modelList, data)
+  ret <- partialCorr(formula., modelList, data)
 
-  tab[, which(sapply(tab, is.numeric))] <- round(tab[, which(sapply(tab, is.numeric))], 4)
+  ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
-  return(tab)
+  ret <- cbind.data.frame(ret, isSig(ret[, 5]))
+  
+  names(ret)[ncol(ret)] <- ""
+  
+  return(ret)
 
 }

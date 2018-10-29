@@ -345,7 +345,9 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
   # }
 
-  ret <- sapply(vars, function(x) {
+  ret <- data.frame()
+  
+  for(x in vars) { #sapply(vars, function(x) {
 
     reduceMod <- update(model, as.formula(paste(". ~ . -", x)))
 
@@ -357,9 +359,9 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
     p <- kr$stats$p.valueU
 
-    c(d, p)
+    ret <- rbind(ret, c(d, p))
 
-  } )
+  } # )
 
   if(intercepts == TRUE) {
 
