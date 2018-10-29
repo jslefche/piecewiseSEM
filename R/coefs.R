@@ -71,7 +71,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   if(all(standardize != "none")) ret <- stdCoefs(modelList, data, standardize, standardize.type, intercepts) else
 
-    ret <- unstdCoefs(modelList, data, intercepts)
+    ret <- unstdCoefs(modelList, data, test.type, intercepts)
 
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
@@ -87,7 +87,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 #' 
 #' @export
 #' 
-unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
+unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
@@ -107,7 +107,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 
       } else {
         
-        ret <- getCoefficients(i)
+        ret <- getCoefficients(i, data, test.type)
         
         if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
         
@@ -131,7 +131,7 @@ unstdCoefs <- function(modelList, data = NULL, intercepts = FALSE) {
 #' 
 #' @export
 #' 
-getCoefficients <- function(model) {
+getCoefficients <- function(model, data, test.type = "II") {
   
   vars <- all.vars.merMod(formula(model))
   
@@ -217,7 +217,7 @@ getCoefficients <- function(model) {
 #' 
 #' @export
 #' 
-stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "latent.linear", intercepts = FALSE) {
+stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.type = "latent.linear", test.type = "II", intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
@@ -227,7 +227,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
   modelList <- removeData(modelList, formulas = 2)
   
-  ret <- unstdCoefs(modelList, data, intercepts)
+  ret <- unstdCoefs(modelList, data, test.type, intercepts)
   
   ret <- do.call(rbind, lapply(modelList, function(i) {
     

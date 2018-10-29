@@ -44,6 +44,8 @@
 #' Default is "scale"
 #' @param standardize.type the type of standardized for non-Gaussian responses: 
 #' \code{latent.linear} (default), \code{Mendard.OE}
+#' @param test.type the type of test ("II" or "III") for significance of categorical
+#' variables (from \code{\link{car::Anova}})
 #' @param .progressBar an optional progress bar. Default is TRUE
 #' 
 #' @return The function \code{summary.psem} returns a list of summary
@@ -76,7 +78,7 @@
 summary.psem <- function(object, ...,
                          direction = NULL, conserve = FALSE, conditional = FALSE,
                          add.claims = NULL,
-                         standardize = "scale", standardize.type = "latent.linear",
+                         standardize = "scale", standardize.type = "latent.linear", test.type = "II",
                          intercepts = FALSE,
                          .progressBar = TRUE) {
 
@@ -90,7 +92,7 @@ summary.psem <- function(object, ...,
 
   IC <- infCrit(object, Cstat, add.claims, direction, conserve, conditional, .progressBar)
 
-  coefficients <- coefs(object, standardize, standardize.type, intercepts)
+  coefficients <- coefs(object, standardize, standardize.type, test.type, intercepts)
 
   R2 <- rsquared(object)
 
