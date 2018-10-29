@@ -345,7 +345,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
   # }
 
-  ret <- data.frame()
+  out <- data.frame()
   
   for(x in vars) { #sapply(vars, function(x) {
 
@@ -359,25 +359,25 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
     p <- kr$stats$p.valueU
 
-    ret <- rbind(ret, c(d, p))
+    out <- rbind(out, data.frame(d, p))
 
   } # )
 
   if(intercepts == TRUE) {
 
-    reducMod <- update(model, as.formula(paste("~ 0 + .")), data = data)
+    reducModI <- update(model, as.formula(paste("~ 0 + .")), data = data)
 
-    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reducMod))
+    krI <- suppressWarnings(pbkrtest::KRmodcomp(model, reducModI))
 
-    d <- kr$stats$ddf
+    dI <- kr$stats$ddf
 
-    p <- kr$stats$p.valueU
+    pI <- kr$stats$p.valueU
 
-    cbind(`(Intercept)` = c(d, p), ret)
-
-    # cbind(`(Intercept)` = c(NA, NA), ret)
-
-  } else ret
+    out <- rbind(data.frame(d = dI, p = pI), out)
+      
+  }
+  
+  return(out)
 
 }
 

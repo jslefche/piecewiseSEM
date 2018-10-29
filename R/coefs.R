@@ -14,8 +14,8 @@
 #' \item{\code{range} Raw coefficients are scaled by a pre-selected range of x
 #' divided by a preselected range of y. The default argument is \code{range} which takes the
 #' two extremes of the data, otherwise the user must supply must a named \code{list} where
-#' the names are the variables to be standardized, and each entry contains a vector of length 2
-#' to the ranges to be used in standardization.}
+#' the names are the variables to be standardized, and each entry contains a vector of 
+#' length == 2 to the ranges to be used in standardization.}
 #' }
 #'
 #' For binary response models (i.e., binomial responses), standardized coefficients
@@ -33,6 +33,12 @@
 #' the predictions (on the linear scale) plus the correlation between the observed and
 #' predicted (on the original or 'response' scale) values of y.}
 #' }
+#' 
+#' Model-estimated means are reported for each level of categorical variables using the 
+#' \code{lsmeans} package. Pairwise contrasts are conducted among all levels using the
+#' default correction for multiple testing. The results of those comparisons are given
+#' in the significance codes (e.g., "a", "b", "ab") as reported in the \code{\link{cld}} 
+#' function.
 #'
 #' @param modelList A list of structural equations.
 #' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
@@ -139,9 +145,9 @@ getCoefficients <- function(model) {
 
       krp <- KRp(model, vars[-1], data, intercepts = TRUE)
       
-      ret <- data.frame(append(as.data.frame(ret), list(DF = krp[1,]), after = 2))
-      
-      ret[, "Pr(>|t|)"] <- krp[2, ]
+      ret <- cbind.data.frame(ret[, 1:2], DF = krp[, 1], ret[, 3, drop = FALSE], krp[, 2])
+        
+      names(ret)[ncol(ret)] <- "Pr(>|t|)"
       
     }
     
@@ -222,11 +228,13 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       Std.Estimate <- ret[rowN, "Estimate"] 
       
-      cbind.data.frame(ret[rowN, 1:3], Std.Estimate, ret[rowN, 4:8])
+      cbind.data.frame(ret[rowN, 1:7], Std.Estimate, ret[rowN, 8])
       
     } else {
       
       numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
+      
+      newdata <- data[, numVars]
       
       ret.sub <- ret[ret$Response == numVars[1], ]
       
@@ -285,7 +293,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
           Std.Estimate = c(0, B[-1] * (sd.x / sd.y))
       
       
-      cbind.data.frame(ret.sub[, 1:3], Std.Estimate, ret.sub[, 4:8])
+      cbind.data.frame(ret.sub[, 1:7], Std.Estimate, ret.sub[, 8])
       
     }
     
