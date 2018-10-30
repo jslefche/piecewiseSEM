@@ -45,7 +45,7 @@
 #' @param standardize.type the type of standardized for non-Gaussian responses: 
 #' \code{latent.linear} (default), \code{Mendard.OE}
 #' @param test.type the type of test ("II" or "III") for significance of categorical
-#' variables (from \code{\link{car::Anova}})
+#' variables (from \code{car::Anova})
 #' @param .progressBar an optional progress bar. Default is TRUE
 #' 
 #' @return The function \code{summary.psem} returns a list of summary
