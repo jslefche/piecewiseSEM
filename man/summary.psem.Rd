@@ -6,8 +6,8 @@
 \usage{
 \method{summary}{psem}(object, ..., direction = NULL, conserve = FALSE,
   conditional = FALSE, add.claims = NULL, standardize = "scale",
-  standardize.type = "latent.linear", intercepts = FALSE,
-  .progressBar = TRUE)
+  standardize.type = "latent.linear", test.type = "II",
+  intercepts = FALSE, .progressBar = TRUE)
 }
 \arguments{
 \item{object}{a list of structural equations}
@@ -31,6 +31,9 @@ Default is "scale"}
 
 \item{standardize.type}{the type of standardized for non-Gaussian responses: 
 \code{latent.linear} (default), \code{Mendard.OE}}
+
+\item{test.type}{the type of test ("II" or "III") for significance of categorical
+variables (from \code{\link{car::Anova}})}
 
 \item{intercepts}{whether intercepts should be included in the coefficient  table
 Default is FALSE}

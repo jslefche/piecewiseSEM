@@ -63,11 +63,15 @@ the predictions (on the linear scale) plus the correlation between the observed 
 predicted (on the original or 'response' scale) values of y.}
 }
 
-Model-estimated means are reported for each level of categorical variables using the 
-\code{lsmeans} package. Pairwise contrasts are conducted among all levels using the
-default correction for multiple testing. The results of those comparisons are given
-in the significance codes (e.g., "a", "b", "ab") as reported in the \code{\link{cld}} 
-function.
+For categorical predictors: significance is determined using ANOVA (or analysis of
+deviance). Because n-1 coefficients are reported for n levels, the output instead
+reports model-estimated means in the \code{Estimate} column. This is done so all
+n paths in the corresponding path diagram have assignable values.
+
+The means are generated using function \code{lsmeans} in the \code{lsmeans} package. 
+Pairwise contrasts  are further conducted among all levels using the default  
+correction for multiple testing. The results of those comparisons are given in the 
+significance codes (e.g., "a", "b", "ab") as reported in the \code{lsmeans::cld} function.
 }
 \references{
 Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
@@ -75,7 +79,7 @@ Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 Ecosphere 9(6): e02283.
 }
 \seealso{
-\code{\link{KRmodcomp}}
+\code{\link{KRmodcomp}}, \code{\link{lsmeans}}, \code{\link{clld}}
 }
 \author{
 Jon Lefcheck <jlefcheck@bigelow.org>, Jim Grace
