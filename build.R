@@ -43,6 +43,7 @@ mod <- psem(
   data = keeley
   
 )
+summary(mod)
 
 res <- residuals(mod)
 anova(mod)
@@ -56,9 +57,11 @@ mod2 <- psem(
   data = keeley
   
 )
+summary(mod2)
 
 anova(mod, mod2)
 
+#######################################
 
 #test mixed models
 library(lme4)
@@ -82,8 +85,6 @@ shipley_psem <- psem(
   )
 
 summary(shipley_psem)
-
-
 
 # Create list of structural equations
 shipley_psem_lme4 <- psem(
