@@ -349,11 +349,11 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
   
   for(x in vars) { #sapply(vars, function(x) {
 
-    reduceMod <- update(model, as.formula(paste(". ~ . -", x)))
+    reduceModel <- update(model, as.formula(paste(". ~ . -", x)))
 
-    if(nobs(model) != nobs(reduceMod)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
+    if(nobs(model) != nobs(reduceModel)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
     
-    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reduceMod))
+    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reduceModel))
 
     d <- round(kr$stats$ddf, 2)
 
@@ -365,9 +365,9 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
   if(intercepts == TRUE) {
 
-    reducModI <- update(model, as.formula(paste("~ 0 + .")), data = data)
+    reduceModelI <- update(model, as.formula(paste("~ . - 1")), data = data)
 
-    krI <- suppressWarnings(pbkrtest::KRmodcomp(model, reducModI))
+    krI <- suppressWarnings(pbkrtest::KRmodcomp(model, reduceModelI))
 
     dI <- kr$stats$ddf
 
