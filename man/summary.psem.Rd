@@ -33,7 +33,7 @@ Default is "scale"}
 \code{latent.linear} (default), \code{Mendard.OE}}
 
 \item{test.type}{the type of test ("II" or "III") for significance of categorical
-variables (from \code{\link{car::Anova}})}
+variables (from \code{car::Anova})}
 
 \item{intercepts}{whether intercepts should be included in the coefficient  table
 Default is FALSE}
