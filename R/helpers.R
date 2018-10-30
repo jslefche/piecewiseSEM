@@ -353,13 +353,19 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
     if(nobs(model) != nobs(reduceModel)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
     
-    kr <- suppressWarnings(pbkrtest::KRmodcomp(model, reduceModel))
+    kr <- try(pbkrtest::KRmodcomp(model, reduceModel), silent = TRUE)
 
-    d <- round(kr$stats$ddf, 2)
-
-    p <- kr$stats$p.valueU
-
-    out <- rbind(out, data.frame(d, p))
+    if(class(kr) == "try-error") 
+      
+      stop("Cannot obtain P-values from `lmerMod` using `pbkrtest::KRmodcopm`. Consider fitting using `nlme::lme`") else {
+        
+        d <- round(kr$stats$ddf, 2)
+  
+        p <- kr$stats$p.valueU
+  
+        out <- rbind(out, data.frame(d, p))
+        
+      }
 
   } # )
 
@@ -367,13 +373,19 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 
     reduceModelI <- update(model, as.formula(paste("~ . - 1")), data = data)
 
-    krI <- suppressWarnings(pbkrtest::KRmodcomp(model, reduceModelI))
-
-    dI <- kr$stats$ddf
-
-    pI <- kr$stats$p.valueU
-
-    out <- rbind(data.frame(d = dI, p = pI), out)
+    krI <- try(pbkrtest::KRmodcomp(model, reduceModelI), silent = TRUE)
+    
+    if(class(krI) == "try-error") 
+      
+      stop("Cannot obtain P-values from `lmerMod` using `pbkrtest::KRmodcomp`. Consider re-fitting using `nlme::lme`")else {
+        
+        dI <- krI$stats$ddf
+    
+        pI <- krI$stats$p.valueU
+    
+        out <- rbind(data.frame(d = dI, p = pI), out)
+        
+      }
       
   }
   
