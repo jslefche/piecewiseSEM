@@ -108,23 +108,23 @@ shipley_psem_lme4 <- psem(
 summary(shipley_psem_lme4)
 
 #lmerTest
-library(lmerTest)
-shipley_psem_lmerTest <- psem(
-  
-  lmer(DD ~ lat + (1 | site / tree), 
-       data = shipley),
-  
-  lmer(Date ~ DD + (1 | site / tree), 
-       data = shipley),
-  
-  lmer(Growth ~ Date + (1 | site / tree),
-       data = shipley),
-  
-  glmer(Live ~ Growth + (1 | site) + (1 | tree),
-        family = binomial(link = "logit"), data = shipley),
-  
-  data = shipley
-  
-)
-
-summary(shipley_psem_lmerTest)
+# library(lmerTest)
+# shipley_psem_lmerTest <- psem(
+#   
+#   lmer(DD ~ lat + (1 | site / tree), 
+#        data = shipley),
+#   
+#   lmer(Date ~ DD + (1 | site / tree), 
+#        data = shipley),
+#   
+#   lmer(Growth ~ Date + (1 | site / tree),
+#        data = shipley),
+#   
+#   glmer(Live ~ Growth + (1 | site) + (1 | tree),
+#         family = binomial(link = "logit"), data = shipley),
+#   
+#   data = shipley
+#   
+# )
+# 
+# summary(shipley_psem_lmerTest)
