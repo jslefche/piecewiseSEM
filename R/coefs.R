@@ -101,17 +101,15 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FA
     
     if(all(class(i) %in% c("formula.cerror"))) {
       
-      ret <- cbind.data.frame(cerror(i, modelList, data), "") 
+      ret <- cbind.data.frame(cerror(i, modelList, data)) 
       
-      names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "", "")
+      names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
 
       } else {
         
         ret <- getCoefficients(i, data, test.type)
         
-        if(intercepts == FALSE) ret <- ret[rownames(ret) != "(Intercept)", ]
-        
-        names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "", "")
+        if(intercepts == FALSE) ret <- ret[ret$Predictor != "(Intercept)", ]
         
       }
     
@@ -177,7 +175,7 @@ getCoefficients <- function(model, data, test.type = "II") {
     
   }
   
-  ret <- cbind(ret, isSig(ret[, 5]), "")
+  ret <- cbind(ret, isSig(ret[, 5]))
   
   if(length(factorVars) > 0) {
     
@@ -193,8 +191,15 @@ getCoefficients <- function(model, data, test.type = "II") {
        
        atab <- anovaTable[which(rownames(anovaTable) == names(out)[1]), ]
        
-       out <- data.frame(out[, 2:3], DF = atab$Df, NA, P.value = atab[, ncol(atab)], isSig(atab[ncol(atab)]), out[, 7])
-      
+       atab. <- data.frame(lsmean = NA, SE = NA, DF = atab$Df, crit.value = atab[, 1], P.value = atab[, ncol(atab)], sig = isSig(atab[, ncol(atab)]))
+       
+       rownames(atab.) <- rownames(atab) 
+       
+       out <- rbind(
+         atab.,
+         data.frame(out[, 2:3], DF = out$df, crit.value = NA, P.value = NA, sig = out[, 7])
+       )
+       
        names(out) <- names(ret)
        
        ret <- rbind(ret, out)
@@ -203,11 +208,21 @@ getCoefficients <- function(model, data, test.type = "II") {
     
   }
   
-  data.frame(
+  ret <- data.frame(
     Response = all.vars_trans(listFormula(list(model))[[1]])[1],
     Predictor = rownames(ret),
     ret
   )
+  
+  names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
+  
+  rownames(ret) <- NULL
+  
+  ret$Response <- as.character(ret$Response)
+  
+  ret[is.na(ret$P.Value), "Response"] <- ""
+  
+  return(ret)  
      
 }
 
@@ -227,34 +242,29 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
   modelList <- removeData(modelList, formulas = 2)
   
-  ret <- unstdCoefs(modelList, data, test.type, intercepts)
-  
   ret <- do.call(rbind, lapply(modelList, function(i) {
     
     if(all(class(i) %in% c("formula.cerror"))) {
       
-      rowN <- which(ret$Response == paste0("~~", gsub(" ", "", strsplit(i, "~~")[[1]]))[1] &
-                      ret$Predictor == paste0("~~", gsub(" ", "", strsplit(i, "~~")[[1]]))[2])
+      ret <- cerror(i, modelList)
       
-      Std.Estimate <- ret[rowN, "Estimate"] 
- 
-      cbind.data.frame(ret[rowN, 1:7], Std.Estimate, sig = ret[rowN, 8:9])
+      cbind.data.frame(ret[, 1:7], Std.Estimate = ret[, 3], sig = ret[, 8])
       
     } else {
       
-      numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
+      ret <- unstdCoefs(i, data, test.type, intercepts)
       
-      ret.sub <- ret[ret$Response == numVars[1], ]
-
       newdata <- data[, all.vars_notrans(i)]
       
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
       
       newdata <- dataTrans(formula(i), newdata)
       
-      B <- ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Estimate"]
+      numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
       
-      names(B) <- ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Predictor"]
+      B <- ret[ret$Predictor %in% numVars[-1], "Estimate"]
+      
+      names(B) <- ret[ret$Predictor %in% numVars[-1], "Predictor"]
       
       if(all(standardize == "scale"))
         
@@ -302,17 +312,17 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
           
           Std.Estimate <- c(0, B[-1] * (sd.x / sd.y))
       
-      ret.sub[ret.sub$Response == numVars[1] & ret.sub$Predictor %in% numVars[-1], "Std.Estimate"] <- Std.Estimate
+      ret[which(ret$Predictor %in% numVars[-1]), "Std.Estimate"] <- Std.Estimate
       
-      cbind.data.frame(ret.sub[, 1:7], ret.sub[, 10, drop = FALSE], sig = ret.sub[, 8:9])
+      ret <- cbind(ret[, 1:7], ret[, 9, drop = FALSE], sig = ret[, 8])
+      
+      return(ret)
       
     }
     
-  } ) )
+  } ) )  
   
   rownames(ret) <- NULL
-  
-  names(ret)[9:10] <- ""
   
   return(ret)
   
