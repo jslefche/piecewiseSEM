@@ -151,6 +151,8 @@ evaluateClasses <- function(modelList) {
 #' 
 print.psem <- function(x, ...) {
 
+  nm <- deparse(substitute(x))
+  
   formulas <- listFormula(x)
 
   formulas_print <- sapply(1:length(formulas), function(i) {
@@ -167,7 +169,7 @@ print.psem <- function(x, ...) {
 
   class_print <- paste0("class(", class(x), ")")
 
-  cat("Structural Equations:\n")
+  cat("Structural Equations of", nm, ":\n")
 
   cat(paste(formulas_print, collapse = "\n"))
 
