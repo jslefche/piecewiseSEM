@@ -68,7 +68,7 @@ deviance). Because n-1 coefficients are reported for n levels, the output instea
 reports model-estimated means in the \code{Estimate} column. This is done so all
 n paths in the corresponding path diagram have assignable values.
 
-The means are generated using function \code{lsmeans} in the \code{lsmeans} package. 
+The means are generated using function \code{lsmeans} in the \code{emmeans} package. 
 Pairwise contrasts  are further conducted among all levels using the default  
 correction for multiple testing. The results of those comparisons are given in the 
 significance codes (e.g., "a", "b", "ab") as reported in the \code{lsmeans::cld} function.
@@ -79,7 +79,7 @@ Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 Ecosphere 9(6): e02283.
 }
 \seealso{
-\code{\link{KRmodcomp}}, \code{\link{lsmeans}}, \code{\link{clld}}
+\code{\link{KRmodcomp}}, \code{\link{lsmeans}}, \code{\link{CLD}}
 }
 \author{
 Jon Lefcheck <jlefcheck@bigelow.org>, Jim Grace
