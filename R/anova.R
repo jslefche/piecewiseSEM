@@ -39,7 +39,10 @@ anova.psem <- function(object, ..., test.type = "II") {
    } ) )
    
   } else {
-
+    
+    # need to stop if fit to different datasets
+    # lapply(l, function(x) GetData(x))
+    
     combos <- combn(length(l), 2)
     
     combos <- split(t(combos), seq(ncol(combos)))
@@ -84,6 +87,24 @@ anova.psem <- function(object, ..., test.type = "II") {
     
   }
   
+  class(ret) <- "anova.psem"
+  
   return(ret)
 
+}
+
+#' Print anova.psem
+#' 
+#' @keywords internal
+#' 
+#' @export
+#' 
+print.anova.psem <- function(x) {
+  
+  cat("Chi square difference test\n")
+  
+  cat("\n")
+  
+  lapply(x, function(i) { print(i); cat("\n") })
+  
 }
