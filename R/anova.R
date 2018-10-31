@@ -1,25 +1,24 @@
 #' Chi-squared Difference Test for Model Comparison
 #' 
-#' @param object a \code{\link{psem}} object
-#' @param object2 an optional second \code{\link{psem}} object
-#' @param fun what anova function to use. Default is car::Anova
-#' @param ... additional arguments for car::Anova
+#' @param object a \code{psem} object
+#' @param ... additional \code{psem} objects
+#' @param test.type 
 #' 
-#' @return a table reporting the Fisher's C statistics for each model, and the result of 
-#' the Chi-squared difference test
+#' @return 
 #' 
 #' @method anova psem
 #' 
 #' @export
 #'
-anova.psem <- function(object, object2 = NULL, ...) {
+anova.psem <- function(object, ..., test.type = "II") {
 
-  if(is.null(object2)) {
+  l <- list(object, ...)
+  
+  if(length(l) == 1) {
 
    object <- removeData(object, formulas = 1)
 
-   #get residuals of relationships
-   ret <- lapply(object, car::Anova, ...)
+   ret <- lapply(object, function(x) car::Anova(x, type = test.type))
    
    ret <- do.call(rbind, lapply(ret, function(i) {
      
@@ -32,7 +31,7 @@ anova.psem <- function(object, object2 = NULL, ...) {
      data.frame(
        Response = response,
        Predictor = predictors,
-       Test.stat = dat[-nrow(dat), 1],
+       Test.Stat = dat[-nrow(dat), 1],
        DF = dat[-nrow(dat), "Df"],
        P.Value = dat[-nrow(dat), ncol(dat)]
      )
@@ -40,16 +39,50 @@ anova.psem <- function(object, object2 = NULL, ...) {
    } ) )
    
   } else {
+
+    combos <- combn(length(l), 2)
     
-    ret <- rbind(fisherC(object), fisherC(object2))
+    combos <- split(t(combos), seq(ncol(combos)))
     
-    ret <- rbind(ret, abs(ret[1, ] - ret[2, ]))
+    ret <- lapply(combos, function(i) {
+      
+      nm1 <- deparse(substitute(l[[i[1]]]))
+      
+      nm2 <- deparse(substitute(l[[i[2]]]))
+      
+      model1 <- l[[i[1]]]
+      
+      model2 <- l[[i[2]]]
     
-    ret[3, 3] <- 1 - pchisq(ret[3, 1], df = ret[3, 2])
+      model1.summary <- summary(model1, .progressBar = FALSE)
+      
+      model2.summary <- summary(model2, .progressBar = FALSE)
+      
+      Cdiff <- abs(model1.summary$Cstat$Fisher.C - model2.summary$Cstat$Fisher.C)
+      
+      dfdiff <- abs(model1.summary$Cstat$df - model2.summary$Cstat$df)
+      
+      pvalue <- 1 - pchisq(Cdiff, df = dfdiff)
+      
+      ret <- data.frame(
+        AIC = c(model1.summary$IC$AIC, model2.summary$IC$AIC),
+        BIC = c(model1.summary$IC$BIC, model2.summary$IC$BIC),
+        Fisher.C = c(model1.summary$Cstat$Fisher.C, model2.summary$Cstat$Fisher.C),
+        Fisher.C.Diff = c("", Cdiff),
+        DF.diff = c("", dfdiff),
+        P.value = c("", pvalue),
+        sig = c("", isSig(pvalue))
+      )
+       
+      colnames(ret)[ncol(ret)] <- ""
+      
+      rownames(ret) <- c(paste(i[1]), paste("vs", i[2]))
+      
+      return(ret)
+      
+    } )
     
-    rownames(ret) <- c(1, 2, "Difference")
-    
-    }
+  }
   
   return(ret)
 
