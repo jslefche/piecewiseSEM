@@ -189,7 +189,7 @@ getCoefficients <- function(model, data, test.type = "II") {
   
     ret <- do.call(rbind, lapply(levs, function(j) {
       
-       out <- as.data.frame(emmeans::CLD(j, Letters = letters[1:26]))
+       out <- as.data.frame(emmeans::CLD(j[[1]],  Letters = letters[1:26]))
      
        rownames(out) <- paste0(names(out)[1], "[", out[, 1], "]")
        
