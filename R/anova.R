@@ -35,13 +35,21 @@ anova.psem <- function(object, ...,
      
      predictors <- rownames(dat)[-nrow(dat)]
      
-     data.frame(
+     ret <- data.frame(
        Response = response,
        Predictor = predictors,
-       Test.Stat = dat[-nrow(dat), 1],
+       Test.Stat = round(dat[-nrow(dat), 1], 1),
        DF = dat[-nrow(dat), "Df"],
-       P.Value = dat[-nrow(dat), ncol(dat)]
+       P.Value = round(dat[-nrow(dat), ncol(dat)], 4)
      )
+     
+     ret <- cbind.data.frame(ret, isSig(ret$P.Value))
+     
+     names(ret)[ncol(ret)] <- ""
+     
+     # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
+     
+     return(ret)
      
    } ) ) )
    
