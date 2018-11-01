@@ -1,18 +1,17 @@
 #' Chi-squared Difference Test for Model Comparison
 #' 
-#' For a single SEM, returns ANOVA output. For multiple SEMs, returns Likehood Ratio
-#' Tests based on Fisher's C statistic.
-#' 
 #' @param object a \code{psem} object
 #' @param ... additional \code{psem} objects
 #' @param test.type what kind of ANOVA should be reported. Default is type II
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
 #' @seealso The model fitting function \code{\link{psem}}
 #' 
-#' @method anova psem
-#' 
 #' @export
+#' 
+anova <- function(object, ...) UseMethod("anova")
 #'
+#' @export
+#' 
 anova.psem <- function(object, ..., test.type = "II") {
 
   l <- list(object, ...)
@@ -89,8 +88,8 @@ anova.psem <- function(object, ..., test.type = "II") {
     } )
     
   }
-  
-  # class(ret) <- "anova.psem"
+
+  class(ret) <- "anova.psem"
   
   return(ret)
 
@@ -98,7 +97,7 @@ anova.psem <- function(object, ..., test.type = "II") {
 
 #' Print anova
 #' 
-#' @keywords internal
+#' @param x an object of class anova.psem
 #' 
 #' @method print anova.psem
 #' 
@@ -106,7 +105,7 @@ anova.psem <- function(object, ..., test.type = "II") {
 #' 
 print.anova.psem <- function(x) {
   
-  if(length(x) == 1) print(x) else {
+  if(length(x) == 1) print(x[[1]]) else {
   
     cat("Chi square difference test\n")
     
