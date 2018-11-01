@@ -33,5 +33,5 @@ internally from the structural equations.
 \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>
 }

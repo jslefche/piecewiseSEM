@@ -53,5 +53,5 @@ plot(presid) # identical plot!
 \code{\link{cerror}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>
 }

@@ -98,5 +98,5 @@ models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 The model fitting function \code{\link{psem}}.
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>
 }

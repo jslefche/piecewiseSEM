@@ -98,5 +98,5 @@ from generalized linear mixed-effects models revisted and expanded." bioRxiv
 095851 (2017).
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>
 }

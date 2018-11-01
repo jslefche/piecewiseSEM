@@ -9,3 +9,4 @@ getCoefficients(model, data, test.type = "II")
 \description{
 Get coefficients from linear regression
 }
+\keyword{internal}

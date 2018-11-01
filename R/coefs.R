@@ -55,7 +55,7 @@
 #' table. Default is FALSE.
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
 #' degrees of freedom, and significance tests.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>, Jim Grace
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jim Grace
 #' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
@@ -129,7 +129,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FA
 
 #' Get coefficients from linear regression
 #' 
-#' @keyword internal
+#' @keywords internal
 #' 
 #' @export
 #'

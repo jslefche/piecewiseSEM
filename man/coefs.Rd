@@ -82,5 +82,5 @@ Ecosphere 9(6): e02283.
 \code{\link{KRmodcomp}}, \code{\link{emmeans}}, \code{\link{CLD}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>, Jim Grace
+Jon Lefcheck <LefcheckJ@si.edu>, Jim Grace
 }

@@ -20,7 +20,7 @@
 #' @name piecewiseSEM-package
 #' @aliases piecewiseSEM-package piecewiseSEM
 #' @docType package
-#' @author Jon Lefcheck <lefcheckj@@si.edu>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #'

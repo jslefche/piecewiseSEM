@@ -41,7 +41,7 @@
 #' @return Returns a \code{data.frame} with the response, its family and link,
 #' the method used to estimate R2, and the R2 value itself. Mixed models also
 #' return marginal and conditional R2 values.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @references Nakagawa, Sinichi, Johnson, Paul C.D., and Holger Schielzeth.
 #' "The coefficient of determination R2 and intra-class correlation coefficient
 #' from generalized linear mixed-effects models revisted and expanded." bioRxiv

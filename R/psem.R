@@ -17,7 +17,7 @@
 #'
 #' @param \dots A list of structural equations
 #' @return Returns an object of class \code{psem}
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 #' 
 #' @export
