@@ -1,16 +1,23 @@
-#' Chi-squared Difference Test for Model Comparison
+#' ANOVA and chi-squared difference test for model comparison
+#' 
+#' Compute analysis of variance table for one or more structural equation models.
 #' 
 #' @param object a \code{psem} object
 #' @param ... additional \code{psem} objects
 #' @param test.type what kind of ANOVA should be reported. Default is type II
+#' 
+#' @return an ANOVA table for a single model, a list of comparisons between multiple
+#' models
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
+#' 
 #' @seealso The model fitting function \code{\link{psem}}
 #' 
 #' @method anova psem
 #' 
 #' @export
 #' 
-anova.psem <- function(object, ..., test.type = "II") {
+anova.psem <- function(object, ..., 
+                       test.type = "II") {
 
   l <- list(object, ...)
   
