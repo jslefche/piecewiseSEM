@@ -6,10 +6,8 @@
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
 #' @seealso The model fitting function \code{\link{psem}}
 #' 
-#' @export
+#' @method anova psem
 #' 
-anova <- function(object, ...) UseMethod("anova")
-#'
 #' @export
 #' 
 anova.psem <- function(object, ..., test.type = "II") {
