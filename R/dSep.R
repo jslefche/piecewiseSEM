@@ -56,7 +56,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
     
     data <- modelList$data
     
-    modelList <- removeData(modelList, formulas = 1)
+    # modelList <- removeData(modelList, formulas = 1)
     
     formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
     
@@ -86,7 +86,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
         
       }
       
-      ct <- unstdCoefs(bNewMod)
+      ct <- unstdCoefs(bNewMod, data)
       
       ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
       
