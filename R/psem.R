@@ -175,7 +175,7 @@ print.psem <- function(x, ...) {
 
   print(data_print)
 
-  cat(paste("...with ", dim(x$data)[1], " more rows"))
+  cat(paste("...with ", dim(x$data)[1] - 6, " more rows"))
 
   cat("\n\n")
 
