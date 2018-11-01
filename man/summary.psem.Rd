@@ -5,7 +5,7 @@
 \title{Summarizing piecewise structural equation models}
 \usage{
 \method{summary}{psem}(object, ..., direction = NULL, conserve = FALSE,
-  conditional = FALSE, add.claims = NULL, standardize = "scale",
+  conditioning = FALSE, add.claims = NULL, standardize = "scale",
   standardize.type = "latent.linear", test.type = "II",
   intercepts = FALSE, .progressBar = TRUE)
 }
@@ -18,9 +18,6 @@
 claim(s)}
 
 \item{conserve}{whether the most conservative P-value should be returned (See Details) 
-Default is FALSE}
-
-\item{conditional}{whether all conditioning variables should be shown in the table
 Default is FALSE}
 
 \item{add.claims}{an optional vector of additional independence claims (P-values) 
@@ -39,6 +36,9 @@ variables (from \code{car::Anova})}
 Default is FALSE}
 
 \item{.progressBar}{an optional progress bar. Default is TRUE}
+
+\item{conditional}{whether all conditioning variables should be shown in the table
+Default is FALSE}
 }
 \value{
 The function \code{summary.psem} returns a list of summary
