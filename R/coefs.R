@@ -135,7 +135,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FA
 #'
 getCoefficients <- function(model, data, test.type = "II") {
   
-  vars <- all.vars.merMod(formula(model))
+  vars <- all.vars.merMod(model)
   
   factorVars <- vars[which(sapply(data[, vars], class) == "factor")]
 
@@ -185,7 +185,7 @@ getCoefficients <- function(model, data, test.type = "II") {
     
     anovaTable <- as.data.frame(car::Anova(model, type = test.type))
   
-    levs <- lapply(factorVars, function(j) emmeans::emmeans(model, list(formula(paste("pairwise ~", j)))))
+    levs <- lapply(factorVars, function(j) suppressMessages(emmeans::emmeans(model, list(formula(paste(" ~", j))))))
   
     ret <- do.call(rbind, lapply(levs, function(j) {
       
@@ -193,7 +193,7 @@ getCoefficients <- function(model, data, test.type = "II") {
      
        rownames(out) <- paste0(names(out)[1], "[", out[, 1], "]")
        
-       atab <- anovaTable[which(rownames(anovaTable) == names(out)[1]), ]
+       atab <- anovaTable[which(grepl(names(out)[1], rownames(anovaTable))), ]
        
        atab. <- data.frame(emmean = NA, SE = NA, DF = atab$Df, crit.value = atab[, 1], P.value = atab[, ncol(atab)], sig = isSig(atab[, ncol(atab)]))
        
@@ -258,13 +258,15 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       ret <- unstdCoefs(i, data, test.type, intercepts)
       
-      newdata <- data[, all.vars_notrans(i)]
+      vars <- all.vars.merMod(i)
+      
+      newdata <- data[, vars]
       
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
       
       newdata <- dataTrans(formula(i), newdata)
       
-      numVars <- all.vars_notrans(i)[which(sapply(data[, all.vars_notrans(i)], class) != "factor")]
+      numVars <- vars[which(sapply(data[, vars], class) != "factor")]
       
       B <- ret[ret$Predictor %in% numVars[-1], "Estimate"]
       
