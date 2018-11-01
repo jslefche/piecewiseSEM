@@ -88,7 +88,7 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
       
       ct <- unstdCoefs(bNewMod)
       
-      ret <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
+      ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
       
       rhs <- paste0(b[[i]][-2], collapse = " + ")
       
@@ -96,7 +96,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
         
         rhs <- paste0(b[[i]][1], " + ...")
       
-      ret <- data.frame(Independ.Claim = paste(b[[i]][2], "~", rhs), ret[, 3:7])
+      ret <- data.frame(Independ.Claim = paste(b[[i]][2], "~", rhs), ct[, 3:8])
+      
+      names(ret)[ncol(ret)] <- ""
       
       if(.progressBar == TRUE) setTxtProgressBar(pb, i)
       
@@ -110,9 +112,9 @@ dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = F
     
     if(conserve == TRUE) {
       
-      ret = do.call(rbind, lapply(unique(names(b)), function(i) {
+      ret <- do.call(rbind, lapply(unique(names(b)), function(i) {
         
-        r = ret[which(names(b) == i), ]
+        r <- ret[which(names(b) == i), ]
         
         r[which.min(r[, "P.Value"]), ]
         
