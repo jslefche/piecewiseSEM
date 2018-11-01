@@ -86,7 +86,7 @@ summary.psem <- function(object, ...,
 
   call <- paste(listFormula(object), collapse = "\n  ")
 
-  dTable <- dSep(object, direction, conserve, conditional, .progressBar)
+  dTable <- dSep(object, direction, conserve, conditioning, .progressBar)
 
   Cstat <- fisherC(dTable, add.claims, direction, conserve, conditioning, .progressBar)
 
