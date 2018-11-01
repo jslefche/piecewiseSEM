@@ -1,27 +1,42 @@
 #' Multigroup Analysis for Piecewise SEM
 #' 
 #' @param modelList
-#' @param data
 #' @param group
 #' 
 #' @return 
 #' 
-multigroup <- function(modelList, data, group) {
+multigroup <- function(modelList, group) {
   
-  # refit models to each group
-  modelList.list <- lapply(levels(data[, group]), function(i) update(modelList, data = data[data[, group] == i, ]))
+  data <- modelList$data
   
-  names(modelList.list) <- levels(data[, group])
+  modelList <- removeData(modelList, formulas = 1)
+  
+  # refit model with group-interaction
+  newModelList <- lapply(modelList, function(i) {
+    
+    rhs1 <- paste(paste(all.vars_trans(i)[-1], collapse = " + "))
+    
+    rhs2 <- paste(paste(all.vars_trans(i)[-1], ":", group), collapse = " + ")
 
-  # conduct LRT
+    update(i, formula(paste(". ~ ", paste(rhs1, " + ", rhs2))))
+    
+  } )
   
-  lapply(2:modelList, function(i) anova(modelList.list[[i]], modelList.list[[i - 1]]) )
+  # capture output and assign to each group
+  coefList <- lapply(levels(data[, group]), function(i) update(modelList, data = data[data[, group] == i, ]))
   
   
-  # fit interactions
+  # test for significant interactions
   
+  anovaTable <- anova(as.psem(newModelList))[[1]]
   
-  # get coefficients
-  lapply(modelList.list, coefs)
+  anovaInts <- anovaTable[grepl(":", anovaTable$Predictor), ]
+  
+  global <- anovaInts[anovaInts$P.Value >= 0.05, c("Predictor", "Response")]
+  
+  # alter output for each group if interaction is non-significant (Assign global value)
+  
+  # plus have column for "constrained" vs "free" ??
+  
 }
   
