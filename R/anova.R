@@ -7,7 +7,7 @@
 #' @param ... additional \code{psem} objects
 #' @param test.type what kind of ANOVA should be reported. Default is type II
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
-#' @seealso The model fitting function \code{\link{psem}}.
+#' @seealso The model fitting function \code{\link{psem}}
 #' 
 #' @method anova psem
 #' 
@@ -23,7 +23,7 @@ anova.psem <- function(object, ..., test.type = "II") {
 
    ret <- lapply(object, function(x) car::Anova(x, type = test.type))
    
-   ret <- do.call(rbind, lapply(ret, function(i) {
+   ret <- list(do.call(rbind, lapply(ret, function(i) {
      
      response <- gsub("Response: ", "", attr(i, "heading")[grepl("Response:", attr(i, "heading"))])
      
@@ -39,7 +39,7 @@ anova.psem <- function(object, ..., test.type = "II") {
        P.Value = dat[-nrow(dat), ncol(dat)]
      )
      
-   } ) )
+   } ) ) )
    
   } else {
     
@@ -90,7 +90,7 @@ anova.psem <- function(object, ..., test.type = "II") {
     
   }
   
-  class(ret) <- "anova.psem"
+  # class(ret) <- "anova.psem"
   
   return(ret)
 
@@ -106,10 +106,14 @@ anova.psem <- function(object, ..., test.type = "II") {
 #' 
 print.anova.psem <- function(x) {
   
-  cat("Chi square difference test\n")
+  if(length(x) == 1) print(x) else {
   
-  cat("\n")
-  
-  lapply(x, function(i) { print(i); cat("\n") })
+    cat("Chi square difference test\n")
+    
+    cat("\n")
+    
+    lapply(x, function(i) { print(i); cat("\n") })
+    
+  }
   
 }
