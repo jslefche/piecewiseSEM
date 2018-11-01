@@ -76,7 +76,7 @@
 #' @export
 #' 
 summary.psem <- function(object, ...,
-                         direction = NULL, conserve = FALSE, conditional = FALSE,
+                         direction = NULL, conserve = FALSE, conditioning = FALSE,
                          add.claims = NULL,
                          standardize = "scale", standardize.type = "latent.linear", test.type = "II",
                          intercepts = FALSE,
@@ -88,9 +88,9 @@ summary.psem <- function(object, ...,
 
   dTable <- dSep(object, direction, conserve, conditional, .progressBar)
 
-  Cstat <- fisherC(dTable, add.claims, direction, conserve, conditional, .progressBar)
+  Cstat <- fisherC(dTable, add.claims, direction, conserve, conditioning, .progressBar)
 
-  IC <- infCrit(object, Cstat, add.claims, direction, conserve, conditional, .progressBar)
+  IC <- infCrit(object, Cstat, add.claims, direction, conserve, conditioning, .progressBar)
 
   coefficients <- coefs(object, standardize, standardize.type, test.type, intercepts)
 

@@ -19,6 +19,15 @@
 #' @return Returns an object of class \code{psem}
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
+#' @examples 
+#' mod <- psem(
+#' lm(rich ~ cover, data = keeley),
+#' lm(cover ~ firesev, data = keeley),
+#' lm(firesev ~ age, data = keeley),
+#' data = keeley
+#' )
+#' 
+#' summary(mod)
 #' 
 #' @export
 #' 
