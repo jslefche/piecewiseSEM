@@ -80,7 +80,7 @@ anova.psem <- function(object, ...,
       
       dfdiff <- abs(model1.summary$Cstat$df - model2.summary$Cstat$df)
       
-      pvalue <- 1 - pchisq(Cdiff, df = dfdiff)
+      pvalue <- round(1 - pchisq(Cdiff, df = dfdiff), 4)
       
       ret <- data.frame(
         AIC = c(model1.summary$IC$AIC, model2.summary$IC$AIC),
