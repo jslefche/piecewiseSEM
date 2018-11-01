@@ -1,8 +1,8 @@
 Package: piecewiseSEM
 Type: Package
 Title: Piecewise Structural Equation Modeling
-Version: 2.0.3
-Date: 2018-10-29
+Version: 2.1.0
+Date: 2018-10-31
 Authors@R: c(
     person("Jon", "Lefcheck",   role = c("aut", "cre"), email = "jlefcheck@bigelow.org"),
     person("Jarrett", "Byrnes",  role = "aut", email = "jarrett.byrnes@umb.edu"),
@@ -18,8 +18,8 @@ URL: https://github.com/jslefche/
 BugReports: https://github.com/jslefche/piecewiseSEM/issues
 Imports:
     car,
+    emmeans,
     lme4,
-    lsmeans,
     MASS,
     methods,
     nlme,

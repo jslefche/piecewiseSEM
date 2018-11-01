@@ -120,7 +120,7 @@ cerror <- function(formula., modelList, data = NULL) {
 
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
-  ret <- cbind.data.frame(ret, isSig(ret[, 5]))
+  ret <- cbind.data.frame(ret, isSig(ret$P.Value))
   
   names(ret)[ncol(ret)] <- ""
   

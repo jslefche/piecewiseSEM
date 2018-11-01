@@ -39,10 +39,10 @@
 #' reports model-estimated means in the \code{Estimate} column. This is done so all
 #' n paths in the corresponding path diagram have assignable values.
 #' 
-#' The means are generated using function \code{lsmeans} in the \code{lsmeans} package. 
+#' The means are generated using function \code{emmeans} in the \code{emmeans} package. 
 #' Pairwise contrasts  are further conducted among all levels using the default  
 #' correction for multiple testing. The results of those comparisons are given in the 
-#' significance codes (e.g., "a", "b", "ab") as reported in the \code{lsmeans::cld} function.
+#' significance codes (e.g., "a", "b", "ab") as reported in the \code{emmeans::cld} function.
 #'
 #' @param modelList A list of structural equations.
 #' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
@@ -59,7 +59,7 @@
 #' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
-#' @seealso \code{\link{KRmodcomp}}, \code{\link{lsmeans}}, \code{\link{clld}}
+#' @seealso \code{\link{KRmodcomp}}, \code{\link{emmeans}}, \code{\link{CLD}}
 #' 
 #' @export
 #'
@@ -132,7 +132,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FA
 #' @keyword internal
 #' 
 #' @export
-#' 
+#'
 getCoefficients <- function(model, data, test.type = "II") {
   
   vars <- all.vars.merMod(formula(model))
@@ -184,18 +184,18 @@ getCoefficients <- function(model, data, test.type = "II") {
   if(length(factorVars) > 0) {
     
     anovaTable <- as.data.frame(car::Anova(model, type = test.type))
-    
-    levs <- lapply(factorVars, function(j) lsmeans::lsmeans(model, list(formula(paste("pairwise ~", j)))))
+  
+    levs <- lapply(factorVars, function(j) emmeans::emmeans(model, list(formula(paste("pairwise ~", j)))))
   
     ret <- do.call(rbind, lapply(levs, function(j) {
       
-       out <- as.data.frame(lsmeans::cld(j, Letters = letters[1:26]))
+       out <- as.data.frame(emmeans::CLD(j[[1]],  Letters = letters[1:26]))
      
        rownames(out) <- paste0(names(out)[1], "[", out[, 1], "]")
        
        atab <- anovaTable[which(rownames(anovaTable) == names(out)[1]), ]
        
-       atab. <- data.frame(lsmean = NA, SE = NA, DF = atab$Df, crit.value = atab[, 1], P.value = atab[, ncol(atab)], sig = isSig(atab[, ncol(atab)]))
+       atab. <- data.frame(emmean = NA, SE = NA, DF = atab$Df, crit.value = atab[, 1], P.value = atab[, ncol(atab)], sig = isSig(atab[, ncol(atab)]))
        
        rownames(atab.) <- rownames(atab) 
        

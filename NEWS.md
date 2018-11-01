@@ -1,4 +1,4 @@
-## Version 2.0.3 Release Notes
+## Version 2.1.0 Release Notes
 - `coefs` now returns coefficients for categorical variables
 - Changed contact e-mail to new affiliation
 - Fixed bug with `KRp` and `lmerMod` models with intercepts
