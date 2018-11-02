@@ -196,7 +196,7 @@ print.psem <- function(x, ...) {
 
 #' Update psem model object with additional values.
 #' 
-#' @param object a psem object to update
+#' @param object a psem object
 #' @param ... additional arguments to update
 #' 
 #' @method update psem
@@ -204,7 +204,7 @@ print.psem <- function(x, ...) {
 #' @export
 #' 
 update.psem <- function(object, ...) {
-
+  
   l <- list(...)
 
   for(i in l) {
@@ -213,7 +213,7 @@ update.psem <- function(object, ...) {
 
       idx <- which(names(object) == "data")
 
-      if(length(idx) == 0) object$data = i else
+      if(length(idx) == 0) object$data <- i else
 
         object[[idx]] <- i
 
