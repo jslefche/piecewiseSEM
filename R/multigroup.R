@@ -51,9 +51,13 @@ multigroup <- function(modelList, group) {
   
   coefTable <- coefs(modelList)
  
-  # test for significant interactions
+  coefTable[, ncol(coefTable)] <- "c"
   
-  anovaTable <- anova(as.psem(newModelList))[[1]]
+  coefTable[, ncol(coefTable) + 1] <- isSig(coefTable$P.Value)
+  
+  names(coefTable)[(ncol(coefTable) - 1):ncol(coefTable)] <- ""
+  
+  anovaTable <- anova(as.psem(intModelList))[[1]]
   
   anovaInts <- anovaTable[grepl(":", anovaTable$Predictor), ]
   
