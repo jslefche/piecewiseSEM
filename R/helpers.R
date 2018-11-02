@@ -78,6 +78,25 @@ all.vars_trans <- function(formula.) {
 
 }
 
+
+#' Captures output table
+#' 
+#' @keywords internal
+#' 
+captureTable <- function(g) {
+  
+  g1 <- capture.output(print(g, row.names = FALSE))
+  
+  if(all(g1 == "data frame with 0 columns and 0 rows")) 
+    
+    g1 <- "No independence claims present. Tests of directed separation not possible."
+  
+  g1 <- paste0(g1, "\n")
+  
+  return(g1)
+  
+}
+
 #' Bind data.frames of differing dimensions
 #'
 #' From: https://stackoverflow.com/a/31678079
