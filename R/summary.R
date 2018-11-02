@@ -82,7 +82,7 @@ summary.psem <- function(object, ...,
                          intercepts = FALSE,
                          .progressBar = TRUE) {
 
-  name <- deparse(substitute(object))
+  name <- deparse(match.call()$object)
 
   call <- paste(listFormula(object), collapse = "\n  ")
 
