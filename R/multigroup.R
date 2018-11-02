@@ -1,7 +1,7 @@
 #' Multigroup Analysis for Piecewise SEM
 #' 
-#' @param object a list of structural equations
-#' @param group the name of the grouping variable
+#' @param modelList a list of structural equations
+#' @param group the name of the grouping variable in quotes
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' 

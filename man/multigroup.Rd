@@ -7,9 +7,9 @@
 multigroup(modelList, group)
 }
 \arguments{
-\item{group}{the name of the grouping variable}
+\item{modelList}{a list of structural equations}
 
-\item{object}{a list of structural equations}
+\item{group}{the name of the grouping variable in quotes}
 }
 \description{
 Multigroup Analysis for Piecewise SEM
