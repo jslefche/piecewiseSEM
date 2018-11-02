@@ -63,7 +63,7 @@ information criterion values, and R-squared values of individual models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">piecewiseSEM</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.1.0</span>
       </span>
     </div>
 
@@ -120,9 +120,9 @@ information criterion values, and R-squared values of individual models.</p>
 
     <pre class="usage"><span class='co'># S3 method for psem</span>
 <span class='fu'>summary</span>(<span class='no'>object</span>, <span class='no'>...</span>, <span class='kw'>direction</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>conserve</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>conditional</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>add.claims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>standardize</span> <span class='kw'>=</span> <span class='st'>"scale"</span>,
-  <span class='kw'>standardize.type</span> <span class='kw'>=</span> <span class='st'>"latent.linear"</span>, <span class='kw'>intercepts</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.progressBar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>conditioning</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>add.claims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>standardize</span> <span class='kw'>=</span> <span class='st'>"scale"</span>,
+  <span class='kw'>standardize.type</span> <span class='kw'>=</span> <span class='st'>"latent.linear"</span>, <span class='kw'>test.type</span> <span class='kw'>=</span> <span class='st'>"II"</span>,
+  <span class='kw'>intercepts</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.progressBar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,11 +146,6 @@ claim(s)</p></td>
 Default is FALSE</p></td>
     </tr>
     <tr>
-      <th>conditional</th>
-      <td><p>whether all conditioning variables should be shown in the table
-Default is FALSE</p></td>
-    </tr>
-    <tr>
       <th>add.claims</th>
       <td><p>an optional vector of additional independence claims (P-values) 
 to be added to the basis set</p></td>
@@ -166,6 +161,11 @@ Default is "scale"</p></td>
 <code>latent.linear</code> (default), <code>Mendard.OE</code></p></td>
     </tr>
     <tr>
+      <th>test.type</th>
+      <td><p>the type of test ("II" or "III") for significance of categorical
+variables (from <code><a href='http://www.rdocumentation.org/packages/car/topics/Anova'>car::Anova</a></code>)</p></td>
+    </tr>
+    <tr>
       <th>intercepts</th>
       <td><p>whether intercepts should be included in the coefficient  table
 Default is FALSE</p></td>
@@ -173,6 +173,11 @@ Default is FALSE</p></td>
     <tr>
       <th>.progressBar</th>
       <td><p>an optional progress bar. Default is TRUE</p></td>
+    </tr>
+    <tr>
+      <th>conditional</th>
+      <td><p>whether all conditioning variables should be shown in the table
+Default is FALSE</p></td>
     </tr>
     </table>
     
@@ -183,7 +188,7 @@ statistics:</p>
 <dt>dTable</dt><dd><p>A summary table of the tests of directed
 separation, from <code><a href='dSep.html'>dSep</a></code>.</p></dd> <dt>CStat</dt><dd><p>Fisher's C statistic,
 degrees of freedom, and significance value based on a Chi-square test.</p></dd>
-<dt>IC</dt><dd><p>Information criterion (Akaike, Bayesianm, corrected Akaike) as
+<dt>IC</dt><dd><p>Information criterion (Akaike, Bayesian, corrected Akaike) as
 well as degrees of freedom and sample size.</p></dd> <dt>coefficients</dt><dd><p>A
 summary table of the path coefficients, from <code>link{coefs}</code>.</p></dd>
 <dt>R2</dt><dd><p>(Pseudo)-R2 values, from <code><a href='rsquared.html'>rsquared</a></code>.</p></dd>
@@ -191,7 +196,7 @@ summary table of the path coefficients, from <code>link{coefs}</code>.</p></dd>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The forthcomiing argument <code>groups</code> splits the analysis based on an optional grouping
+    <p>The forthcoming argument <code>groups</code> splits the analysis based on an optional grouping
 factor, conducts separate d-sep tests, and reports goodness-of-fit and path
 coefficients for each submodel. The procedure is approximately similar to a
 multigroup analysis in traditional variance-covariance SEM. Coming in version 2.1.</p>
@@ -246,7 +251,7 @@ models compared using a d-separation test." Ecology 94.3 (2013): 560-564.</p>
 
     <h2>Author</h2>
     
-Jon Lefcheck &lt;jlefcheck@bigelow.org&gt;
+Jon Lefcheck &lt;LefcheckJ@si.edu&gt;
 
   </div>
 </div>

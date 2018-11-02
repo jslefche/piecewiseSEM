@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">piecewiseSEM</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.1.0</span>
       </span>
     </div>
 
@@ -140,8 +140,8 @@
 
 <span class='co'># Look at correlated error between x1 and x2</span>
 <span class='co'># (exogenous)</span>
-<span class='fu'><a href='cerror.html'>cerror</a></span>(<span class='no'>x1</span> <span class='kw'>%~~%</span> <span class='no'>x2</span>, <span class='no'>sem</span>, <span class='no'>dat</span>)</div><div class='output co'>#&gt;    Response Predictor Estimate Std.Error DF Crit.Value P.Value
-#&gt; df     ~~x1      ~~x2   0.0659        NA 48     0.4576  0.6493</div><div class='input'>
+<span class='fu'><a href='cerror.html'>cerror</a></span>(<span class='no'>x1</span> <span class='kw'>%~~%</span> <span class='no'>x2</span>, <span class='no'>sem</span>, <span class='no'>dat</span>)</div><div class='output co'>#&gt;    Response Predictor Estimate Std.Error DF Crit.Value P.Value 
+#&gt; df     ~~x1      ~~x2   0.0659        NA 48     0.4576  0.6493 </div><div class='input'>
 <span class='co'># Same as cor.test</span>
 <span class='fu'>with</span>(<span class='no'>dat</span>, <span class='fu'>cor.test</span>(<span class='no'>x1</span>, <span class='no'>x2</span>))</div><div class='output co'>#&gt; 
 #&gt; 	Pearson's product-moment correlation

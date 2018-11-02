@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">piecewiseSEM</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.1.0</span>
       </span>
     </div>
 
@@ -114,7 +114,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>coefs</span>(<span class='no'>modelList</span>, <span class='kw'>standardize</span> <span class='kw'>=</span> <span class='st'>"scale"</span>, <span class='kw'>standardize.type</span> <span class='kw'>=</span> <span class='st'>"latent.linear"</span>,
+    <pre class="usage"><span class='fu'>coefs</span>(<span class='no'>modelList</span>, <span class='kw'>standardize</span> <span class='kw'>=</span> <span class='st'>"scale"</span>,
+  <span class='kw'>standardize.type</span> <span class='kw'>=</span> <span class='st'>"latent.linear"</span>, <span class='kw'>test.type</span> <span class='kw'>=</span> <span class='st'>"II"</span>,
   <span class='kw'>intercepts</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -133,6 +134,11 @@ Default is <code>scale</code>.</p></td>
       <th>standardize.type</th>
       <td><p>The type of standardized for non-Gaussian responses:
 <code>latent.linear</code>, <code>Menard.OE</code>. Default is <code>latent.linear</code>.</p></td>
+    </tr>
+    <tr>
+      <th>test.type</th>
+      <td><p>the type of test ("II" or "III") for significance of categorical
+variables (from <code><a href='http://www.rdocumentation.org/packages/car/topics/Anova'>car::Anova</a></code>)</p></td>
     </tr>
     <tr>
       <th>intercepts</th>
@@ -159,8 +165,8 @@ of x divided by the standard deviation of y. See below for cases pertaining to G
 <li><p><code>range</code> Raw coefficients are scaled by a pre-selected range of x
 divided by a preselected range of y. The default argument is <code>range</code> which takes the
 two extremes of the data, otherwise the user must supply must a named <code>list</code> where
-the names are the variables to be standardized, and each entry contains a vector of length 2
-to the ranges to be used in standardization.</p></li>
+the names are the variables to be standardized, and each entry contains a vector of 
+length == 2 to the ranges to be used in standardization.</p></li>
 </ul>
     <p>For binary response models (i.e., binomial responses), standardized coefficients
 are obtained in one of two ways:</p><ul>
@@ -177,6 +183,14 @@ deviation used for standardization is computed as the square-root of the varianc
 the predictions (on the linear scale) plus the correlation between the observed and
 predicted (on the original or 'response' scale) values of y.</p></li>
 </ul>
+    <p>For categorical predictors: significance is determined using ANOVA (or analysis of
+deviance). Because n-1 coefficients are reported for n levels, the output instead
+reports model-estimated means in the <code>Estimate</code> column. This is done so all
+n paths in the corresponding path diagram have assignable values.</p>
+<p>The means are generated using function <code>emmeans</code> in the <code>emmeans</code> package. 
+Pairwise contrasts  are further conducted among all levels using the default  
+correction for multiple testing. The results of those comparisons are given in the 
+significance codes (e.g., "a", "b", "ab") as reported in the <code><a href='http://www.rdocumentation.org/packages/emmeans/topics/old.cld'>emmeans::cld</a></code> function.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -186,7 +200,7 @@ Ecosphere 9(6): e02283.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>KRmodcomp</code></p></div>
+    <div class='dont-index'><p><code>KRmodcomp</code>, <code>emmeans</code>, <code>CLD</code></p></div>
     
 
   </div>
@@ -206,7 +220,7 @@ Ecosphere 9(6): e02283.</p>
 
     <h2>Author</h2>
     
-Jon Lefcheck &lt;jlefcheck@bigelow.org&gt;, Jim Grace
+Jon Lefcheck &lt;LefcheckJ@si.edu&gt;, Jim Grace
 
   </div>
 </div>
