@@ -3,7 +3,7 @@
 \docType{data}
 \name{shipley}
 \alias{shipley}
-\title{Data set from Shipley (2009)}
+\title{Data set from Shipley}
 \format{A \code{data.frame} with 1900 observations of 9 variables.
 \describe{
 \item{site}{Site of observation}
@@ -20,6 +20,6 @@
 shipley
 }
 \description{
-Data set from Shipley (2009)
+Data set from Shipley
 }
 \keyword{data}

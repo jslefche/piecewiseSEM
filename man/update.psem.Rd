@@ -7,7 +7,7 @@
 \method{update}{psem}(object, ...)
 }
 \arguments{
-\item{object}{a psem object to update}
+\item{object}{a psem object}
 
 \item{...}{additional arguments to update}
 }

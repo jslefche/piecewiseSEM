@@ -4,14 +4,29 @@
 \alias{multigroup}
 \title{Multigroup Analysis for Piecewise SEM}
 \usage{
-multigroup(modelList, data, group)
+multigroup(modelList, group)
 }
 \arguments{
-\item{group}{}
-}
-\value{
+\item{group}{the name of the grouping variable}
 
+\item{object}{a list of structural equations}
 }
 \description{
 Multigroup Analysis for Piecewise SEM
+}
+\examples{
+data(meadows)
+
+jutila <- psem(
+lm(rich ~ elev + mass, data = meadows),
+lm(mass ~ elev, data = meadows)
+)
+
+jutila.multigroup <- multigroup(jutila, group = "grazed")
+
+jutila.multigroup
+
+}
+\author{
+Jon Lefcheck <LefcheckJ@si.edu>
 }
