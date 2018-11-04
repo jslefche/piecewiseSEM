@@ -27,7 +27,6 @@ multigroup <- function(modelList, group) {
   
   modelList <- removeData(modelList, formulas = 1)
   
-  # refit model with group-interaction
   intModelList <- lapply(modelList, function(i) {
     
     rhs1 <- paste(paste(all.vars_trans(i)[-1], collapse = " + "))
@@ -38,14 +37,11 @@ multigroup <- function(modelList, group) {
     
   } )
   
-  # capture output and assign to each group
-  coefsList <- lapply(unique(data[, group]), function(i) {
-    
-    m <- update(as.psem(modelList), data = data[data[, group] == i, ])
-    
-    coefs(m)
-    
-  } )
+  newModelList <- lapply(unique(data[, group]), function(i) update(as.psem(modelList), data = data[data[, group] == i, ]) )
+  
+  names(newModelList) <- unique(data[, group])
+  
+  coefsList <- lapply(newModelList, coefs)
   
   names(coefsList) <- unique(data[, group])
   
@@ -96,6 +92,8 @@ multigroup <- function(modelList, group) {
           
           ct[j, "Std.Estimate"] <- ct[j, "Estimate"] * (sd.x/sd.y)
           
+          ct[j, "Std.Estimate"] <- round(ct[j, "Std.Estimate"], 4)
+          
         }
         
       }
@@ -109,13 +107,22 @@ multigroup <- function(modelList, group) {
     names(newCoefsList) <- names(coefsList)
     
   }
+  
+  if(nrow(global) == nrow(anovaInts)) LRT.list <- list() else {
+
+    LRT.list <- lapply(newModelList, function(i) anova(as.psem(modelList), i))
+
+    names(LRT.list) <- names(newModelList)
+
+  }
 
   ret <- list(
     name = name,
     group = group,
     global = global,
     anovaInts = anovaInts,
-    group.coefs = newCoefsList
+    group.coefs = newCoefsList,
+    LRTs = LRT.list
   )
   
   class(ret) <- "multigroup.psem"
@@ -165,8 +172,23 @@ print.multigroup.psem <- function(x, ...) {
   
   cat("Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05    c = constrained")
   
-  cat("\n\n---\n\n")
+  # if(length(x$LRTs) > 0) {
+  #   
+  #   cat("\n\n---\n\n")
+  #   
+  #   cat("Chi-squared difference tests:\n")
+  #   
+  #   for(i in names(x$LRTs)) {
+  #     
+  #     cat(paste("\n  Global model vs. Group", i))
+  #     
+  #     cat("\n  ", captureTable(x$LRTs[[i]][[i]]), "\n")
+  #         
+  #   }
+  #   
+  # }
 
   invisible(x)
   
 }
+
