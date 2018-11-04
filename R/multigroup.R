@@ -145,7 +145,7 @@ print.multigroup.psem <- function(x, ...) {
   
   cat("\n", captureTable(x$anovaInts))
   
-  if(nrow(x$global) == 0) cat("\n No paths constrained to the global model") else {
+  if(nrow(x$global) == 0) cat("\n No paths constrained to the global model (P > 0.05)") else {
     
     for(i in 1:nrow(x$global)) cat("\n", paste(x$global[i, "Predictor"], "->", x$global[i, "Response"], "constrained to the global model"), "\n")
   
