@@ -44,7 +44,7 @@
 #' correction for multiple testing. The results of those comparisons are given in the 
 #' significance codes (e.g., "a", "b", "ab") as reported in the \code{emmeans::cld} function.
 #'
-#' @param modelList A list of structural equations.
+#' @param modelList A list of structural equations, or a model.
 #' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
 #' Default is \code{scale}.
 #' @param standardize.type The type of standardized for non-Gaussian responses:
@@ -60,6 +60,15 @@
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
 #' @seealso \code{\link{KRmodcomp}}, \code{\link{emmeans}}, \code{\link{CLD}}
+#' @examples 
+#' mod <- psem(
+#' lm(rich ~ cover, data = keeley),
+#' lm(cover ~ firesev, data = keeley),
+#' lm(firesev ~ age, data = keeley),
+#' data = keeley
+#' )
+#' 
+#' coefs(mod)
 #' 
 #' @export
 #'
@@ -272,45 +281,9 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       names(B) <- ret[ret$Predictor %in% numVars[-1], "Predictor"]
       
-      if(all(standardize == "scale"))
-        
-        sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) sd(newdata[, x], na.rm = TRUE)) else
-          
-          if(all(standardize == "range"))
-            
-            sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) diff(range(newdata[, x], na.rm = TRUE))) else
-              
-              if(is.list(standardize)) {
-                
-                vars <- unlist(sapply(modelList, all.vars_notrans))
-                
-                vars <- vars[!grepl(":", vars)]
-                
-                if(!all(names(standardize) %in% vars))
-                  
-                  stop("Names in standardize list must match those in the model formula!")
-                
-                sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) {
-                  
-                  nm <- which(names(standardize) == x)
-                  
-                  if(sum(nm) == 0) {
-                    
-                    warning(paste0("Relevant range not specified for variable '", x, "'. Using observed range instead"), call. = FALSE)
-                    
-                    diff(range(newdata[, x], na.rm = TRUE)) 
-                    
-                  } else  diff(range(standardize[[nm]]))
-                  
-                } )
-                
-              } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
+      sd.x <- GetSDx(i, modelList, data, standardize)
       
-      if(any(grepl(":", numVars))) sd.x <- c(sd.x, scaleInt(i, newdata, standardize))
-      
-      if(length(sd.x) == 0) sd.x <- NA
-      
-      sd.y <- scaleFam(numVars[1], i, newdata, standardize, standardize.type)
+      sd.y <- GetSDy(i, newdata, standardize, standardize.type)
       
       if(intercepts == FALSE)
         
@@ -374,54 +347,110 @@ dataTrans <- function(formula., newdata) {
 
 }
 
+#' Get standard deviation of predictor variables
+#' 
+#' @keywords internal
+#' 
+GetSDx <- function(model, modelList, data, standardize = "scale") {
+  
+  vars <- all.vars.merMod(model)
+  
+  numVars <- vars[which(sapply(data[, vars], class) != "factor")]
+  
+  if(all(standardize == "scale"))
+    
+    sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) sd(data[, x], na.rm = TRUE)) else
+      
+      if(all(standardize == "range"))
+        
+        sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) diff(range(data[, x], na.rm = TRUE))) else
+          
+          if(is.list(standardize)) {
+            
+            vars <- unlist(sapply(modelList, all.vars_notrans))
+            
+            vars <- vars[!grepl(":", vars)]
+            
+            if(!all(names(standardize) %in% vars))
+              
+              stop("Names in standardize list must match those in the model formula!")
+            
+            sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) {
+              
+              nm <- which(names(standardize) == x)
+              
+              if(sum(nm) == 0) {
+                
+                warning(paste0("Relevant range not specified for variable '", x, "'. Using observed range instead"), call. = FALSE)
+                
+                diff(range(data[, x], na.rm = TRUE)) 
+                
+              } else  diff(range(standardize[[nm]]))
+              
+            } )
+            
+          } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
+  
+  if(any(grepl(":", numVars))) sd.x <- c(sd.x, scaleInt(i, data, standardize))
+  
+  if(length(sd.x) == 0) sd.x <- NA
+  
+  return(sd.x)
+  
+}
+
 #' Properly scale standard deviations depending on the error distribution
 #' 
 #' @keywords internal
 #' 
-scaleFam <- function(y, model, newdata, standardize = "scale", standardize.type = "latent.linear") {
-
+GetSDy <- function(model, data, standardize = "scale", standardize.type = "latent.linear") {
+  
+  vars <- all.vars.merMod(model)
+  
+  y <- vars[1]
+  
   family. <- try(family(model), silent = TRUE)
-
+  
   if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
-
+  
   if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "lme")))
-
+    
     family. <- list(family = "gaussian", link = "identity")
-
+  
   if(class(family.) == "try-error" | is.null(family.) | any(class(model) %in% c("glmerMod", "glmmPQL")))
-
+    
     sd.y <- NA else {
-
+      
       if(family.$family == "gaussian") {
-
-        if(all(standardize == "scale")) sd.y <- sd(newdata[, y], na.rm = TRUE) else
-
-          if(all(standardize == "range")) sd.y <- diff(range(newdata[, y], na.rm = TRUE)) else
-
+        
+        if(all(standardize == "scale")) sd.y <- sd(data[, y], na.rm = TRUE) else
+          
+          if(all(standardize == "range")) sd.y <- diff(range(data[, y], na.rm = TRUE)) else
+            
             if(is.list(standardize)) {
-
+              
               nm <- which(names(standardize) == y)
               
               if(sum(nm) == 0) {
                 
                 warning(paste0("Relevant range not specified for variable '", y, "'. Using observed range instead"), call. = FALSE)
                 
-                sd.y <- diff(range(newdata[, y], na.rm = TRUE)) 
+                sd.y <- diff(range(data[, y], na.rm = TRUE)) 
                 
               } else sd.y <- diff(range(standardize[[nm]]))
               
             }
-
-          } else if(family.$family == "binomial")
-
-              sd.y <- scaleGLM(model, standardize, standardize.type) else
-
-                sd.y <- NA
-
+          
+      } else if(family.$family == "binomial")
+        
+        sd.y <- scaleGLM(model, standardize, standardize.type) else
+          
+          sd.y <- NA
+        
     }
-
+  
   return(sd.y)
-
+  
 }
 
 #' Compute standard deviation or relevant range of response for GLMs

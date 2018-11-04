@@ -67,23 +67,46 @@ multigroup <- function(modelList, group) {
   
   if(nrow(global) == nrow(anovaInts)) newCoefsList <- list(global = coefTable) else {
   
-    # alter output for each group if interaction is non-significant (Assign global value)
-    newCoefsList <- lapply(coefsList, function(i) {
+    newCoefsList <- lapply(names(coefsList), function(i) {
+      
+      ct <- coefsList[[i]]
       
       suppressWarnings(
-        i[which(i$Response %in% global$Response & i$Predictor %in% global$Predictor), ] <-
+        ct[which(ct$Response %in% global$Response & ct$Predictor %in% global$Predictor), ] <-
         coefTable[which(coefTable$Response %in% global$Response & coefTable$Predictor %in% global$Predictor), ]
       )
-    
-      i[, ncol(i)] <- ifelse(i$Response %in% global$Response & i$Predictor %in% global$Predictor, "c", "")
       
-      i[, ncol(i) + 1] <- isSig(i$P.Value)
+      ct[, ncol(ct)] <- ifelse(ct$Response %in% global$Response & ct$Predictor %in% global$Predictor, "c", "")
       
-      names(i)[(ncol(i) - 1):ncol(i)] <- ""
+      ct[, ncol(ct) + 1] <- isSig(ct$P.Value)
       
-      return(i) 
+      for(j in 1:nrow(ct)) {
+        
+        if(ct[j, 9] == "c") {
+          
+          model <- modelList[[which(sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] == ct[j, "Response"]))]]
+          
+          subdata <- data[data[, group] == i, ]
+          
+          sd.x <- GetSDx(model, modelList, subdata, standardize = "scale") 
+          
+          sd.x <- sd.x[which(names(sd.x) == ct[j, "Predictor"])]
+          
+          sd.y <- GetSDy(model, subdata, standardize = "scale", standardize.type = "latent.linear")
+          
+          ct[j, "Std.Estimate"] <- ct[j, "Estimate"] * (sd.x/sd.y)
+          
+        }
+        
+      }
+      
+      names(ct)[(ncol(ct) - 1):ncol(ct)] <- ""
+      
+      return(ct) 
       
     } )
+    
+    names(newCoefsList) <- names(coefsList)
     
   }
 
