@@ -9,7 +9,7 @@ coefs(modelList, standardize = "scale",
   intercepts = FALSE)
 }
 \arguments{
-\item{modelList}{A list of structural equations.}
+\item{modelList}{A list of structural equations, or a model.}
 
 \item{standardize}{The type of standardization: \code{none}, \code{scale}, \code{range}.
 Default is \code{scale}.}
@@ -72,6 +72,17 @@ The means are generated using function \code{emmeans} in the \code{emmeans} pack
 Pairwise contrasts  are further conducted among all levels using the default  
 correction for multiple testing. The results of those comparisons are given in the 
 significance codes (e.g., "a", "b", "ab") as reported in the \code{emmeans::cld} function.
+}
+\examples{
+mod <- psem(
+lm(rich ~ cover, data = keeley),
+lm(cover ~ firesev, data = keeley),
+lm(firesev ~ age, data = keeley),
+data = keeley
+)
+
+coefs(mod)
+
 }
 \references{
 Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
