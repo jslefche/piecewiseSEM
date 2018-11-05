@@ -2,6 +2,10 @@
 #' 
 #' @param modelList a list of structural equations
 #' @param group the name of the grouping variable in quotes
+#' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
+#' Default is \code{scale}.
+#' @param standardize.type The type of standardized for non-Gaussian responses:
+#' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' 
@@ -19,7 +23,7 @@
 #' 
 #' @export
 #' 
-multigroup <- function(modelList, group) {
+multigroup <- function(modelList, group, standardize = "scale", standardize.type = "latent.linear") {
   
   name <- deparse(match.call()$modelList)
   
@@ -84,11 +88,11 @@ multigroup <- function(modelList, group) {
           
           subdata <- data[data[, group] == i, ]
           
-          sd.x <- GetSDx(model, modelList, subdata, standardize = "scale") 
+          sd.x <- GetSDx(model, modelList, subdata, standardize) 
           
           sd.x <- sd.x[which(names(sd.x) == ct[j, "Predictor"])]
           
-          sd.y <- GetSDy(model, subdata, standardize = "scale", standardize.type = "latent.linear")
+          sd.y <- GetSDy(model, subdata, standardize, standardize.type)
           
           ct[j, "Std.Estimate"] <- ct[j, "Estimate"] * (sd.x/sd.y)
           
