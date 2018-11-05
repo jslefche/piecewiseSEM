@@ -16,8 +16,7 @@
 #' 
 #' @export
 #' 
-anova.psem <- function(object, ..., 
-                       test.type = "II") {
+anova.psem <- function(object, ..., test.type = "II") {
 
   l <- list(object, ...)
   
