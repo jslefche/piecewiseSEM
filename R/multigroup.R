@@ -36,7 +36,7 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
     
     rhs1 <- paste(paste(all.vars_trans(i)[-1], collapse = " + "))
     
-    rhs2 <- paste(paste(all.vars_trans(i)[-1], ":", group), collapse = " + ")
+    rhs2 <- paste(paste(all.vars_trans(i)[-1], "*", group), collapse = " + ")
 
     update(i, formula(paste(". ~ ", paste(rhs1, " + ", rhs2))))
     
@@ -152,11 +152,11 @@ print.multigroup.psem <- function(x, ...) {
   
   if(nrow(x$global) == 0) cat("\n No paths constrained to the global model (P > 0.05)") else {
     
-    for(i in 1:nrow(x$global)) cat("\n", paste(x$global[i, "Predictor"], "->", x$global[i, "Response"], "constrained to the global model"), "\n")
+    for(i in 1:nrow(x$global)) cat("\n", paste(x$global[i, "Predictor"], "->", x$global[i, "Response"], "constrained to the global model"))
   
   }
     
-  cat("\n---\n\n")
+  cat("\n\n---\n\n")
   
   if(length(x$group.coefs) == 1) {
     
