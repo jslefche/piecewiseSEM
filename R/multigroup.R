@@ -6,6 +6,7 @@
 #' Default is \code{scale}.
 #' @param standardize.type The type of standardized for non-Gaussian responses:
 #' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
+#' @param test.type what kind of ANOVA should be reported. Default is type II
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' 
@@ -23,7 +24,7 @@
 #' 
 #' @export
 #' 
-multigroup <- function(modelList, group, standardize = "scale", standardize.type = "latent.linear") {
+multigroup <- function(modelList, group, standardize = "scale", standardize.type = "latent.linear", test.type = "II") {
   
   name <- deparse(match.call()$modelList)
   
@@ -45,11 +46,11 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
   names(newModelList) <- unique(data[, group])
   
-  coefsList <- lapply(newModelList, coefs)
+  coefsList <- lapply(newModelList, coefs, standardize, standardize.type, test.type)
   
   names(coefsList) <- unique(data[, group])
   
-  coefTable <- coefs(modelList)
+  coefTable <- coefs(modelList, standardize, standardize.type, test.type)
  
   coefTable[, ncol(coefTable)] <- "c"
   
@@ -57,7 +58,7 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
   names(coefTable)[(ncol(coefTable) - 1):ncol(coefTable)] <- ""
   
-  anovaTable <- anova(as.psem(intModelList))[[1]]
+  anovaTable <- anova(as.psem(intModelList), test.type = test.type)[[1]]
   
   anovaInts <- anovaTable[grepl(":", anovaTable$Predictor), ]
   
