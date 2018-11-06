@@ -113,11 +113,27 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
     
   }
   
-  if(nrow(global) == nrow(anovaInts)) LRT.list <- list() else {
-
-    LRT.list <- lapply(newModelList, function(i) anova(as.psem(modelList), i))
-
-    names(LRT.list) <- names(newModelList)
+  if(nrow(global) == nrow(anovaInts)) gof <- fisherC(modelList) else {
+    
+    b <- basisSet(modelList)
+    
+    for(i in 1:nrow(global)) {
+      
+      cf <- coefTable[coefTable$Predictor == global[i, "Predictor"], "Estimate"]
+      
+      b <- lapply(b, function(j) {
+        
+        j[which(j == global[i, "Predictor"])] <- paste0("offset(", cf, "*", global[i, "Predictor"], ")")
+        
+        return(j)
+        
+      } )
+      
+    }
+    
+    fisherC(modelList, basis.set = b)
+    
+    
 
   }
 
