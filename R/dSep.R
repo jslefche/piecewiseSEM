@@ -55,6 +55,8 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
     
   } else {
     
+    if(class(modelList) != "psem") modelList <- as.psem(modelList)
+    
     data <- modelList$data
     
     # modelList <- removeData(modelList, formulas = 1)

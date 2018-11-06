@@ -20,7 +20,7 @@ fisherC <- function(dTable, add.claims = NULL, basis.set = NULL, direction = NUL
 
   if(class(dTable) == "list") dTable <- as.psem(dTable)
   
-  if(class(dTable) == "psem") dTable <- dSep(dTable, basis.setm direction, conserve, conditional, .progressBar)
+  if(class(dTable) == "psem") dTable <- dSep(dTable, basis.set, direction, conserve, conditional, .progressBar)
 
   if(length(dTable) == 0) {
 
