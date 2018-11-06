@@ -131,10 +131,8 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
       
     }
     
-    fisherC(modelList, basis.set = b)
+    gof <- fisherC(modelList, basis.set = b)
     
-    
-
   }
 
   ret <- list(
@@ -143,7 +141,7 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
     global = global,
     anovaInts = anovaInts,
     group.coefs = newCoefsList,
-    LRTs = LRT.list
+    Cstat = gof
   )
   
   class(ret) <- "multigroup.psem"
@@ -158,9 +156,15 @@ print.multigroup.psem <- function(x, ...) {
 
   cat("\nStructural Equation Model of", x$name, "\n")
   
-  cat("\nGroups =", x$group, ":", paste(names(x$group.coefs), collapse = ", "))
+  cat("\nGroups =", x$group, "[", paste(names(x$group.coefs), collapse = ", "), "]")
   
-  cat("\n")
+  cat("\n\n---\n")
+  
+  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(x$Cstat[1]),
+      "with P-value =", as.character(x$Cstat[3]),
+      "and on", as.character(x$Cstat[2]), "degrees of freedom")
+  
+  cat("\n\n---\n")
   
   cat("\nModel-wide Interactions:\n")
   
@@ -171,7 +175,7 @@ print.multigroup.psem <- function(x, ...) {
     for(i in 1:nrow(x$global)) cat("\n", paste(x$global[i, "Predictor"], "->", x$global[i, "Response"], "constrained to the global model"))
   
   }
-    
+  
   cat("\n\n---\n\n")
   
   if(length(x$group.coefs) == 1) {
@@ -184,7 +188,7 @@ print.multigroup.psem <- function(x, ...) {
       
       for(i in names(x$group.coefs)) { 
         
-        cat(paste("Group", i), "coefficients: \n")
+        cat(paste0("Group [", i, "]"), "coefficients: \n")
     
         cat("\n", captureTable(x$group.coefs[[i]]), "\n")
         
@@ -192,7 +196,7 @@ print.multigroup.psem <- function(x, ...) {
   }
   
   cat("Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05    c = constrained")
-  
+
   # if(length(x$LRTs) > 0) {
   #   
   #   cat("\n\n---\n\n")
@@ -212,4 +216,3 @@ print.multigroup.psem <- function(x, ...) {
   invisible(x)
   
 }
-
