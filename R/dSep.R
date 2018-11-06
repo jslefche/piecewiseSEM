@@ -39,7 +39,7 @@
 #' 
 dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
   
-  if(is.null(basis.set)) b <- basisSet(modelList, direction)
+  if(is.null(basis.set)) b <- basisSet(modelList, direction) else b <- basis.set
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
     
