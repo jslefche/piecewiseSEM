@@ -76,7 +76,7 @@
 #' @export
 #' 
 summary.psem <- function(object, ...,
-                         direction = NULL, conserve = FALSE, conditioning = FALSE,
+                         basis.set = NULL, direction = NULL, conserve = FALSE, conditioning = FALSE,
                          add.claims = NULL,
                          standardize = "scale", standardize.type = "latent.linear", test.type = "II",
                          intercepts = FALSE,
@@ -86,7 +86,7 @@ summary.psem <- function(object, ...,
 
   call <- paste(listFormula(object), collapse = "\n  ")
 
-  dTable <- dSep(object, direction, conserve, conditioning, .progressBar)
+  dTable <- dSep(object, basis.set, direction, conserve, conditioning, .progressBar)
 
   Cstat <- fisherC(dTable, add.claims, direction, conserve, conditioning, .progressBar)
 

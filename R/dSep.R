@@ -18,6 +18,7 @@
 #' argument.
 #' 
 #' @param modelList A list of structural equations created using \code{psem}.
+#' @param basis.set An optional list of independence claims.
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #' Details).
@@ -36,9 +37,9 @@
 #' 
 #' @export 
 #' 
-dSep <- function(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
+dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
   
-  b <- basisSet(modelList, direction)
+  if(is.null(basis.set)) b <- basisSet(modelList, direction)
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
     
