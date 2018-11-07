@@ -88,6 +88,8 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
+  ret[is.na(ret)] <- "-"
+  
   names(ret)[length(ret)] <- ""
 
   return(ret)
@@ -200,7 +202,7 @@ getCoefficients <- function(model, data, test.type = "II") {
       
        out <- as.data.frame(emmeans::CLD(j[[1]],  Letters = letters[1:26]))
      
-       rownames(out) <- paste0(names(out)[1], "[", out[, 1], "]")
+       rownames(out) <- paste0(names(out)[1], "[", out[, 1], "] mean=")
        
        atab <- anovaTable[which(grepl(names(out)[1], rownames(anovaTable))), ]
        
