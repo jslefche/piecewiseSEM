@@ -72,7 +72,7 @@
 #' 
 #' @export
 #'
-coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", test.type = "II", intercepts = FALSE) {
+coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", test.type = "III", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
