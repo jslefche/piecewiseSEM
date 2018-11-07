@@ -4,12 +4,21 @@
 \alias{multigroup}
 \title{Multigroup Analysis for Piecewise SEM}
 \usage{
-multigroup(modelList, group)
+multigroup(modelList, group, standardize = "scale",
+  standardize.type = "latent.linear", test.type = "II")
 }
 \arguments{
 \item{modelList}{a list of structural equations}
 
 \item{group}{the name of the grouping variable in quotes}
+
+\item{standardize}{The type of standardization: \code{none}, \code{scale}, \code{range}.
+Default is \code{scale}.}
+
+\item{standardize.type}{The type of standardized for non-Gaussian responses:
+\code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.}
+
+\item{test.type}{what kind of ANOVA should be reported. Default is type II}
 }
 \description{
 Multigroup Analysis for Piecewise SEM

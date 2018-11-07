@@ -4,10 +4,10 @@
 \alias{summary.psem}
 \title{Summarizing piecewise structural equation models}
 \usage{
-\method{summary}{psem}(object, ..., direction = NULL, conserve = FALSE,
-  conditioning = FALSE, add.claims = NULL, standardize = "scale",
-  standardize.type = "latent.linear", test.type = "II",
-  intercepts = FALSE, .progressBar = TRUE)
+\method{summary}{psem}(object, ..., basis.set = NULL, direction = NULL,
+  conserve = FALSE, conditioning = FALSE, add.claims = NULL,
+  standardize = "scale", standardize.type = "latent.linear",
+  test.type = "II", intercepts = FALSE, .progressBar = TRUE)
 }
 \arguments{
 \item{object}{a list of structural equations}
