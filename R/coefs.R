@@ -49,8 +49,8 @@
 #' Default is \code{scale}.
 #' @param standardize.type The type of standardized for non-Gaussian responses:
 #' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
-#' @param test.type the type of test ("II" or "III") for significance of categorical
-#' variables (from \code{\link{car::Anova}})
+#' @param test.type the type of test for significance of categorical variables
+#' from \code{\link{car::Anova}}. Default is type "III".
 #' @param intercepts Whether intercepts should be included in the coefficients
 #' table. Default is FALSE.
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,

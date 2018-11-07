@@ -6,7 +6,7 @@
 #' Default is \code{scale}.
 #' @param standardize.type The type of standardized for non-Gaussian responses:
 #' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
-#' @param test.type what kind of ANOVA should be reported. Default is type II
+#' @param test.type what kind of ANOVA should be reported. Default is type III
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' 
@@ -24,7 +24,7 @@
 #' 
 #' @export
 #' 
-multigroup <- function(modelList, group, standardize = "scale", standardize.type = "latent.linear", test.type = "II") {
+multigroup <- function(modelList, group, standardize = "scale", standardize.type = "latent.linear", test.type = "III") {
   
   name <- deparse(match.call()$modelList)
   

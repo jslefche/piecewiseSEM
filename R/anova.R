@@ -4,7 +4,7 @@
 #' 
 #' @param object a \code{psem} object
 #' @param ... additional \code{psem} objects
-#' @param test.type what kind of ANOVA should be reported. Default is type II
+#' @param test.type what kind of ANOVA should be reported. Default is type III
 #' 
 #' @return an ANOVA table for a single model, a list of comparisons between multiple
 #' models
@@ -16,7 +16,7 @@
 #' 
 #' @export
 #' 
-anova.psem <- function(object, ..., test.type = "II") {
+anova.psem <- function(object, ..., test.type = "III") {
 
   l <- list(object, ...)
   
