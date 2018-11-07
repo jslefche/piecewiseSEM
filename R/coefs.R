@@ -102,7 +102,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 #' 
 #' @export
 #' 
-unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FALSE) {
+unstdCoefs <- function(modelList, data = NULL, test.type = "III", intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
@@ -144,7 +144,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FA
 #' 
 #' @export
 #'
-getCoefficients <- function(model, data, test.type = "II") {
+getCoefficients <- function(model, data, test.type = "III") {
   
   vars <- all.vars.merMod(model)
   
