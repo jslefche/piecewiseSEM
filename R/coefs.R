@@ -144,7 +144,9 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "III", intercepts = F
 #' 
 #' @export
 #'
-getCoefficients <- function(model, data, test.type = "III") {
+getCoefficients <- function(model, data = NULL, test.type = "III") {
+  
+  if(is.null(data)) data <- GetData(model)
   
   vars <- all.vars.merMod(model)
   
@@ -196,7 +198,7 @@ getCoefficients <- function(model, data, test.type = "III") {
     
     anovaTable <- as.data.frame(car::Anova(model, type = test.type))
   
-    levs <- lapply(factorVars, function(j) suppressMessages(emmeans::emmeans(model, list(formula(paste(" ~", j))))))
+    levs <- lapply(factorVars, function(j) suppressMessages(emmeans::emmeans(model, list(formula(paste(" ~", j))), data = data)))
   
     ret <- do.call(rbind, lapply(levs, function(j) {
       

@@ -39,8 +39,6 @@
 #' 
 dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
   
-  if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
-  
   if(is.null(basis.set)) b <- basisSet(modelList, direction) else b <- basis.set
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
@@ -56,8 +54,10 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
     data.frame()
     
   } else {
+    
+    if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
 
-    # modelList <- removeData(modelList, formulas = 1)
+    modelList <- removeData(modelList, formulas = 1)
     
     formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
     
@@ -87,7 +87,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
         
       }
       
-      ct <- unstdCoefs(bNewMod, data = data)
+      ct <- unstdCoefs(bNewMod)
       
       ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
       
