@@ -116,7 +116,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "III", intercepts = F
     
     if(all(class(i) %in% c("formula.cerror"))) {
       
-      ret <- cbind.data.frame(cerror(i, modelList, data)) 
+      ret <- cerror(i, modelList, data)
       
       names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
 
@@ -253,7 +253,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
+  if(is.null(data) & class(modelList) == "psem") data <- modelList$data 
   
   if(is.null(data)) data <- GetData(modelList)
   
@@ -263,7 +263,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
     
     if(all(class(i) %in% c("formula.cerror"))) {
       
-      ret <- cerror(i, modelList)
+      ret <- cerror(i, modelList, data)
       
       cbind.data.frame(ret[, 1:7], Std.Estimate = ret[, 3], sig = ret[, 8])
       
