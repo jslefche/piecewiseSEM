@@ -43,7 +43,7 @@ partialResid <- function(formula., modelList, data = NULL) {
   
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
   
-  data <- modelList$data
+  if(is.null(data)) data <- GetData(modelList)
   
   if(is.null(data)) data <- GetData(modelList)
   

@@ -155,6 +155,8 @@ GetData <- function(modelList) {
   
   data.list <- lapply(modelList, GetSingleData)
   
+  data.list <- data.list[!sapply(data.list, is.null)]
+  
   if(all(sapply(data.list, class) == "comparative.data"))
     
     data <- data.list[[1]] else 

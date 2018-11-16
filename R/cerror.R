@@ -118,7 +118,7 @@ cerror <- function(formula., modelList, data = NULL) {
 
   ret <- partialCorr(formula., modelList, data)
 
-  ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
+  # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
   ret <- cbind.data.frame(ret, isSig(ret$P.Value))
   
