@@ -87,7 +87,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
         
       }
       
-      ct <- unstdCoefs(bNewMod)
+      ct <- unstdCoefs(bNewMod, data)
       
       ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
       

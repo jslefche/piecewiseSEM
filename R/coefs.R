@@ -106,7 +106,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "III", intercepts = F
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
+  if(is.null(data) & class(modelList) == "psem") data <- modelList$data 
   
   if(is.null(data)) data <- GetData(modelList)
   
