@@ -5,7 +5,7 @@
 \title{Multigroup Analysis for Piecewise SEM}
 \usage{
 multigroup(modelList, group, standardize = "scale",
-  standardize.type = "latent.linear", test.type = "II")
+  standardize.type = "latent.linear", test.type = "III")
 }
 \arguments{
 \item{modelList}{a list of structural equations}
@@ -18,7 +18,7 @@ Default is \code{scale}.}
 \item{standardize.type}{The type of standardized for non-Gaussian responses:
 \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.}
 
-\item{test.type}{what kind of ANOVA should be reported. Default is type II}
+\item{test.type}{what kind of ANOVA should be reported. Default is type III}
 }
 \description{
 Multigroup Analysis for Piecewise SEM
