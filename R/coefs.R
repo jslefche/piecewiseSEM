@@ -281,7 +281,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       numVars <- vars[which(sapply(data[, vars], class) != "factor")]
       
-      B <- ret[ret$Predictor %in% numVars[-1], "Estimate"]
+      B <- ret[ret$Predictor %in% c("(Intercept)", numVars[-1]), "Estimate"]
       
       names(B) <- ret[ret$Predictor %in% numVars[-1], "Predictor"]
       
