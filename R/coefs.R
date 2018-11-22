@@ -336,10 +336,14 @@ dataTrans <- function(formula., newdata) {
   if(any(!notrans %in% trans)) {
 
     for(k in 1:length(notrans)) {
+      
+      if(is.factor(newdata[, notrans[k]])) next else {
 
-      newdata[, notrans[k]] <-
-
-        sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
+        newdata[, notrans[k]] <-
+  
+          sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
+        
+      }
 
     }
 
