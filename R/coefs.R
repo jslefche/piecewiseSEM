@@ -148,9 +148,9 @@ getCoefficients <- function(model, data = NULL, test.type = "III") {
   
   if(is.null(data)) data <- GetData(model)
   
-  vars <- all.vars.merMod(model)
+  vars <- all.vars_trans(model)
   
-  factorVars <- vars[which(sapply(data[, vars], class) == "factor")]
+  factorVars <- vars[which(sapply(data[, all.vars_notrans(model)], class) == "factor")]
 
   if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
     
@@ -200,7 +200,7 @@ getCoefficients <- function(model, data = NULL, test.type = "III") {
   
     levs <- lapply(factorVars, function(j) suppressMessages(emmeans::emmeans(model, list(formula(paste(" ~", j))), data = data)))
   
-    ret <- do.call(rbind, lapply(levs, function(j) {
+    out <- do.call(rbind, lapply(levs, function(j) {
       
        out <- as.data.frame(emmeans::CLD(j[[1]],  Letters = letters[1:26]))
      
@@ -219,9 +219,12 @@ getCoefficients <- function(model, data = NULL, test.type = "III") {
        
        names(out) <- names(ret)
        
-       ret <- rbind(ret, out)
+       return(out)
        
        } ) )
+    
+    
+    ret <- rbind(ret, out)
     
   }
   
@@ -281,11 +284,13 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       numVars <- vars[which(sapply(data[, vars], class) != "factor")]
       
+      numVars <- all.vars_trans(i)[all.vars_notrans(i) %in% numVars]
+      
       B <- ret[ret$Predictor %in% c("(Intercept)", numVars[-1]), "Estimate"]
       
       names(B) <- ret[ret$Predictor %in% numVars[-1], "Predictor"]
       
-      sd.x <- GetSDx(i, modelList, data, standardize)
+      sd.x <- GetSDx(i, modelList, newdata, standardize)
       
       sd.y <- GetSDy(i, newdata, standardize, standardize.type)
       
