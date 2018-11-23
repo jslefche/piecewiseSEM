@@ -49,9 +49,9 @@ partialResid <- function(formula., modelList, data = NULL) {
   
   modelList <- removeData(modelList, formulas = 1)
   
-  if(class(formula.) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(formula., "~~"))) else
-    
-    vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
+  vars <- all.vars_notrans(formula.)
+  
+  vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   vars <- strsplit(vars, ":|\\*")
   
@@ -111,9 +111,9 @@ partialCorr <- function(formula., modelList, data = NULL) {
   
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
   
-  if(class(formula.) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(formula., "~~"))) else
-    
-    vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
+  vars <- all.vars_notrans(formula.)
+  
+  vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   vars <- strsplit(vars, ":|\\*")
   
@@ -158,8 +158,8 @@ partialCorr <- function(formula., modelList, data = NULL) {
   }
   
   ret <- data.frame(
-    Response = paste0("~~", vars[[1]]),
-    Predictor = paste0("~~", paste(vars[[2]], collapse = ":")),
+    Response = paste0("~~", all.vars_trans(formula.)[[1]]),
+    Predictor = paste0("~~", paste(all.vars_trans(formula.)[[2]], collapse = ":")),
     Estimate = rcor,
     Std.Error = NA,
     DF = N,
