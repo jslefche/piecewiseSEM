@@ -76,12 +76,12 @@ formatpsem <- function(x) {
   }
   
   vars <- unlist(sapply(removeData(x, formulas = 1), all.vars_notrans))
-  
-  vars <- vars[!duplicated(vars)]
+
+  vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
   
   t_vars <- unlist(sapply(removeData(x, formulas = 1), all.vars_trans))
   
-  t_vars <- t_vars[!duplicated(t_vars)]
+  t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
   
   if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
   

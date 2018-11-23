@@ -150,7 +150,9 @@ getCoefficients <- function(model, data = NULL, test.type = "III") {
   
   vars <- all.vars_trans(model)
   
-  factorVars <- vars[which(sapply(data[, all.vars_notrans(model)], class) == "factor")]
+  factorVars <- attr(terms(model), "dataClasses")
+  
+  factorVars <- names(factorVars)[which(factorVars == "factor")]
 
   if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
     
