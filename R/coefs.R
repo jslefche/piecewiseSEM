@@ -426,7 +426,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
   
   if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
   
-  if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "lme")))
+  if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "gls", "lme")))
     
     family. <- list(family = "gaussian", link = "identity")
   
