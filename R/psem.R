@@ -62,8 +62,6 @@ formatpsem <- function(x) {
     x$data <- x$data
 
   } else {
-    
-    # warning("Missing data argument to psem.", call. = FALSE)
 
     x$data <- GetData(x)
 
@@ -77,12 +75,11 @@ formatpsem <- function(x) {
 
   }
   
-  
-  vars <- unlist(sapply(x, all.vars_notrans))
+  vars <- unlist(sapply(removeData(x, formulas = 1), all.vars_notrans))
   
   vars <- vars[!duplicated(vars)]
   
-  t_vars <- unlist(sapply(x, all.vars_trans))
+  t_vars <- unlist(sapply(removeData(x, formulas = 1), all.vars_trans))
   
   t_vars <- t_vars[!duplicated(t_vars)]
   
