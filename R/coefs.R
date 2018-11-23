@@ -316,50 +316,6 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
 }
 
-#' Transform variables based on model formula and store in new data frame
-#' 
-#' @keywords internal
-#' 
-dataTrans <- function(formula., newdata) {
-
-  notrans <- all.vars.merMod(formula.)
-
-  trans <- all.vars_trans(formula.)
-
-  trans <- unlist(strsplit(trans, "\\:"))
-
-  trans <- trans[!duplicated(trans)]
-
-  if(any(grepl("scale\\(.*\\)", trans))) {
-
-    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
-
-    warning("`scale` applied directly to variable. Use argument `standardize = TRUE` instead.", call. = FALSE)
-
-  }
-
-  if(any(!notrans %in% trans)) {
-
-    for(k in 1:length(notrans)) {
-      
-      if(is.factor(newdata[, notrans[k]])) next else {
-
-        newdata[, notrans[k]] <-
-  
-          sapply(newdata[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
-        
-      }
-
-    }
-
-  }
-
-  colnames(newdata) <- notrans
-
-  return(newdata)
-
-}
-
 #' Get standard deviation of predictor variables
 #' 
 #' @keywords internal

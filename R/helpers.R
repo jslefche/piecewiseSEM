@@ -125,6 +125,52 @@ cbind_fill <- function(...) {
 
   }
 
+#' Transform variables based on model formula and store in new data frame
+#' 
+#' @keywords internal
+#' 
+dataTrans <- function(formula., data) {
+  
+  notrans <- all.vars.merMod(formula.)
+  
+  if(class(formula.) == "formula.cerror") notrans <- gsub(".*\\((.*)\\)", "\\1", notrans)
+  
+  trans <- all.vars_trans(formula.)
+  
+  trans <- unlist(strsplit(trans, "\\:"))
+  
+  trans <- trans[!duplicated(trans)]
+  
+  if(any(grepl("scale\\(.*\\)", trans))) {
+    
+    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
+    
+    warning("`scale` applied directly to variable. Use argument `standardize = TRUE` instead.", call. = FALSE)
+    
+  }
+  
+  if(any(!notrans %in% trans)) {
+    
+    for(k in 1:length(notrans)) {
+      
+      if(is.factor(data[, notrans[k]])) next else {
+        
+        data[, notrans[k]] <-
+          
+          sapply(data[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
+        
+      }
+      
+    }
+    
+  }
+  
+  colnames(data) <- notrans
+  
+  return(data)
+  
+}
+
 #' Get random effects from lme
 #' 
 #' @keywords internal

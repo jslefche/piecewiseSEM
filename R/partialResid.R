@@ -55,9 +55,17 @@ partialResid <- function(formula., modelList, data = NULL) {
   
   vars <- strsplit(vars, ":|\\*")
   
-  if(!all(unlist(vars) %in% colnames(data)))
+  if(!all(unlist(vars) %in% colnames(data))) {
     
-    stop("Variables not found in the model list. Ensure spelling is correct and remove all transformations!")
+    if(any(grepl("\\(", unlist(vars)))) {
+      
+      data <- dataTrans(formula., data)
+      
+    } else stop("Variables not found in the model list. Ensure spelling is correct")
+    
+  }
+  
+  vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   residModList <- getResidModels(vars, modelList, data)
   
