@@ -76,14 +76,21 @@ formatpsem <- function(x) {
     names(x)[idx.] <- idx.
 
   }
-
-  if(class(x$data) == "comparative.data") { if(any(sapply(x$data$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE) } else
-    
-    if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE)
   
-  # if(any(sapply(x$data, class) == "factor"))
-  #
-  #   stop("Some predictors in the model are factors. Respecify as binary or ordered numeric!", call. = FALSE)
+  
+  vars <- unlist(sapply(x, all.vars_notrans))
+  
+  vars <- vars[!duplicated(vars)]
+  
+  t_vars <- unlist(sapply(x, all.vars_trans))
+  
+  t_vars <- t_vars[!duplicated(t_vars)]
+  
+  if(length(vars) != length(t_vars)) warning("Some variables appear as alternately transformed and untransformed. Consider applying transformations across the entire model", call. = FALSE)
+  
+  if(class(x$data) == "comparative.data") { if(any(sapply(x$data$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different sets of data", call. = FALSE) } else
+    
+    if(any(sapply(x$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different sets of data", call. = FALSE)
 
   evaluateClasses(x)
 
