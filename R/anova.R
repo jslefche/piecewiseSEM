@@ -18,9 +18,9 @@
 #' 
 anova.psem <- function(object, ..., test.type = "III") {
 
-  l <- list(object, ...)
+  dots <- list(object, ...)
   
-  if(length(l) == 1) {
+  if(length(dots) == 1) {
 
    object <- removeData(object, formulas = 1)
 
@@ -55,21 +55,21 @@ anova.psem <- function(object, ..., test.type = "III") {
   } else {
     
     # need to stop if fit to different datasets
-    # lapply(l, function(x) GetData(x))
+    # lapply(dots, function(x) GetData(x))
     
-    combos <- combn(length(l), 2)
+    combos <- combn(length(dots), 2)
     
     combos <- split(t(combos), seq(ncol(combos)))
     
     ret <- lapply(combos, function(i) {
       
-      nm1 <- deparse(substitute(l[[i[1]]]))
+      nm1 <- deparse(substitute(dots[[i[1]]]))
       
-      nm2 <- deparse(substitute(l[[i[2]]]))
+      nm2 <- deparse(substitute(dots[[i[2]]]))
       
-      model1 <- l[[i[1]]]
+      model1 <- dots[[i[1]]]
       
-      model2 <- l[[i[2]]]
+      model2 <- dots[[i[2]]]
     
       model1.summary <- summary(model1, .progressBar = FALSE)
       
