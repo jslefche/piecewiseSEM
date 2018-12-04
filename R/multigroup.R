@@ -152,6 +152,8 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
 
 #' Print multigroup
 #' 
+#' @keywords internal
+#' 
 print.multigroup.psem <- function(x, ...) {
 
   cat("\nStructural Equation Model of", x$name, "\n")
