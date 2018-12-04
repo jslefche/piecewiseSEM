@@ -40,7 +40,7 @@
 #' 
 anova.psem <- function(object, ...) {
   
-  if(length(list(object, ...)) == 1) anovasingle.psem(object, ...) else anovaLRT.psem(object, ...)
+  if(all(sapply(list(object, ...), class) == "psem")) anovaLRT.psem(object, ...) else anovasingle.psem(object, ...)
   
 }
 
