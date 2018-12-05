@@ -4,7 +4,7 @@
 \alias{multigroup}
 \title{Multigroup Analysis for Piecewise SEM}
 \usage{
-\method{multigroup}{psem}(modelList, group, standardize = "scale",
+multigroup(modelList, group, standardize = "scale",
   standardize.type = "latent.linear", test.type = "III")
 }
 \arguments{

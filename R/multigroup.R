@@ -22,8 +22,6 @@
 #' 
 #' jutila.multigroup
 #' 
-#' @method multigroup psem
-#' 
 #' @export
 #' 
 multigroup <- function(modelList, group, standardize = "scale", standardize.type = "latent.linear", test.type = "III") {
