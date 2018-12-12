@@ -7,7 +7,7 @@
 ## Getting Help
 See our website at http://jslefche.github.io/piecewiseSEM/
   
-This version is a major update to the `piecewiseSEM` package that usesa completely revised syntax that better reproduces the base R syntax and output. It is highly recommended that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
+This version is a major update to the `piecewiseSEM` package that uses a completely revised syntax that better reproduces the base R syntax and output. It is highly recommended that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
 
 It also incorporates new functionality in the form of coefficient standardization and updated methods for R^2 for mixed models.
 
