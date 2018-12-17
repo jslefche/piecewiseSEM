@@ -1,5 +1,6 @@
 ## Version 2.1.0 Release Notes
 - `coefs` now returns coefficients for categorical variables
+- added `multigroup` function and analysis
 - Changed contact e-mail to new affiliation
 - Fixed bug with `KRp` and `lmerMod` models with intercepts
 - Fixed bug with `getOLRE` and single observation-level random effects glmerMods
