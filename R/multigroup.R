@@ -117,20 +117,22 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
     
     b <- basisSet(modelList)
     
-    for(i in 1:nrow(global)) {
-      
-      cf <- coefTable[coefTable$Predictor == global[i, "Predictor"], "Estimate"]
-      
-      b <- lapply(b, function(j) {
-        
-        j[which(j == global[i, "Predictor"])] <- paste0("offset(", cf, "*", global[i, "Predictor"], ")")
-        
-        return(j)
-        
-      } )
-      
-    }
+    cf <- coefTable[coefTable$Response %in% global$Response & coefTable$Predictor %in% global$Predictor, ]
     
+    b <- lapply(b, function(i) {
+      
+      for(j in 3:length(i)) {
+        
+        value <- cf[cf$Response == i[2] & cf$Predictor == i[j], "Estimate"]
+        
+        if(length(value) != 0) i[j] <- paste0("offset(", value, "*", i[j], ")")
+        
+      }
+      
+      return(i)
+      
+    } )
+        
     gof <- fisherC(modelList, basis.set = b)
     
   }
