@@ -374,7 +374,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
           
           nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = binomial(link = link), data = data))
           
-          vt <- sum(unlist(VarCorr(nullmodel)))
+          vt <- sum(unlist(lme4::VarCorr(nullmodel)))
 
           pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
                             tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
@@ -393,7 +393,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
             
             sigmaE <- 0
             
-            lambda <- attr(VarCorr(model), "sc")^2
+            lambda <- attr(lme4::VarCorr(model), "sc")^2
 
             omega <- 1
 
@@ -481,11 +481,11 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
     f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
 
-    nullmodel <- suppressWarnings(lme4::glmer.nb(formula(f), family=negative.binomial(link = link), data))
+    nullmodel <- suppressWarnings(lme4::glmer.nb(formula(f), family = negative.binomial(link = link), data))
 
     # nullmodel <- update(model, formula(paste(". ~ 1 +", onlyBars(formula(model)))))
 
-    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(VarCorr(nullmodel)))))
+    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(lme4::VarCorr(nullmodel)))))
 
     theta <- lme4::getME(model, "glmer.nb.theta")
 
@@ -529,94 +529,100 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
   sigmaF <- var(as.vector(nlme::fixef(model) %*% t(X)))
 
-  sigma <- VarCorr(model)
+  sigma <- nlme::VarCorr(model)
 
   sigmaL <- sum(as.numeric(sigma[!grepl("=|Residual", rownames(sigma)), 1]))
 
   data <- GetData(model)
 
-  if(family. %in% c("poisson", "quasipoisson")) {
-
-    f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
-
-    if(family. == "poisson")
-
-      nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = poisson(link = link), data = data, verbose = FALSE)) else
-
-        nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasipoisson(link = link), data = data, verbose = FALSE))
-
-    lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(GetVarCov(nullmodel)))))
-
-    if(family. == "poisson") omega <- 1 else omega <- as.numeric(sigma[nrow(sigma), 1])
-
-    if(link == "mu^0.5") sigmaE <- 0.25 * omega else {
-
-      if(link == "log") {
-
-        if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
-
-        nu <- omega / lambda
-        
-        if(method == "delta") sigmaE <- nu
-
-        if(method == "lognormal") sigmaE <- log(1 + (nu))
-
-        if(method == "trigamma") sigmaE <- trigamma(1/nu)
-
-      } else stop("Unsupported link function!")
-
-    }
-
-  } else if(family. %in% c("binomial", "quasibinomial")) {
-
-    if(method == "trigamma") method <- "delta"
-
-    if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
-
-    if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
-
-    if(method == "delta") {
-
+  if(family. %in% c("gaussian")) l <- rsquared.lme(model) else {
+  
+    if(family. %in% c("poisson", "quasipoisson")) {
+  
       f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
-
-      if(family. == "binomial")
-
-        nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE)) else
-
-          nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasibinomial(link = link), data = data, verbose = FALSE))
-
-      vt <- sum(unlist(GetVarCov(nullmodel)))
-
-      pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
-                        tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
-
-      sigmaE <- 1/(pmean * (1 - pmean))
-
-      }
-
-    } else if(family. %in% c("Gamma")) {
-
-      if(link == "log") {
-
-        if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
-
-        nu <- 1 / as.numeric(VarCorr(model)[nrow(VarCorr(model)), 1])
-
-        if(method == "delta") sigmaE <- 1 / nu
-
-        if(method == "lognormal") sigmaE <- log(1 + 1/nu)
-
-        if(method == "trigamma") sigmaE <- trigamma(nu)
-
+  
+      if(family. == "poisson")
+  
+        nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = poisson(link = link), data = data, verbose = FALSE)) else
+  
+          nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasipoisson(link = link), data = data, verbose = FALSE))
+  
+      lambda <- as.numeric(exp(fixef(nullmodel) + 0.5 * sum(unlist(GetVarCov(nullmodel)))))
+  
+      if(family. == "poisson") omega <- 1 else omega <- as.numeric(sigma[nrow(sigma), 1])
+  
+      if(link == "mu^0.5") sigmaE <- 0.25 * omega else {
+  
+        if(link == "log") {
+  
+          if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
+  
+          nu <- omega / lambda
+          
+          if(method == "delta") sigmaE <- nu
+  
+          if(method == "lognormal") sigmaE <- log(1 + (nu))
+  
+          if(method == "trigamma") sigmaE <- trigamma(1/nu)
+  
         } else stop("Unsupported link function!")
-
-      } else stop("Unsupported family!")
-
-  mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
-
-  con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
-
-  list(family = family., link = link, method = method, Marginal = mar, Conditional = con)
+  
+      }
+  
+    } else if(family. %in% c("binomial", "quasibinomial")) {
+  
+      if(method == "trigamma") method <- "delta"
+  
+      if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
+  
+      if(method == "theoretical") sigmaE <- sigmaD <- pi^2/3
+  
+      if(method == "delta") {
+  
+        f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
+  
+        if(family. == "binomial")
+  
+          nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = binomial(link = link), data = data, verbose = FALSE)) else
+  
+            nullmodel <- suppressWarnings(MASS::glmmPQL(formula(f), random = model$call$random, family = quasibinomial(link = link), data = data, verbose = FALSE))
+  
+        vt <- sum(unlist(GetVarCov(nullmodel)))
+  
+        pmean <- plogis(as.numeric(fixef(nullmodel)) - 0.5 * vt *
+                          tanh(as.numeric(fixef(nullmodel)) * (1 + 2 * exp(-0.5 * vt))/6))
+  
+        sigmaE <- 1/(pmean * (1 - pmean))
+  
+        }
+  
+      } else if(family. %in% c("Gamma")) {
+  
+        if(link == "log") {
+  
+          if(!method %in% c("delta", "lognormal", "trigamma")) stop("Unsupported method!")
+  
+          nu <- 1 / as.numeric(nlme::VarCorr(model)[nrow(nlme::VarCorr(model)), 1])
+  
+          if(method == "delta") sigmaE <- 1 / nu
+  
+          if(method == "lognormal") sigmaE <- log(1 + 1/nu)
+  
+          if(method == "trigamma") sigmaE <- trigamma(nu)
+  
+          } else stop("Unsupported link function!")
+  
+        } else stop("Unsupported family!")
+  
+    mar <- (sigmaF) / (sigmaF + sigmaL + sigmaE)
+  
+    con <- (sigmaF + sigmaL) / (sigmaF + sigmaL + sigmaE)
+  
+    l <- list(family = family., link = link, method = method, Marginal = mar, Conditional = con)
+    
+  }
+  
+  return(l)
 
 }
 

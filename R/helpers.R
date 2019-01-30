@@ -368,7 +368,7 @@ GetVarCov <- function(model) {
 
   if(any(class(vc) == "try-error")) {
 
-    vc <- VarCorr(model)
+    vc <- nlme::VarCorr(model)
 
     v <- suppressWarnings(as.numeric(vc[, 1]))
 
