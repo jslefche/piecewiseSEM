@@ -203,6 +203,8 @@ GetData <- function(modelList) {
   
   data.list <- data.list[!sapply(data.list, is.null)]
   
+  data.list <- unname(data.list)
+  
   if(all(sapply(data.list, class) == "comparative.data"))
     
     data <- data.list[[1]] else 
