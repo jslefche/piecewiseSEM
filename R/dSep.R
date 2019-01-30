@@ -61,9 +61,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
     
     formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
     
-    if(.progressBar == T & length(b) > 0)
-      
-      pb <- txtProgressBar(min = 0, max = length(b), style = 3)
+    if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
     
     ret <- do.call(rbind, lapply(1:length(b), function(i) {
       
