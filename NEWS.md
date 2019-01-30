@@ -4,6 +4,7 @@
 - Changed contact e-mail to new affiliation
 - Fixed bug with `KRp` and `lmerMod` models with intercepts
 - Fixed bug with `getOLRE` and single observation-level random effects glmerMods
+- Fixed errant parantheses in `rsquared` leading to bad values for lme
 
 ## Version 2.0.2 Release Notes
 - Fixed bug with `partialCorr` and negative correlations returning wrong P-value 

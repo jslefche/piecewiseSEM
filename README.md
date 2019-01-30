@@ -2,7 +2,7 @@
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/piecewiseSEM)](https://cran.r-project.org/package=piecewiseSEM)
 
 ## Version 2.1.0
-## Last updated: 17 December 2018
+## Last updated: 30 January 2019
 
 ## Getting Help
 See our website at http://jslefche.github.io/piecewiseSEM/
