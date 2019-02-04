@@ -59,7 +59,7 @@
 #' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
-#' @seealso \code{\link{KRmodcomp}}, \code{\link{emmeans}}, \code{\link{CLD}}
+#' @seealso \code{\link{KRmodcomp}}, \code{\link{Anova}}, \code{\link{emmeans}}, \code{\link{CLD}}
 #' @examples 
 #' mod <- psem(
 #' lm(rich ~ cover, data = keeley),

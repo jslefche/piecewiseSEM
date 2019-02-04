@@ -154,6 +154,9 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
 
 #' Print multigroup
 #' 
+#' @param x an object to print
+#' @param ... additional arguments to print
+#' 
 #' @method print multigroup.psem
 #' 
 #' @export

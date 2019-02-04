@@ -20,6 +20,9 @@ claim(s)}
 \item{conserve}{whether the most conservative P-value should be returned (See Details) 
 Default is FALSE}
 
+\item{conditioning}{whether all conditioning variables should be shown in the table
+Default is FALSE}
+
 \item{add.claims}{an optional vector of additional independence claims (P-values) 
 to be added to the basis set}
 
@@ -36,9 +39,6 @@ variables (from \code{car::Anova})}
 Default is FALSE}
 
 \item{.progressBar}{an optional progress bar. Default is TRUE}
-
-\item{conditional}{whether all conditioning variables should be shown in the table
-Default is FALSE}
 }
 \value{
 The function \code{summary.psem} returns a list of summary

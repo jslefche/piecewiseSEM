@@ -101,6 +101,8 @@ captureTable <- function(g) {
 #'
 #' From: https://stackoverflow.com/a/31678079
 #' 
+#' @param ... data.frames to be bound, separated by commas
+#' 
 #'  @keywords internal
 #'   
 cbind_fill <- function(...) {

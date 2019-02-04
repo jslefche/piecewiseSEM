@@ -6,6 +6,11 @@
 \usage{
 \method{print}{multigroup.psem}(x, ...)
 }
+\arguments{
+\item{x}{an object to print}
+
+\item{...}{additional arguments to print}
+}
 \description{
 Print multigroup
 }

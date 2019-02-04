@@ -34,7 +34,7 @@
 #' claim(s)
 #' @param conserve whether the most conservative P-value should be returned (See Details) 
 #' Default is FALSE
-#' @param conditional whether all conditioning variables should be shown in the table
+#' @param conditioning whether all conditioning variables should be shown in the table
 #' Default is FALSE
 #' @param add.claims an optional vector of additional independence claims (P-values) 
 #' to be added to the basis set
