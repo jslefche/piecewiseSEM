@@ -4,7 +4,7 @@
 \alias{anovasingle.psem}
 \title{Single anova}
 \usage{
-anovasingle.psem(object, ..., test.type = "III")
+anovasingle.psem(object, anovafun = car::Anova, digits = 3, ...)
 }
 \description{
 Single anova

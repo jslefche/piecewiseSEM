@@ -2,12 +2,14 @@
 #' 
 #' Compute analysis of variance table for one or more structural equation models.
 #' 
-#' @param object a \code{psem} object
-#' @param ... additional \code{psem} objects
-#' @param test.type what kind of ANOVA is conducted. Default is type III
+#' @param mod a \code{psem} object
+#' @param mod2 a \code{psem} object for comparison. Defaults to NULL to allow for a LRT or F tables of all fit model pieces.
+#' @param anovafun The function used for ANOVA. Defaults to \code{\link{car::Anova}}
+#' @param digits number of digits to round results. Default is 3
+#' @param ... additional arguments passed to \code{anovafun}
 #' 
-#' @return an ANOVA table for a single model, a list of comparisons between multiple
-#' models
+#' @return an F, LRT, or other table for a single model, or a list of
+#'  comparisons between multiple models
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
 #' 
@@ -21,7 +23,7 @@
 #' data = keeley
 #' )
 #' 
-#' # get type III Anova
+#' # get type II Anova
 #' anova(mod1)
 #' 
 #' # conduct LRT
@@ -39,44 +41,47 @@
 #' @export
 #' 
 
-anova.psem <- function(object, ...) {
-  
-  if(sum(sapply(list(object, ...), class) == "psem") > 1) anovaLRT.psem(object, ...) else anovasingle.psem(object, ...)
-  
+anova.psem <- function(mod, mod2 = NULL, digits = 3, 
+                       anovafun = car::Anova, ...) {
+  if(!is.null(mod2)){
+    anovaLRT.psem(mod, mod2, ...) 
+  }else{ 
+      anovasingle.psem(mod, anovafun = anovafun, digits = digits,  ...)
+      }
 }
-
 #' Single anova
 #' 
 #' @keywords internal
 #' 
 #' @export
 #' 
-anovasingle.psem <- function(object, ..., test.type = "III") {
+anovasingle.psem <- function(object, anovafun = car::Anova, 
+                             digits = 3, ...) {
   
   object <- removeData(object, formulas = 1)
   
-  ret <- lapply(object, function(x) car::Anova(x, type = test.type))
+  tests <- lapply(object, function(x) anovafun(x, ...))
+  names(tests) <- get_response(object)
   
-  ret <- list(do.call(rbind, lapply(ret, function(i) {
+  ret <- list(do.call(rbind, lapply(names(tests), function(x) {
+    i <- tests[[x]]
     
-    response <- gsub("Response: ", "", attr(i, "heading")[grepl("Response:", attr(i, "heading"))])
+#    response <- gsub("Response: ", "", attr(i, "heading")[grepl("Response:", attr(i, "heading"))])
+    response <- x
     
     dat <- as.data.frame(i)
     
-    predictors <- rownames(dat)[-nrow(dat)]
+    predictors <- rownames(dat)
     
-    ret <- data.frame(
+    anovatab <- data.frame(
       Response = response,
-      Predictor = predictors,
-      Test.Stat = round(dat[-nrow(dat), 1], 1),
-      DF = dat[-nrow(dat), "Df"],
-      P.Value = round(dat[-nrow(dat), ncol(dat)], 4)
+      Predictor = predictors
     )
     
-    ret <- cbind.data.frame(ret, isSig(ret$P.Value))
+    ret <- cbind.data.frame(anovatab, dat, isSig(dat[,ncol(dat)]))
     
     names(ret)[ncol(ret)] <- ""
-    
+    rownames(ret) <- NULL
     # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
     
     return(ret)
@@ -95,7 +100,7 @@ anovasingle.psem <- function(object, ..., test.type = "III") {
 #' 
 #' @export
 #' 
-anovaLRT.psem <- function(object, ..., test.type = "III") {
+anovaLRT.psem <- function(object, ...) {
 
   dots <- list(object, ...)
   

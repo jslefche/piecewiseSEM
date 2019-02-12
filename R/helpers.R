@@ -556,3 +556,16 @@ stripTransformations <- function(x) {
   gsub(" ", "", gsub("(.*)\\+.*", "\\1", x))
 
 }
+
+
+#' Get Response Name as a Character
+#' 
+#' @keywords internal
+#' 
+get_response <- function(mod){
+  mod <- removeData(mod)
+  f <- lapply(mod, formula)
+  r <- lapply(f, function(x) x[[2]])
+  
+  return(as.character(r))
+}
