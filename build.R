@@ -49,6 +49,12 @@ res <- residuals(mod)
 anova(mod)
 fisherC(mod)
 
+plot(mod)
+
+plot(mod, node_attrs = list(
+   shape = "rectangle", color = "black",
+   fillcolor = "orange", x = 3, y=1:4))
+
 mod2 <- psem(
   lm(rich ~ cover, data=keeley),
   lm(cover ~ firesev + age, data=keeley),

@@ -27,16 +27,17 @@
 #'   lm(firesev ~ age, data=keeley),
 #'   data = keeley
 #' )
-#' plot.psem(mod)
+#' plot(mod)
 #' 
 #' ### More customized plot
 #' keeley_graph <- plot.psem(mod, return=TRUE)
 #' 
-#' plot.psem(mod, node_attrs = list(
+#' plot(mod, node_attrs = list(
 #'   shape = "rectangle", color = "black",
 #'   fillcolor = "orange", x = 3, y=1:4))
 
 #' @import DiagrammeR
+#' @export
 #' @md
 
 
