@@ -184,12 +184,13 @@ of `piecewiseSEM`` fits within R.</p>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>firesev</span> ~ <span class='no'>age</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='no'>keeley</span>),
   <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>
 )
-<span class='fu'>plot.psem</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot.psem(mod): could not find function "plot.psem"</span></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>mod</span>)
+
 <span class='co'>### More customized plot</span>
 <span class='no'>keeley_graph</span> <span class='kw'>&lt;-</span> <span class='fu'>plot.psem</span>(<span class='no'>mod</span>, <span class='kw'>return</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot.psem(mod, return = TRUE): could not find function "plot.psem"</span></div><div class='input'>
-<span class='fu'>plot.psem</span>(<span class='no'>mod</span>, <span class='kw'>node_attrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>mod</span>, <span class='kw'>node_attrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(
   <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"rectangle"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
-  <span class='kw'>fillcolor</span> <span class='kw'>=</span> <span class='st'>"orange"</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>y</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>4</span>))</div><div class='output co'>#&gt; <span class='error'>Error in plot.psem(mod, node_attrs = list(shape = "rectangle", color = "black",     fillcolor = "orange", x = 3, y = 1:4)): could not find function "plot.psem"</span></div></pre>
+  <span class='kw'>fillcolor</span> <span class='kw'>=</span> <span class='st'>"orange"</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>y</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>4</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

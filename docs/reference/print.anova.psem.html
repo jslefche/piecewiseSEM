@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ANOVA and chi-squared difference test for model comparison — anova.psem • piecewiseSEM</title>
+<title>Print anova — print.anova.psem • piecewiseSEM</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="ANOVA and chi-squared difference test for model comparison — anova.psem" />
+<meta property="og:title" content="Print anova — print.anova.psem" />
 
-<meta property="og:description" content="Compute analysis of variance table for one or more structural equation models." />
+<meta property="og:description" content="Print anova" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -105,93 +105,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>ANOVA and chi-squared difference test for model comparison</h1>
+    <h1>Print anova</h1>
     <small class="dont-index">Source: <a href='https://github.com/NA/NA/blob/master/R/anova.psem.R'><code>R/anova.psem.R</code></a></small>
-    <div class="hidden name"><code>anova.psem.Rd</code></div>
+    <div class="hidden name"><code>print.anova.psem.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compute analysis of variance table for one or more structural equation models.</p>
+    <p>Print anova</p>
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for psem</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for anova.psem</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>a <code>psem</code> object</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>additional <code>psem</code> objects</p></td>
-    </tr>
-    <tr>
-      <th>test.type</th>
-      <td><p>what kind of ANOVA is conducted. Default is type III</p></td>
+      <th>x</th>
+      <td><p>an object of class anova.psem</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an ANOVA table for a single model, a list of comparisons between multiple
-models</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>The model fitting function <code><a href='psem.html'>psem</a></code></p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>mod1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='psem.html'>psem</a></span>(
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>rich</span> ~ <span class='no'>cover</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>),
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>cover</span> ~ <span class='no'>firesev</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>),
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>firesev</span> ~ <span class='no'>age</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>
-)
-
-<span class='co'># get type III Anova</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>mod1</span>)</div><div class='output co'>#&gt;   Response   Predictor Test.Stat DF P.Value    
-#&gt; 1     rich (Intercept)   22876.7  1  0.0000 ***
-#&gt; 2     rich       cover    2200.1  1  0.0015  **
-#&gt; 3    cover (Intercept)      11.9  1  0.0000 ***
-#&gt; 4    cover     firesev       1.7  1  0.0000 ***
-#&gt; 5  firesev (Intercept)     160.3  1  0.0000 ***
-#&gt; 6  firesev         age      50.1  1  0.0000 ***</div><div class='input'>
-<span class='co'># conduct LRT</span>
-<span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='psem.html'>psem</a></span>(
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>rich</span> ~ <span class='no'>cover</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>),
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>cover</span> ~ <span class='no'>firesev</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>),
-  <span class='no'>age</span> ~ <span class='fl'>1</span>,
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>
-)
-
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>mod1</span>, <span class='no'>mod2</span>)</div><div class='output co'>#&gt; Chi square difference test
-#&gt; 
-#&gt;         AIC    BIC Fisher.C Fisher.C.Diff DF.diff P.value    
-#&gt; 1    35.136 57.634   17.136                                  
-#&gt; vs 2 32.052 47.051   20.052         2.916       0       0 ***
-#&gt; </div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
+                </ul>
 
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Jon Lefcheck &lt;LefcheckJ@si.edu&gt;, Jarrett Byrnes &lt;jarrett.byrnes@umb.edu&gt;</p>
   </div>
 </div>
 
