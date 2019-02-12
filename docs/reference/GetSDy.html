@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Identify models with correlated errors and return modified versions — getResidModels • piecewiseSEM</title>
+<title>Properly scale standard deviations depending on the error distribution — GetSDy • piecewiseSEM</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Identify models with correlated errors and return modified versions — getResidModels" />
+<meta property="og:title" content="Properly scale standard deviations depending on the error distribution — GetSDy" />
 
-<meta property="og:description" content="Identify models with correlated errors and return modified versions" />
+<meta property="og:description" content="Properly scale standard deviations depending on the error distribution" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -105,18 +105,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Identify models with correlated errors and return modified versions</h1>
-    <small class="dont-index">Source: <a href='https://github.com/NA/NA/blob/master/R/partialResid.R'><code>R/partialResid.R</code></a></small>
-    <div class="hidden name"><code>getResidModels.Rd</code></div>
+    <h1>Properly scale standard deviations depending on the error distribution</h1>
+    <small class="dont-index">Source: <a href='https://github.com/NA/NA/blob/master/R/coefs.R'><code>R/coefs.R</code></a></small>
+    <div class="hidden name"><code>GetSDy.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Identify models with correlated errors and return modified versions</p>
+    <p>Properly scale standard deviations depending on the error distribution</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getResidModels</span>(<span class='no'>vars</span>, <span class='no'>modelList</span>, <span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>GetSDy</span>(<span class='no'>model</span>, <span class='no'>data</span>, <span class='kw'>standardize</span> <span class='kw'>=</span> <span class='st'>"scale"</span>,
+  <span class='kw'>standardize.type</span> <span class='kw'>=</span> <span class='st'>"latent.linear"</span>)</pre>
         
 
   </div>
