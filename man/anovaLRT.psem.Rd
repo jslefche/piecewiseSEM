@@ -4,7 +4,7 @@
 \alias{anovaLRT.psem}
 \title{Chi-square differnce test}
 \usage{
-anovaLRT.psem(object, ...)
+anovaLRT.psem(...)
 }
 \description{
 Chi-square differnce test

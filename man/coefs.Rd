@@ -5,7 +5,7 @@
 \title{Extract path coefficients}
 \usage{
 coefs(modelList, standardize = "scale",
-  standardize.type = "latent.linear", test.type = "III",
+  standardize.type = "latent.linear", test.type = "II",
   intercepts = FALSE)
 }
 \arguments{
@@ -18,7 +18,7 @@ Default is \code{scale}.}
 \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.}
 
 \item{test.type}{the type of test for significance of categorical variables
-from \code{\link{car::Anova}}. Default is type "III".}
+from \code{\link{car::Anova}}. Default is type "II".}
 
 \item{intercepts}{Whether intercepts should be included in the coefficients
 table. Default is FALSE.}

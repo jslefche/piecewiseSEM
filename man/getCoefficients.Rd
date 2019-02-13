@@ -4,7 +4,7 @@
 \alias{getCoefficients}
 \title{Get coefficients from linear regression}
 \usage{
-getCoefficients(model, data = NULL, test.type = "III")
+getCoefficients(model, data = NULL, test.type = "II")
 }
 \description{
 Get coefficients from linear regression

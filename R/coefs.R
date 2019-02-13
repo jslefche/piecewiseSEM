@@ -50,7 +50,7 @@
 #' @param standardize.type The type of standardized for non-Gaussian responses:
 #' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
 #' @param test.type the type of test for significance of categorical variables
-#' from \code{\link{car::Anova}}. Default is type "III".
+#' from \code{\link{car::Anova}}. Default is type "II".
 #' @param intercepts Whether intercepts should be included in the coefficients
 #' table. Default is FALSE.
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
@@ -72,7 +72,7 @@
 #' 
 #' @export
 #'
-coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", test.type = "III", intercepts = FALSE) {
+coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", test.type = "II", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -144,7 +144,7 @@ unstdCoefs <- function(modelList, data = NULL, test.type = "III", intercepts = F
 #' 
 #' @export
 #'
-getCoefficients <- function(model, data = NULL, test.type = "III") {
+getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   if(is.null(data)) data <- GetData(model)
   

@@ -113,6 +113,33 @@ shipley_psem_lme4 <- psem(
 
 summary(shipley_psem_lme4)
 
+#testing interactions
+data(meadows)
+meadows$grazed <- factor(meadows$grazed)
+
+meadow_mod <- psem(
+  lm(mass ~ grazed*elev, data = meadows),
+  lm(rich ~ grazed*(elev + mass), data = meadows),
+  data = meadows
+)
+
+anova(meadow_mod)
+
+meadom_mod_const <- psem(
+  lm(mass ~ grazed + elev, data = meadows),
+  lm(rich ~ grazed +  mass, data = meadows),
+  data = meadows
+)
+
+
+anova(meadom_mod_const)
+
+
+anova(meadow_mod, meadom_mod_const)
+
+fisherC(meadow_mod)
+fisherC(meadom_mod_const)
+
 #lmerTest
 # library(lmerTest)
 # shipley_psem_lmerTest <- psem(

@@ -117,29 +117,38 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for psem</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>mod</span>, <span class='kw'>mod2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>anovafun</span> <span class='kw'>=</span> <span class='kw pkg'>car</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/car/topics/Anova'>Anova</a></span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
+      <th>mod</th>
       <td><p>a <code>psem</code> object</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>additional <code>psem</code> objects</p></td>
+      <th>mod2</th>
+      <td><p>a <code>psem</code> object for comparison. Defaults to NULL to allow for a LRT or F tables of all fit model pieces.</p></td>
     </tr>
     <tr>
-      <th>test.type</th>
-      <td><p>what kind of ANOVA is conducted. Default is type III</p></td>
+      <th>digits</th>
+      <td><p>number of digits to round results. Default is 3</p></td>
+    </tr>
+    <tr>
+      <th>anovafun</th>
+      <td><p>The function used for ANOVA. Defaults to <code><a href='https://www.rdocumentation.org/packages/car/topics/Anova'>car::Anova</a></code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additional arguments passed to <code>anovafun</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an ANOVA table for a single model, a list of comparisons between multiple
-models</p>
+    <p>an F, LRT, or other table for a single model, or a list of
+ comparisons between multiple models</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -154,14 +163,14 @@ models</p>
 <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>
 )
 
-<span class='co'># get type III Anova</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>mod1</span>)</div><div class='output co'>#&gt;   Response   Predictor Test.Stat DF P.Value    
-#&gt; 1     rich (Intercept)   22876.7  1  0.0000 ***
-#&gt; 2     rich       cover    2200.1  1  0.0015  **
-#&gt; 3    cover (Intercept)      11.9  1  0.0000 ***
-#&gt; 4    cover     firesev       1.7  1  0.0000 ***
-#&gt; 5  firesev (Intercept)     160.3  1  0.0000 ***
-#&gt; 6  firesev         age      50.1  1  0.0000 ***</div><div class='input'>
+<span class='co'># get type II Anova</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></span>(<span class='no'>mod1</span>)</div><div class='output co'>#&gt;   Response Predictor       Sum Sq Df  F value       Pr(&gt;F)     
+#&gt; 1     rich     cover  2200.083191  1 10.69180 1.536849e-03   **
+#&gt; 2     rich Residuals 18108.016809 88       NA           NA &lt;NA&gt;
+#&gt; 3    cover   firesev     1.711520  1 20.78792 1.648353e-05  ***
+#&gt; 4    cover Residuals     7.245252 88       NA           NA &lt;NA&gt;
+#&gt; 5  firesev       age    50.054888  1 22.83036 7.027847e-06  ***
+#&gt; 6  firesev Residuals   192.937362 88       NA           NA &lt;NA&gt;</div><div class='input'>
 <span class='co'># conduct LRT</span>
 <span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='psem.html'>psem</a></span>(
   <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></span>(<span class='no'>rich</span> ~ <span class='no'>cover</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>keeley</span>),
