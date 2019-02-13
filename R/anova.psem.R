@@ -44,7 +44,7 @@
 anova.psem <- function(mod, mod2 = NULL, digits = 3, 
                        anovafun = car::Anova, ...) {
   if(!is.null(mod2)){
-    anovaLRT.psem(mod, mod2, ...) 
+    anovaLRT.psem(mod, mod2) 
   }else{ 
       anovasingle.psem(mod, anovafun = anovafun, digits = digits,  ...)
       }
@@ -100,9 +100,9 @@ anovasingle.psem <- function(object, anovafun = car::Anova,
 #' 
 #' @export
 #' 
-anovaLRT.psem <- function(object, ...) {
+anovaLRT.psem <- function(...) {
 
-  dots <- list(object, ...)
+  dots <- list(...)
   
   combos <- combn(length(dots), 2)
     
@@ -118,20 +118,21 @@ anovaLRT.psem <- function(object, ...) {
     
     model2 <- dots[[i[2]]]
   
-    model1.summary <- summary(model1, .progressBar = FALSE)
+    model1.summary <- fisherC(model1, .progressBar = FALSE)
     
-    model2.summary <- summary(model2, .progressBar = FALSE)
+    model2.summary <- fisherC(model2, .progressBar = FALSE)
     
-    Cdiff <- abs(model1.summary$Cstat$Fisher.C - model2.summary$Cstat$Fisher.C)
+    Cdiff <- abs(model1.summary$Fisher.C - model2.summary$Fisher.C)
     
-    dfdiff <- abs(model1.summary$Cstat$df - model2.summary$Cstat$df)
+    dfdiff <- abs(model1.summary$df - model2.summary$df)
     
     pvalue <- round(1 - pchisq(Cdiff, df = dfdiff), 4)
     
     ret <- data.frame(
-      AIC = c(model1.summary$IC$AIC, model2.summary$IC$AIC),
-      BIC = c(model1.summary$IC$BIC, model2.summary$IC$BIC),
-      Fisher.C = c(model1.summary$Cstat$Fisher.C, model2.summary$Cstat$Fisher.C),
+      AIC = c(AIC(model1), AIC(model2)),
+      BIC = c(BIC(model1), BIC(model2)),
+      # BIC = c(model1.summary$IC$BIC, model2.summary$IC$BIC),
+      Fisher.C = c(model1.summary$Fisher.C, model2.summary$Fisher.C),
       Fisher.C.Diff = c("", Cdiff),
       DF.diff = c("", dfdiff),
       P.value = c("", pvalue),
