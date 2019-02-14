@@ -82,10 +82,12 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   if(class(data) %in% c("comparative.data")) data <- data$data
 
-  if(all(standardize != "none")) ret <- stdCoefs(modelList, data, standardize, standardize.type, test.type, intercepts) else
-
+  if(all(standardize != "none")){
+    ret <- stdCoefs(modelList, data, standardize, standardize.type, test.type, intercepts) 
+    }else{
     ret <- unstdCoefs(modelList, data, test.type, intercepts)
-
+    }
+  
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
 
   ret[is.na(ret)] <- "-"
@@ -148,17 +150,17 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   if(is.null(data)) data <- GetData(model)
   
-  # v <- attr(terms(model), "dataClasses")
+   v <- attr(terms(model), "dataClasses")
 
-  # vars <- names(v)
+   vars <- names(v)
     
-  # factorVars <- names(v)[which(v == "factor")]
+   factorVars <- names(v)[which(v == "factor")]
   
-  vars <- all.vars_notrans(model)
+  #vars <- all.vars_notrans(model)
   
-  v <- apply(data[, vars], 2, class)
+  #v <- apply(data[, vars], 2, class)
   
-  factorVars <- names(which(v == "factor"))
+  #factorVars <- names(which(v == "factor"))
 
   if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
     
