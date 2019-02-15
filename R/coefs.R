@@ -150,34 +150,23 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   if(is.null(data)) data <- GetData(model)
   
-   v <- attr(terms(model), "dataClasses")
-
-   vars <- names(v)
-    
-   factorVars <- names(v)[which(v == "factor")]
   
-  #vars <- all.vars_notrans(model)
-  
-  #v <- apply(data[, vars], 2, class)
-  
-  #factorVars <- names(which(v == "factor"))
-
   if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
     
-    ret <- as.data.frame(summary(model)$coefficients)[rownames(summary(model)$coefficients) %in% c("(Intercept)", vars), ]
+    ret <- as.data.frame(summary(model)$coefficients)
     
     if(all(class(model) %in% c("lm", "glm", "negbin"))) ret <- cbind(ret[, 1:2], DF = summary(model)$df[2], ret[, 3:4])
     
     if(all(class(model) %in% c("glmerMod", "pgls"))) ret <- cbind(ret[, 1:2], DF = length(summary(model)$residuals), ret[, 3:4])
     
     if(all(class(model) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = model$n, ret[, c(3, 6)])
-  
+    
     if(all(class(model) %in% c("lmerMod"))) {
-
+      
       krp <- KRp(model, vars[-1], data, intercepts = TRUE)
       
       ret <- cbind.data.frame(ret[, 1:2], DF = krp[, 1], ret[, 3, drop = FALSE], krp[, 2])
-        
+      
       names(ret)[ncol(ret)] <- "Pr(>|t|)"
       
     }
@@ -194,7 +183,7 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   if(all(class(model) %in% c("gls", "lme", "glmmPQL"))) {
     
-    ret <- as.data.frame(summary(model)$tTable)[rownames(summary(model)$tTable) %in% c("(Intercept)", vars), ]
+    ret <- as.data.frame(summary(model)$tTable)
     
     if(ncol(ret) == 4 & all(class(model) %in% c("gls")))
       
@@ -203,40 +192,6 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   }
   
   ret <- cbind(ret, isSig(ret[, 5]))
-  
-  if(length(factorVars) > 0) {
-    
-    anovaTable <- as.data.frame(car::Anova(model, type = test.type))
-  
-    levs <- lapply(factorVars, function(j) suppressMessages(emmeans::emmeans(model, list(formula(paste(" ~", j))), data = data)))
-  
-    out <- do.call(rbind, lapply(levs, function(j) {
-      
-       out <- as.data.frame(emmeans::CLD(j[[1]],  Letters = letters[1:26]))
-     
-       rownames(out) <- paste0(names(out)[1], "[", out[, 1], "] mean=")
-       
-       atab <- anovaTable[which(grepl(names(out)[1], rownames(anovaTable))), ]
-       
-       atab. <- data.frame(emmean = NA, SE = NA, DF = atab$Df, crit.value = atab[, 1], P.value = atab[, ncol(atab)], sig = isSig(atab[, ncol(atab)]))
-       
-       rownames(atab.) <- rownames(atab) 
-       
-       out <- rbind(
-         atab.,
-         data.frame(out[, 2:3], DF = out$df, crit.value = NA, P.value = NA, sig = out[, 7])
-       )
-       
-       names(out) <- names(ret)
-       
-       return(out)
-       
-       } ) )
-    
-    
-    ret <- rbind(ret, out)
-    
-  }
   
   ret <- data.frame(
     Response = all.vars_trans(listFormula(list(model))[[1]])[1],
@@ -253,8 +208,9 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   ret[is.na(ret$P.Value), "Response"] <- ""
   
   return(ret)  
-     
+  
 }
+
 
 #' Calculate standardized regression coefficients
 #' 
