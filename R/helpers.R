@@ -468,7 +468,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 #' 
 #' If remove = TRUE, take out non-evaluated formula
 #' 
-#' @keywords internal
+#' @external
 #' 
 listFormula <- function(modelList, formulas = 0) {
 
