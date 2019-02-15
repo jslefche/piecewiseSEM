@@ -193,7 +193,7 @@ findbars.lme <- function(model) {
 
 #' Get data from model list
 #' 
-#' @keywords internal
+#' @export
 #' 
 GetData <- function(modelList) {
   
@@ -529,7 +529,7 @@ print.attr <- function(x, ...) {
 #' formulas = 2, remove only formula but keep correlated errors
 #' formulas = 3, remove correlated errors but keep formula
 #' 
-#' @keywords internal
+#' @export
 #' 
 removeData <- function(modelList, formulas = 0) {
 
