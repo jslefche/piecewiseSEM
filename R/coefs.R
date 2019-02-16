@@ -104,7 +104,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 #' 
 #' @export
 #' 
-unstdCoefs <- function(modelList, data = NULL, test.type = "III", intercepts = FALSE) {
+unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
@@ -191,6 +191,7 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
     
   }
   
+  
   ret <- cbind(ret, isSig(ret[, 5]))
   
   ret <- data.frame(
@@ -200,6 +201,11 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   )
   
   names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
+
+  if(sum(grepl("\\:", ret$Predictor))>0) warning("Interactions present. Interpret with care.")
+  
+  ret <- handleCategoricalCoefs(ret, model, data)
+  
   
   rownames(ret) <- NULL
   
@@ -452,4 +458,146 @@ scaleInt <- function(model, newdata, standardize) {
 
   } )
 
+}
+
+
+#' Handles putting categorical variables into coefficient tables
+#' for easy use in path analysis
+#' 
+#' @keyword internal
+
+handleCategoricalCoefs <- function(ret, model, data){
+  
+  #first, what are we dealing with
+  vars <- names(data)
+  coefNames <- as.character(ret$Predictor)
+  modanova <- as.data.frame(anova(model))
+  
+  #figure out which rows of the return contain categorical variables
+  f <- listFormula(list(model))[[1]]
+  mf <- model.frame(f, data)
+  catVars <- names(mf)[sapply(mf, class) %in% c("factor", "character")]
+  
+  #if there are no categorical variables...
+  if(length(catVars)==0) return(ret)
+  
+  hasFact <- grep(catVars, coefNames)
+  
+  #strip out factor rows
+  
+  #what are the factors and their interactions?
+  factTypes <- rownames(modanova)[grep(catVars, rownames(modanova))]
+  
+  #figure out which rows contain factors AND interactions
+  hasFactInt <- grep("\\:", factTypes)
+  intVars <- factTypes[hasFactInt]
+  
+  #get the emmeans of the factor levels
+  meanFacts <- suppressMessages(lapply(catVars, function(v) emmeans(model, specs = v)))
+  meanFacts <- lapply(meanFacts, function(m){
+    m <- as.data.frame(m)
+    rownames(m) <- paste(names(m)[1], "=", as.character(m[,1]))
+    m$Crit.Value <- with(m, emmean/SE)
+    m$P.Value <- with(m, 2 * pt(abs(Crit.Value), df, 
+                                lower.tail = FALSE))
+    m[,-1]
+  })
+  
+  meanFacts <- do.call(rbind, meanFacts)
+  meanFacts <- cbind(data.frame(Response = ret$Response[1], Predictor = rownames(meanFacts)),
+                     meanFacts)
+  names(meanFacts)[names(meanFacts) %in% c("emmean", "SE", "df")] <- c("Estimate", "Std.Error", "DF")
+  meanFacts <- meanFacts[,-which(names(meanFacts) %in% c("lower.CL", "upper.CL"))]
+  meanFacts <- cbind(meanFacts, isSig(meanFacts[, 7]))
+  names(meanFacts)[8] <- ""
+  
+  ret <- rbind(ret, meanFacts)
+  
+  #if there are interactions, use emmeans to get either
+  if(length(intVars)>0){
+    intFacts <- lapply(intVars, deparseInt, model = model, catVars = catVars, vars = vars)
+    intFacts <- do.call(rbind, intFacts)
+    intFacts <- cbind(data.frame(Response = ret$Response[1]), intFacts)
+    names(intFacts)[8] <- ""
+    ret <- rbind(ret, intFacts)
+  }
+  
+  ret <- ret[-hasFact,]  
+  
+  return(ret)
+}
+
+
+#' Determines if we need to use emmeans or emtrends
+#' 
+#' @keyword internal
+deparseInt <- function(coefName, model, catVars, vars){
+  piecesOfInt <- strsplit(coefName, ":")[[1]]
+  catVarsInInt <- piecesOfInt[piecesOfInt %in% catVars]
+  contVarsInInt <- piecesOfInt[!(piecesOfInt %in% catVars)]
+  
+  if(length(contVarsInInt)>0){
+    ret <- intTrend(model, catVarsInInt, contVarsInInt)
+  }else{
+    ret <- intCat(model, catVarsInInt)
+  }
+  ret <- ret[,-which(names(ret) %in% c("lower.CL", "upper.CL"))]
+  #clean up
+  names(ret) <- c("Predictor", "Estimate", "Std.Error", "DF")
+  ret$Crit.Value <- with(ret, Estimate/`Std.Error`)
+  ret$P.Value <- with(ret, 2 * pt(abs(Crit.Value), DF, 
+                                  lower.tail = FALSE))
+  
+  ret <- cbind(ret, isSig(ret[,6]))
+  names(ret)[7] <- ""  
+  
+  return(ret)
+}
+
+
+#' Uses emtrends to get the slope at different levels of factors
+#' 
+#' @keyword internal
+#' 
+
+intTrend <- function(model, catVarsInInt, contVarsInInt){
+  meanTrends <- as.data.frame(emtrends(model, specs = catVarsInInt, var = contVarsInInt))
+  
+  #paste a big predictor
+  for(avar in catVarsInInt){
+    meanTrends[[avar]] <- paste(avar, "=", as.character( meanTrends[[avar]]))
+  }
+  
+  newvar <- sapply(1:nrow(meanTrends), function(i) paste(contVarsInInt, "at", 
+                                                         paste(meanTrends[i,catVarsInInt], collapse = ", ")))
+  
+  #clean up naming
+  meanTrends <- meanTrends[,-which(names(meanTrends) %in% catVarsInInt)]
+  meanTrends <- cbind(data.frame(Predictor = newvar), meanTrends)
+  
+  return(meanTrends)
+}
+
+
+#' Uses emmeans to get the mean at different levels of factors
+#' 
+#' @keyword internal
+#' 
+
+intCat <- function(model, catVarsInInt){
+  meanInts <- as.data.frame(emmeans(model, catVarsInInt))
+  
+  #paste a big predictor
+  for(avar in catVarsInInt){
+    meanInts[[avar]] <- paste(avar, "=", as.character( meanInts[[avar]]))
+  }
+  
+  newvar <- sapply(1:nrow(meanInts), function(i) 
+    paste(meanInts[i,catVarsInInt], collapse = ", "))
+  
+  #clean up naming
+  meanInts <- meanInts[,-which(names(meanInts) %in% catVarsInInt)]
+  meanInts <- cbind(data.frame(Predictor = newvar), meanInts) 
+  
+  meanInts
 }
