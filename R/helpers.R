@@ -193,7 +193,7 @@ findbars.lme <- function(model) {
 
 #' Get data from model list
 #' 
-#' @export
+#' @keywords internal
 #' 
 GetData <- function(modelList) {
   
@@ -468,7 +468,7 @@ KRp <- function(model, vars, data, intercepts = FALSE) {
 #' 
 #' If remove = TRUE, take out non-evaluated formula
 #' 
-#' @external
+#' @keywords internal
 #' 
 listFormula <- function(modelList, formulas = 0) {
 
@@ -529,7 +529,7 @@ print.attr <- function(x, ...) {
 #' formulas = 2, remove only formula but keep correlated errors
 #' formulas = 3, remove correlated errors but keep formula
 #' 
-#' @export
+#' @keywords internal
 #' 
 removeData <- function(modelList, formulas = 0) {
 
