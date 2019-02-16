@@ -381,7 +381,8 @@ flipOne <- function(rel, arrow, b){
 
 #' Pretty print a basis set
 #' 
-#' @keywords internal
+#' @method print basisSet
+#' @export
 #' 
 print.basisSet <- function(b){
   ret <- lapply(b, function (oneLine){

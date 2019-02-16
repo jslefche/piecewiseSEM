@@ -126,6 +126,8 @@ meadow_mod <- psem(
   data = meadows
 )
 
+dSep(meadow_mod)
+
 anova(meadow_mod)
 
 meadom_mod_const <- psem(
@@ -142,6 +144,19 @@ anova(meadow_mod, meadom_mod_const)
 
 fisherC(meadow_mod)
 fisherC(meadom_mod_const)
+
+
+#make sure factors are included in conditional independence tests
+meadows$grazed <- factor(meadows$grazed)
+meadom_mod_graz <- psem(
+  lm(mass ~  elev, data = meadows),
+  lm(rich ~ grazed +  mass, data = meadows),
+  data = meadows
+)
+
+dSep(meadom_mod_graz)
+
+#
 
 #lmerTest
 # library(lmerTest)

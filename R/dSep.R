@@ -56,54 +56,17 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
   } else {
     
     if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
-
+    
     modelList <- removeData(modelList, formulas = 1)
     
     formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
     
     if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
     
-    ret <- do.call(rbind, lapply(1:length(b), function(i) {
-      
-      bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
-      
-      if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
-        
-        bNewMod <- suppressWarnings(
-          update(bMod,
-                 formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))),
-                 data = data)
-        )
-        
-      } else {
-        
-        bNewMod <- suppressWarnings(
-          update(bMod,
-                 formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
-                 data = data)
-        )
-        
-      }
-      
-      ct <- unstdCoefs(bNewMod, data)
-      
-      ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
-      
-      rhs <- paste0(b[[i]][-2], collapse = " + ")
-      
-      if(conditioning == FALSE)
-        
-        rhs <- paste0(b[[i]][1], " + ...")
-      
-      ret <- data.frame(Independ.Claim = paste(b[[i]][2], "~", rhs), ct[, 3:8])
-      
-      names(ret)[ncol(ret)] <- ""
-      
-      if(.progressBar == TRUE) setTxtProgressBar(pb, i)
-      
-      return(ret)
-      
-    } ) )
+    
+    ret <- do.call(rbind, lapply(1:length(b), function(i)
+      testBasisSetElements(i, b, modelList, formulaList, 
+                           data, conditioning, .progressBar, pb) ) )
     
     if(.progressBar == TRUE) close(pb)
     
@@ -120,10 +83,114 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
       } ) )
       
     }
-
+    
     return(ret)
     
   }
+  
+}
+
+#' Identify duplicate output
+#' 
+#' @keywords internal
+#' 
+dupOutput <- function(b, conserve = FALSE) {
+  
+  dup <- names(b)[which(duplicated(names(b)))]
+  
+  if(conserve == FALSE) {
+    
+    s <- paste("\nNon-linearities detected in the basis set where P-values are not symmetrical.",
+               "\nThis can bias the outcome of the tests of directed separation.\n",
+               
+               "\nOffending independence claims:",
+               
+               lapply(dup, function(i) {
+                 
+                 d <- b[names(b) %in% dup]
+                 
+                 paste(
+                   "\n", paste(d[[1]][2], "<-", d[[1]][1]), "*OR*",
+                   paste(d[[1]][2], "->", d[[1]][1]), "\n"
+                 )
+                 
+               } ),
+               
+               "\nOption 1: Specify directionality using argument 'direction = c()' in 'summary'.\n",
+               
+               "\nOption 2: Remove path from the basis set by specifying as a correlated error using '%~~%' in 'psem'.\n",
+               
+               "\nOption 3 (recommended): Use argument 'conserve = TRUE' in 'summary' to compute both tests, and return the most conservative P-value.\n"
+               
+    )
+    
+    stop(s, call. = FALSE)
+    
+  }
+  
+}
+
+
+#' Evaluate one conditional independence claim
+#' from the basis set
+#' 
+#' @keywords internal
+#' 
+
+testBasisSetElements <- function(i, b, modelList, formulaList, 
+                                 data, conditioning, 
+                                 .progressBar, pb) {
+  
+  bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
+  
+  if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
+    
+    bNewMod <- suppressWarnings(
+      update(bMod,
+             formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))),
+             data = data)
+    )
+    
+  } else {
+    
+    bNewMod <- suppressWarnings(
+      update(bMod,
+             formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
+             data = data)
+    )
+    
+  }
+  
+  ct <- unstdCoefs(bNewMod, data)
+  ct$Test.Type = "coef"
+  
+  #if there are more than 1 new rows, then we have
+  #a categorical predictor - deal with accordingly
+  if(class(data[[b[[i]][1]]]) %in% c("character", "factor")){
+    ct <- anova.psem(mod = psem(bNewMod, data = data))
+    ct <- as.data.frame(ct[[1]])
+    names(ct)[ncol(ct)-1] <- "P.Value"
+    names(ct)[ncol(ct)-2] <- "Crit.Value"
+    names(ct)[ncol(ct)-3] <- "DF"
+    ct$Test.Type = "anova"
+    
+  }
+  
+  ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
+  
+  
+  rhs <- paste0(b[[i]][-2], collapse = " + ")
+  
+  if(conditioning == FALSE)
+    rhs <- paste0(b[[i]][1], " + ...")
+  
+  ret <- data.frame(Independ.Claim = paste(b[[i]][2], "~", rhs), ct[, c("Test.Type", "DF", "Crit.Value", "P.Value")])
+  
+  #names(ret)[ncol(ret)] <- ""
+  
+  if(.progressBar == TRUE) setTxtProgressBar(pb, i)
+  
+  return(ret)
   
 }
 
