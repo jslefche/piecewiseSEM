@@ -186,7 +186,9 @@ testBasisSetElements <- function(i, b, modelList, formulaList,
   
   ret <- data.frame(Independ.Claim = paste(b[[i]][2], "~", rhs), ct[, c("Test.Type", "DF", "Crit.Value", "P.Value")])
   
-  #names(ret)[ncol(ret)] <- ""
+  ret <- cbind(ret, isSig(ret[, "P.Value"]))
+
+  names(ret)[ncol(ret)] <- ""
   
   if(.progressBar == TRUE) setTxtProgressBar(pb, i)
   
