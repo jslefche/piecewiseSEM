@@ -89,6 +89,8 @@ basisSet <- function(modelList, direction = NULL) {
     # b <- replaceTrans(modelList, b, amat)
 
   }
+  
+  class(b) <- "basisSet"
 
   return(b)
 
@@ -375,4 +377,18 @@ flipOne <- function(rel, arrow, b){
   
   #return the new element of the basis set, and where it should be replaced
   return(list(cond[[1]], b_idx))
+}
+
+#' Pretty print a basis set
+#' 
+#' @keywords internal
+#' 
+print.basisSet <- function(b){
+  ret <- lapply(b, function (oneLine){
+    str <- paste(oneLine[1], "_||_", oneLine[2], sep = " ")
+    if(length(oneLine)>2) str <- paste(str, paste(oneLine[3:length(oneLine)], collapse = ","))
+    str
+  })
+ 
+  print(ret)
 }
