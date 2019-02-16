@@ -79,7 +79,11 @@ basisSet <- function(modelList, direction = NULL) {
     b <- reverseAddVars(modelList, b, amat)
 
     b <- reverseNonLin(modelList, b, amat)
-
+    
+    # Need to write a function that makes sure categorical
+    #variables are always predictors in basis set
+    #b <- fixCatDir(modelList, b, amat)
+    
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
     # b <- replaceTrans(modelList, b, amat)
@@ -328,11 +332,47 @@ reverseNonLin <- function(modelList, b, amat) {
 #' @keywords internal
 #' 
 specifyDir <- function(b, direction) {
-
-  vars <- gsub(" ", "", unlist(strsplit(direction, "\\->|<\\-")))
-
-  b[which(sapply(b, function(i) i[1] == vars[2] & i[2] == vars[1]))] <- NULL
-
+  
+  #what relationships have a direction?
+  rels <- lapply(direction, function(d){
+    trimws(strsplit(d, "\\->|<\\-")[[1]])
+  })
+  
+  #what is the direction of each of those
+  dirs <- sapply(direction, function(d){
+    gsub(".*(\\->|<\\-).*", "\\1", d)
+  })
+  
+  #flip them, one by one
+  #and yehaw for loops!
+  for(i in 1:length(rels)){
+    fix <- flipOne(rels[[i]], arrow[i], b)
+    b[[fix[[2]]]] <- fix[[1]] #not sure why Jon was setting this to NULL before JEKB
+  }
+  
   return(b)
 
+}
+
+
+flipOne <- function(rel, arrow, b){
+  #which element of the basis set are we dealing with?
+  b_idx <- which(sapply(b, function(i) i[1] %in% rel & i[2] %in% rel))
+  cond <- b[b_idx]
+  
+  #what's the direction?
+  if(arrow == "<\\-"){
+    r1 <- rel[1]
+    rel[1] <- rel[2]
+    rel[2] <- r1
+  } 
+  
+  #see if it needs to be flipped
+  if(cond[[1]][1] != rel[1]){
+    cond[[1]][1] <- rel[1]
+    cond[[1]][2] <- rel[2]
+  }
+  
+  #return the new element of the basis set, and where it should be replaced
+  return(list(cond[[1]], b_idx))
 }
