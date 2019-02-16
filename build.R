@@ -23,7 +23,7 @@ load_all(piecewiseSEM, reset=T)
 #build(piecewiseSEM, path="./piecewiseSEM/builds")
 #devtools::check_built("./piecewiseSEM_2.0.tar.gz")
 install(piecewiseSEM) 
-#run_examples(multifunc) 
+#run_examples(piecewiseSEM) 
 
 ### Build pkgdown site
 library(pkgdown)
@@ -43,6 +43,9 @@ mod <- psem(
   data = keeley
   
 )
+basisSet(mod)
+dSep(mod)
+
 summary(mod)
 
 res <- residuals(mod)
