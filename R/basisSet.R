@@ -386,7 +386,7 @@ flipOne <- function(rel, arrow, b){
 print.basisSet <- function(b){
   ret <- lapply(b, function (oneLine){
     str <- paste(oneLine[1], "_||_", oneLine[2], sep = " ")
-    if(length(oneLine)>2) str <- paste(str, paste(oneLine[3:length(oneLine)], collapse = ","))
+    if(length(oneLine)>2) str <- paste(str, "|", paste(oneLine[3:length(oneLine)], collapse = ", "))
     str
   })
  
