@@ -464,7 +464,7 @@ scaleInt <- function(model, newdata, standardize) {
 #' Handles putting categorical variables into coefficient tables
 #' for easy use in path analysis
 #' 
-#' @keyword internal
+#' @keywords internal
 
 handleCategoricalCoefs <- function(ret, model, data){
   
@@ -530,7 +530,7 @@ handleCategoricalCoefs <- function(ret, model, data){
 
 #' Determines if we need to use emmeans or emtrends
 #' 
-#' @keyword internal
+#' @keywords internal
 deparseInt <- function(coefName, model, catVars, vars){
   piecesOfInt <- strsplit(coefName, ":")[[1]]
   catVarsInInt <- piecesOfInt[piecesOfInt %in% catVars]
@@ -557,7 +557,7 @@ deparseInt <- function(coefName, model, catVars, vars){
 
 #' Uses emtrends to get the slope at different levels of factors
 #' 
-#' @keyword internal
+#' @keywords internal
 #' 
 
 intTrend <- function(model, catVarsInInt, contVarsInInt){
@@ -581,7 +581,7 @@ intTrend <- function(model, catVarsInInt, contVarsInInt){
 
 #' Uses emmeans to get the mean at different levels of factors
 #' 
-#' @keyword internal
+#' @keywords internal
 #' 
 
 intCat <- function(model, catVarsInInt){
