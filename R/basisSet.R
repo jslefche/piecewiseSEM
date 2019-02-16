@@ -346,7 +346,7 @@ specifyDir <- function(b, direction) {
   #flip them, one by one
   #and yehaw for loops!
   for(i in 1:length(rels)){
-    fix <- flipOne(rels[[i]], arrow[i], b)
+    fix <- flipOne(rels[[i]], dirs[i], b)
     b[[fix[[2]]]] <- fix[[1]] #not sure why Jon was setting this to NULL before JEKB
   }
   
