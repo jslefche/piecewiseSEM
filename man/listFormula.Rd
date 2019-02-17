@@ -9,3 +9,4 @@ listFormula(modelList, formulas = 0)
 \description{
 If remove = TRUE, take out non-evaluated formula
 }
+\keyword{internal}

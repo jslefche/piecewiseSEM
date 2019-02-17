@@ -5,8 +5,12 @@
 \title{Identify duplicate output}
 \usage{
 dupOutput(b, conserve = FALSE)
+
+dupOutput(b, conserve = FALSE)
 }
 \description{
+Identify duplicate output
+
 Identify duplicate output
 }
 \keyword{internal}
