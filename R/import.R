@@ -1,5 +1,6 @@
 #' Functions to import from dependencies
 #' 
+#' @import DiagrammeR
 #' @importFrom car Anova
 #' @importFrom emmeans emmeans emtrends
 #' @importFrom lme4 findbars nobars glmerControl lmerControl ranef VarCorr
