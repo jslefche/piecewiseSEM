@@ -157,24 +157,8 @@ testBasisSetElements <- function(i, b, modelList, formulaList, data, conditionin
   
   ct <- unstdCoefs(bNewMod, data)
   
-  ct$Test.Type <- "coef"
-  
-  if(class(data[[b[[i]][1]]]) %in% c("character", "factor")) {
-    
-    ct <- anova.psem(mod = psem(bNewMod, data = data))
-    
-    ct <- as.data.frame(ct[[1]])
-    
-    names(ct)[ncol(ct)-1] <- "P.Value"
-    
-    names(ct)[ncol(ct)-2] <- "Crit.Value"
-    
-    names(ct)[ncol(ct)-3] <- "DF"
-    
-    ct$Test.Type = "anova"
-    
-  }
-  
+  ct$Test.Type <- ifelse(is.na(ct$Estimate) | grepl("=", ct$Predictor), "anova", "coef")
+
   ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
   
   rhs <- paste0(b[[i]][-2], collapse = " + ")
