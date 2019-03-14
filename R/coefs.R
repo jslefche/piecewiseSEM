@@ -481,7 +481,7 @@ handleCategoricalCoefs <- function(ret, model, data) {
     
     for(i in catVars) {
       
-      meanFacts <- suppressMessages(lapply(i, function(v) emmeans::emmeans(model, specs = v)))
+      meanFacts <- suppressMessages(lapply(i, function(v) emmeans::emmeans(model, specs = v, data = data)))
       
       meanFacts <- lapply(meanFacts, function(m) {
         
