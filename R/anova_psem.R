@@ -75,15 +75,21 @@ anovaTable <- function(object, anovafun = car::Anova, digits = 3, ...) {
     
     dat <- as.data.frame(i)
     
-    predictors <- rownames(dat)[-nrow(dat)]
+    predictors <- rownames(dat)
+    
+    DF <- ifelse(any(grepl("numDF", colnames(dat))), dat$numDF, dat$Df)
+    
+    Test.Stat <- ifelse(any(grepl("F-value", colnames(dat))), dat$`F-value`, dat[, 1])
     
     ret <- data.frame(
       Response = response,
       Predictor = predictors,
-      Test.Stat = round(dat[-nrow(dat), 1], 1),
-      DF = dat[-nrow(dat), "Df"],
-      P.Value = round(dat[-nrow(dat), ncol(dat)], 4)
+      Test.Stat = round(Test.Stat, 1),
+      DF = DF,
+      P.Value = round(dat[, ncol(dat)], 4)
     )
+    
+    ret <- ret[ret$Predictor != "(Intercept)", ]
     
     ret <- cbind.data.frame(ret, isSig(ret$P.Value))
     
