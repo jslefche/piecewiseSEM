@@ -41,22 +41,26 @@
 #' @export
 #' 
 
-anova.psem <- function(mod, mod2 = NULL, digits = 3, 
-                       anovafun = car::Anova, ...) {
-  if(!is.null(mod2)){
-    anovaLRT.psem(mod, mod2) 
-  }else{ 
-      anovasingle.psem(mod, anovafun = anovafun, digits = digits,  ...)
-      }
+anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = car::Anova, ...) {
+ 
+   if(!is.null(mod2)) {
+     
+    anovaLRT.psem(mod, mod2)
+     
+     } else {
+       
+      anovasingle.psem(mod, anovafun = anovafun, digits = digits, ...)
+       
+       }
 }
+
 #' Single anova
 #' 
 #' @keywords internal
 #' 
 #' @export
 #' 
-anovasingle.psem <- function(object, anovafun = car::Anova, 
-                             digits = 3, ...) {
+anovasingle.psem <- function(object, anovafun = car::Anova, digits = 3, ...) {
   
   object <- removeData(object, formulas = 1)
   
@@ -64,9 +68,9 @@ anovasingle.psem <- function(object, anovafun = car::Anova,
   names(tests) <- get_response(object)
   
   ret <- list(do.call(rbind, lapply(names(tests), function(x) {
+    
     i <- tests[[x]]
     
-#    response <- gsub("Response: ", "", attr(i, "heading")[grepl("Response:", attr(i, "heading"))])
     response <- x
     
     dat <- as.data.frame(i)
@@ -81,6 +85,7 @@ anovasingle.psem <- function(object, anovafun = car::Anova,
     ret <- cbind.data.frame(anovatab, dat, isSig(dat[,ncol(dat)]))
     
     names(ret)[ncol(ret)] <- ""
+    
     rownames(ret) <- NULL
     # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
     
