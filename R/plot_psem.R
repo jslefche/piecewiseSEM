@@ -14,8 +14,7 @@
 #' @param add_edge_label_spaces Should spaces by added on either side of edge labels? Default is `TRUE` as otherwise paths too often overlap edges.
 #' @param ... Other arguments to [DiagrammeR::render_graph()]
 #' 
-#' 
-#'@return Returns an object of class [DiagrammeR::dgr_graph]
+#' @return Returns an object of class [DiagrammeR::dgr_graph]
 #' @author Jarrett Byrnes <jarrett.byrnes@@umb.edu>
 #' 
 #' @examples 
@@ -35,12 +34,10 @@
 #' plot(mod, node_attrs = list(
 #'   shape = "rectangle", color = "black",
 #'   fillcolor = "orange", x = 3, y=1:4))
-
+#'   
 #' @import DiagrammeR
 #' @export
-#' @md
-
-
+#' 
 plot.psem <- function(mod, return=FALSE,
                       node_attrs = data.frame(shape = "rectangle", color = "black",
                                               fillcolor = "white"),
@@ -49,6 +46,7 @@ plot.psem <- function(mod, return=FALSE,
                       show = "std", digits = 3, 
                       add_edge_label_spaces = TRUE, ...
                       ){
+  
   #get the coefficients table
   ctab <- coefs(mod)
   ctab$Response <- as.character(ctab$Response)
@@ -63,8 +61,7 @@ plot.psem <- function(mod, return=FALSE,
   nodes <- cbind(nodes, node_attrs)
   nodes[] <- lapply(nodes, as.character)
   nodes$id <- as.numeric(nodes$id)
-  
-  
+
   #make an edges DF
   edges <- create_edge_df(
                           from = match(ctab$Predictor, unique_nodes),
@@ -80,13 +77,11 @@ plot.psem <- function(mod, return=FALSE,
   if(show == "unstd") edges$label = round(ctab$Estimate, digits)
   if(add_edge_label_spaces) edges$label = paste0(" ", edges$label, " ")
   
-  
   #turn into a graph
   sem_graph <- create_graph(nodes, edges, directed=TRUE)
   
   if(return) return(sem_graph)
   
   render_graph(sem_graph, ...)
-  
-  
+
 }
