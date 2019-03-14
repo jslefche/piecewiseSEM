@@ -82,10 +82,14 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   if(class(data) %in% c("comparative.data")) data <- data$data
 
-  if(all(standardize != "none")){
+  if(all(standardize != "none")) { 
+    
     ret <- stdCoefs(modelList, data, standardize, standardize.type, test.type, intercepts) 
-    }else{
+    
+    } else {
+      
     ret <- unstdCoefs(modelList, data, test.type, intercepts)
+    
     }
   
   ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
@@ -107,9 +111,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 unstdCoefs <- function(modelList, data = NULL, test.type = "II", intercepts = FALSE) {
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
-  
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data 
-  
+
   if(is.null(data)) data <- GetData(modelList)
   
   modelList <- removeData(modelList, formulas = 2)
@@ -485,13 +487,13 @@ handleCategoricalCoefs <- function(ret, model, data) {
         
         m <- as.data.frame(m)
         
-        rownames(m) <- paste(names(m)[1], "=", as.character(m[,1]))
+        rownames(m) <- paste(names(m)[1], "=", as.character(m[, 1]))
         
         m$Crit.Value <- with(m, emmean/SE)
         
         m$P.Value <- with(m, 2 * pt(abs(Crit.Value), df, lower.tail = FALSE))
         
-        m[,-1]
+        m[, -1]
         
       } )
       

@@ -30,7 +30,7 @@
 #' 
 #' @return Returns a \code{data.frame} of independence claims and their
 #' significance values.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
 #' @seealso \code{\link{basisSet}}
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
@@ -44,9 +44,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
   
   if(length(b) == 0) {
-    
-    # warning("No independence claims present. Tests of directed separation not possible.", call. = FALSE)
-    
+  
     data.frame()
     
   } else {
@@ -55,13 +53,11 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
     
     modelList <- removeData(modelList, formulas = 1)
     
-    formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
-    
     if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
     
     ret <- do.call(rbind, lapply(1:length(b), function(i)
       
-      testBasisSetElements(i, b, modelList, formulaList, data, conditioning, .progressBar, pb) 
+      testBasisSetElements(i, b, modelList, data, conditioning, .progressBar, pb) 
       
       ) )
     
@@ -133,7 +129,9 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 #' @keywords internal
 #' 
-testBasisSetElements <- function(i, b, modelList, formulaList, data, conditioning, .progressBar, pb) {
+testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressBar, pb) {
+  
+  formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
   
   bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
   
