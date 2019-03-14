@@ -4,10 +4,10 @@
 \alias{Dag}
 \title{Generate adjacency matrix from list of structural equations}
 \usage{
-Dag(formulaList)
+Dag(modelList)
 }
 \arguments{
-\item{formulaList}{a list of formulae corresponding to structural equations}
+\item{modelList}{A list of structural equations}
 }
 \description{
 Generate adjacency matrix from list of structural equations

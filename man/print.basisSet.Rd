@@ -2,10 +2,10 @@
 % Please edit documentation in R/basisSet.R
 \name{print.basisSet}
 \alias{print.basisSet}
-\title{Pretty print a basis set}
+\title{Print basis set}
 \usage{
 \method{print}{basisSet}(b)
 }
 \description{
-Pretty print a basis set
+Print basis set
 }
