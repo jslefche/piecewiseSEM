@@ -515,17 +515,15 @@ handleCategoricalCoefs <- function(ret, model, data) {
       
       colnames(atab) <- colnames(ret)
       
-      retsp <- split(ret, (1:nrow(ret)) > match(i, rownames(ret)))
+      retsp <- split(ret, grepl(i, rownames(ret)))
       
       ret <- rbind(
           
-          retsp[[1]][-nrow(retsp[[1]]), ],
+          retsp[[1]],
           
           atab,
           
           meanFacts)
-      
-      if(length(retsp) > 1) ret <- rbind(ret, retsp[[2]])
       
     } 
     
