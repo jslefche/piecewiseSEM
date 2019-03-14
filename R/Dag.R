@@ -38,7 +38,10 @@ Dag <- function(modelList) {
   
   amat <- sortDag(amat, fList)
 
-  if(igraph::is_dag(igraph::graph_from_adjacency_matrix(amat))) 
+  if(
+    sum(colSums(amat) > 0) < 1 &
+    igraph::is_dag(igraph::graph_from_adjacency_matrix(amat))
+    ) 
     
     stop("Model is non-recursive. Remove feedback loops!", call. = FALSE)
 
