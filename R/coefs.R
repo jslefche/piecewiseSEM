@@ -150,7 +150,6 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   if(is.null(data)) data <- GetData(model)
   
-  
   if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
     
     ret <- as.data.frame(summary(model)$coefficients)
@@ -191,7 +190,6 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
     
   }
   
-  
   ret <- cbind(ret, isSig(ret[, 5]))
   
   ret <- data.frame(
@@ -202,10 +200,9 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
 
-  if(sum(grepl("\\:", ret$Predictor))>0) warning("Interactions present. Interpret with care.")
+  if(sum(grepl("\\:", ret$Predictor)) > 0) warning("Interactions present. Interpret with care.")
   
   ret <- handleCategoricalCoefs(ret, model, data)
-  
   
   rownames(ret) <- NULL
   
@@ -465,68 +462,99 @@ scaleInt <- function(model, newdata, standardize) {
 #' for easy use in path analysis
 #' 
 #' @keywords internal
-
-handleCategoricalCoefs <- function(ret, model, data){
+#' 
+handleCategoricalCoefs <- function(ret, model, data) {
   
-  #first, what are we dealing with
   vars <- names(data)
-  coefNames <- as.character(ret$Predictor)
+  
   modanova <- as.data.frame(anova(model))
   
-  #figure out which rows of the return contain categorical variables
   f <- listFormula(list(model))[[1]]
+  
   mf <- model.frame(f, data)
+  
   catVars <- names(mf)[sapply(mf, class) %in% c("factor", "character")]
   
-  #if there are no categorical variables...
-  if(length(catVars)==0) return(ret)
-  
-  hasFact <- grep(catVars, coefNames)
-  
-  #strip out factor rows
-  
-  #what are the factors and their interactions?
-  factTypes <- rownames(modanova)[grep(catVars, rownames(modanova))]
-  
-  #figure out which rows contain factors AND interactions
-  hasFactInt <- grep("\\:", factTypes)
-  intVars <- factTypes[hasFactInt]
-  
-  #get the emmeans of the factor levels
-  meanFacts <- suppressMessages(lapply(catVars, function(v) emmeans(model, specs = v)))
-  meanFacts <- lapply(meanFacts, function(m){
-    m <- as.data.frame(m)
-    rownames(m) <- paste(names(m)[1], "=", as.character(m[,1]))
-    m$Crit.Value <- with(m, emmean/SE)
-    m$P.Value <- with(m, 2 * pt(abs(Crit.Value), df, 
-                                lower.tail = FALSE))
-    m[,-1]
-  })
-  
-  meanFacts <- do.call(rbind, meanFacts)
-  meanFacts <- cbind(data.frame(Response = ret$Response[1], Predictor = rownames(meanFacts)),
-                     meanFacts)
-  names(meanFacts)[names(meanFacts) %in% c("emmean", "SE", "df")] <- c("Estimate", "Std.Error", "DF")
-  meanFacts <- meanFacts[,-which(names(meanFacts) %in% c("lower.CL", "upper.CL"))]
-  meanFacts <- cbind(meanFacts, isSig(meanFacts[, 7]))
-  names(meanFacts)[8] <- ""
-  
-  ret <- rbind(ret, meanFacts)
-  
-  #if there are interactions, use emmeans to get either
-  if(length(intVars)>0){
-    intFacts <- lapply(intVars, deparseInt, model = model, catVars = catVars, vars = vars)
-    intFacts <- do.call(rbind, intFacts)
-    intFacts <- cbind(data.frame(Response = ret$Response[1]), intFacts)
-    names(intFacts)[8] <- ""
-    ret <- rbind(ret, intFacts)
+  if(length(catVars) == 0) return(ret) else {
+    
+    for(i in catVars) {
+      
+      meanFacts <- suppressMessages(lapply(i, function(v) emmeans(model, specs = v)))
+      
+      meanFacts <- lapply(meanFacts, function(m) {
+        
+        m <- as.data.frame(m)
+        
+        rownames(m) <- paste(names(m)[1], "=", as.character(m[,1]))
+        
+        m$Crit.Value <- with(m, emmean/SE)
+        
+        m$P.Value <- with(m, 2 * pt(abs(Crit.Value), df, lower.tail = FALSE))
+        
+        m[,-1]
+        
+      } )
+      
+      meanFacts <- do.call(rbind, meanFacts)
+      
+      meanFacts <- cbind(data.frame(Response = ret$Response[1], Predictor = rownames(meanFacts)), meanFacts)
+      
+      names(meanFacts)[names(meanFacts) %in% c("emmean", "SE", "df")] <- c("Estimate", "Std.Error", "DF")
+      
+      meanFacts <- meanFacts[, -which(names(meanFacts) %in% c("lower.CL", "upper.CL"))]
+      
+      meanFacts <- cbind(meanFacts, isSig(meanFacts[, 7]))
+      
+      names(meanFacts)[8] <- ""
+      
+      atab <- modanova[grepl(i, rownames(modanova)), ]
+      
+      atab <- data.frame(ret[1, 1], rownames(atab), NA, NA, atab[, 2:4], isSig(atab[, 4]))
+      
+      colnames(atab) <- colnames(ret)
+      
+      retsp <- split(ret, (1:nrow(ret)) > grep(i, rownames(ret)))
+      
+      ret <- rbind(
+        
+        rbind(
+          
+          retsp[[1]][-nrow(retsp[[1]]), ],
+          
+          atab,
+          
+          meanFacts), 
+        
+        retsp[[2]]
+        
+        )
+      
+    } 
+    
+    return(ret)
+    
   }
+      
+  # removed categorical interactions for now sorry JEKB
+  #  
+  # #what are the factors and their interactions?
+  # factTypes <- rownames(modanova)[grep(catVars, rownames(modanova))]
+  # 
+  # #figure out which rows contain factors AND interactions
+  # hasFactInt <- grep("\\:", factTypes)
+  # 
+  # intVars <- factTypes[hasFactInt]
+  # 
+  # #if there are interactions, use emmeans to get either
+  # if(length(intVars)>0){
+  #   intFacts <- lapply(intVars, deparseInt, model = model, catVars = catVars, vars = vars)
+  #   intFacts <- do.call(rbind, intFacts)
+  #   intFacts <- cbind(data.frame(Response = ret$Response[1]), intFacts)
+  #   names(intFacts)[8] <- ""
+  #   ret <- rbind(ret, intFacts)
+  # }
   
-  ret <- ret[-hasFact,]  
-  
-  return(ret)
 }
-
 
 #' Determines if we need to use emmeans or emtrends
 #' 
