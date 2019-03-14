@@ -16,6 +16,8 @@
 #' @seealso The model fitting function \code{\link{psem}}
 #' 
 #' @examples 
+#' data(keeley)
+#' 
 #' mod1 <- psem(
 #' lm(rich ~ cover, data = keeley),
 #' lm(cover ~ firesev, data = keeley),
@@ -100,7 +102,7 @@ anovaTable <- function(object, anovafun = car::Anova, digits = 3, ...) {
   
 }
 
-#' Chi-square differnce test
+#' Chi-square difference test
 #' 
 #' @keywords internal
 #' 

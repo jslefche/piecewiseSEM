@@ -2,11 +2,11 @@
 % Please edit documentation in R/anova_psem.R
 \name{anovaLRT}
 \alias{anovaLRT}
-\title{Chi-square differnce test}
+\title{Chi-square difference test}
 \usage{
 anovaLRT(...)
 }
 \description{
-Chi-square differnce test
+Chi-square difference test
 }
 \keyword{internal}

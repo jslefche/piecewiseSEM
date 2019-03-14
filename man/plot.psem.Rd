@@ -47,6 +47,7 @@ mod <- psem(
   lm(firesev ~ age, data=keeley),
   data = keeley
 )
+
 plot(mod)
 
 ### More customized plot

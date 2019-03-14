@@ -26,6 +26,8 @@ an F, LRT, or other table for a single model, or a list of
 Compute analysis of variance table for one or more structural equation models.
 }
 \examples{
+data(keeley)
+
 mod1 <- psem(
 lm(rich ~ cover, data = keeley),
 lm(cover ~ firesev, data = keeley),
