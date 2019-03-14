@@ -1,10 +1,12 @@
 #' Generate adjacency matrix from list of structural equations
 #'
-#' @param formulaList a list of formulae corresponding to structural equations
+#' @param modelList A list of structural equations
 #' 
 #' @export
 #' 
-Dag <- function(formulaList) {
+Dag <- function(modelList) {
+  
+  formulaList <- listFormula(modelList)
 
   fList <- lapply(formulaList, function(i) if(any(class(i) %in% "formula.cerror")) NULL else i)
 
@@ -33,10 +35,12 @@ Dag <- function(formulaList) {
   dimnames(amat) <- list(vars, vars)
 
   diag(amat) <- 0
-
-  if(cyclic(amat, fList)) stop("Model is non-recursive. Remove feedback loops!", call. = FALSE)
   
   amat <- sortDag(amat, fList)
+
+  if(igraph::is_dag(igraph::graph_from_adjacency_matrix(amat))) 
+    
+    stop("Model is non-recursive. Remove feedback loops!", call. = FALSE)
 
   return(amat)
 
@@ -79,49 +83,5 @@ sortDag <- function(amat, formulaList) {
   amat = amat[names(sort(counter)), names(sort(counter))]
 
   return(amat)
-
-}
-
-#' Determine whether graph is cylic
-#' 
-#' @keywords internal
-#' 
-cyclic <- function(amat, formulaList) {
-
-  vars <- colnames(amat[, colSums(amat) > 0, drop = FALSE])
-
-  cyc <- sapply(vars, function(i) {
-    
-    indicated <- i
-    
-    indicated_sum <- c()
-    
-    fList <- formulaList
-    
-    flag <- TRUE
-    
-    while(flag == TRUE) {
-
-      pos <- sapply(fList, function(k) k[1] %in% indicated)
-
-      if(all(pos == FALSE)) flag <- FALSE else {
-
-        indicated <- formulaList[pos][[1]][-1]
-
-        indicated_sum <- c(indicated_sum, indicated)
-        
-        fList <- fList[!pos]
-
-        flag <- TRUE
-
-      }
-
-    }
-
-    i %in% indicated_sum
-
-  } )
-
-  any(cyc == TRUE)
 
 }
