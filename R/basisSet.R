@@ -331,25 +331,31 @@ reverseNonLin <- function(b, modelList, amat) {
 
 }
 
-#' Remove items from the basis set whose direction is a priori specified
+#' Remove duplicate items from the basis set whose direction is not a priori specified
 #' 
 #' @keywords internal
 #' 
 specifyDir <- function(b, direction) {
   
-  rels <- lapply(direction, function(d) { trimws(strsplit(d, "\\->|<\\-")[[1]]) })
+  vars <- gsub(" ", "", unlist(strsplit(direction, "\\->|<\\-")))
   
-  dirs <- sapply(direction, function(d) { gsub(".*(\\->|<\\-).*", "\\1", d) })
-  
-  for(i in 1:length(rels)) {
-    
-    fix <- flipOne(rels[[i]], dirs[i], b)
-    
-    b[[fix[[2]]]] <- fix[[1]] 
-    
-    }
+  b[which(sapply(b, function(i) i[1] == vars[2] & i[2] == vars[1]))] <- NULL
   
   return(b)
+  
+  # rels <- lapply(direction, function(d) { trimws(strsplit(d, "\\->|<\\-")[[1]]) })
+  # 
+  # dirs <- sapply(direction, function(d) { gsub(".*(\\->|<\\-).*", "\\1", d) })
+  # 
+  # for(i in 1:length(rels)) {
+  #   
+  #   fix <- flipOne(rels[[i]], dirs[i], b)
+  #   
+  #   b[[fix[[2]]]] <- fix[[1]] 
+  #   
+  #   }
+  # 
+  # return(b)
 
 }
 
