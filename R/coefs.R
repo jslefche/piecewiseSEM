@@ -481,7 +481,7 @@ handleCategoricalCoefs <- function(ret, model, data) {
     
     for(i in catVars) {
       
-      meanFacts <- suppressMessages(lapply(i, function(v) emmeans(model, specs = v)))
+      meanFacts <- suppressMessages(lapply(i, function(v) emmeans::emmeans(model, specs = v)))
       
       meanFacts <- lapply(meanFacts, function(m) {
         
@@ -509,13 +509,13 @@ handleCategoricalCoefs <- function(ret, model, data) {
       
       names(meanFacts)[8] <- ""
       
-      atab <- modanova[grepl(i, rownames(modanova)), ]
+      atab <- modanova[match(i, rownames(modanova)), ]
       
       atab <- data.frame(ret[1, 1], rownames(atab), NA, NA, atab[, 2:4], isSig(atab[, 4]))
       
       colnames(atab) <- colnames(ret)
       
-      retsp <- split(ret, (1:nrow(ret)) > grep(i, rownames(ret)))
+      retsp <- split(ret, (1:nrow(ret)) > match(i, rownames(ret)))
       
       ret <- rbind(
           
