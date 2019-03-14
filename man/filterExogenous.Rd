@@ -4,7 +4,7 @@
 \alias{filterExogenous}
 \title{Filter relationships among exogenous variables from the basis set (ignoring add.vars)}
 \usage{
-filterExogenous(modelList, b, amat)
+filterExogenous(b, modelList, amat)
 }
 \description{
 Filter relationships among exogenous variables from the basis set (ignoring add.vars)

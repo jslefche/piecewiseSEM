@@ -4,7 +4,7 @@
 \alias{removeCerror}
 \title{Remove correlated errors from the basis set}
 \usage{
-removeCerror(b, formulaList)
+removeCerror(b, modelList)
 }
 \description{
 Remove correlated errors from the basis set

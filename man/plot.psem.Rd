@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_psem.R
 \name{plot.psem}
 \alias{plot.psem}
-\title{Plotting Path Models of Piecewise Structural Equation Models}
+\title{Plotting of Piecewise Structural Equation Models}
 \usage{
 \method{plot}{psem}(mod, return = FALSE, node_attrs = data.frame(shape
   = "rectangle", color = "black", fillcolor = "white"),
@@ -11,31 +11,31 @@
   add_edge_label_spaces = TRUE, ...)
 }
 \arguments{
-\item{mod}{a \code{\link[=psem]{psem()}} object}
+\item{mod}{a [psem()] object}
 
-\item{return}{whether to return the output from \code{\link[DiagrammeR:create_graph]{DiagrammeR::create_graph()}} for modification and later plotting}
+\item{return}{whether to return the output from [DiagrammeR::create_graph()] for modification and later plotting}
 
-\item{node_attrs}{List of node attributes to overide defaults of rectangular nodes with black outline and white fill. See \href{http://visualizers.co/diagrammer/articles/node-edge-data-frames.html}{here} and \href{http://visualizers.co/diagrammer/articles/graphviz-mermaid.html}{here} for a more complete rundown of options.}
+\item{node_attrs}{List of node attributes to overide defaults of rectangular nodes with black outline and white fill. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.}
 
-\item{edge_attrs}{List of edge attributes to overide defaults of solid black arrows. See \href{http://visualizers.co/diagrammer/articles/node-edge-data-frames.html}{here} and \href{http://visualizers.co/diagrammer/articles/graphviz-mermaid.html}{here} for a more complete rundown of options.}
+\item{edge_attrs}{List of edge attributes to overide defaults of solid black arrows. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.}
 
-\item{ns_dashed}{If TRUE, paths that are not different from 0 will be dashed rather than solid, unless the wholse is overridden in \code{edge_attrs}}
+\item{ns_dashed}{If TRUE, paths that are not different from 0 will be dashed rather than solid, unless the wholse is overridden in `edge_attrs`}
 
 \item{alpha}{The alpha level for assessing whether a path is different from 0}
 
-\item{show}{What types of path coefficients are shown? Default \code{"std"} is standardized coefficients. For undstandardized, use \code{"unstd"}}
+\item{show}{What types of path coefficients are shown? Default `"std"` is standardized coefficients. For undstandardized, use `"unstd"`}
 
 \item{digits}{How many significant digits should be shown?}
 
-\item{add_edge_label_spaces}{Should spaces by added on either side of edge labels? Default is \code{TRUE} as otherwise paths too often overlap edges.}
+\item{add_edge_label_spaces}{Should spaces by added on either side of edge labels? Default is `TRUE` as otherwise paths too often overlap edges.}
 
-\item{...}{Other arguments to \code{\link[DiagrammeR:render_graph]{DiagrammeR::render_graph()}}}
+\item{...}{Other arguments to [DiagrammeR::render_graph()]}
 }
 \value{
-Returns an object of class \link[DiagrammeR:dgr_graph]{DiagrammeR::dgr_graph}
+Returns an object of class [DiagrammeR::dgr_graph]
 }
 \description{
-plot.psem uses \link{DiagrammeR} to generate path diagrams
+plot.psem uses [DiagrammeR] to generate path diagrams 
 of `piecewiseSEM`` fits within R.
 }
 \examples{
@@ -55,7 +55,8 @@ keeley_graph <- plot.psem(mod, return=TRUE)
 plot(mod, node_attrs = list(
   shape = "rectangle", color = "black",
   fillcolor = "orange", x = 3, y=1:4))
+  
 }
 \author{
-Jarrett Byrnes \href{mailto:jarrett.byrnes@umb.edu}{jarrett.byrnes@umb.edu}
+Jarrett Byrnes <jarrett.byrnes@umb.edu>
 }
