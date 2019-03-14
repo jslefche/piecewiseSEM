@@ -66,17 +66,17 @@ basisSet <- function(modelList, direction = NULL) {
 
   if(length(b) > 0) {
 
-    b <- filterExisting(b, formulaList)
+    b <- filterExisting(b, modelList)
 
-    b <- filterExogenous(modelList, b, amat)
+    b <- filterExogenous(b, modelList, amat)
 
     b <- filterInteractions(b)
 
-    b <- removeCerror(b, formulaList)
+    b <- removeCerror(b, modelList)
 
-    b <- reverseAddVars(modelList, b, amat)
+    b <- reverseAddVars(b, modelList, amat)
 
-    b <- reverseNonLin(modelList, b, amat)
+    b <- reverseNonLin(b, modelList, amat)
     
     # Need to write a function that makes sure categorical
     #variables are always predictors in basis set
@@ -98,8 +98,10 @@ basisSet <- function(modelList, direction = NULL) {
 #' 
 #' @keywords internal
 #' 
-filterExisting <- function(b, formulaList) {
-
+filterExisting <- function(b, modelList) {
+  
+  formulaList <- listFormula(modelList)
+  
   b <- lapply(b, function(i) {
 
     f <- formulaList[sapply(formulaList, function(x) all.vars_trans(x)[1] == i[1])]
@@ -118,7 +120,7 @@ filterExisting <- function(b, formulaList) {
 #' 
 #' @keywords internal
 #' 
-filterExogenous <- function(modelList, b, amat) {
+filterExogenous <- function(b, modelList, amat) {
 
   formulaList <- listFormula(modelList, formulas = 3)
 
@@ -156,7 +158,9 @@ filterInteractions <- function(b) {
 #' 
 #' @keywords internal
 #' 
-removeCerror <- function(b, formulaList) {
+removeCerror <- function(b, modelList) {
+  
+  formulaList <- listFormula(modelList)
 
   ceList <- lapply(formulaList, function(i) if(any(class(i) == "formula.cerror")) {
 
@@ -247,7 +251,7 @@ removeCerror <- function(b, formulaList) {
 #' 
 #' @keywords internal
 #' 
-reverseAddVars <- function(modelList, b, amat) {
+reverseAddVars <- function(b, modelList, amat) {
 
   formulaList <- listFormula(modelList, formulas = 3)
 
@@ -265,7 +269,7 @@ reverseAddVars <- function(modelList, b, amat) {
 #' 
 #' @keywords internal
 #' 
-reverseNonLin <- function(modelList, b, amat) {
+reverseNonLin <- function(b, modelList, amat) {
 
   if(length(b) > 0) {
 
