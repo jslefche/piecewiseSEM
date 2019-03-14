@@ -25,7 +25,7 @@
 #'  photosynthetically-active radiation) that the user may wish to 
 #'  exclude from evaluation.
 #' 
-#' @param modelList A list of structural equations.
+#' @param modelList A list of structural equations
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s) 
 #' @return A \code{list} of independence claims.
@@ -37,9 +37,7 @@
 #' 
 basisSet <- function(modelList, direction = NULL) {
 
-  formulaList <- listFormula(modelList)
-
-  amat <- Dag(formulaList)
+  amat <- Dag(modelList)
 
   b <- lapply(1:nrow(amat), function(i) {
 
@@ -335,61 +333,69 @@ reverseNonLin <- function(modelList, b, amat) {
 #' 
 specifyDir <- function(b, direction) {
   
-  #what relationships have a direction?
-  rels <- lapply(direction, function(d){
-    trimws(strsplit(d, "\\->|<\\-")[[1]])
-  })
+  rels <- lapply(direction, function(d) { trimws(strsplit(d, "\\->|<\\-")[[1]]) })
   
-  #what is the direction of each of those
-  dirs <- sapply(direction, function(d){
-    gsub(".*(\\->|<\\-).*", "\\1", d)
-  })
+  dirs <- sapply(direction, function(d) { gsub(".*(\\->|<\\-).*", "\\1", d) })
   
-  #flip them, one by one
-  #and yehaw for loops!
-  for(i in 1:length(rels)){
+  for(i in 1:length(rels)) {
+    
     fix <- flipOne(rels[[i]], dirs[i], b)
-    b[[fix[[2]]]] <- fix[[1]] #not sure why Jon was setting this to NULL before JEKB
-  }
+    
+    b[[fix[[2]]]] <- fix[[1]] 
+    
+    }
   
   return(b)
 
 }
 
 
-flipOne <- function(rel, arrow, b){
-  #which element of the basis set are we dealing with?
+flipOne <- function(rel, arrow, b) {
+  
   b_idx <- which(sapply(b, function(i) i[1] %in% rel & i[2] %in% rel))
+  
   cond <- b[b_idx]
-  
-  #what's the direction?
-  if(arrow == "<\\-"){
+
+  if(arrow == "<\\-") { 
+    
     r1 <- rel[1]
+    
     rel[1] <- rel[2]
+    
     rel[2] <- r1
-  } 
-  
-  #see if it needs to be flipped
-  if(cond[[1]][1] != rel[1]){
+    
+    } 
+
+  if(cond[[1]][1] != rel[1]) {
+    
     cond[[1]][1] <- rel[1]
+    
     cond[[1]][2] <- rel[2]
-  }
+    
+    }
   
-  #return the new element of the basis set, and where it should be replaced
+
   return(list(cond[[1]], b_idx))
+  
 }
 
-#' Pretty print a basis set
+#' Print basis set
 #' 
 #' @method print basisSet
 #' @export
 #' 
-print.basisSet <- function(b){
-  ret <- lapply(b, function (oneLine){
-    str <- paste(oneLine[1], "_||_", oneLine[2], sep = " ")
-    if(length(oneLine)>2) str <- paste(str, "|", paste(oneLine[3:length(oneLine)], collapse = ", "))
-    str
-  })
+print.basisSet <- function(b) { 
+  
+  ret <- lapply(b, function(oneLine) {
+    
+    st <- paste(oneLine[1], "_||_", oneLine[2], sep = " ")
+    
+    if(length(oneLine)>2) st <- paste(st, "|", paste(oneLine[3:length(oneLine)], collapse = ", "))
+    
+    st
+    
+    } )
  
   print(ret)
+  
 }
