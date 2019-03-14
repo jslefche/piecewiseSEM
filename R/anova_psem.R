@@ -40,16 +40,15 @@
 #' 
 #' @export
 #' 
-
 anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = car::Anova, ...) {
  
    if(!is.null(mod2)) {
      
-    anovaLRT.psem(mod, mod2)
+    anovaLRT(mod, mod2)
      
      } else {
        
-      anovasingle.psem(mod, anovafun = anovafun, digits = digits, ...)
+      anovaTable(mod, anovafun = anovafun, digits = digits, ...)
        
        }
 }
@@ -58,13 +57,12 @@ anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = car::Anova, ...)
 #' 
 #' @keywords internal
 #' 
-#' @export
-#' 
-anovasingle.psem <- function(object, anovafun = car::Anova, digits = 3, ...) {
+anovaTable <- function(object, anovafun = car::Anova, digits = 3, ...) {
   
   object <- removeData(object, formulas = 1)
   
   tests <- lapply(object, function(x) anovafun(x, ...))
+  
   names(tests) <- get_response(object)
   
   ret <- list(do.call(rbind, lapply(names(tests), function(x) {
@@ -75,16 +73,19 @@ anovasingle.psem <- function(object, anovafun = car::Anova, digits = 3, ...) {
     
     dat <- as.data.frame(i)
     
-    predictors <- rownames(dat)
+    predictors <- rownames(dat)[-nrow(dat)]
     
-    anovatab <- data.frame(
+    ret <- data.frame(
       Response = response,
-      Predictor = predictors
+      Predictor = predictors,
+      Test.Stat = round(dat[-nrow(dat), 1], 1),
+      DF = dat[-nrow(dat), "Df"],
+      P.Value = round(dat[-nrow(dat), ncol(dat)], 4)
     )
     
-    ret <- cbind.data.frame(anovatab, dat, isSig(dat[,ncol(dat)]))
+    ret <- cbind.data.frame(ret, isSig(ret$P.Value))
     
-    names(ret)[ncol(ret)] <- ""
+    colnames(ret)[ncol(ret)] <- ""
     
     rownames(ret) <- NULL
     # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
@@ -103,9 +104,7 @@ anovasingle.psem <- function(object, anovafun = car::Anova, digits = 3, ...) {
 #' 
 #' @keywords internal
 #' 
-#' @export
-#' 
-anovaLRT.psem <- function(...) {
+anovaLRT <- function(...) {
 
   dots <- list(...)
   
@@ -170,7 +169,7 @@ print.anova.psem <- function(x) {
   
   if(grepl("Response", colnames(x[[1]])[1])) print(x[[1]]) else {
   
-    cat("Chi square difference test\n")
+    cat("Chi-square Difference Test\n")
     
     cat("\n")
     

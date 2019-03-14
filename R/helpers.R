@@ -529,7 +529,7 @@ print.attr <- function(x, ...) {
 #' formulas = 2, remove only formula but keep correlated errors
 #' formulas = 3, remove correlated errors but keep formula
 #' 
-#' @keywords export
+#' @keywords internal
 #' 
 removeData <- function(modelList, formulas = 0) {
   
