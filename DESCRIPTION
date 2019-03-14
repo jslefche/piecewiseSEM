@@ -18,7 +18,9 @@ URL: https://github.com/jslefche/
 BugReports: https://github.com/jslefche/piecewiseSEM/issues
 Imports:
     car,
+    DiagrammeR,
     emmeans,
+    igraph,
     lme4,
     MASS,
     methods,
