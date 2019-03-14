@@ -37,7 +37,8 @@
 #' 
 #' @export 
 #' 
-dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
+dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, 
+                 conditioning = FALSE, .progressBar = TRUE) {
   
   if(is.null(basis.set)) b <- basisSet(modelList, direction) else b <- basis.set
   
@@ -123,9 +124,7 @@ dupOutput <- function(b, conserve = FALSE) {
   
 }
 
-
-#' Evaluate one conditional independence claim
-#' from the basis set
+#' Evaluate conditional independence claim from the basis set
 #' 
 #' @keywords internal
 #' 
