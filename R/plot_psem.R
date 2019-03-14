@@ -1,4 +1,4 @@
-#' Plotting Path Models of Piecewise Structural Equation Models
+#' Plotting of Piecewise Structural Equation Models
 #' 
 #' @description plot.psem uses [DiagrammeR] to generate path diagrams 
 #' of `piecewiseSEM`` fits within R.
@@ -15,6 +15,7 @@
 #' @param ... Other arguments to [DiagrammeR::render_graph()]
 #' 
 #' @return Returns an object of class [DiagrammeR::dgr_graph]
+#' 
 #' @author Jarrett Byrnes <jarrett.byrnes@@umb.edu>
 #' 
 #' @examples 
@@ -36,6 +37,9 @@
 #'   fillcolor = "orange", x = 3, y=1:4))
 #'   
 #' @import DiagrammeR
+#' 
+#' @method plot psem
+#' 
 #' @export
 #' 
 plot.psem <- function(mod, return=FALSE,
