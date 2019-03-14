@@ -41,11 +41,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
   
   if(is.null(basis.set)) b <- basisSet(modelList, direction) else b <- basis.set
   
-  if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) {
-    
-    dupOutput(b)
-    
-  }
+  if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
   
   if(length(b) == 0) {
     
@@ -63,10 +59,11 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
     
     if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
     
-    
     ret <- do.call(rbind, lapply(1:length(b), function(i)
-      testBasisSetElements(i, b, modelList, formulaList, 
-                           data, conditioning, .progressBar, pb) ) )
+      
+      testBasisSetElements(i, b, modelList, formulaList, data, conditioning, .progressBar, pb) 
+      
+      ) )
     
     if(.progressBar == TRUE) close(pb)
     
@@ -136,10 +133,7 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 #' @keywords internal
 #' 
-
-testBasisSetElements <- function(i, b, modelList, formulaList, 
-                                 data, conditioning, 
-                                 .progressBar, pb) {
+testBasisSetElements <- function(i, b, modelList, formulaList, data, conditioning, .progressBar, pb) {
   
   bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
   
@@ -162,27 +156,30 @@ testBasisSetElements <- function(i, b, modelList, formulaList,
   }
   
   ct <- unstdCoefs(bNewMod, data)
-  ct$Test.Type = "coef"
   
-  #if there are more than 1 new rows, then we have
-  #a categorical predictor - deal with accordingly
-  if(class(data[[b[[i]][1]]]) %in% c("character", "factor")){
+  ct$Test.Type <- "coef"
+  
+  if(class(data[[b[[i]][1]]]) %in% c("character", "factor")) {
+    
     ct <- anova.psem(mod = psem(bNewMod, data = data))
+    
     ct <- as.data.frame(ct[[1]])
+    
     names(ct)[ncol(ct)-1] <- "P.Value"
+    
     names(ct)[ncol(ct)-2] <- "Crit.Value"
+    
     names(ct)[ncol(ct)-3] <- "DF"
+    
     ct$Test.Type = "anova"
     
   }
   
   ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
   
-  
   rhs <- paste0(b[[i]][-2], collapse = " + ")
   
-  if(conditioning == FALSE)
-    rhs <- paste0(b[[i]][1], " + ...")
+  if(conditioning == FALSE) rhs <- paste0(b[[i]][1], " + ...")
   
   ret <- data.frame(Independ.Claim = paste(b[[i]][2], "~", rhs), ct[, c("Test.Type", "DF", "Crit.Value", "P.Value")])
   
