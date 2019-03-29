@@ -406,63 +406,63 @@ isSig <- function(p) {
 #' 
 #' @keywords internal
 #' 
-KRp <- function(model, vars, data, intercepts = FALSE) {
-
-  # if(any(grepl("\\*", all.vars_notrans(formula(model)))) & !all(grepl("\\*", vars))) {
-
-    f <- all.vars_trans(formula(model))
-
-    model <- update(model, as.formula(paste(f[1], " ~ ", paste(f[-1], collapse = " + "), " + ", paste(onlyBars(formula(model)), collapse = " + "))))
-
-  # }
-
-  out <- data.frame()
-  
-  for(x in vars) { #sapply(vars, function(x) {
-
-    reduceModel <- update(model, as.formula(paste(". ~ . -", x)))
-
-    if(nobs(model) != nobs(reduceModel)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
-    
-    kr <- try(pbkrtest::KRmodcomp(model, reduceModel), silent = TRUE)
-
-    if(class(kr) == "try-error") 
-      
-      stop("Cannot obtain P-values from `lmerMod` using `pbkrtest::KRmodcopm`. Consider fitting using `nlme::lme`") else {
-        
-        d <- round(kr$stats$ddf, 2)
-  
-        p <- kr$stats$p.valueU
-  
-        out <- rbind(out, data.frame(d, p))
-        
-      }
-
-  } # )
-
-  if(intercepts == TRUE) {
-
-    reduceModelI <- update(model, as.formula(paste("~ . - 1")), data = data)
-
-    krI <- try(pbkrtest::KRmodcomp(model, reduceModelI), silent = TRUE)
-    
-    if(class(krI) == "try-error") 
-      
-      stop("Cannot obtain P-values from `lmerMod` using `pbkrtest::KRmodcomp`. Consider re-fitting using `nlme::lme`")else {
-        
-        dI <- krI$stats$ddf
-    
-        pI <- krI$stats$p.valueU
-    
-        out <- rbind(data.frame(d = dI, p = pI), out)
-        
-      }
-      
-  }
-  
-  return(out)
-
-}
+# KRp <- function(model, vars, data, intercepts = FALSE) {
+# 
+#   # if(any(grepl("\\*", all.vars_notrans(formula(model)))) & !all(grepl("\\*", vars))) {
+# 
+#     f <- all.vars_trans(formula(model))
+# 
+#     model <- update(model, as.formula(paste(f[1], " ~ ", paste(f[-1], collapse = " + "), " + ", paste(onlyBars(formula(model)), collapse = " + "))))
+# 
+#   # }
+# 
+#   out <- data.frame()
+#   
+#   for(x in vars) { #sapply(vars, function(x) {
+# 
+#     reduceModel <- update(model, as.formula(paste(". ~ . -", x)))
+# 
+#     if(nobs(model) != nobs(reduceModel)) stop("Different sample sizes for `KRmodcomp`. Remove all NAs and re-run")
+#     
+#     kr <- try(pbkrtest::KRmodcomp(model, reduceModel), silent = TRUE)
+# 
+#     if(class(kr) == "try-error") 
+#       
+#       stop("Cannot obtain P-values from `lmerMod` using `pbkrtest::KRmodcopm`. Consider fitting using `nlme::lme`") else {
+#         
+#         d <- round(kr$stats$ddf, 2)
+#   
+#         p <- kr$stats$p.valueU
+#   
+#         out <- rbind(out, data.frame(d, p))
+#         
+#       }
+# 
+#   } # )
+# 
+#   if(intercepts == TRUE) {
+# 
+#     reduceModelI <- update(model, as.formula(paste("~ . - 1")), data = data)
+# 
+#     krI <- try(pbkrtest::KRmodcomp(model, reduceModelI), silent = TRUE)
+#     
+#     if(class(krI) == "try-error") 
+#       
+#       stop("Cannot obtain P-values from `lmerMod` using `pbkrtest::KRmodcomp`. Consider re-fitting using `nlme::lme`")else {
+#         
+#         dI <- krI$stats$ddf
+#     
+#         pI <- krI$stats$p.valueU
+#     
+#         out <- rbind(data.frame(d = dI, p = pI), out)
+#         
+#       }
+#       
+#   }
+#   
+#   return(out)
+# 
+# }
 
 #' Get list of formula from a `sem` object
 #' 
