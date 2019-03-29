@@ -503,7 +503,7 @@ handleCategoricalCoefs <- function(ret, model, data) {
       
       names(meanFacts)[names(meanFacts) %in% c("emmean", "SE", "df")] <- c("Estimate", "Std.Error", "DF")
       
-      meanFacts <- meanFacts[, -which(names(meanFacts) %in% c("lower.CL", "upper.CL"))]
+      meanFacts <- meanFacts[, -which(colnames(meanFacts) %in% c("lower.CL", "upper.CL", "asymp.LCL", "asymp.UCL"))]
       
       meanFacts <- cbind(meanFacts, isSig(meanFacts[, 7]))
       
