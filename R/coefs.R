@@ -164,9 +164,11 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
     
     if(all(class(model) %in% c("lmerMod"))) {
       
-      krp <- KRp(model, vars[-1], data, intercepts = TRUE)
+      # krp <- KRp(model, vars[-1], data, intercepts = TRUE)
       
-      ret <- cbind.data.frame(ret[, 1:2], DF = krp[, 1], ret[, 3, drop = FALSE], krp[, 2])
+      krp <- as.data.frame(car::Anova(model, test.statistic = "F", type = "III"))
+      
+      ret <- cbind.data.frame(ret[, 1:2], DF = krp[, 3], ret[, 3, drop = FALSE], krp[, 4])
       
       names(ret)[ncol(ret)] <- "Pr(>|t|)"
       
