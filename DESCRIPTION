@@ -24,8 +24,7 @@ Imports:
     lme4,
     MASS,
     methods,
-    nlme,
-    pbkrtest
+    nlme
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
