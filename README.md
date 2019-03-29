@@ -2,10 +2,21 @@
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/piecewiseSEM)](https://cran.r-project.org/package=piecewiseSEM)
 
 ## Version 2.1.0
-## Last updated: 18 Feburary 2019
+## Last updated: 29 March 2019
+
+## To install
+
+Run the following code to install the development version:
+```
+# install.packages("devtools") # if devtools not installed
+
+devtools::install_github("jslefche/piecewiseSEM@devel")
+```
 
 ## Getting Help
-See our website at http://jslefche.github.io/piecewiseSEM/
+See our website at (piecewiseSEM)[http://jslefche.github.io/piecewiseSEM/]
+
+There is an online resource available for SEM, including `piecewiseSEM` and `lavaan`, available (here)[https://jslefche.github.io/sem_book/]
 
 This version is a major update to the `piecewiseSEM` package that usesa completely revised syntax that better reproduces the base R syntax and output. It is highly recommended that consult `vignette("piecewiseSEM")` even if you have used the package before as it documents the many changes.
 
