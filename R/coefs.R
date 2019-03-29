@@ -165,12 +165,8 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
     if(all(class(model) %in% c("lmerMod"))) {
       
       # krp <- KRp(model, vars[-1], data, intercepts = TRUE)
-      
-      krp <- as.data.frame(car::Anova(model, test.statistic = "F", type = "III"))
-      
-      ret <- cbind.data.frame(ret[, 1:2], DF = krp[, 3], ret[, 3, drop = FALSE], krp[, 4])
-      
-      names(ret)[ncol(ret)] <- "Pr(>|t|)"
+  
+      ret <- GetAnova(model)
       
     }
     
@@ -471,7 +467,7 @@ handleCategoricalCoefs <- function(ret, model, data) {
   
   vars <- names(data)
   
-  modanova <- as.data.frame(anova(model))
+  # modanova <- GetAnova(model)
   
   f <- listFormula(list(model))[[1]]
   
@@ -484,7 +480,7 @@ handleCategoricalCoefs <- function(ret, model, data) {
     for(i in catVars) {
       
       meanFacts <- suppressMessages(lapply(i, function(v) emmeans::emmeans(model, specs = v, data = data)))
-      
+
       meanFacts <- lapply(meanFacts, function(m) {
         
         m <- as.data.frame(m)
@@ -510,20 +506,26 @@ handleCategoricalCoefs <- function(ret, model, data) {
       meanFacts <- cbind(meanFacts, isSig(meanFacts[, 7]))
       
       names(meanFacts)[8] <- ""
-      
-      atab <- modanova[match(i, rownames(modanova)), ]
-      
-      atab <- data.frame(ret[1, 1], rownames(atab), NA, NA, atab[, 2:4], isSig(atab[, 4]))
-      
-      colnames(atab) <- colnames(ret)
+      # 
+      # atab <- ret[match(i, rownames(ret)), ]
+      # 
+      # atab <- modanova[match(i, rownames(modanova)), ]
+      # 
+      # atab <- data.frame(ret[1, 1], rownames(atab), NA, NA, atab[, 2:4], isSig(atab[, 4]))
+      # 
+      # colnames(atab) <- colnames(ret)
       
       retsp <- split(ret, grepl(i, rownames(ret)))
+      
+      retsp[[2]][, 2] <- i
+      
+      retsp[[2]][, 3:4] <- NA
       
       ret <- rbind(
           
           retsp[[1]],
           
-          atab,
+          retsp[[2]],
           
           meanFacts)
       

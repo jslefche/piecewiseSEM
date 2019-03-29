@@ -173,6 +173,26 @@ dataTrans <- function(formula., data) {
   
 }
 
+#' Get ANOVA results
+#' 
+#' @keywords internal
+#' 
+GetAnova <- function(model, test.statistic = "F", test.type = "III") {
+  
+  ct <- as.data.frame(summary(model)$coefficients)
+  
+  krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
+  
+  ret <- cbind.data.frame(ct[, 1:2], DF = krp[, 3], Crit.Value = krp[, 1], krp[, 4])
+  
+  names(ret)[ncol(ret)] <- "Pr(>|t|)"
+  
+  rownames(ret) <- rownames(krp)
+  
+  return(ret)
+  
+}
+
 #' Get random effects from lme
 #' 
 #' @keywords internal
