@@ -180,7 +180,7 @@ print.psem <- function(x, ...) {
 
       paste0("Correlated error: ", paste(formulas[[i]])) else
 
-        paste0(class(x[[i]])[1], ": ", deparse(formulas[[i]]))
+        paste0(class(x[[i]])[1], ": ", paste0(deparse(formulas[[i]]), collapse = ""))
 
   } )
 
