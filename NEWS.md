@@ -1,4 +1,5 @@
 ## Version 2.1.0 Release Notes
+- replaced `pbkrtest` with `car::Anova`
 - added `plot.psem` function using `DiagrammR` package
 - `coefs` now returns coefficients for categorical variables using `emmeans` and `Anova`
 - added `multigroup` function and analysis
