@@ -251,13 +251,29 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       newdata <- dataTrans(formula(i), newdata)
       
-      numVars <- vars[which(sapply(data[, vars], class) != "factor")]
+      numVars <- attr(terms(i), "term.labels")
       
-      numVars <- all.vars_trans(i)[all.vars_notrans(i) %in% numVars]
+      if(any(grepl("\\:", numVars))) {
+        
+        v <- sapply(numVars, function(x) {
+          
+          if(any(grepl("\\:", x))) {
+            
+            x. <- strsplit(x, ":")[[1]]
+            
+            x. <- gsub("(.*) \\+.*", "\\1", gsub(".*\\((.*)\\)", "\\1", x.))
+            
+            ifelse(!all(sapply(x., function(y) class(newdata[, y]) == "factor")), TRUE, FALSE)
+          
+          } else TRUE } )
+        
+        numVars <- numVars[v]
+        
+      }
       
-      B <- ret[ret$Predictor %in% c("(Intercept)", numVars[-1]), "Estimate"]
+      B <- ret[ret$Predictor %in% c("(Intercept)", numVars), "Estimate"]
       
-      names(B) <- ret[ret$Predictor %in% numVars[-1], "Predictor"]
+      names(B) <- numVars
       
       sd.x <- GetSDx(i, modelList, newdata, standardize)
       
@@ -269,7 +285,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
           
           Std.Estimate <- c(0, B[-1] * (sd.x / sd.y))
       
-      ret[which(ret$Predictor %in% c("(Intercept)", numVars[-1])), "Std.Estimate"] <- Std.Estimate
+      ret[which(ret$Predictor %in% c("(Intercept)", numVars)), "Std.Estimate"] <- Std.Estimate
       
       ret <- cbind(ret[, 1:7], ret[, 9, drop = FALSE], sig = ret[, 8])
       
