@@ -200,7 +200,7 @@ getCoefficients <- function(model, data = NULL, test.type = "II") {
   
   names(ret) <- c("Response", "Predictor", "Estimate", "Std.Error", "DF", "Crit.Value", "P.Value", "")
 
-  if(sum(grepl("\\:", ret$Predictor)) > 0) warning("Interactions present. Interpret with care.")
+  # if(sum(grepl("\\:", ret$Predictor)) > 0) warning("Interactions present. Interpret with care.")
   
   ret <- handleCategoricalCoefs(ret, model, data)
   
