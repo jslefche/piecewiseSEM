@@ -66,7 +66,7 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
   global <- anovaInts[anovaInts$P.Value >= 0.05, c("Response", "Predictor")]
   
-  global$Predictor <- gsub(paste0("(.*):|", group, "(.*)"), "\\1", global$Predictor)
+  global$Predictor <- sub("(.*?[:])", "", global$Predictor)
   
   if(nrow(global) == nrow(anovaInts)) newCoefsList <- list(global = coefTable) else {
   
