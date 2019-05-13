@@ -329,7 +329,7 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
             
           } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
   
-  if(any(grepl(":", numVars))) sd.x <- c(sd.x, scaleInt(i, data, standardize))
+  if(any(grepl(":", all.vars_notrans(model)))) sd.x <- c(sd.x, scaleInt(model, data, standardize))
   
   if(length(sd.x) == 0) sd.x <- NA
   
