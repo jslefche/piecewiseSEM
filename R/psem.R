@@ -75,11 +75,11 @@ formatpsem <- function(x) {
 
   }
   
-  vars <- unlist(sapply(removeData(x, formulas = 1), all.vars_notrans))
+  vars <- as.vector(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x))))
 
   vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
   
-  t_vars <- unlist(sapply(removeData(x, formulas = 1), all.vars_trans))
+  t_vars <- as.vector(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x))))
   
   t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
   
