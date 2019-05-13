@@ -34,11 +34,13 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
   intModelList <- lapply(modelList, function(i) {
     
-    rhs1 <- paste(paste(all.vars_trans(i)[-1], collapse = " + "))
+    # rhs1 <- paste(paste(all.vars_trans(i)[-1], collapse = " + "))
     
     rhs2 <- paste(paste(all.vars_trans(i)[-1], "*", group), collapse = " + ")
 
-    update(i, formula(paste(". ~ ", paste(rhs1, " + ", rhs2))))
+    i <- update(i, formula(paste(". ~ ", rhs2))) # paste(rhs1, " + ", rhs2))))
+    
+    return(i)
     
   } )
   
@@ -84,20 +86,20 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
       for(j in 1:nrow(ct)) {
         
         if(ct[j, 9] == "c") {
-          
+      
           model <- modelList[[which(sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] == ct[j, "Response"]))]]
           
-          subdata <- data[data[, group] == i, ]
+          data. <- data[data[, group] == i, ]
           
-          sd.x <- GetSDx(model, modelList, subdata, standardize) 
+          sd.x <- GetSDx(model, modelList, data., standardize) 
           
           sd.x <- sd.x[which(names(sd.x) == ct[j, "Predictor"])]
           
-          sd.y <- GetSDy(model, subdata, standardize, standardize.type)
+          sd.y <- GetSDy(model, data., standardize, standardize.type)
           
-          ct[j, "Std.Estimate"] <- ct[j, "Estimate"] * (sd.x/sd.y)
+          new.coef <- ct[j, "Estimate"] * (sd.x/sd.y)
           
-          ct[j, "Std.Estimate"] <- round(ct[j, "Std.Estimate"], 4)
+          ct[j, "Std.Estimate"] <- ifelse(length(new.coef) > 0, round(as.numeric(new.coef), 4), "-")
           
         }
         
@@ -132,6 +134,8 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
       return(i)
       
     } )
+    
+    if(length(b) == 0) b <- NULL
         
     gof <- fisherC(modelList, basis.set = b)
     
