@@ -42,7 +42,7 @@ getEdgelist <- function(modelList) {
     
     f <- all.vars_notrans(i)
     
-    matrix(c(rep(f[1], length(f) - 1), f[-1]), ncol = 2)
+    matrix(c(f[-1], rep(f[1], length(f) - 1)), ncol = 2)
     
   } ) )
   
