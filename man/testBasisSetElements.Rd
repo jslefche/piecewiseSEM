@@ -2,14 +2,11 @@
 % Please edit documentation in R/dSep.R
 \name{testBasisSetElements}
 \alias{testBasisSetElements}
-\title{Evaluate one conditional independence claim
-from the basis set}
+\title{Evaluate conditional independence claim from the basis set}
 \usage{
-testBasisSetElements(i, b, modelList, formulaList, data, conditioning,
-  .progressBar, pb)
+testBasisSetElements(i, b, modelList, data, conditioning, .progressBar, pb)
 }
 \description{
-Evaluate one conditional independence claim
-from the basis set
+Evaluate conditional independence claim from the basis set
 }
 \keyword{internal}

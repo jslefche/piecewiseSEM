@@ -37,7 +37,7 @@
 #' 
 basisSet <- function(modelList, direction = NULL) {
 
-  amat <- Dag(modelList)
+  amat <- getDAG(modelList)
 
   b <- lapply(1:nrow(amat), function(i) {
 

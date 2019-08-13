@@ -3,7 +3,7 @@
 \docType{data}
 \name{meadows}
 \alias{meadows}
-\title{Data set from Jutila}
+\title{Data set from Grace & Jutila (1999)}
 \format{A \code{data.frame} with 354 observations of 4 variables.
 \describe{
 \item{grazed}{Whether meadows were exposed to grazing: 0 = no, 1 = yes}
@@ -15,6 +15,6 @@
 meadows
 }
 \description{
-Data set from Jutila
+Data set from Grace & Jutila (1999)
 }
 \keyword{data}
