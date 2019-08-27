@@ -2,6 +2,8 @@
 #'
 #' @param modelList A list of structural equations
 #' 
+#' @import igraph
+#' 
 #' @export
 #' 
 getDAG <- function(modelList) {
