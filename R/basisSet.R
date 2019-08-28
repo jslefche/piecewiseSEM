@@ -270,65 +270,61 @@ reverseAddVars <- function(b, modelList, amat) {
 #' @keywords internal
 #' 
 reverseNonLin <- function(b, modelList, amat) {
-
-  if(length(b) > 0) {
-
-    modelList <- removeData(modelList, formulas = 1)
-
-    formulaList <- listFormula(modelList, formulas = 1)
-
-    names(b) <- 1:length(b)
-
-    idx <- which(colSums(amat[colSums(amat) == 0, , drop = FALSE]) > 0)
-
-    idx <- idx[!idx %in% which(colSums(amat[!colSums(amat) == 0, , drop = FALSE]) > 0)]
-
-    idx <- names(idx)
-
-    idm <- sapply(formulaList, function(i) all.vars_trans(i)[1] %in% idx)
-
-    idm <- idm[
-
-      sapply(modelList[idm], function(x) {
-
-        .family <- try(family(x), silent = TRUE)
-
-        if(class(.family) == "try-error") FALSE else
-
-          if(.family$family == "gaussian") FALSE else
-
-            TRUE
-
+  
+  modelList <- removeData(modelList, formulas = 1)
+  
+  formulaList <- listFormula(modelList, formulas = 1)
+  
+  names(b) <- 1:length(b)
+  
+  idx <- which(colSums(amat[colSums(amat) == 0, , drop = FALSE]) > 0)
+  
+  idx <- idx[!idx %in% which(colSums(amat[!colSums(amat) == 0, , drop = FALSE]) > 0)]
+  
+  idx <- names(idx)
+  
+  idm <- sapply(formulaList, function(i) all.vars_notrans(i)[1] %in% idx)
+  
+  idm <- idm[
+    
+    sapply(modelList[idm], function(x) {
+      
+      .family <- try(family(x), silent = TRUE)
+      
+      if(class(.family) == "try-error") FALSE else
+        
+        if(.family$family == "gaussian") FALSE else
+          
+          TRUE
+      
     } ) ]
-
-    if(length(idm) > 0) {
-
-      if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
-
-        idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
-
-        if(length(idf) > 0) {
-
-          b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
-
-            c(i[2], i[1], i[-(1:2)]) )
-
-            )
-
-        }
-
+  
+  if(length(idm) > 0) {
+    
+    if(any(sapply(modelList[idm], function(x) family(x)$family != "gaussian"))) {
+      
+      idf <- idx[sapply(modelList[idm], function(x) family(x)$family != "gaussian")]
+      
+      if(length(idf) > 0) {
+        
+        b <- append(b, lapply(b[sapply(b, function(x) x[2] %in% idf)], function(i)
+          
+          c(i[2], i[1], i[-(1:2)]) )
+          
+        )
+        
       }
-
+      
     }
-
-    r <- sapply(formulaList, function(x) all.vars_trans(x)[1])
-
-    b <- b[sapply(b, function(x) any(x[2] %in% r))]
-
+    
   }
-
+  
+  r <- sapply(formulaList, function(x) all.vars_notrans(x)[1])
+  
+  b <- b[sapply(b, function(x) any(x[2] %in% r))]
+  
   return(b)
-
+  
 }
 
 #' Remove duplicate items from the basis set whose direction is not a priori specified
@@ -358,7 +354,6 @@ specifyDir <- function(b, direction) {
   # return(b)
 
 }
-
 
 flipOne <- function(rel, arrow, b) {
   
@@ -398,9 +393,9 @@ print.basisSet <- function(b) {
   
   ret <- lapply(b, function(oneLine) {
     
-    st <- paste(oneLine[1], "_||_", oneLine[2], sep = " ")
+    st <- paste(oneLine[1], "|", oneLine[2], sep = " ")
     
-    if(length(oneLine)>2) st <- paste(st, "|", paste(oneLine[3:length(oneLine)], collapse = ", "))
+    if(length(oneLine) > 2) st <- paste0(st, "(", paste(oneLine[3:length(oneLine)], collapse = ", "), ")")
     
     st
     
