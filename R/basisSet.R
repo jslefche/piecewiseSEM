@@ -398,14 +398,14 @@ print.basisSet <- function(b) {
   
   ret <- lapply(b, function(oneLine) {
     
-    st <- paste(oneLine[1], "_||_", oneLine[2], sep = " ")
+    st <- paste(oneLine[1], "|", oneLine[2], sep = " ")
     
-    if(length(oneLine)>2) st <- paste(st, "|", paste(oneLine[3:length(oneLine)], collapse = ", "))
+    if(length(oneLine) > 2) st <- paste(st, "(", paste(oneLine[3:length(oneLine)], collapse = ", "), ")")
     
     st
     
-    } )
- 
+  } )
+  
   print(ret)
   
 }
