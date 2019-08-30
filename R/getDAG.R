@@ -48,13 +48,12 @@
 #' 
 #' }
 
-
-#' #' Generate adjacency matrix from list of structural equations
-#' #'
-#' #' @param modelList A list of structural equations
-#' #' 
-#' #' @export
-#' #' 
+#' Generate adjacency matrix from list of structural equations
+#'
+#' @param modelList A list of structural equations
+#'
+#' @export
+#'
 getDAG <- function(modelList) {
 
   formulaList <- listFormula(modelList)
@@ -139,5 +138,3 @@ sortDag <- function(amat, formulaList) {
   return(amat)
 
 }
-
-
