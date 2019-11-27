@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDAG.R
 \name{getDAG}
 \alias{getDAG}
-\title{}
+\title{Generate adjacency matrix from list of structural equations}
 \usage{
 getDAG(modelList)
 }
@@ -10,8 +10,5 @@ getDAG(modelList)
 \item{modelList}{A list of structural equations}
 }
 \description{
-el <- getEdgelist(modelList)
-}
-\details{
-
+Generate adjacency matrix from list of structural equations
 }

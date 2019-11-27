@@ -49,7 +49,7 @@ anova(mod1, mod2)
 
 }
 \seealso{
-The model fitting function \code{\link{psem}}
+\code{\link{car::Anova}}
 }
 \author{
 Jon Lefcheck <LefcheckJ@si.edu>, Jarrett Byrnes <jarrett.byrnes@umb.edu>

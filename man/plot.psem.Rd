@@ -58,7 +58,6 @@ mod <- psem(
 plot(mod)
 
 ### More customized plot
-keeley_graph <- plot.psem(mod, return=TRUE)
 
 plot(mod, node_attrs = list(
   shape = "rectangle", color = "black",

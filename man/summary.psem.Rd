@@ -25,6 +25,8 @@
 
 \item{...}{additional arguments to summary}
 
+\item{basis.set}{an optional basis set}
+
 \item{direction}{a vector of claims defining the specific directionality of any independence 
 claim(s)}
 

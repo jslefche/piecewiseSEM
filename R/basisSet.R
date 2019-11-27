@@ -394,9 +394,9 @@ flipOne <- function(rel, arrow, b) {
 #' @method print basisSet
 #' @export
 #' 
-print.basisSet <- function(b) { 
+print.basisSet <- function(x, ...) { 
   
-  ret <- lapply(b, function(oneLine) {
+  ret <- lapply(x, function(oneLine) {
     
     st <- paste(oneLine[1], "|", oneLine[2], sep = " ")
     

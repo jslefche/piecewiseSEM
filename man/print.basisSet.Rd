@@ -4,7 +4,7 @@
 \alias{print.basisSet}
 \title{Print basis set}
 \usage{
-\method{print}{basisSet}(b)
+\method{print}{basisSet}(x, ...)
 }
 \description{
 Print basis set

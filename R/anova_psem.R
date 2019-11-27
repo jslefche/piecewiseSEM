@@ -13,7 +13,7 @@
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
 #' 
-#' @seealso The model fitting function \code{\link{psem}}
+#' @seealso \code{\link{car::Anova}}
 #' 
 #' @examples 
 #' data(keeley)
@@ -173,7 +173,7 @@ anovaLRT <- function(...) {
 #' 
 #' @export
 #' 
-print.anova.psem <- function(x) {
+print.anova.psem <- function(x, ...) {
   
   if(grepl("Response", colnames(x[[1]])[1])) print(x[[1]]) else {
   

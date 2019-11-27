@@ -30,6 +30,7 @@
 #'
 #' @param object a list of structural equations
 #' @param ... additional arguments to summary
+#' @param basis.set an optional basis set
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s)
 #' @param conserve whether the most conservative P-value should be returned (See Details) 
@@ -57,8 +58,11 @@
 #' well as degrees of freedom and sample size.  } \item{coefficients}{ A
 #' summary table of the path coefficients, from \code{link{coefs}}.  }
 #' \item{R2}{ (Pseudo)-R2 values, from \code{\link{rsquared}}.  }
+#' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' 
 #' @seealso The model fitting function \code{\link{psem}}.
+#' 
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #'

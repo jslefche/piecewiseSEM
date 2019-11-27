@@ -4,7 +4,7 @@
 \alias{print.anova.psem}
 \title{Print anova}
 \usage{
-\method{print}{anova.psem}(x)
+\method{print}{anova.psem}(x, ...)
 }
 \arguments{
 \item{x}{an object of class anova.psem}
