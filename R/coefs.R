@@ -582,76 +582,76 @@ scaleInt <- function(model, newdata, standardize) {
 
 }
 
-#' Determines if we need to use emmeans or emtrends
+#' #' Determines if we need to use emmeans or emtrends
+#' #' 
+#' #' @keywords internal
+#' deparseInt <- function(coefName, model, catVars, vars){
+#'   piecesOfInt <- strsplit(coefName, ":")[[1]]
+#'   catVarsInInt <- piecesOfInt[piecesOfInt %in% catVars]
+#'   contVarsInInt <- piecesOfInt[!(piecesOfInt %in% catVars)]
+#'   
+#'   if(length(contVarsInInt)>0){
+#'     ret <- intTrend(model, catVarsInInt, contVarsInInt)
+#'   }else{
+#'     ret <- intCat(model, catVarsInInt)
+#'   }
+#'   ret <- ret[,-which(names(ret) %in% c("lower.CL", "upper.CL"))]
+#'   #clean up
+#'   names(ret) <- c("Predictor", "Estimate", "Std.Error", "DF")
+#'   ret$Crit.Value <- with(ret, Estimate/`Std.Error`)
+#'   ret$P.Value <- with(ret, 2 * pt(abs(Crit.Value), DF, 
+#'                                   lower.tail = FALSE))
+#'   
+#'   ret <- cbind(ret, isSig(ret[,6]))
+#'   names(ret)[7] <- ""  
+#'   
+#'   return(ret)
+#' }
 #' 
-#' @keywords internal
-deparseInt <- function(coefName, model, catVars, vars){
-  piecesOfInt <- strsplit(coefName, ":")[[1]]
-  catVarsInInt <- piecesOfInt[piecesOfInt %in% catVars]
-  contVarsInInt <- piecesOfInt[!(piecesOfInt %in% catVars)]
-  
-  if(length(contVarsInInt)>0){
-    ret <- intTrend(model, catVarsInInt, contVarsInInt)
-  }else{
-    ret <- intCat(model, catVarsInInt)
-  }
-  ret <- ret[,-which(names(ret) %in% c("lower.CL", "upper.CL"))]
-  #clean up
-  names(ret) <- c("Predictor", "Estimate", "Std.Error", "DF")
-  ret$Crit.Value <- with(ret, Estimate/`Std.Error`)
-  ret$P.Value <- with(ret, 2 * pt(abs(Crit.Value), DF, 
-                                  lower.tail = FALSE))
-  
-  ret <- cbind(ret, isSig(ret[,6]))
-  names(ret)[7] <- ""  
-  
-  return(ret)
-}
-
-
-#' Uses emtrends to get the slope at different levels of factors
 #' 
-#' @keywords internal
+#' #' Uses emtrends to get the slope at different levels of factors
+#' #' 
+#' #' @keywords internal
+#' #' 
 #' 
-
-intTrend <- function(model, catVarsInInt, contVarsInInt){
-  meanTrends <- as.data.frame(emtrends(model, specs = catVarsInInt, var = contVarsInInt))
-  
-  #paste a big predictor
-  for(avar in catVarsInInt){
-    meanTrends[[avar]] <- paste(avar, "=", as.character( meanTrends[[avar]]))
-  }
-  
-  newvar <- sapply(1:nrow(meanTrends), function(i) paste(contVarsInInt, "at", 
-                                                         paste(meanTrends[i,catVarsInInt], collapse = ", ")))
-  
-  #clean up naming
-  meanTrends <- meanTrends[,-which(names(meanTrends) %in% catVarsInInt)]
-  meanTrends <- cbind(data.frame(Predictor = newvar), meanTrends)
-  
-  return(meanTrends)
-}
-
-
-#' Uses emmeans to get the mean at different levels of factors
+#' intTrend <- function(model, catVarsInInt, contVarsInInt){
+#'   meanTrends <- as.data.frame(emtrends(model, specs = catVarsInInt, var = contVarsInInt))
+#'   
+#'   #paste a big predictor
+#'   for(avar in catVarsInInt){
+#'     meanTrends[[avar]] <- paste(avar, "=", as.character( meanTrends[[avar]]))
+#'   }
+#'   
+#'   newvar <- sapply(1:nrow(meanTrends), function(i) paste(contVarsInInt, "at", 
+#'                                                          paste(meanTrends[i,catVarsInInt], collapse = ", ")))
+#'   
+#'   #clean up naming
+#'   meanTrends <- meanTrends[,-which(names(meanTrends) %in% catVarsInInt)]
+#'   meanTrends <- cbind(data.frame(Predictor = newvar), meanTrends)
+#'   
+#'   return(meanTrends)
+#' }
 #' 
-#' @keywords internal
 #' 
-
-intCat <- function(model, catVarsInInt){
-  meanInts <- as.data.frame(emmeans(model, catVarsInInt))
-  
-  #paste a big predictor
-  for(avar in catVarsInInt){
-    meanInts[[avar]] <- paste(avar, "=", as.character( meanInts[[avar]]))
-  }
-  
-  newvar <- sapply(1:nrow(meanInts), function(i) 
-    paste(meanInts[i,catVarsInInt], collapse = ", "))
-  
-  #clean up naming
-  meanInts <- meanInts[,-which(names(meanInts) %in% catVarsInInt)]
-  meanInts <- cbind(data.frame(Predictor = newvar), meanInts) 
-  
-  meanInts
-}
+#' #' Uses emmeans to get the mean at different levels of factors
+#' #' 
+#' #' @keywords internal
+#' #' 
+#' 
+#' intCat <- function(model, catVarsInInt){
+#'   meanInts <- as.data.frame(emmeans(model, catVarsInInt))
+#'   
+#'   #paste a big predictor
+#'   for(avar in catVarsInInt){
+#'     meanInts[[avar]] <- paste(avar, "=", as.character( meanInts[[avar]]))
+#'   }
+#'   
+#'   newvar <- sapply(1:nrow(meanInts), function(i) 
+#'     paste(meanInts[i,catVarsInInt], collapse = ", "))
+#'   
+#'   #clean up naming
+#'   meanInts <- meanInts[,-which(names(meanInts) %in% catVarsInInt)]
+#'   meanInts <- cbind(data.frame(Predictor = newvar), meanInts) 
+#'   
+#'   meanInts
+#' }
