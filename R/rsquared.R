@@ -348,7 +348,15 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
           if(method == "trigamma") sigmaD <- trigamma(1/nu)
 
-        } else stop("Unsupported link function!")
+        } else if(link == "sqrt") {
+          
+          method <- "delta"
+          
+          if(method == "delta") sigmaD <- 0.25*omega else stop("Unsupported method!")
+          
+          }
+        
+        else stop("Unsupported link function!")
 
       }
 
@@ -501,7 +509,13 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
       if(method == "trigamma") sigmaE <- trigamma(nu^(-1))
 
-    }
+    } else if(link == "sqrt") {
+      
+      method <- "delta"
+      
+      if(method == "delta") sigmaE <- 0.25*(1 + (lambda / theta)) else stop("Unsupported method!")
+      
+    } else stop("Unsupported link function!")
 
   }
 
