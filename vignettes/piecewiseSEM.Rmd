@@ -385,9 +385,9 @@ sem2new <- update(sem2, y3 ~ 1)
 AIC(sem1, sem2new)
 ```
 
-Now the comparison is fair and the model selection procedure is robust. In this case, the models have equivalent support (i.e., $\delta$AIC < 2).
+Now the comparison is fair and the model selection procedure is robust. 
 
-Comparison of saturated models--ones that have *no* missing paths--and unsaturated ones using AIC is currently not possible, although we are looking into possible likelihood formulations in the absence of a C statistic.
+Comparison of saturated models--ones that have *no* missing paths--and unsaturated ones using AIC is currently not possible, although we are looking into possible likelihood formulations in the absence of a C statistic (e.g., AIC = 0 + 2K).
 
 ## 3. Comparing Package Versions
 
