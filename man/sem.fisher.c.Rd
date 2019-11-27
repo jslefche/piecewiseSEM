@@ -4,10 +4,19 @@
 \alias{sem.fisher.c}
 \title{sem.fisher.c}
 \usage{
-sem.fisher.c(modelList, data, corr.errors = NULL, add.vars = NULL,
-  grouping.vars = NULL, grouping.fun = mean, adjust.p = FALSE,
-  basis.set = NULL, pvalues.df = NULL, model.control = NULL,
-  .progressBar = TRUE)
+sem.fisher.c(
+  modelList,
+  data,
+  corr.errors = NULL,
+  add.vars = NULL,
+  grouping.vars = NULL,
+  grouping.fun = mean,
+  adjust.p = FALSE,
+  basis.set = NULL,
+  pvalues.df = NULL,
+  model.control = NULL,
+  .progressBar = TRUE
+)
 }
 \arguments{
 \item{modelList}{a \code{list} of regressions representing the structural equation model}

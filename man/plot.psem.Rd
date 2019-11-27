@@ -4,11 +4,18 @@
 \alias{plot.psem}
 \title{Plotting of Piecewise Structural Equation Models}
 \usage{
-\method{plot}{psem}(mod, return = FALSE, node_attrs = data.frame(shape
-  = "rectangle", color = "black", fillcolor = "white"),
+\method{plot}{psem}(
+  mod,
+  return = FALSE,
+  node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white"),
   edge_attrs = data.frame(style = "solid", color = "black"),
-  ns_dashed = T, alpha = 0.05, show = "std", digits = 3,
-  add_edge_label_spaces = TRUE, ...)
+  ns_dashed = T,
+  alpha = 0.05,
+  show = "std",
+  digits = 3,
+  add_edge_label_spaces = TRUE,
+  ...
+)
 }
 \arguments{
 \item{mod}{a [psem()] object}

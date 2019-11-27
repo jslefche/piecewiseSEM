@@ -5,8 +5,13 @@
 \title{Handles putting categorical variables into coefficient tables
 for easy use in path analysis}
 \usage{
-handleCategoricalCoefs(ret, model, data, test.statistic = "F",
-  test.type = "II")
+handleCategoricalCoefs(
+  ret,
+  model,
+  data,
+  test.statistic = "F",
+  test.type = "II"
+)
 }
 \description{
 Handles putting categorical variables into coefficient tables

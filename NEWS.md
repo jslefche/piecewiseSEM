@@ -8,7 +8,7 @@
 - Changed contact e-mail to new affiliation
 - Fixed bug with `KRp` and `lmerMod` models with intercepts
 - Fixed bug with `getOLRE` and single observation-level random effects glmerMods
-- Fixed errant parantheses in `rsquared` leading to wrong values for lme
+- Fixed errant parentheses in `rsquared` leading to wrong values for lme
 - Fixed bug in `cyclic` where incorrect error was returned
 
 ## Version 2.0.2 Release Notes

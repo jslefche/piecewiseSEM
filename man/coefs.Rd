@@ -4,9 +4,14 @@
 \alias{coefs}
 \title{Extract path coefficients}
 \usage{
-coefs(modelList, standardize = "scale",
-  standardize.type = "latent.linear", test.statistic = "F",
-  test.type = "II", intercepts = FALSE)
+coefs(
+  modelList,
+  standardize = "scale",
+  standardize.type = "latent.linear",
+  test.statistic = "F",
+  test.type = "II",
+  intercepts = FALSE
+)
 }
 \arguments{
 \item{modelList}{A list of structural equations, or a model.}
@@ -35,7 +40,7 @@ Extracts (standardized) path coefficients from a \code{psem} object.
 \details{
 P-values for models constructed using \code{lme4} are obtained
 using the Kenward-Roger approximation of the denominator degrees of freedom
-as implemented in the \code{pbkrtest} package.
+as implemented in the \code{car::Anova} function.
 
 Different forms of standardization can be implemented using the \code{standardize}
 argument:\itemize{
@@ -92,7 +97,7 @@ Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 Ecosphere 9(6): e02283.
 }
 \seealso{
-\code{\link{KRmodcomp}}, \code{\link{Anova}}, \code{\link{emmeans}}, \code{\link{CLD}}
+\code{\link{Anova}}, \code{\link{emmeans}}, \code{\link{CLD}}
 }
 \author{
 Jon Lefcheck <LefcheckJ@si.edu>, Jim Grace

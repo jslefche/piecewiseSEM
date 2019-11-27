@@ -4,8 +4,7 @@
 \alias{GetSDy}
 \title{Properly scale standard deviations depending on the error distribution}
 \usage{
-GetSDy(model, data, standardize = "scale",
-  standardize.type = "latent.linear")
+GetSDy(model, data, standardize = "scale", standardize.type = "latent.linear")
 }
 \description{
 Properly scale standard deviations depending on the error distribution

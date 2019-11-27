@@ -4,8 +4,13 @@
 \alias{multigroup}
 \title{Multigroup Analysis for Piecewise SEM}
 \usage{
-multigroup(modelList, group, standardize = "scale",
-  standardize.type = "latent.linear", test.type = "III")
+multigroup(
+  modelList,
+  group,
+  standardize = "scale",
+  standardize.type = "latent.linear",
+  test.type = "III"
+)
 }
 \arguments{
 \item{modelList}{a list of structural equations}

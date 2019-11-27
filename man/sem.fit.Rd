@@ -4,10 +4,20 @@
 \alias{sem.fit}
 \title{sem.fit}
 \usage{
-sem.fit(modelList, data, conditional = FALSE, corr.errors = NULL,
-  add.vars = NULL, grouping.vars = NULL, grouping.fun = mean,
-  adjust.p = FALSE, basis.set = NULL, pvalues.df = NULL,
-  model.control = NULL, .progressBar = TRUE)
+sem.fit(
+  modelList,
+  data,
+  conditional = FALSE,
+  corr.errors = NULL,
+  add.vars = NULL,
+  grouping.vars = NULL,
+  grouping.fun = mean,
+  adjust.p = FALSE,
+  basis.set = NULL,
+  pvalues.df = NULL,
+  model.control = NULL,
+  .progressBar = TRUE
+)
 }
 \arguments{
 \item{modelList}{a \code{list} of regressions representing the structural equation model}

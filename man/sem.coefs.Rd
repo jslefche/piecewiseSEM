@@ -4,8 +4,13 @@
 \alias{sem.coefs}
 \title{sem.coefs}
 \usage{
-sem.coefs(modelList, data = NULL, standardize = "none",
-  corr.errors = NULL, intercept = FALSE)
+sem.coefs(
+  modelList,
+  data = NULL,
+  standardize = "none",
+  corr.errors = NULL,
+  intercept = FALSE
+)
 }
 \arguments{
 \item{modelList}{a \code{list} of regressions representing the structural equation model}

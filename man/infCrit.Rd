@@ -4,9 +4,16 @@
 \alias{infCrit}
 \title{Information criterion values for SEM}
 \usage{
-infCrit(modelList, Cstat, add.claims = NULL, basis.set = NULL,
-  direction = NULL, conserve = FALSE, conditional = FALSE,
-  .progressBar = FALSE)
+infCrit(
+  modelList,
+  Cstat,
+  add.claims = NULL,
+  basis.set = NULL,
+  direction = NULL,
+  conserve = FALSE,
+  conditional = FALSE,
+  .progressBar = FALSE
+)
 }
 \arguments{
 \item{modelList}{a list of structural equations}

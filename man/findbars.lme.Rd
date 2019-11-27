@@ -2,49 +2,11 @@
 % Please edit documentation in R/helpers.R
 \name{findbars.lme}
 \alias{findbars.lme}
-\title{#' Get ANOVA results
-#' 
-#' @keywords internal
-#' 
-getAnova <- function(model, test.statistic = "F", test.type = "III") {
-  
-  ct <- getCoefficients(model)
-  
-  krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
-  
-  ret <- cbind.data.frame(ct[, 1:2], DF = krp[, 3], Crit.Value = krp[, 1], krp[, 4])
-  
-  names(ret)[ncol(ret)] <- "Pr(>|t|)"
-  
-  rownames(ret) <- rownames(krp)
-  
-  return(ret)
-  
-}
-Get random effects from lme}
+\title{Get random effects from lme}
 \usage{
 findbars.lme(model)
 }
 \description{
-#' Get ANOVA results
-#' 
-#' @keywords internal
-#' 
-getAnova <- function(model, test.statistic = "F", test.type = "III") {
-  
-  ct <- getCoefficients(model)
-  
-  krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
-  
-  ret <- cbind.data.frame(ct[, 1:2], DF = krp[, 3], Crit.Value = krp[, 1], krp[, 4])
-  
-  names(ret)[ncol(ret)] <- "Pr(>|t|)"
-  
-  rownames(ret) <- rownames(krp)
-  
-  return(ret)
-  
-}
 Get random effects from lme
 }
 \keyword{internal}
