@@ -3,7 +3,6 @@
 #' @import DiagrammeR
 #' @importFrom car Anova
 #' @importFrom emmeans emmeans emtrends
-#' @importFrom pbkrtest KRmodcomp
 #' @importFrom lme4 findbars nobars glmerControl lmerControl ranef VarCorr
 #' @importFrom MASS glm.nb glmmPQL negative.binomial
 #' @importFrom methods as
