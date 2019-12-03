@@ -148,7 +148,7 @@ print.summary.psem <- function(x, ...) {
 
   cat("\n  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05")
 
-  cat("\n\nIndividual R-squared:\n\n", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
+  cat("\n\n---\nIndividual R-squared:\n\n", captureTable(x$R2[, c(1, 4:ncol(x$R2))]))
 
   invisible(x)
 

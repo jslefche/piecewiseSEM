@@ -83,9 +83,9 @@ all.vars_trans <- function(formula.) {
 #' 
 #' @keywords internal
 #' 
-captureTable <- function(g) {
+captureTable <- function(g, row.names = FALSE) {
   
-  g1 <- capture.output(print(g, row.names = FALSE))
+  g1 <- capture.output(print(g, row.names = row.names))
   
   if(all(g1 == "data frame with 0 columns and 0 rows")) 
     
