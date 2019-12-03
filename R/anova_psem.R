@@ -2,11 +2,12 @@
 #' 
 #' Compute analysis of variance table for one or more structural equation models.
 #' 
-#' @param mod a \code{psem} object
-#' @param mod2 a \code{psem} object for comparison. Defaults to NULL to allow for a LRT or F tables of all fit model pieces.
+#' Additional models will be tested against the first model using a Chi-squared difference test.
+#' 
+#' @param object a \code{psem} object
+#' @param ... additional objects of the same type
 #' @param anovafun The function used for ANOVA. Defaults to \code{Anova}
 #' @param digits number of digits to round results. Default is 3
-#' @param ... additional arguments passed to \code{anovafun}
 #' 
 #' @return an F, LRT, or other table for a single model, or a list of
 #'  comparisons between multiple models
@@ -42,15 +43,17 @@
 #' 
 #' @export
 #' 
-anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = Anova, ...) {
+anova.psem <- function(object, ..., digits = 3, anovafun = "Anova") {
  
-   if(!is.null(mod2)) {
+  dots <- list(object, ...)
+  
+  if(length(dots) > 1) {
      
-    anovaLRT(mod, mod2)
+    anovaLRT(dots)
+   
+    } else {
      
-     } else {
-       
-      anovaTable(mod, anovafun = anovafun, digits = digits, ...)
+      anovaTable(object, anovafun = anovafun, digits = digits)
        
        }
 }
@@ -59,11 +62,15 @@ anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = Anova, ...) {
 #' 
 #' @keywords internal
 #' 
-anovaTable <- function(object, anovafun = Anova, digits = 3, ...) {
+anovaTable <- function(object, anovafun = "Anova", digits = 3) {
   
   object <- removeData(object, formulas = 1)
   
-  tests <- lapply(object, function(x) anovafun(x, ...))
+  if(anovafun == "Anova") a <- car::Anova else stop("Unsupported ANOVA function")
+    
+    # if(anovafun == "aov") a <- aov else 
+  
+  tests <- lapply(object, function(x) a(x))
   
   names(tests) <- get_response(object)
   
@@ -89,7 +96,7 @@ anovaTable <- function(object, anovafun = Anova, digits = 3, ...) {
       P.Value = round(dat[, ncol(dat)], 4)
     )
     
-    ret <- ret[ret$Predictor != "(Intercept)", ]
+    ret <- ret[!ret$Predictor %in% c("(Intercept)", "Residuals"), ]
     
     ret <- cbind.data.frame(ret, isSig(ret$P.Value))
     
@@ -112,26 +119,30 @@ anovaTable <- function(object, anovafun = Anova, digits = 3, ...) {
 #' 
 #' @keywords internal
 #' 
-anovaLRT <- function(...) {
-
-  dots <- list(...)
+anovaLRT <- function(object) {
   
-  combos <- combn(length(dots), 2)
-    
-  combos <- split(t(combos), seq(ncol(combos)))
+  model1 <- object[[1]]
   
-  ret <- lapply(combos, function(i) {
-    
-    nm1 <- deparse(substitute(dots[[i[1]]]))
-    
-    nm2 <- deparse(substitute(dots[[i[2]]]))
-    
-    model1 <- dots[[i[1]]]
-    
-    model2 <- dots[[i[2]]]
+  model1.summary <- fisherC(model1, .progressBar = FALSE)
   
-    model1.summary <- fisherC(model1, .progressBar = FALSE)
+  ret1 <- data.frame(
+    AIC = AIC(model1),
+    BIC = BIC(model1),
+    Fisher.C = model1.summary$Fisher.C,
+    Fisher.C.Diff = NA,
+    DF.diff = NA,
+    P.value = NA,
+    sig = NA
+  )
+  
+  colnames(ret1)[ncol(ret1)] <- ""
+  
+  rownames(ret1) <- "1"
+  
+  ret2 <- do.call(rbind, lapply(2:length(object), function(i) {
     
+    model2 <- object[[i]]
+  
     model2.summary <- fisherC(model2, .progressBar = FALSE)
     
     Cdiff <- abs(model1.summary$Fisher.C - model2.summary$Fisher.C)
@@ -141,24 +152,29 @@ anovaLRT <- function(...) {
     pvalue <- round(1 - pchisq(Cdiff, df = dfdiff), 4)
     
     ret <- data.frame(
-      AIC = c(AIC(model1), AIC(model2)),
-      BIC = c(BIC(model1), BIC(model2)),
-      # BIC = c(model1.summary$IC$BIC, model2.summary$IC$BIC),
-      Fisher.C = c(model1.summary$Fisher.C, model2.summary$Fisher.C),
-      Fisher.C.Diff = c("", Cdiff),
-      DF.diff = c("", dfdiff),
-      P.value = c("", pvalue),
-      sig = c("", isSig(pvalue))
+      AIC = AIC(model2),
+      BIC = BIC(model2),
+      Fisher.C = model2.summary$Fisher.C,
+      Fisher.C.Diff = Cdiff,
+      DF.diff = dfdiff,
+      P.value = pvalue,
+      sig = isSig(pvalue)
     )
      
     colnames(ret)[ncol(ret)] <- ""
     
-    rownames(ret) <- c(paste(i[1]), paste("vs", i[2]))
+    rownames(ret) <- c(paste("vs", i))
     
     return(ret)
     
-  } )
+  } ) )
 
+  ret <- rbind(ret1, ret2)
+  
+  ret[is.na(ret)] <- ""
+  
+  ret <- list(ret)
+  
   class(ret) <- "anova.psem"
   
   return(ret)
@@ -176,14 +192,22 @@ anovaLRT <- function(...) {
 #' 
 print.anova.psem <- function(x, ...) {
   
-  if(grepl("Response", colnames(x[[1]])[1])) print(x[[1]]) else {
-  
-    cat("Chi-square Difference Test\n")
+  if(any(grepl("Response", names(x[[1]])))) {
     
+    cat(captureTable(x[[1]]))
+    
+    cat("---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05") 
+    
+    } else {
+    
+    cat("Chi-square Difference Test\n")
+      
     cat("\n")
     
-    lapply(x, function(i) { print(i); cat("\n") })
+    cat(captureTable(x[[1]], row.names = TRUE))
     
-  }
+    cat("---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05")
+    
+    }
   
 }
