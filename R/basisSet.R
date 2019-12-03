@@ -247,7 +247,7 @@ removeCerror <- function(b, modelList) {
 #
 # }
 
-#' Reverse added variables (y ~ 1)
+#' Reverse added variables
 #' 
 #' @keywords internal
 #' 
