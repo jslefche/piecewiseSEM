@@ -4,7 +4,7 @@
 #' 
 #' @param mod a \code{psem} object
 #' @param mod2 a \code{psem} object for comparison. Defaults to NULL to allow for a LRT or F tables of all fit model pieces.
-#' @param anovafun The function used for ANOVA. Defaults to \code{\link{car::Anova}}
+#' @param anovafun The function used for ANOVA. Defaults to \code{Anova}
 #' @param digits number of digits to round results. Default is 3
 #' @param ... additional arguments passed to \code{anovafun}
 #' 
