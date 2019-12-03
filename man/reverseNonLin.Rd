@@ -4,7 +4,7 @@
 \alias{reverseNonLin}
 \title{If intermediate endogenous variables are nonlinear, return both directions}
 \usage{
-reverseNonLin(modelList, b, amat)
+reverseNonLin(b, modelList, amat)
 }
 \description{
 If intermediate endogenous variables are nonlinear, return both directions

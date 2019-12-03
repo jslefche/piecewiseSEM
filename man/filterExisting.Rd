@@ -4,7 +4,7 @@
 \alias{filterExisting}
 \title{Remove existing paths from the basis set}
 \usage{
-filterExisting(b, formulaList)
+filterExisting(b, modelList)
 }
 \description{
 Remove existing paths from the basis set

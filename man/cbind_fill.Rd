@@ -6,9 +6,11 @@
 \usage{
 cbind_fill(...)
 }
+\arguments{
+\item{...}{data.frames to be bound, separated by commas
+
+ @keywords internal}
+}
 \description{
 From: https://stackoverflow.com/a/31678079
-}
-\details{
-@keywords internal
 }

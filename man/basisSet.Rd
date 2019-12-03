@@ -7,7 +7,7 @@
 basisSet(modelList, direction = NULL)
 }
 \arguments{
-\item{modelList}{A list of structural equations.}
+\item{modelList}{A list of structural equations}
 
 \item{direction}{a vector of claims defining the specific directionality of any independence 
 claim(s)}
@@ -49,5 +49,5 @@ Shipley, Bill. "A new inferential test for path models based on directed acyclic
 \code{\link{dSep}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>
 }

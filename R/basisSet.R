@@ -25,11 +25,11 @@
 #'  photosynthetically-active radiation) that the user may wish to 
 #'  exclude from evaluation.
 #' 
-#' @param modelList A list of structural equations.
+#' @param modelList A list of structural equations
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s) 
 #' @return A \code{list} of independence claims.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{dSep}}
 #' @references Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #' 
@@ -37,9 +37,7 @@
 #' 
 basisSet <- function(modelList, direction = NULL) {
 
-  formulaList <- listFormula(modelList)
-
-  amat <- Dag(formulaList)
+  amat <- getDAG(modelList)
 
   b <- lapply(1:nrow(amat), function(i) {
 
@@ -68,23 +66,29 @@ basisSet <- function(modelList, direction = NULL) {
 
   if(length(b) > 0) {
 
-    b <- filterExisting(b, formulaList)
+    b <- filterExisting(b, modelList)
 
-    b <- filterExogenous(modelList, b, amat)
+    b <- filterExogenous(b, modelList, amat)
 
     b <- filterInteractions(b)
 
-    b <- removeCerror(b, formulaList)
+    b <- removeCerror(b, modelList)
 
-    b <- reverseAddVars(modelList, b, amat)
+    b <- reverseAddVars(b, modelList, amat)
 
-    b <- reverseNonLin(modelList, b, amat)
-
+    b <- reverseNonLin(b, modelList, amat)
+    
+    # Need to write a function that makes sure categorical
+    #variables are always predictors in basis set
+    #b <- fixCatDir(modelList, b, amat)
+    
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
     # b <- replaceTrans(modelList, b, amat)
 
   }
+  
+  class(b) <- "basisSet"
 
   return(b)
 
@@ -94,8 +98,10 @@ basisSet <- function(modelList, direction = NULL) {
 #' 
 #' @keywords internal
 #' 
-filterExisting <- function(b, formulaList) {
-
+filterExisting <- function(b, modelList) {
+  
+  formulaList <- listFormula(modelList)
+  
   b <- lapply(b, function(i) {
 
     f <- formulaList[sapply(formulaList, function(x) all.vars_trans(x)[1] == i[1])]
@@ -114,7 +120,7 @@ filterExisting <- function(b, formulaList) {
 #' 
 #' @keywords internal
 #' 
-filterExogenous <- function(modelList, b, amat) {
+filterExogenous <- function(b, modelList, amat) {
 
   formulaList <- listFormula(modelList, formulas = 3)
 
@@ -152,7 +158,9 @@ filterInteractions <- function(b) {
 #' 
 #' @keywords internal
 #' 
-removeCerror <- function(b, formulaList) {
+removeCerror <- function(b, modelList) {
+  
+  formulaList <- listFormula(modelList)
 
   ceList <- lapply(formulaList, function(i) if(any(class(i) == "formula.cerror")) {
 
@@ -243,7 +251,7 @@ removeCerror <- function(b, formulaList) {
 #' 
 #' @keywords internal
 #' 
-reverseAddVars <- function(modelList, b, amat) {
+reverseAddVars <- function(b, modelList, amat) {
 
   formulaList <- listFormula(modelList, formulas = 3)
 
@@ -261,7 +269,7 @@ reverseAddVars <- function(modelList, b, amat) {
 #' 
 #' @keywords internal
 #' 
-reverseNonLin <- function(modelList, b, amat) {
+reverseNonLin <- function(b, modelList, amat) {
 
   if(length(b) > 0) {
 
@@ -323,16 +331,85 @@ reverseNonLin <- function(modelList, b, amat) {
 
 }
 
-#' Remove items from the basis set whose direction is a priori specified
+#' Remove duplicate items from the basis set whose direction is not a priori specified
 #' 
 #' @keywords internal
 #' 
 specifyDir <- function(b, direction) {
-
+  
   vars <- gsub(" ", "", unlist(strsplit(direction, "\\->|<\\-")))
-
+  
   b[which(sapply(b, function(i) i[1] == vars[2] & i[2] == vars[1]))] <- NULL
-
+  
   return(b)
+  
+  # rels <- lapply(direction, function(d) { trimws(strsplit(d, "\\->|<\\-")[[1]]) })
+  # 
+  # dirs <- sapply(direction, function(d) { gsub(".*(\\->|<\\-).*", "\\1", d) })
+  # 
+  # for(i in 1:length(rels)) {
+  #   
+  #   fix <- flipOne(rels[[i]], dirs[i], b)
+  #   
+  #   b[[fix[[2]]]] <- fix[[1]] 
+  #   
+  #   }
+  # 
+  # return(b)
 
+}
+
+
+flipOne <- function(rel, arrow, b) {
+  
+  b_idx <- which(sapply(b, function(i) i[1] %in% rel & i[2] %in% rel))
+  
+  cond <- b[b_idx]
+
+  if(arrow == "<\\-") { 
+    
+    r1 <- rel[1]
+    
+    rel[1] <- rel[2]
+    
+    rel[2] <- r1
+    
+    } 
+
+  if(cond[[1]][1] != rel[1]) {
+    
+    cond[[1]][1] <- rel[1]
+    
+    cond[[1]][2] <- rel[2]
+    
+    }
+  
+
+  return(list(cond[[1]], b_idx))
+  
+}
+
+#' Print basis set
+#' 
+#' @method print basisSet
+#' 
+#' @param x a basis set
+#' @param ... further arguments passed to or from other methods
+#' 
+#' @export
+#' 
+print.basisSet <- function(x, ...) { 
+  
+  ret <- lapply(x, function(oneLine) {
+    
+    st <- paste(oneLine[1], "|", oneLine[2], sep = " ")
+    
+    if(length(oneLine) > 2) st <- paste(st, "(", paste(oneLine[3:length(oneLine)], collapse = ", "), ")")
+    
+    st
+    
+  } )
+  
+  print(ret)
+  
 }

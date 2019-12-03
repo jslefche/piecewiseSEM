@@ -4,14 +4,23 @@
 \alias{fisherC}
 \title{Summarize tests of directed separation using Fisher's C statistic}
 \usage{
-fisherC(dTable, add.claims = NULL, direction = NULL, conserve = FALSE,
-  conditional = FALSE, .progressBar = FALSE)
+fisherC(
+  dTable,
+  add.claims = NULL,
+  basis.set = NULL,
+  direction = NULL,
+  conserve = FALSE,
+  conditional = FALSE,
+  .progressBar = FALSE
+)
 }
 \arguments{
 \item{dTable}{a \code{data.frame} containing tests of directed separation from \code{dSep}}
 
 \item{add.claims}{an optional vector of additional independence claims (i.e., P-values) 
 to be added to the basis set}
+
+\item{basis.set}{An optional list of independence claims.}
 
 \item{direction}{a vector of claims defining the specific directionality of any independence 
 claim(s)}

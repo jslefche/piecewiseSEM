@@ -29,9 +29,20 @@ The function optionally accepts data objects of classes: \code{matrix,
 data.frame, SpatialPointsDataFrame, comparative.data}, or these are derived
 internally from the structural equations.
 }
+\examples{
+mod <- psem(
+lm(rich ~ cover, data = keeley),
+lm(cover ~ firesev, data = keeley),
+lm(firesev ~ age, data = keeley),
+data = keeley
+)
+
+summary(mod)
+
+}
 \seealso{
 \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>
 }

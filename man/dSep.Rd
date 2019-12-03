@@ -4,11 +4,19 @@
 \alias{dSep}
 \title{Tests of directed separation}
 \usage{
-dSep(modelList, direction = NULL, conserve = FALSE, conditioning = FALSE,
-  .progressBar = TRUE)
+dSep(
+  modelList,
+  basis.set = NULL,
+  direction = NULL,
+  conserve = FALSE,
+  conditioning = FALSE,
+  .progressBar = TRUE
+)
 }
 \arguments{
 \item{modelList}{A list of structural equations created using \code{psem}.}
+
+\item{basis.set}{An optional list of independence claims.}
 
 \item{direction}{A \code{vector} of claims defining the specific
 directionality of independence claims; for use in special cases (see
@@ -53,5 +61,5 @@ directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 \code{\link{basisSet}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <LefcheckJ@si.edu>, Jarrett Byrnes
 }

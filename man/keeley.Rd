@@ -3,7 +3,7 @@
 \docType{data}
 \name{keeley}
 \alias{keeley}
-\title{Data set from Keeley et al.}
+\title{Data set from Grace & Keeley (2006)}
 \format{A \code{data.frame} with 90 observations of 8 variables.
 \describe{
 \item{distance}{Distance to coast}
@@ -19,6 +19,6 @@
 keeley
 }
 \description{
-Data set from Keeley et al.
+Data set from Grace & Keeley (2006)
 }
 \keyword{data}

@@ -2,11 +2,11 @@
 % Please edit documentation in R/basisSet.R
 \name{specifyDir}
 \alias{specifyDir}
-\title{Remove items from the basis set whose direction is a priori specified}
+\title{Remove duplicate items from the basis set whose direction is not a priori specified}
 \usage{
 specifyDir(b, direction)
 }
 \description{
-Remove items from the basis set whose direction is a priori specified
+Remove duplicate items from the basis set whose direction is not a priori specified
 }
 \keyword{internal}

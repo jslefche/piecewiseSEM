@@ -4,7 +4,13 @@
 \alias{unstdCoefs}
 \title{Get raw (undstandardized) coefficients from model}
 \usage{
-unstdCoefs(modelList, data = NULL, intercepts = FALSE)
+unstdCoefs(
+  modelList,
+  data = NULL,
+  test.statistic = "F",
+  test.type = "II",
+  intercepts = FALSE
+)
 }
 \description{
 Get raw (undstandardized) coefficients from model

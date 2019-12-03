@@ -1,11 +1,11 @@
 ## Update package
-This is a minor bug fix.
+This is a feature release with minor bug fixes. 
 
 ## R CMD check results
 There were no ERRORS or WARNINGS. 
 
 ## NOTES 
-N=one.
+Contact email has also been updated.
 
 ## Test environments
 * local OS X install, R 3.5.0

@@ -1,5 +1,15 @@
-## Version 2.0.3 Release Notes
+## Version 2.1.0 Release Notes
+- implemented `igraph` package for DAG construction and evaluation
+- replaced `pbkrtest` with `car::Anova`
+- added `plot.psem` function using `DiagrammR` package
+- `coefs` now returns coefficients for categorical variables using `emmeans` and `Anova`
+- added `multigroup` function and analysis
+- added sqrt link for poisson GLMMs
+- Changed contact e-mail to new affiliation
+- Fixed bug with `KRp` and `lmerMod` models with intercepts
 - Fixed bug with `getOLRE` and single observation-level random effects glmerMods
+- Fixed errant parentheses in `rsquared` leading to wrong values for lme
+- Fixed bug in `cyclic` where incorrect error was returned
 
 ## Version 2.0.2 Release Notes
 - Fixed bug with `partialCorr` and negative correlations returning wrong P-value 

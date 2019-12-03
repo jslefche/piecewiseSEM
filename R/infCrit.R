@@ -4,6 +4,7 @@
 #' @param Cstat Fisher's C statistic obtained from \code{fisherC}
 #' @param add.claims an optional vector of additional independence claims (P-values) 
 #' to be added to the basis set
+#' @param basis.set An optional list of independence claims.
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s)
 #' @param conserve whether the most conservative P-value should be returned (See Details) 
@@ -16,9 +17,9 @@
 #' 
 #' @export
 #' 
-infCrit <- function(modelList, Cstat, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
+infCrit <- function(modelList, Cstat, add.claims = NULL, basis.set = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, direction, conserve, conditional, .progressBar)
+  if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
 
   modelList <- removeData(modelList, formulas = 1)
 

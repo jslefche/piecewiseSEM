@@ -3,6 +3,7 @@
 #' @param dTable a \code{data.frame} containing tests of directed separation from \code{dSep}
 #' @param add.claims an optional vector of additional independence claims (i.e., P-values) 
 #' to be added to the basis set
+#' @param basis.set An optional list of independence claims.
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s)
 #' @param conserve whether the most conservative P-value should be returned. 
@@ -15,11 +16,11 @@
 #' 
 #' @export
 #'
-fisherC <- function(dTable, add.claims = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
+fisherC <- function(dTable, add.claims = NULL, basis.set = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   if(class(dTable) == "list") dTable <- as.psem(dTable)
   
-  if(class(dTable) == "psem") dTable <- dSep(dTable, direction, conserve, conditional, .progressBar)
+  if(class(dTable) == "psem") dTable <- dSep(dTable, basis.set, direction, conserve, conditional, .progressBar)
 
   if(length(dTable) == 0) {
 

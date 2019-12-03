@@ -4,8 +4,16 @@
 \alias{infCrit}
 \title{Information criterion values for SEM}
 \usage{
-infCrit(modelList, Cstat, add.claims = NULL, direction = NULL,
-  conserve = FALSE, conditional = FALSE, .progressBar = FALSE)
+infCrit(
+  modelList,
+  Cstat,
+  add.claims = NULL,
+  basis.set = NULL,
+  direction = NULL,
+  conserve = FALSE,
+  conditional = FALSE,
+  .progressBar = FALSE
+)
 }
 \arguments{
 \item{modelList}{a list of structural equations}
@@ -14,6 +22,8 @@ infCrit(modelList, Cstat, add.claims = NULL, direction = NULL,
 
 \item{add.claims}{an optional vector of additional independence claims (P-values) 
 to be added to the basis set}
+
+\item{basis.set}{An optional list of independence claims.}
 
 \item{direction}{a vector of claims defining the specific directionality of any independence 
 claim(s)}

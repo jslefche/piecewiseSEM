@@ -17,8 +17,17 @@
 #'
 #' @param \dots A list of structural equations
 #' @return Returns an object of class \code{psem}
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
+#' @examples 
+#' mod <- psem(
+#' lm(rich ~ cover, data = keeley),
+#' lm(cover ~ firesev, data = keeley),
+#' lm(firesev ~ age, data = keeley),
+#' data = keeley
+#' )
+#' 
+#' summary(mod)
 #' 
 #' @export
 #' 
@@ -53,8 +62,6 @@ formatpsem <- function(x) {
     x$data <- x$data
 
   } else {
-    
-    # warning("Missing data argument to psem.", call. = FALSE)
 
     x$data <- GetData(x)
 
@@ -67,15 +74,27 @@ formatpsem <- function(x) {
     names(x)[idx.] <- idx.
 
   }
-
-  if(class(x$data) == "comparative.data") { if(any(sapply(x$data$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE) } else
-    
-    if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Models will run but this is not recommended", call. = FALSE)
   
-  # if(any(sapply(x$data, class) == "factor"))
-  #
-  #   stop("Some predictors in the model are factors. Respecify as binary or ordered numeric!", call. = FALSE)
+  vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x)))))
 
+  vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
+  
+  t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x)))))
+  
+  t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
+  
+  if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
+  
+  if(class(x$data) == "comparative.data") { 
+    
+    if(any(sapply(x$data$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE) 
+    
+    } else {
+      
+      if(any(sapply(x$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE)
+
+    }
+      
   evaluateClasses(x)
 
   formulaList <- listFormula(x, formulas = 1)
@@ -151,6 +170,8 @@ evaluateClasses <- function(modelList) {
 #' 
 print.psem <- function(x, ...) {
 
+  nm <- deparse(substitute(x))
+  
   formulas <- listFormula(x)
 
   formulas_print <- sapply(1:length(formulas), function(i) {
@@ -159,7 +180,7 @@ print.psem <- function(x, ...) {
 
       paste0("Correlated error: ", paste(formulas[[i]])) else
 
-        paste0(class(x[[i]])[1], ": ", deparse(formulas[[i]]))
+        paste0(class(x[[i]])[1], ": ", paste0(deparse(formulas[[i]]), collapse = ""))
 
   } )
 
@@ -167,7 +188,7 @@ print.psem <- function(x, ...) {
 
   class_print <- paste0("class(", class(x), ")")
 
-  cat("Structural Equations:\n")
+  cat("Structural Equations of", nm, ":\n")
 
   cat(paste(formulas_print, collapse = "\n"))
 
@@ -175,7 +196,7 @@ print.psem <- function(x, ...) {
 
   print(data_print)
 
-  cat(paste("...with ", dim(x$data)[1], " more rows"))
+  cat(paste("...with ", dim(x$data)[1] - 6, " more rows"))
 
   cat("\n\n")
 
@@ -185,7 +206,7 @@ print.psem <- function(x, ...) {
 
 #' Update psem model object with additional values.
 #' 
-#' @param object a psem object to update
+#' @param object a psem object
 #' @param ... additional arguments to update
 #' 
 #' @method update psem
@@ -193,7 +214,7 @@ print.psem <- function(x, ...) {
 #' @export
 #' 
 update.psem <- function(object, ...) {
-
+  
   l <- list(...)
 
   for(i in l) {
@@ -202,7 +223,7 @@ update.psem <- function(object, ...) {
 
       idx <- which(names(object) == "data")
 
-      if(length(idx) == 0) object$data = i else
+      if(length(idx) == 0) object$data <- i else
 
         object[[idx]] <- i
 

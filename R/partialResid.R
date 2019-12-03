@@ -15,7 +15,7 @@
 #' 
 #' @return Returns a \code{data.frame} of residuals of \code{y ~ Z} called
 #' \code{yresids}, of \code{x ~ Z} called \code{xresids}.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{cerror}}
 #' @examples
 #'
@@ -43,21 +43,29 @@ partialResid <- function(formula., modelList, data = NULL) {
   
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
   
-  data <- modelList$data
+  if(is.null(data)) data <- GetData(modelList)
   
   if(is.null(data)) data <- GetData(modelList)
   
   modelList <- removeData(modelList, formulas = 1)
   
-  if(class(formula.) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(formula., "~~"))) else
-    
-    vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
+  vars <- all.vars_notrans(formula.)
+  
+  vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   vars <- strsplit(vars, ":|\\*")
   
-  if(!all(unlist(vars) %in% colnames(data)))
+  if(!all(unlist(vars) %in% colnames(data))) {
     
-    stop("Variables not found in the model list. Ensure spelling is correct and remove all transformations!")
+    if(any(grepl("\\(", unlist(vars)))) {
+      
+      data <- dataTrans(formula., data)
+      
+    } else stop("Variables not found in the model list. Ensure spelling is correct")
+    
+  }
+  
+  vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   residModList <- getResidModels(vars, modelList, data)
   
@@ -103,9 +111,9 @@ partialCorr <- function(formula., modelList, data = NULL) {
   
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
   
-  if(class(formula.) == "formula.cerror") vars <- gsub(" " , "", unlist(strsplit(formula., "~~"))) else
-    
-    vars <- gsub(" ", "", unlist(strsplit(deparse(formula.), "~")))
+  vars <- all.vars_notrans(formula.)
+  
+  vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   vars <- strsplit(vars, ":|\\*")
   
@@ -150,8 +158,8 @@ partialCorr <- function(formula., modelList, data = NULL) {
   }
   
   ret <- data.frame(
-    Response = paste0("~~", vars[[1]]),
-    Predictor = paste0("~~", paste(vars[[2]], collapse = ":")),
+    Response = paste0("~~", all.vars_trans(formula.)[[1]]),
+    Predictor = paste0("~~", paste(all.vars_trans(formula.)[[2]], collapse = ":")),
     Estimate = rcor,
     Std.Error = NA,
     DF = N,

@@ -6,7 +6,7 @@ setwd("../")
 
 
 piecewiseSEM <- as.package("./piecewiseSEM") 
-devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "R/anova.R", "docs"),
+devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "docs"),
                            pkg = "./piecewiseSEM")
 
 ### Build documentation and vignettes
@@ -23,7 +23,7 @@ load_all(piecewiseSEM, reset=T)
 #build(piecewiseSEM, path="./piecewiseSEM/builds")
 #devtools::check_built("./piecewiseSEM_2.0.tar.gz")
 install(piecewiseSEM) 
-#run_examples(multifunc) 
+#run_examples(piecewiseSEM) 
 
 ### Build pkgdown site
 library(pkgdown)
@@ -43,10 +43,20 @@ mod <- psem(
   data = keeley
   
 )
+basisSet(mod)
+dSep(mod)
+
+summary(mod)
 
 res <- residuals(mod)
 anova(mod)
 fisherC(mod)
+
+plot(mod)
+
+plot(mod, node_attrs = list(
+   shape = "rectangle", color = "black",
+   fillcolor = "orange", x = 3, y=1:4))
 
 mod2 <- psem(
   lm(rich ~ cover, data=keeley),
@@ -56,9 +66,11 @@ mod2 <- psem(
   data = keeley
   
 )
+summary(mod2)
 
 anova(mod, mod2)
 
+#######################################
 
 #test mixed models
 library(lme4)
@@ -83,8 +95,6 @@ shipley_psem <- psem(
 
 summary(shipley_psem)
 
-
-
 # Create list of structural equations
 shipley_psem_lme4 <- psem(
   
@@ -106,24 +116,66 @@ shipley_psem_lme4 <- psem(
 
 summary(shipley_psem_lme4)
 
-#lmerTest
-library(lmerTest)
-shipley_psem_lmerTest <- psem(
-  
-  lmer(DD ~ lat + (1 | site / tree), 
-       data = shipley),
-  
-  lmer(Date ~ DD + (1 | site / tree), 
-       data = shipley),
-  
-  lmer(Growth ~ Date + (1 | site / tree),
-       data = shipley),
-  
-  glmer(Live ~ Growth + (1 | site) + (1 | tree),
-        family = binomial(link = "logit"), data = shipley),
-  
-  data = shipley
-  
+#testing interactions
+data(meadows)
+meadows$grazed <- factor(meadows$grazed)
+
+meadow_mod <- psem(
+  lm(mass ~ grazed*elev, data = meadows),
+  lm(rich ~ grazed*(elev + mass), data = meadows),
+  data = meadows
 )
 
-summary(shipley_psem_lmerTest)
+dSep(meadow_mod)
+
+anova(meadow_mod)
+
+meadom_mod_const <- psem(
+  lm(mass ~ grazed + elev, data = meadows),
+  lm(rich ~ grazed +  mass, data = meadows),
+  data = meadows
+)
+
+
+anova(meadom_mod_const)
+
+
+anova(meadow_mod, meadom_mod_const)
+
+fisherC(meadow_mod)
+fisherC(meadom_mod_const)
+
+
+#make sure factors are included in conditional independence tests
+meadows$grazed <- factor(meadows$grazed)
+meadom_mod_graz <- psem(
+  lm(mass ~  elev, data = meadows),
+  lm(rich ~ grazed +  mass, data = meadows),
+  data = meadows
+)
+
+dSep(meadom_mod_graz)
+
+#
+
+#lmerTest
+# library(lmerTest)
+# shipley_psem_lmerTest <- psem(
+#   
+#   lmer(DD ~ lat + (1 | site / tree), 
+#        data = shipley),
+#   
+#   lmer(Date ~ DD + (1 | site / tree), 
+#        data = shipley),
+#   
+#   lmer(Growth ~ Date + (1 | site / tree),
+#        data = shipley),
+#   
+#   glmer(Live ~ Growth + (1 | site) + (1 | tree),
+#         family = binomial(link = "logit"), data = shipley),
+#   
+#   data = shipley
+#   
+# )
+# 
+# summary(shipley_psem_lmerTest)
