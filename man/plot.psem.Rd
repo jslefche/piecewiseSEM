@@ -5,7 +5,7 @@
 \title{Plotting of Piecewise Structural Equation Models}
 \usage{
 \method{plot}{psem}(
-  mod,
+  x,
   return = FALSE,
   node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white"),
   edge_attrs = data.frame(style = "solid", color = "black"),
@@ -18,7 +18,7 @@
 )
 }
 \arguments{
-\item{mod}{a [psem()] object}
+\item{x}{a [psem()] object}
 
 \item{return}{whether to return the output from [DiagrammeR::create_graph()] for modification and later plotting}
 

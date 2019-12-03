@@ -3,7 +3,8 @@
 #' @description plot.psem uses [DiagrammeR] to generate path diagrams 
 #' of `piecewiseSEM`` fits within R.
 #' 
-#' @param mod a [psem()] object
+#' @param x a [psem()] object
+#' @param ... Other arguments to [DiagrammeR::render_graph()]
 #' @param return whether to return the output from [DiagrammeR::create_graph()] for modification and later plotting
 #' @param node_attrs List of node attributes to overide defaults of rectangular nodes with black outline and white fill. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.
 #' @param edge_attrs List of edge attributes to overide defaults of solid black arrows. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.
@@ -12,7 +13,6 @@
 #' @param show What types of path coefficients are shown? Default `"std"` is standardized coefficients. For undstandardized, use `"unstd"`
 #' @param digits How many significant digits should be shown?
 #' @param add_edge_label_spaces Should spaces by added on either side of edge labels? Default is `TRUE` as otherwise paths too often overlap edges.
-#' @param ... Other arguments to [DiagrammeR::render_graph()]
 #' 
 #' @return Returns an object of class [DiagrammeR::dgr_graph]
 #' 
@@ -42,7 +42,7 @@
 #' 
 #' @export
 #' 
-plot.psem <- function(mod, return=FALSE,
+plot.psem <- function(x, return=FALSE,
                       node_attrs = data.frame(shape = "rectangle", color = "black",
                                               fillcolor = "white"),
                       edge_attrs = data.frame(style = "solid", color="black"),
@@ -52,7 +52,7 @@ plot.psem <- function(mod, return=FALSE,
                       ){
   
   #get the coefficients table
-  ctab <- coefs(mod)
+  ctab <- coefs(x)
   ctab$Response <- as.character(ctab$Response)
   ctab$Predictor <- as.character(ctab$Predictor)
   

@@ -4,7 +4,7 @@
 \alias{captureTable}
 \title{Captures output table}
 \usage{
-captureTable(g)
+captureTable(g, row.names = FALSE)
 }
 \description{
 Captures output table

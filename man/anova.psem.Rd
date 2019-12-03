@@ -4,18 +4,16 @@
 \alias{anova.psem}
 \title{ANOVA and chi-squared difference test for model comparison}
 \usage{
-\method{anova}{psem}(mod, mod2 = NULL, digits = 3, anovafun = Anova, ...)
+\method{anova}{psem}(object, ..., digits = 3, anovafun = "Anova")
 }
 \arguments{
-\item{mod}{a \code{psem} object}
+\item{object}{a \code{psem} object}
 
-\item{mod2}{a \code{psem} object for comparison. Defaults to NULL to allow for a LRT or F tables of all fit model pieces.}
+\item{...}{additional objects of the same type}
 
 \item{digits}{number of digits to round results. Default is 3}
 
-\item{anovafun}{The function used for ANOVA. Defaults to \code{\link{car::Anova}}}
-
-\item{...}{additional arguments passed to \code{anovafun}}
+\item{anovafun}{The function used for ANOVA. Defaults to \code{Anova}}
 }
 \value{
 an F, LRT, or other table for a single model, or a list of
@@ -23,6 +21,9 @@ an F, LRT, or other table for a single model, or a list of
 }
 \description{
 Compute analysis of variance table for one or more structural equation models.
+}
+\details{
+Additional models will be tested against the first model using a Chi-squared difference test.
 }
 \examples{
 data(keeley)

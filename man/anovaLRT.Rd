@@ -4,7 +4,7 @@
 \alias{anovaLRT}
 \title{Chi-square difference test}
 \usage{
-anovaLRT(...)
+anovaLRT(object)
 }
 \description{
 Chi-square difference test
