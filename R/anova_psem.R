@@ -14,7 +14,7 @@
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
 #' 
-#' @seealso \code{\link{car::Anova}}
+#' @seealso \code{\link{Anova}}
 #' 
 #' @examples 
 #' data(keeley)

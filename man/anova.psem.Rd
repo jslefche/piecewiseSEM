@@ -50,7 +50,7 @@ anova(mod1, mod2)
 
 }
 \seealso{
-\code{\link{car::Anova}}
+\code{\link{Anova}}
 }
 \author{
 Jon Lefcheck <LefcheckJ@si.edu>, Jarrett Byrnes <jarrett.byrnes@umb.edu>
