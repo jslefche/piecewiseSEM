@@ -6,6 +6,11 @@
 \usage{
 \method{print}{basisSet}(x, ...)
 }
+\arguments{
+\item{x}{a basis set}
+
+\item{...}{further arguments passed to or from other methods}
+}
 \description{
 Print basis set
 }

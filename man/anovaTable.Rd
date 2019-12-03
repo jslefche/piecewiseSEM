@@ -4,7 +4,7 @@
 \alias{anovaTable}
 \title{Single anova}
 \usage{
-anovaTable(object, anovafun = car::Anova, digits = 3, ...)
+anovaTable(object, anovafun = Anova, digits = 3, ...)
 }
 \description{
 Single anova

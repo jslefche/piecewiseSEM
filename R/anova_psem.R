@@ -42,7 +42,7 @@
 #' 
 #' @export
 #' 
-anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = car::Anova, ...) {
+anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = Anova, ...) {
  
    if(!is.null(mod2)) {
      
@@ -59,7 +59,7 @@ anova.psem <- function(mod, mod2 = NULL, digits = 3, anovafun = car::Anova, ...)
 #' 
 #' @keywords internal
 #' 
-anovaTable <- function(object, anovafun = car::Anova, digits = 3, ...) {
+anovaTable <- function(object, anovafun = Anova, digits = 3, ...) {
   
   object <- removeData(object, formulas = 1)
   
@@ -168,6 +168,7 @@ anovaLRT <- function(...) {
 #' Print anova
 #' 
 #' @param x an object of class anova.psem
+#' @param ... further arguments passed to or from other methods
 #' 
 #' @method print anova.psem
 #' 

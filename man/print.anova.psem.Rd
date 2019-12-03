@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{an object of class anova.psem}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Print anova

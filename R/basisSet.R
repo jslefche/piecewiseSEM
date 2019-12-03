@@ -392,6 +392,10 @@ flipOne <- function(rel, arrow, b) {
 #' Print basis set
 #' 
 #' @method print basisSet
+#' 
+#' @param x a basis set
+#' @param ... further arguments passed to or from other methods
+#' 
 #' @export
 #' 
 print.basisSet <- function(x, ...) { 

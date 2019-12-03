@@ -4,7 +4,7 @@
 \alias{anova.psem}
 \title{ANOVA and chi-squared difference test for model comparison}
 \usage{
-\method{anova}{psem}(mod, mod2 = NULL, digits = 3, anovafun = car::Anova, ...)
+\method{anova}{psem}(mod, mod2 = NULL, digits = 3, anovafun = Anova, ...)
 }
 \arguments{
 \item{mod}{a \code{psem} object}
