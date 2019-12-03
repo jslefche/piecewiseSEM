@@ -54,7 +54,7 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
   coefTable <- coefs(modelList, standardize, standardize.type, test.type)
 
-  anovaTable <- anova(as.psem(intModelList), type = test.type)[[1]]
+  anovaTable <- anova(as.psem(intModelList))[[1]]
   
   anovaInts <- anovaTable[grepl(":", anovaTable$Predictor), ]
   
