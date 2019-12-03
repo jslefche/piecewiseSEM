@@ -580,7 +580,6 @@ stripTransformations <- function(x) {
 
 }
 
-
 #' Get Response Name as a Character
 #' 
 #' @keywords internal
