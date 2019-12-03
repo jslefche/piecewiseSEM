@@ -7,6 +7,8 @@ There were no ERRORS or WARNINGS.
 ## NOTES 
 Contact email has also been updated.
 
+Fixed issues with check_rhub()
+
 ## Test environments
 * local OS X install, R 3.5.0
 * local Windows 10 install, R 3.5.0
