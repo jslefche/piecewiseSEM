@@ -4,7 +4,8 @@
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
 #' 
-#' @usage e1 %~~% e2
+#' @param e1 one variable to be correlated
+#' @param e2 the other variable to be correlated
 #' 
 #' @author Jon Lefcheck <lefcheckj@@si.edu>
 #' 

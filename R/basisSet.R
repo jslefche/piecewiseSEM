@@ -28,9 +28,13 @@
 #' @param modelList A list of structural equations
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s) 
+#' 
 #' @return A \code{list} of independence claims.
+#' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' 
 #' @seealso \code{\link{dSep}}
+#' 
 #' @references Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #' 
 #' @export
