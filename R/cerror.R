@@ -1,13 +1,20 @@
 #' Correlated error operator
 #'
-#' Specifies correlated errors among predictors
+#' Specifies correlated errors among variables
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
 #' 
-#' @usage e1 %~~% e2
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @param x the name of the first variable
+#' @param y the name of the second variable
+#' 
+#' @usage x %~~% y
+#' 
+#' @author Jon Lefcheck <lefcheckj@@si.edu>
+#' 
 #' @aliases `~~`
+#' 
 #' @seealso \code{\link{cerror}}
+#' 
 #' @examples
 #'
 #' # Generate example data
@@ -43,9 +50,9 @@
 #'
 #' @export
 #' 
-`%~~%` <- function(e1, e2) {
+`%~~%` <- function(x, y) {
 
-  x <- paste(deparse(substitute(e1)), "~~", deparse(substitute(e2)))
+  x <- paste(deparse(substitute(x)), "~~", deparse(substitute(y)))
 
   # x <- call(x)
 
@@ -77,7 +84,9 @@
 #' 
 #' @return Returns a \code{data.frame} containing the (partial) correlation and
 #' associated significance test.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' 
+#' @author Jon Lefcheck <lefcheckj@@si.edu>
+#' 
 #' @seealso \code{\link{\%~~\%}}
 #' 
 #' @examples

@@ -9,15 +9,14 @@ listFormula(modelList, formulas = 0)
 \description{
 Recompute P-values using Kenward-Rogers approximation
 }
-\keyword{=}
 \keyword{Get}
 \keyword{If}
-\keyword{TRUE,}
 \keyword{`sem`}
 \keyword{a}
 \keyword{formula}
 \keyword{from}
 \keyword{internal}
+\keyword{is}
 \keyword{list}
 \keyword{non-evaluated}
 \keyword{object}
@@ -25,3 +24,4 @@ Recompute P-values using Kenward-Rogers approximation
 \keyword{out}
 \keyword{remove}
 \keyword{take}
+\keyword{true,}

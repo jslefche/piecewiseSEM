@@ -4,7 +4,7 @@ Title: Piecewise Structural Equation Modeling
 Version: 2.1.0
 Date: 2019-12-03
 Authors@R: c(
-    person("Jon", "Lefcheck",   role = c("aut", "cre"), email = "LefcheckJ@si.edu"),
+    person("Jon", "Lefcheck",   role = c("aut", "cre"), email = "lefcheckj@si.edu"),
     person("Jarrett", "Byrnes",  role = "aut", email = "jarrett.byrnes@umb.edu"),
     person("James", "Grace",  role = "aut", email = "gracej@usgs.gov")
     )
