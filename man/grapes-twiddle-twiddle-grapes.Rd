@@ -5,15 +5,10 @@
 \alias{`~~`}
 \title{Correlated error operator}
 \usage{
-x %~~% y
-}
-\arguments{
-\item{x}{the name of the first variable}
-
-\item{y}{the name of the second variable}
+e1 %~~% e2
 }
 \description{
-Specifies correlated errors among variables
+Specifies correlated errors among predictors
 }
 \details{
 For use in \code{psem} to identify correlated sets of variables.

@@ -1,13 +1,10 @@
 #' Correlated error operator
 #'
-#' Specifies correlated errors among variables
+#' Specifies correlated errors among predictors
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
 #' 
-#' @param x the name of the first variable
-#' @param y the name of the second variable
-#' 
-#' @usage x %~~% y
+#' @usage e1 %~~% e2
 #' 
 #' @author Jon Lefcheck <lefcheckj@@si.edu>
 #' 
@@ -50,16 +47,16 @@
 #'
 #' @export
 #' 
-`%~~%` <- function(x, y) {
-
-  x <- paste(deparse(substitute(x)), "~~", deparse(substitute(y)))
-
+`%~~%` <- function(e1, e2) {
+  
+  x <- paste(deparse(substitute(e1)), "~~", deparse(substitute(e2)))
+  
   # x <- call(x)
-
+  
   class(x) <- "formula.cerror"
-
+  
   return(x)
-
+  
 }
 
 #' Correlated errors
@@ -84,9 +81,7 @@
 #' 
 #' @return Returns a \code{data.frame} containing the (partial) correlation and
 #' associated significance test.
-#' 
-#' @author Jon Lefcheck <lefcheckj@@si.edu>
-#' 
+#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
 #' @seealso \code{\link{\%~~\%}}
 #' 
 #' @examples
@@ -124,15 +119,15 @@
 #' @export 
 #' 
 cerror <- function(formula., modelList, data = NULL) {
-
+  
   ret <- partialCorr(formula., modelList, data)
-
+  
   # ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 4)
-
+  
   ret <- cbind.data.frame(ret, isSig(ret$P.Value))
   
   names(ret)[ncol(ret)] <- ""
   
   return(ret)
-
+  
 }
