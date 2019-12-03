@@ -8,9 +8,7 @@
 
 Run the following code to install the development version:
 ```
-# install.packages("devtools") # if devtools not installed
-
-devtools::install_github("jslefche/piecewiseSEM@devel")
+install.packages("piecewiseSEM")
 ```
 
 ## Getting Help
