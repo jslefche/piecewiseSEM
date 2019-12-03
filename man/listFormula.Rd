@@ -16,12 +16,10 @@ Recompute P-values using Kenward-Rogers approximation
 \keyword{formula}
 \keyword{from}
 \keyword{internal}
-\keyword{is}
 \keyword{list}
 \keyword{non-evaluated}
 \keyword{object}
 \keyword{of}
 \keyword{out}
-\keyword{remove}
+\keyword{remove,}
 \keyword{take}
-\keyword{true,}
