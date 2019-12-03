@@ -1,10 +1,10 @@
 ## Version 2.1.0 Release Notes
-- added sqrt link for poisson GLMMs
 - implemented `igraph` package for DAG construction and evaluation
 - replaced `pbkrtest` with `car::Anova`
 - added `plot.psem` function using `DiagrammR` package
 - `coefs` now returns coefficients for categorical variables using `emmeans` and `Anova`
 - added `multigroup` function and analysis
+- added sqrt link for poisson GLMMs
 - Changed contact e-mail to new affiliation
 - Fixed bug with `KRp` and `lmerMod` models with intercepts
 - Fixed bug with `getOLRE` and single observation-level random effects glmerMods
