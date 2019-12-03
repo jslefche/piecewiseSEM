@@ -53,39 +53,30 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   names(coefsList) <- unique(data[, group])
   
   coefTable <- coefs(modelList, standardize, standardize.type, test.type)
- 
-  coefTable[, ncol(coefTable)] <- "c"
-  
-  coefTable[, ncol(coefTable) + 1] <- isSig(coefTable$P.Value)
-  
-  names(coefTable)[(ncol(coefTable) - 1):ncol(coefTable)] <- ""
-  
+
   anovaTable <- anova(as.psem(intModelList), type = test.type)[[1]]
   
   anovaInts <- anovaTable[grepl(":", anovaTable$Predictor), ]
   
   global <- anovaInts[anovaInts$P.Value >= 0.05, c("Response", "Predictor")]
   
-  global$Predictor <- sub("(.*?[:])", "", global$Predictor)
+  global$Predictor <- sub(":", "\\1", sub(group, "\\1", global$Predictor))
   
   if(nrow(global) == nrow(anovaInts)) newCoefsList <- list(global = coefTable) else {
   
     newCoefsList <- lapply(names(coefsList), function(i) {
       
       ct <- coefsList[[i]]
+
+      idx <- which(apply(ct[, 1:2], 1, paste, collapse = "___") %in% apply(global[, 1:2], 1, paste, collapse = "___"))
       
-      suppressWarnings(
-        ct[which(ct$Response %in% global$Response & ct$Predictor %in% global$Predictor), ] <-
-        coefTable[which(coefTable$Response %in% global$Response & coefTable$Predictor %in% global$Predictor), ]
-      )
+      ct[idx, ] <- coefTable[idx, ]
       
-      ct[, ncol(ct)] <- ifelse(ct$Response %in% global$Response & ct$Predictor %in% global$Predictor, "c", "")
-      
-      ct[, ncol(ct) + 1] <- isSig(ct$P.Value)
+      ct[, (ncol(ct) + 1)] <- ifelse(1:nrow(ct) %in% idx, "c", "")
       
       for(j in 1:nrow(ct)) {
         
-        if(ct[j, 9] == "c") {
+        if(ct[j, ncol(ct)] == "c") {
       
           model <- modelList[[which(sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] == ct[j, "Response"]))]]
           
@@ -105,6 +96,8 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
         
       }
       
+      ct[is.na(ct)] <- "-"  
+    
       names(ct)[(ncol(ct) - 1):ncol(ct)] <- ""
       
       return(ct) 
