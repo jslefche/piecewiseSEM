@@ -487,9 +487,7 @@ isSig <- function(p) {
 # 
 # }
 
-#' Get list of formula from a `sem` object
-#' 
-#' If remove, take out non-evaluated formula
+#' Get list of formula from a `psem` object
 #' 
 #' @keywords internal
 #' 

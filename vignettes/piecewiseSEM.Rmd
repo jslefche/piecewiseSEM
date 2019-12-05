@@ -29,11 +29,11 @@ Those variables that exist only as predictors in the network are referred to as 
 
 In traditional SEM, the relationships among variables (i.e., their linear coefficients) are estimated simultaneously in a single variance-covariance matrix. This approach is well developed but can be computationally intensive (depending on the sizes of the v-cov matrix) and additionally assumes independence and normality of errors, two assumptions that are generally violated in ecological research.
 
-Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This proces decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are evaluated separately, and then combined later to generate inferences about the entire SEM. This approach has two consequences: 
+Piecewise structural equation modeling (SEM), also called confirmatory path analysis, was proposed in the early 2000s by Bill Shipley as an alternate approach to traditional variance-covariance based SEM. In piecewise SEM, each set of relationships is estimated independently (or locally). This process decomposes the network  into the corresponding simple or multiple linear regressions for each response, each of which are evaluated separately, and then combined later to generate inferences about the entire SEM. This approach has two consequences: 
 1. Increasingly large networks can be estimated with ease compared to a single vcov matrix (because the approach is modularized), and 
 2. Specific assumptions about the distribution and covariance of the responses can be addressed using typical extensions of linear regression, such as fixed covariance structures, random effects, and other sophisticated modeling techniques. 
 
-Unlike traditional SEM, which uses a $\chi^2$ test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed to be biologically or mechanistically insigificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant within some threshold of acceptable error, typically $\alpha$=0.05) or whether  some causal relationship may exist as indicated by the data.
+Unlike traditional SEM, which uses a $\chi^2$ test to compare the observed and predicted covariance matrices, the goodness-of-fit of a piecewise structural equation model is obtained using 'tests of directed separation.' These tests evaluate the assumption that the specific causal structure reflects the data. This is accomplished by deriving the 'basis set,' which is the smallest set of independence claims obtained from the SEM. These claims are relationships that are *un*specified in the model, in other words paths that could have been included but were omitted because they were deemed to be biologically or mechanistically insignificant. The tests ask whether these relationships can truly be considered independent (i.e., their association is not statistically significant within some threshold of acceptable error, typically $\alpha$=0.05) or whether  some causal relationship may exist as indicated by the data.
 
 For instance, the preceding example SEM contains 4 specified paths (solid, black) and 2 unspecified paths (dashed, red), the latter of which constitute the basis set:
 
@@ -445,7 +445,7 @@ shipley.list <- list(
 ```
 Note the use of mixed effects models to account for the nested non-independence of replicates as well as the use of a generalized linear mixed effects model to account for the binomial distribution of survival.
 
-Next, we would have extracted the goodness-of-fit and path coefficients using the old code (depracated).
+Next, we would have extracted the goodness-of-fit and path coefficients using the old code (deprecated).
 
 ```{r}
 # (old.fit <- sem.fit(shipley.list, shipley, .progressBar = F))

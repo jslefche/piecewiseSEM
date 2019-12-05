@@ -42,5 +42,5 @@ jutila.multigroup
 
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>
+Jon Lefcheck <lefcheckj@si.edu>
 }

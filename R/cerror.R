@@ -82,7 +82,7 @@
 #' 
 #' @return Returns a \code{data.frame} containing the (partial) correlation and
 #' associated significance test.
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
+#' @author Jon Lefcheck <lefcheckj@@si.edu>
 #' @seealso \code{\link{\%~~\%}}
 #' 
 #' @examples

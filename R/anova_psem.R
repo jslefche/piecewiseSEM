@@ -12,7 +12,7 @@
 #' @return an F, LRT, or other table for a single model, or a list of
 #'  comparisons between multiple models
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
+#' @author Jon Lefcheck <lefcheckj@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
 #' 
 #' @seealso \code{\link{Anova}}
 #' 

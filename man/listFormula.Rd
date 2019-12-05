@@ -10,16 +10,11 @@ listFormula(modelList, formulas = 0)
 Recompute P-values using Kenward-Rogers approximation
 }
 \keyword{Get}
-\keyword{If}
-\keyword{`sem`}
+\keyword{`psem`}
 \keyword{a}
 \keyword{formula}
 \keyword{from}
 \keyword{internal}
 \keyword{list}
-\keyword{non-evaluated}
 \keyword{object}
 \keyword{of}
-\keyword{out}
-\keyword{remove,}
-\keyword{take}

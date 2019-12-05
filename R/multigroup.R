@@ -8,7 +8,7 @@
 #' \code{latent.linear}, \code{Menard.OE}. Default is \code{latent.linear}.
 #' @param test.type what kind of ANOVA should be reported. Default is type III
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' @author Jon Lefcheck <lefcheckj@@si.edu>
 #' 
 #' @examples
 #' data(meadows)

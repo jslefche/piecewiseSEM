@@ -15,8 +15,11 @@
 #' 
 #' @return Returns a \code{data.frame} of residuals of \code{y ~ Z} called
 #' \code{yresids}, of \code{x ~ Z} called \code{xresids}.
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' 
+#' @author Jon Lefcheck <lefcheckj@@si.edu>
+#' 
 #' @seealso \code{\link{cerror}}
+#' 
 #' @examples
 #'
 #' # Generate data

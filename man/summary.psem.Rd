@@ -78,7 +78,7 @@ multigroup analysis in traditional variance-covariance SEM. Coming in version 2.
 
 In cases involving non-normally distributed responses in the independence
 claims that are modeled using generalized linear models, the significance of
-the independence claim is not reversable (e.g., the P-value of Y ~ X is not
+the independence claim is not reversible (e.g., the P-value of Y ~ X is not
 the same as X ~ Y). This is due to the transformation of the response via
 the link function. In extreme cases, this can bias the goodness-of-fit
 tests. \code{summary.psem} will issue a warning when this case is present
@@ -113,5 +113,5 @@ models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
 The model fitting function \code{\link{psem}}.
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>
+Jon Lefcheck <lefcheckj@si.edu>
 }

@@ -92,11 +92,11 @@ DEFAULT method
 
 }
 \references{
-Nakagawa, Sinichi, Johnson, Paul C.D., and Holger Schielzeth.
-"The coefficient of determination R2 and intra-class correlation coefficient
-from generalized linear mixed-effects models revisted and expanded." bioRxiv
-095851 (2017).
+Nakagawa, Shinichi, Paul CD Johnson, and Holger Schielzeth. 
+"The coefficient of determination R 2 and intra-class correlation coefficient 
+from generalized linear mixed-effects models revisited and expanded." 
+Journal of the Royal Society Interface 14.134 (2017): 20170213.
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>
+Jon Lefcheck <lefcheckj@si.edu>
 }

@@ -31,7 +31,7 @@
 #' 
 #' @return A \code{list} of independence claims.
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' @author Jon Lefcheck <lefcheckj@@si.edu>
 #' 
 #' @seealso \code{\link{dSep}}
 #' 

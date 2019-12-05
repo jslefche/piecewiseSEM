@@ -70,5 +70,5 @@ coefs(sem)
 \code{\link{\%~~\%}}
 }
 \author{
-Jon Lefcheck <jlefcheck@bigelow.org>
+Jon Lefcheck <lefcheckj@si.edu>
 }

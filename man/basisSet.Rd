@@ -49,5 +49,5 @@ Shipley, Bill. "A new inferential test for path models based on directed acyclic
 \code{\link{dSep}}
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>
+Jon Lefcheck <lefcheckj@si.edu>
 }

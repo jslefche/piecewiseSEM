@@ -20,7 +20,7 @@
 - New warning issued when NAs present in the dataset
 - Added Gamma distribution to `rsquared`
 - Fixed bug to determine whether graph is cyclic
-- Fixed bug thowing errors with calls to `lmer`
+- Fixed bug throwing errors with calls to `lmer`
 - Fixed bug creating errors with objects fit using `lmerTest`
 - Added pkgdown website
 

@@ -5,9 +5,9 @@
 #' 
 #' @param x a [psem()] object
 #' @param return whether to return the output from [DiagrammeR::create_graph()] for modification and later plotting
-#' @param node_attrs List of node attributes to overide defaults of rectangular nodes with black outline and white fill. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.
-#' @param edge_attrs List of edge attributes to overide defaults of solid black arrows. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.
-#' @param ns_dashed If TRUE, paths that are not different from 0 will be dashed rather than solid, unless the wholse is overridden in `edge_attrs`
+#' @param node_attrs List of node attributes to override defaults of rectangular nodes with black outline and white fill. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.
+#' @param edge_attrs List of edge attributes to override defaults of solid black arrows. See [here](http://visualizers.co/diagrammer/articles/node-edge-data-frames.html) and [here](http://visualizers.co/diagrammer/articles/graphviz-mermaid.html) for a more complete rundown of options.
+#' @param ns_dashed If TRUE, paths that are not different from 0 will be dashed rather than solid, unless the whole is overridden in `edge_attrs`
 #' @param alpha The alpha level for assessing whether a path is different from 0
 #' @param show What types of path coefficients are shown? Default `"std"` is standardized coefficients. For undstandardized, use `"unstd"`
 #' @param digits How many significant digits should be shown?

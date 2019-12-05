@@ -53,5 +53,5 @@ anova(mod1, mod2)
 \code{\link{Anova}}
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>, Jarrett Byrnes <jarrett.byrnes@umb.edu>
+Jon Lefcheck <lefcheckj@si.edu>, Jarrett Byrnes <jarrett.byrnes@umb.edu>
 }
