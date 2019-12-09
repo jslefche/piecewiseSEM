@@ -7,3 +7,4 @@
 ^\.gitignore$
 ^R/anova\.R$
 ^docs$
+^CRAN-RELEASE$
