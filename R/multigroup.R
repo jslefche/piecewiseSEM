@@ -66,13 +66,15 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
     newCoefsList <- lapply(names(coefsList), function(i) {
       
-      ct <- coefsList[[i]]
+      ct <- as.matrix(coefsList[[i]])
 
       idx <- which(apply(ct[, 1:2], 1, paste, collapse = "___") %in% apply(global[, 1:2], 1, paste, collapse = "___"))
       
-      ct[idx, ] <- coefTable[idx, ]
+      ct[idx, ] <- as.matrix(coefTable[idx, ])
       
-      ct[, (ncol(ct) + 1)] <- ifelse(1:nrow(ct) %in% idx, "c", "")
+      ct <- cbind(ct, ifelse(1:nrow(ct) %in% idx, "c", ""))
+      
+      # ct <- as.data.frame(ct)
       
       for(j in 1:nrow(ct)) {
         
@@ -88,13 +90,15 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
           
           sd.y <- GetSDy(model, data., standardize, standardize.type)
           
-          new.coef <- ct[j, "Estimate"] * (sd.x/sd.y)
+          new.coef <- as.numeric(ct[j, "Estimate"]) * (sd.x/sd.y)
           
           ct[j, "Std.Estimate"] <- ifelse(length(new.coef) > 0, round(as.numeric(new.coef), 4), "-")
           
         }
         
       }
+      
+      ct <- as.data.frame(ct)
       
       ct[is.na(ct)] <- "-"  
     
