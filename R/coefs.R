@@ -160,7 +160,7 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
   
   if(is.null(data)) data <- GetData(model)
   
-  if(all(class(model) %in% c("lm", "glm", "negbin", "lmerMod", "glmerMod", "lmerModLmerTest", "pgls", "phylolm", "phyloglm"))) {
+  if(all(class(model) %in% c("lm", "glm", "negbin", "glmerMod", "pgls", "phylolm", "phyloglm"))) {
     
     ret <- as.data.frame(summary(model)$coefficients)
     
@@ -170,17 +170,9 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
     
     if(all(class(model) %in% c("phylolm", "phyloglm"))) ret <- cbind(ret[, 1:2], DF = model$n, ret[, c(3, 6)])
     
-    if(all(class(model) %in% c("lmerMod"))) {
-      
-      # krp <- KRp(model, vars[-1], data, intercepts = TRUE)
-  
-      ret <- getAnova(model)
-      
-      # ret <- cbind(ret[, 1:2], DF = nobs(model), ret[, 3], P.Value = NA)
-      
-    }
-    
   }
+  
+  if(any(class(model) %in% c("lmerMod"))) ret <- getAnova(model)
   
   if(all(class(model) %in% c("sarlm"))) {
     
@@ -231,6 +223,12 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
 #' 
 handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.type = "II") {
   
+  
+  # could implement as a "try-catch" later on
+  if(class(model) == "glmerMod") test.statistic <- "Chisq"
+  
+  
+  
   vars <- names(data)
   
   f <- listFormula(list(model))[[1]]
@@ -280,7 +278,7 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
       atab <- atab[match(i, rownames(atab)), ]
       
       atab <- data.frame(Response = ret$Response[1], Predictor = i, Estimate = NA, Std.Error = NA, DF = atab$Df, 
-                         Crit.Value = atab[, min(which(grepl("Chisq|F value", colnames(atab))))], P.Value = atab[, ncol(atab)], 
+                         Crit.Value = atab[, min(which(grepl("Chisq|F value|F", colnames(atab))))], P.Value = atab[, ncol(atab)], 
                          isSig(atab[, ncol(atab)]))
       
       colnames(atab) <- colnames(meanFacts)
