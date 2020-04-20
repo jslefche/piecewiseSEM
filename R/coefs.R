@@ -461,6 +461,8 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
   
   if(any(grepl(":", all.vars_notrans(model)))) sd.x <- c(sd.x, scaleInt(model, data, standardize))
   
+  sd.x <- sd.x[names(sd.x) %in% all.vars_notrans(model)[-1]]
+  
   if(length(sd.x) == 0) sd.x <- NA
   
   return(sd.x)
