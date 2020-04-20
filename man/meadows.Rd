@@ -4,13 +4,15 @@
 \name{meadows}
 \alias{meadows}
 \title{Data set from Grace & Jutila (1999)}
-\format{A \code{data.frame} with 354 observations of 4 variables.
+\format{
+A \code{data.frame} with 354 observations of 4 variables.
 \describe{
 \item{grazed}{Whether meadows were exposed to grazing: 0 = no, 1 = yes}
 \item{mass}{Plant biomass in g m[-2]}
 \item{elev}{Elevation of the plot above mean sea level}
 \item{rich}{Plant species richness per m[2]}
-}}
+}
+}
 \usage{
 meadows
 }

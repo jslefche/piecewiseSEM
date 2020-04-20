@@ -14,3 +14,14 @@
 \description{
 Update psem model object with additional values.
 }
+\examples{
+mod <- psem(
+lm(rich ~ cover, data = keeley),
+lm(cover ~ firesev, data = keeley),
+lm(firesev ~ age, data = keeley),
+data = keeley
+)
+
+update(mod, firesev ~ age + cover)
+
+}
