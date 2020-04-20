@@ -1,5 +1,5 @@
 ## Version 2.1.1 Release Notes
--
+-Fixed bug with interactions without main effects in `coefs`
 
 ## Version 2.1.0 Release Notes
 - implemented `igraph` package for DAG construction and evaluation
