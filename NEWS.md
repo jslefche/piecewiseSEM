@@ -1,3 +1,6 @@
+## Version 2.1.1 Release Notes
+-
+
 ## Version 2.1.0 Release Notes
 - implemented `igraph` package for DAG construction and evaluation
 - replaced `pbkrtest` with `car::Anova`
