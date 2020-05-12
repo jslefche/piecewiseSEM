@@ -185,35 +185,48 @@ rsquared.gls <- function(model) {
 #' @keywords internal
 #' 
 rsquared.glm <- function(model, method = "nagelkerke") {
-
+  
   if(is.null(method)) method <- "nagelkerke"
-
+  
   link <- family(model)$link
-
+  
   family. <- family(model)$family
-
-  if(method %in% c("coxsnell", "nagelkerke")) {
-
-    n <- nobs(model)
-
-    r <- 1 - exp((model$dev - model$null) / n)
-
-    if(method == "nagelkerke")
-
-      r <- r / (1 - exp(-model$null / n))
-
-    }
-
-  if(method == "mcfadden") {
-
-    null <- update(model, . ~ 1)
-
-    r <- 1 - (as.numeric(logLik(model)) / as.numeric(logLik(null)))
-
+  
+  if(family. == "gaussian") {
+    
+    method <- "none"
+    
+    r <- summary(lm(model$formula, model$data))$r.squared
+    
   }
-
+  
+  null <- update(model, . ~ 1)
+  
+  nullLik <- exp(as.numeric(logLik(null)))
+  
+  modelLik <- exp(as.numeric(logLik(model)))
+  
+  if(method == "mcfadden") {
+    
+    r <- 1 - log(modelLik)/log(nullLik)
+    
+  }
+  
+  if(method %in% c("coxsnell", "nagelkerke")) {
+    
+    n <- nobs(model)
+    
+    r <- 1 - (nullLik/modelLik)^(2/n)
+    
+    if(method == "nagelkerke")
+      
+      r <- r / (1 - nullLik^(2/n))
+    
+  }
+  
+  
   list(family = family., link = link, method = method, R.squared = r)
-
+  
 }
 
 #' R^2 for phylolm objects
