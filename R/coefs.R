@@ -280,7 +280,7 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
       atab <- atab[match(i, rownames(atab)), ]
       
       atab <- data.frame(Response = ret$Response[1], Predictor = i, Estimate = NA, Std.Error = NA, DF = atab$Df, 
-                         Crit.Value = atab[, min(which(grepl("Chisq|F value", colnames(atab))))], P.Value = atab[, ncol(atab)], 
+                         Crit.Value = atab[, min(which(grepl("LR Chisq|Chisq|F value|^F$", colnames(atab))))], P.Value = atab[, ncol(atab)], 
                          isSig(atab[, ncol(atab)]))
       
       colnames(atab) <- colnames(meanFacts)
