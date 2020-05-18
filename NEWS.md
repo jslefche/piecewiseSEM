@@ -1,6 +1,7 @@
 ## Version 2.1.1 Release Notes
 -Fixed bug with interactions without main effects in `coefs`
--Fixed issue with `rsquared.glm` for "gaussian" family and `method = "nagelkerke"`
+-Fixed issue with `rsquared.glm` for "gaussian" family and `method = "nagelkerke"
+-Fixed issue with `car::Anova` output and `handleCategoricalCoefs`
 
 ## Version 2.1.0 Release Notes
 - implemented `igraph` package for DAG construction and evaluation
