@@ -231,6 +231,8 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
 #' 
 handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.type = "II") {
   
+  if(class(model) %in% c("glmerMod", "merMod")) test.statistic <- "Chisq"
+  
   vars <- names(data)
   
   f <- listFormula(list(model))[[1]]
