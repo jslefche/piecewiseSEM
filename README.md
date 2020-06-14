@@ -39,7 +39,7 @@ Frequently, we get requests to add new model classes. We'd like to accommodate w
       - Will need an `rsquared.youclass()` method to get the R^2
 
 ### Example
-```
+```r
 # Install development branch from github
 library(devtools)
 install_github("jslefche/piecewiseSEM@devel", build_vignette = TRUE)
