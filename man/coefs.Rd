@@ -76,9 +76,9 @@ reports model-estimated means in the \code{Estimate} column. This is done so all
 n paths in the corresponding path diagram have assignable values.
 
 The means are generated using function \code{emmeans} in the \code{emmeans} package. 
-Pairwise contrasts  are further conducted among all levels using the default  
+Pairwise contrasts are further conducted among all levels using the default  
 correction for multiple testing. The results of those comparisons are given in the 
-significance codes (e.g., "a", "b", "ab") as reported in the \code{emmeans::cld} function.
+significance codes (e.g., "a", "b", "ab") as reported in the \code{multcomp::cld} function.
 }
 \examples{
 mod <- psem(
@@ -97,7 +97,7 @@ Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 Ecosphere 9(6): e02283.
 }
 \seealso{
-\code{\link{Anova}}, \code{\link{emmeans}}, \code{\link{CLD}}
+\code{\link{Anova}}, \code{\link{emmeans::emmeans}}, \code{\link{multcomp::cld}}
 }
 \author{
 Jon Lefcheck <LefcheckJ@si.edu>, Jim Grace

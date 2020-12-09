@@ -2,11 +2,11 @@
 % Please edit documentation in R/helpers.R
 \name{getAnova}
 \alias{getAnova}
-\title{Get ANOVA results}
+\title{Get ANOVA results from `merMod`}
 \usage{
 getAnova(model, test.statistic = "F", test.type = "III")
 }
 \description{
-Get ANOVA results
+Get ANOVA results from `merMod`
 }
 \keyword{internal}

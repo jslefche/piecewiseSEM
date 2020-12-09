@@ -1,3 +1,6 @@
+## Version 2.1.2 Release Note
+-Updated `coefs` to remove depracated function `emmeans::CLD`
+
 ## Version 2.1.1 Release Notes
 -Fixed bug with interactions without main effects in `coefs`
 -Fixed issue with `rsquared.glm` for "gaussian" family and `method = "nagelkerke"
