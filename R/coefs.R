@@ -64,7 +64,7 @@
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
 #' 
-#' @seealso \code{\link{Anova}}, \code{\link{emmeans::emmeans}}, \code{\link{multcomp::cld}}
+#' @seealso \code{\link{Anova}}, \code{\link{emmeans:emmeans}}, \code{\link{multcomp:cld}}
 #' 
 #' @examples 
 #' mod <- psem(

@@ -97,7 +97,7 @@ Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 Ecosphere 9(6): e02283.
 }
 \seealso{
-\code{\link{Anova}}, \code{\link{emmeans::emmeans}}, \code{\link{multcomp::cld}}
+\code{\link{Anova}}, \code{\link{emmeans:emmeans}}, \code{\link{multcomp:cld}}
 }
 \author{
 Jon Lefcheck <LefcheckJ@si.edu>, Jim Grace
