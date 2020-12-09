@@ -40,9 +40,9 @@
 #' n paths in the corresponding path diagram have assignable values.
 #' 
 #' The means are generated using function \code{emmeans} in the \code{emmeans} package. 
-#' Pairwise contrasts  are further conducted among all levels using the default  
+#' Pairwise contrasts are further conducted among all levels using the default  
 #' correction for multiple testing. The results of those comparisons are given in the 
-#' significance codes (e.g., "a", "b", "ab") as reported in the \code{emmeans::cld} function.
+#' significance codes (e.g., "a", "b", "ab") as reported in the \code{multcomp::cld} function.
 #'
 #' @param modelList A list of structural equations, or a model.
 #' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
@@ -64,7 +64,7 @@
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
 #' 
-#' @seealso \code{\link{Anova}}, \code{\link{emmeans}}, \code{\link{CLD}}
+#' @seealso \code{\link{Anova}}, \code{\link{emmeans::emmeans}}, \code{\link{multcomp::cld}}
 #' 
 #' @examples 
 #' mod <- psem(
@@ -245,7 +245,9 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
     
     for(i in catVars) {
       
-      meanFacts <- suppressMessages(lapply(i, function(v) emmeans::emmeans(model, specs = v, data = data)))
+      meanFacts <- suppressMessages(lapply(i, function(v) 
+        
+        multcomp::cld(emmeans::emmeans(model, specs = v, data = data))))
       
       meanFacts <- lapply(meanFacts, function(m) {
         
@@ -271,7 +273,7 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
       
       names(meanFacts)[names(meanFacts) %in% c("emmean", "SE", "df")] <- c("Estimate", "Std.Error", "DF")
       
-      meanFacts <- meanFacts[, -which(colnames(meanFacts) %in% c("lower.CL", "upper.CL", "asymp.LCL", "asymp.UCL"))]
+      meanFacts <- meanFacts[, -which(colnames(meanFacts) %in% c("lower.CL", "upper.CL", "asymp.LCL", "asymp.UCL", ".group"))]
       
       meanFacts <- cbind(meanFacts, isSig(meanFacts[, 7]))
       
@@ -429,11 +431,11 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
   
   if(all(standardize == "scale"))
     
-    sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) sd(data[, x], na.rm = TRUE)) else
+    sd.x <- suppressWarnings(sapply(numVars[!grepl(":", numVars)][-1], function(x) sd(data[, x], na.rm = TRUE))) else
       
       if(all(standardize == "range"))
         
-        sd.x <- sapply(numVars[!grepl(":", numVars)][-1], function(x) diff(range(data[, x], na.rm = TRUE))) else
+        sd.x <- suppressWarnings(sapply(numVars[!grepl(":", numVars)][-1], function(x) diff(range(data[, x], na.rm = TRUE)))) else
           
           if(is.list(standardize)) {
             
