@@ -50,7 +50,7 @@ of x divided by the standard deviation of y. See below for cases pertaining to G
 \item{\code{range} Raw coefficients are scaled by a pre-selected range of x
 divided by a preselected range of y. The default argument is \code{range} which takes the
 two extremes of the data, otherwise the user must supply must a named \code{list} where
-the names are the variables to be standardized, and each entry contains a vector of 
+the names are the variables to be standardized, and each entry contains a vector of
 length == 2 to the ranges to be used in standardization.}
 }
 
@@ -75,9 +75,9 @@ deviance). Because n-1 coefficients are reported for n levels, the output instea
 reports model-estimated means in the \code{Estimate} column. This is done so all
 n paths in the corresponding path diagram have assignable values.
 
-The means are generated using function \code{emmeans} in the \code{emmeans} package. 
-Pairwise contrasts are further conducted among all levels using the default  
-correction for multiple testing. The results of those comparisons are given in the 
+The means are generated using function \code{emmeans} in the \code{emmeans} package.
+Pairwise contrasts are further conducted among all levels using the default
+correction for multiple testing. The results of those comparisons are given in the
 significance codes (e.g., "a", "b", "ab") as reported in the \code{multcomp::cld} function.
 }
 \examples{
@@ -93,7 +93,7 @@ coefs(mod)
 }
 \references{
 Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
-"Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
+"Standardized Coefficients in Regression and Structural Models with Binary Outcomes."
 Ecosphere 9(6): e02283.
 }
 \seealso{

@@ -17,12 +17,12 @@ merModLmerTest, glmerMod}.
 }
 \details{
 \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-\tab 2.1.2\cr Date: \tab 2020-12-09\cr Depends: \tab R (>= 4.0.0), car,
-DiagrammR, multcomp, nlme\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr }
-The primary functions in the package are \code{\link{psem}} which unites
-structural equations in a single model. \code{summary.psem} can be used on an
-object of class \code{psem} to provide various summary statistics for evaluation
-and interpretation.
+\tab 2.1.1\cr Date: \tab 2020-04-20\cr Depends: \tab R (>= 3.5.0), nlme,
+pbkrtest\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr } The primary
+functions in the package are \code{\link{psem}} which unites structural
+equations in a single model. \code{summary.psem} can be used on an object of
+class \code{psem} to provide various summary statistics for evaluation and
+interpretation.
 }
 \references{
 Shipley, Bill. "A new inferential test for path models based on
