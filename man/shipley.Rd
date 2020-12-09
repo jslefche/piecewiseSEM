@@ -4,7 +4,8 @@
 \name{shipley}
 \alias{shipley}
 \title{Data set from Shipley (2006)}
-\format{A \code{data.frame} with 1900 observations of 9 variables.
+\format{
+A \code{data.frame} with 1900 observations of 9 variables.
 \describe{
 \item{site}{Site of observation}
 \item{tree}{Individual tree of observation}
@@ -15,7 +16,8 @@
 \item{Growth}{Increase in stem diameter}
 \item{Survival}{Proportional survival}
 \item{Live}{Alive (1) or dead (0)}
-}}
+}
+}
 \usage{
 shipley
 }

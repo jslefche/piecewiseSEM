@@ -173,24 +173,54 @@ dataTrans <- function(formula., data) {
   
 }
 
-#' Get ANOVA results
+#' Get ANOVA results from `merMod`
 #'
 #' @keywords internal
 #'
 getAnova <- function(model, test.statistic = "F", test.type = "III") {
 
-  ct <- summary(model)$coefficients
-
   krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
 
-  ret <- cbind.data.frame(
-    ct[, 1:2], 
-    DF = krp[, 3], 
-    Crit.Value = krp[, 1], 
-    P = krp[, ncol(krp)]
-  )
+  ct <- summary(model)$coefficients
+  
+  colnames(ct)[2] <- "Std.Error"
+  
+  ret <- do.call(rbind, lapply(1:nrow(krp), function(i) {
+    
+    if(rownames(krp)[i] %in% rownames(ct)) {
+      
+      cbind.data.frame(
+        ct[i, 1:2, drop = FALSE],
+        DF = krp[i, 3], 
+        Crit.Value = krp[i, 1], 
+        P = krp[i, ncol(krp)],
+        row.names = NULL
+      )
+      
+    } else {
+      
+      data.frame(
+        Estimate = NA,
+        Std.Error = NA,
+        DF = krp[i, 3], 
+        Crit.Value = krp[i, 1], 
+        P = krp[i, ncol(krp)]
+      )
+      
+    }
+    
+  } ) )
+  
+  # ret <- cbind.data.frame(
+  #   ct[, 1:2], 
+  #   DF = krp[, 3], 
+  #   Crit.Value = krp[, 1], 
+  #   P = krp[, ncol(krp)]
+  # )
 
   names(ret)[ncol(ret)] <- "Pr(>|t|)"
+  
+  rownames(ret) <- rownames(krp)
 
   return(ret)
 
@@ -582,10 +612,14 @@ stripTransformations <- function(x) {
 #' 
 #' @keywords internal
 #' 
-get_response <- function(mod){
-  mod <- removeData(mod)
-  f <- lapply(mod, formula)
-  r <- lapply(f, function(x) x[[2]])
+get_response <- function(mod) {
+
+    mod <- removeData(mod)
   
-  return(as.character(r))
-}
+    f <- lapply(mod, formula)
+
+      r <- lapply(f, function(x) x[[2]])
+  
+      return(as.character(r))
+
+      }

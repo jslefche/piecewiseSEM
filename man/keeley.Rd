@@ -4,7 +4,8 @@
 \name{keeley}
 \alias{keeley}
 \title{Data set from Grace & Keeley (2006)}
-\format{A \code{data.frame} with 90 observations of 8 variables.
+\format{
+A \code{data.frame} with 90 observations of 8 variables.
 \describe{
 \item{distance}{Distance to coast}
 \item{elev}{Elevation from sea level}
@@ -14,7 +15,8 @@
 \item{firesev}{Severity of fire}
 \item{cover}{Cover of plants}
 \item{rich}{Plant species richness}
-}}
+}
+}
 \usage{
 keeley
 }

@@ -10,8 +10,8 @@
 #' merModLmerTest, glmerMod}.
 #'
 #' \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-#' \tab 2.1.0\cr Date: \tab 2019-12-05\cr Depends: \tab R (>= 3.5.0), car, 
-#' DiagrammR, nlme\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr } The primary
+#' \tab 2.1.1\cr Date: \tab 2020-04-20\cr Depends: \tab R (>= 3.5.0), nlme,
+#' pbkrtest\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr } The primary
 #' functions in the package are \code{\link{psem}} which unites structural
 #' equations in a single model. \code{summary.psem} can be used on an object of
 #' class \code{psem} to provide various summary statistics for evaluation and
