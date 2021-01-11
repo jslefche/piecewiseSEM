@@ -78,7 +78,8 @@
 #' 
 #' @export
 #'
-coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", test.statistic = "F", test.type = "II", intercepts = FALSE) {
+coefs <- function(modelList, standardize = "scale", standardize.type = "latent.linear", 
+                  test.statistic = "F", test.type = "II", intercepts = FALSE) {
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
@@ -281,9 +282,13 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
       
       atab <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
       
-      atab <- atab[match(i, rownames(atab)), ]
+      idx <- match(i, rownames(atab))
       
-      atab <- data.frame(Response = ret$Response[1], Predictor = i, Estimate = NA, Std.Error = NA, DF = atab$Df, 
+      if(is.na(idx)) idx <- which(sapply(lapply(strsplit(rownames(atab), ":"), function(j) match(i, j)), function(x) !is.na(x)))
+     
+      atab <- atab[idx, ]
+      
+      atab <- data.frame(Response = ret$Response[1], Predictor = rownames(atab), Estimate = NA, Std.Error = NA, DF = atab$Df, 
                          Crit.Value = atab[, min(which(grepl("LR Chisq|Chisq|F value|^F$", colnames(atab))))], P.Value = atab[, ncol(atab)], 
                          isSig(atab[, ncol(atab)]))
       
