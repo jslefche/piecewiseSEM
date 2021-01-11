@@ -16,9 +16,13 @@
 #' internally from the structural equations.
 #'
 #' @param \dots A list of structural equations
+#' 
 #' @return Returns an object of class \code{psem}
+#' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' 
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
+#' 
 #' @examples 
 #' mod <- psem(
 #' lm(rich ~ cover, data = keeley),

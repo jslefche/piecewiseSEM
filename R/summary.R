@@ -98,7 +98,7 @@ summary.psem <- function(object, ...,
 
   Cstat <- fisherC(dTable, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
-  IC <- infCrit(object, Cstat, add.claims, direction, interactions, conserve, conditioning, .progressBar)
+  AIC <- AIC_psem(object, Cstat, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
   coefficients <- coefs(object, standardize, standardize.type, test.statistic, test.type, intercepts)
 
@@ -110,7 +110,7 @@ summary.psem <- function(object, ...,
 
     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)
 
-  l <- list(name = name, call = call, dTable = dTable, Cstat = Cstat, IC = IC, coefficients = coefficients, R2 = R2)
+  l <- list(name = name, call = call, dTable = dTable, Cstat = Cstat, AIC = AIC, coefficients = coefficients, R2 = R2)
 
   class(l) <- "summary.psem"
 

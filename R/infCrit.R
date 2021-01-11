@@ -1,6 +1,8 @@
 #' Information criterion values for SEM
 #' 
 #' @param modelList a list of structural equations
+#' @param statistic whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+#' should be reported. Default is \code{"loglik"}
 #' @param Cstat Fisher's C statistic obtained from \code{fisherC}
 #' @param add.claims an optional vector of additional independence claims (P-values) 
 #' to be added to the basis set
@@ -15,31 +17,67 @@
 #' Default is FALSE
 #' @param .progressBar an optional progress bar. Default is FALSE
 #' 
-#' @return a vector of AIC, AICc, BIC, d.f., and sample size
+#' @return a data.frame of AIC, AICc, d.f., and sample size
+#' 
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jim Grace
+#' 
+#' @references Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics 
+#' for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.
+#' 
+#' Shipley, Bill. "The AIC model selection method applied to path analytic models compared using 
+#' a d‐separation test." Ecology 94.3 (2013): 560-564.
+#' 
+#' @examples 
+#' 
+#' mod <- psem(
+#' lm(rich ~ cover, data = keeley),
+#' lm(cover ~ firesev, data = keeley),
+#' lm(firesev ~ age, data = keeley),
+#' data = keeley
+#' )
+#' 
+#' # Get log-likelihood based AIC
+#' AIC(mod, statistic = "loglik")
+#' 
+#' # Get d-sep based AIC
+#' AIC(mod, statistic = "dsep")
+#' 
 #' 
 #' @export
 #' 
-infCrit <- function(modelList, Cstat, add.claims = NULL, basis.set = NULL, direction = NULL, 
-                    interactions = FALSE, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
+AIC_psem <- function(modelList, statistic = "loglik", 
+                    Cstat = NULL, add.claims = NULL, basis.set = NULL, direction = NULL, 
+                    interactions = FALSE, conserve = FALSE, conditional = FALSE, 
+                    .progressBar = FALSE) {
+  
+  if(statistic == "loglik") {
+    
+    aic <- sum(sapply(modelList, AIC))
+    
+    aicc <- sum(sapply(modelList, MuMIn:AICc))
+    
+    } else if(statistic == "dsep") {
+      
+      if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
 
-  if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
-
-  modelList <- removeData(modelList, formulas = 1)
-
-  K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
-
-  n.obs <- min(sapply(modelList, nObs))
-
-  pwAIC <- as.numeric(Cstat[1] + 2*K)
-
-  pwAICc <- pwAIC * (n.obs/(n.obs - K - 1))
-
-  pwBIC <- as.numeric(Cstat[1] + log(n.obs)*K)
+      modelList <- removeData(modelList, formulas = 1)
+    
+      K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
+    
+      n.obs <- min(sapply(modelList, nObs))
+    
+      aicc <- as.numeric(Cstat[1] + 2*K)
+  
+      aicc <- dsepAIC * (n.obs/(n.obs - K - 1))
+      
+      BIC <- as.numeric(Cstat[1] + log(n.obs)*K)
+      
+      }
 
   ret <- data.frame(
-    AIC = pwAIC,
-    AICc = pwAICc,
-    BIC = pwBIC,
+    AIC = aic,
+    AICc = aicc,
+    BIC = bic,
     K = K,
     n = n.obs
   )
@@ -62,13 +100,13 @@ infCrit <- function(modelList, Cstat, add.claims = NULL, basis.set = NULL, direc
 #' 
 AIC.psem <- function(object, ..., aicc = FALSE) {
 
-  aicx <- infCrit(object)
+  aicx <- AIC_psem(object)
 
   if(aicc == FALSE) AICx <- aicx$AIC else AICx <- aicx$AICc
 
   if(missing(...)) ret <- AICx else {
 
-    aicy <- infCrit(...)
+    aicy <- AIC_psem(...)
 
     if(aicc == FALSE) AICy <- aicy$AIC else AICy <- aicy$AICc
 
@@ -95,4 +133,4 @@ AIC.psem <- function(object, ..., aicc = FALSE) {
 #' 
 #' @export
 #' 
-BIC.psem <- function(object, ...) infCrit(object)$BIC
+BIC.psem <- function(object, ...) AIC_psem(object)$BIC
