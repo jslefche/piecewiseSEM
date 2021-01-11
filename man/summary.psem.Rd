@@ -9,6 +9,7 @@
   ...,
   basis.set = NULL,
   direction = NULL,
+  inactions = FALSE,
   conserve = FALSE,
   conditioning = FALSE,
   add.claims = NULL,
@@ -54,6 +55,9 @@ variables (from \code{car::Anova})}
 Default is FALSE}
 
 \item{.progressBar}{an optional progress bar. Default is TRUE}
+
+\item{interactions}{whether interactions should be included in independence claims. 
+Default is FALSE}
 }
 \value{
 The function \code{summary.psem} returns a list of summary

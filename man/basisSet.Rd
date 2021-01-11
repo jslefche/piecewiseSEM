@@ -4,13 +4,16 @@
 \alias{basisSet}
 \title{Derivation of the basis set}
 \usage{
-basisSet(modelList, direction = NULL)
+basisSet(modelList, direction = NULL, interactions = FALSE)
 }
 \arguments{
 \item{modelList}{A list of structural equations}
 
 \item{direction}{a vector of claims defining the specific directionality of any independence 
 claim(s)}
+
+\item{interactions}{whether interactions should be included in independence claims. 
+Default is FALSE}
 }
 \value{
 A \code{list} of independence claims.
