@@ -18,6 +18,7 @@
   test.statistic = "F",
   test.type = "II",
   intercepts = FALSE,
+  AIC.statistic = "loglik",
   .progressBar = TRUE
 )
 }
@@ -64,7 +65,7 @@ The function \code{summary.psem} returns a list of summary
 statistics: \item{dTable}{ A summary table of the tests of directed
 separation, from \code{\link{dSep}}.  } \item{CStat}{ Fisher's C statistic,
 degrees of freedom, and significance value based on a Chi-square test.  }
-\item{IC}{ Information criterion (Akaike, Bayesian, corrected Akaike) as
+\item{AIC}{ Information criterion (Akaike, corrected Akaike) as
 well as degrees of freedom and sample size.  } \item{coefficients}{ A
 summary table of the path coefficients, from \code{link{coefs}}.  }
 \item{R2}{ (Pseudo)-R2 values, from \code{\link{rsquared}}.  }
