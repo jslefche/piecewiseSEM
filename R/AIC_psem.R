@@ -1,7 +1,7 @@
 #' Information criterion values for SEM
 #' 
 #' @param modelList a list of structural equations
-#' @param statistic whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+#' @param AIC.statistic whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
 #' should be reported. Default is \code{"loglik"}
 #' @param Cstat Fisher's C statistic obtained from \code{fisherC}
 #' @param add.claims an optional vector of additional independence claims (P-values) 
