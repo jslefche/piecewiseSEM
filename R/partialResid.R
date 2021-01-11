@@ -30,12 +30,12 @@
 #'
 #' xresid <- resid(lm(x1 ~ x2, dat))
 #'
-#' plot(yresid, xresid)
+#' plot(xresid, yresid)
 #'
 #' # Use partialResid
 #' presid <- partialResid(y ~ x1, model)
 #'
-#' plot(presid) # identical plot!
+#' with(presid, plot(xresid, yresid)) # identical plot!
 #'
 #' @export 
 #' 
