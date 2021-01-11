@@ -12,7 +12,7 @@
 #' @return an F, LRT, or other table for a single model, or a list of
 #'  comparisons between multiple models
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
+#' @author Jon Lefcheck <lefcheckj@@si.edu>, Jarrett Byrnes <jarrett.byrnes@@umb.edu>  
 #' 
 #' @seealso \code{\link{Anova}}
 #' 
@@ -44,18 +44,18 @@
 #' @export
 #' 
 anova.psem <- function(object, ..., digits = 3, anovafun = "Anova") {
- 
+  
   dots <- list(object, ...)
   
   if(length(dots) > 1) {
-     
+    
     anovaLRT(dots)
-   
-    } else {
-     
-      anovaTable(object, anovafun = anovafun, digits = digits)
-       
-       }
+    
+  } else {
+    
+    anovaTable(object, anovafun = anovafun, digits = digits)
+    
+  }
 }
 
 #' Single anova
@@ -67,8 +67,8 @@ anovaTable <- function(object, anovafun = "Anova", digits = 3) {
   object <- removeData(object, formulas = 1)
   
   if(anovafun == "Anova") a <- car::Anova else stop("Unsupported ANOVA function")
-    
-    # if(anovafun == "aov") a <- aov else 
+  
+  # if(anovafun == "aov") a <- aov else 
   
   tests <- lapply(object, function(x) a(x))
   
@@ -127,7 +127,6 @@ anovaLRT <- function(object) {
   
   ret1 <- data.frame(
     AIC = AIC(model1),
-    BIC = BIC(model1),
     Fisher.C = model1.summary$Fisher.C,
     Fisher.C.Diff = NA,
     DF.diff = NA,
@@ -142,7 +141,7 @@ anovaLRT <- function(object) {
   ret2 <- do.call(rbind, lapply(2:length(object), function(i) {
     
     model2 <- object[[i]]
-  
+    
     model2.summary <- fisherC(model2, .progressBar = FALSE)
     
     Cdiff <- abs(model1.summary$Fisher.C - model2.summary$Fisher.C)
@@ -153,14 +152,13 @@ anovaLRT <- function(object) {
     
     ret <- data.frame(
       AIC = AIC(model2),
-      BIC = BIC(model2),
       Fisher.C = model2.summary$Fisher.C,
       Fisher.C.Diff = Cdiff,
       DF.diff = dfdiff,
       P.value = pvalue,
       sig = isSig(pvalue)
     )
-     
+    
     colnames(ret)[ncol(ret)] <- ""
     
     rownames(ret) <- c(paste("vs", i))
@@ -168,7 +166,7 @@ anovaLRT <- function(object) {
     return(ret)
     
   } ) )
-
+  
   ret <- rbind(ret1, ret2)
   
   ret[is.na(ret)] <- ""
@@ -178,7 +176,7 @@ anovaLRT <- function(object) {
   class(ret) <- "anova.psem"
   
   return(ret)
-
+  
 }
 
 #' Print anova
@@ -198,16 +196,16 @@ print.anova.psem <- function(x, ...) {
     
     cat("---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05") 
     
-    } else {
+  } else {
     
     cat("Chi-square Difference Test\n")
-      
+    
     cat("\n")
     
     cat(captureTable(x[[1]], row.names = TRUE))
     
     cat("---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05")
     
-    }
+  }
   
 }
