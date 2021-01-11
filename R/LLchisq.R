@@ -21,6 +21,16 @@
 #' @references Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics 
 #' for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.
 #' 
+#' @examples 
+#' mod <- psem(
+#' lm(rich ~ cover, data = keeley),
+#' lm(cover ~ firesev, data = keeley),
+#' lm(firesev ~ age, data = keeley),
+#' data = keeley
+#' )
+#' 
+#' LLchisq(mod)
+#' 
 #' @export 
 #' 
 LLchisq <- function(modelList, basis.set = NULL, interactions = FALSE) {
