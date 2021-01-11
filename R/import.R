@@ -6,6 +6,7 @@
 #' @importFrom lme4 findbars nobars glmerControl lmerControl ranef VarCorr
 #' @importFrom MASS glm.nb glmmPQL negative.binomial
 #' @importFrom methods as
+#' @importFrom MuMIn AICc
 #' @importFrom multcomp cld
 #' @importFrom nlme fixef getData getVarCov glsControl lmeControl ranef VarCorr
 #' @importFrom stats AIC anova as.formula BIC binomial cor cor.test drop.terms family 
