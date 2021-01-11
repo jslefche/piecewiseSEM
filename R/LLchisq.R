@@ -36,9 +36,7 @@
 LLchisq <- function(modelList, basis.set = NULL, interactions = FALSE) {
   
   if(is.null(basis.set)) b <- basisSet(modelList, direction = NULL, interactions) else b <- basis.set
-  
-  if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
-  
+
   if(length(b) == 0) {
     
     data.frame()
