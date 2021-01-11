@@ -22,6 +22,8 @@
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #' Details).
+#' #' @param interactions whether interactions should be included in independence claims. 
+#' Default is FALSE
 #' @param conserve Whether the most conservative P-value should be returned;
 #' for use in special cases (see Details). Default is FALSE.
 #' @param conditioning Whether the conditioning variables should be shown in
@@ -37,10 +39,10 @@
 #' 
 #' @export 
 #' 
-dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, 
-                 conditioning = FALSE, .progressBar = TRUE) {
+dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE, 
+                 conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
   
-  if(is.null(basis.set)) b <- basisSet(modelList, direction) else b <- basis.set
+  if(is.null(basis.set)) b <- basisSet(modelList, direction, interactions) else b <- basis.set
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
   
