@@ -33,6 +33,8 @@
 #' @param basis.set an optional basis set
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s)
+#' @param interactions whether interactions should be included in independence claims. 
+#' Default is FALSE
 #' @param conserve whether the most conservative P-value should be returned (See Details) 
 #' Default is FALSE
 #' @param conditioning whether all conditioning variables should be shown in the table
@@ -81,7 +83,7 @@
 #' @export
 #' 
 summary.psem <- function(object, ...,
-                         basis.set = NULL, direction = NULL, conserve = FALSE, conditioning = FALSE,
+                         basis.set = NULL, direction = NULL, inactions = FALSE, conserve = FALSE, conditioning = FALSE,
                          add.claims = NULL,
                          standardize = "scale", standardize.type = "latent.linear", 
                          test.statistic = "F", test.type = "II",
@@ -92,11 +94,11 @@ summary.psem <- function(object, ...,
 
   call <- paste(listFormula(object), collapse = "\n  ")
 
-  dTable <- dSep(object, basis.set, direction, conserve, conditioning, .progressBar)
+  dTable <- dSep(object, basis.set, direction, interactions, conserve, conditioning, .progressBar)
 
-  Cstat <- fisherC(dTable, add.claims, direction, conserve, conditioning, .progressBar)
+  Cstat <- fisherC(dTable, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
-  IC <- infCrit(object, Cstat, add.claims, direction, conserve, conditioning, .progressBar)
+  IC <- infCrit(object, Cstat, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
   coefficients <- coefs(object, standardize, standardize.type, test.statistic, test.type, intercepts)
 

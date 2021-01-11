@@ -22,7 +22,7 @@
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #' Details).
-#' #' @param interactions whether interactions should be included in independence claims. 
+#' @param interactions whether interactions should be included in independence claims. 
 #' Default is FALSE
 #' @param conserve Whether the most conservative P-value should be returned;
 #' for use in special cases (see Details). Default is FALSE.

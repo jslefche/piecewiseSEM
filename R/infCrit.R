@@ -7,6 +7,8 @@
 #' @param basis.set An optional list of independence claims.
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s)
+#' @param interactions whether interactions should be included in independence claims. 
+#' Default is FALSE
 #' @param conserve whether the most conservative P-value should be returned (See Details) 
 #' Default is FALSE
 #' @param conditional whether the conditioning variables should be shown in the table. 
@@ -17,7 +19,8 @@
 #' 
 #' @export
 #' 
-infCrit <- function(modelList, Cstat, add.claims = NULL, basis.set = NULL, direction = NULL, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
+infCrit <- function(modelList, Cstat, add.claims = NULL, basis.set = NULL, direction = NULL, 
+                    interactions = FALSE, conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
   if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
 
