@@ -56,7 +56,7 @@
 #' statistics: \item{dTable}{ A summary table of the tests of directed
 #' separation, from \code{\link{dSep}}.  } \item{CStat}{ Fisher's C statistic,
 #' degrees of freedom, and significance value based on a Chi-square test.  }
-#' \item{IC}{ Information criterion (Akaike, Bayesian, corrected Akaike) as
+#' \item{AIC}{ Information criterion (Akaike, corrected Akaike) as
 #' well as degrees of freedom and sample size.  } \item{coefficients}{ A
 #' summary table of the path coefficients, from \code{link{coefs}}.  }
 #' \item{R2}{ (Pseudo)-R2 values, from \code{\link{rsquared}}.  }
@@ -88,6 +88,7 @@ summary.psem <- function(object, ...,
                          standardize = "scale", standardize.type = "latent.linear", 
                          test.statistic = "F", test.type = "II",
                          intercepts = FALSE,
+                         AIC.statistic = "loglik",
                          .progressBar = TRUE) {
 
   name <- deparse(match.call()$object)
@@ -98,7 +99,9 @@ summary.psem <- function(object, ...,
 
   Cstat <- fisherC(dTable, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
-  AIC <- AIC_psem(object, Cstat, add.claims, direction, interactions, conserve, conditioning, .progressBar)
+  ChiSq <- LLchisq(object, basis.set, interactions)
+  
+  AIC <- AIC_psem(object, AIC.statistic, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
   coefficients <- coefs(object, standardize, standardize.type, test.statistic, test.type, intercepts)
 
@@ -110,7 +113,8 @@ summary.psem <- function(object, ...,
 
     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[, which(sapply(dTable, is.numeric))], 4)
 
-  l <- list(name = name, call = call, dTable = dTable, Cstat = Cstat, AIC = AIC, coefficients = coefficients, R2 = R2)
+  l <- list(name = name, call = call, dTable = dTable, ChiSq = ChiSq, Cstat = Cstat, 
+            AIC = AIC, coefficients = coefficients, R2 = R2)
 
   class(l) <- "summary.psem"
 
@@ -135,14 +139,18 @@ print.summary.psem <- function(x, ...) {
 
   cat("\n")
 
-  cat("\n    AIC      BIC")
-  cat("\n", as.character(sprintf("%.3f", x$IC[1])), " ", as.character(x$IC[3]))
+  cat("\n    AIC")
+  cat("\n", as.character(sprintf("%.3f", x$AIC[1])))
 
   cat("\n")
 
   cat("\n---\nTests of directed separation:\n\n", captureTable(x$dTable))
 
-  cat("\nGlobal goodness-of-fit:\n\n  Fisher's C =", as.character(x$Cstat[1]),
+  cat("\n--\nGlobal goodness-of-fit:\n\nChi-Squared =", as.character(x$ChiSq[1]),
+      "with P-value =", as.character(x$ChiSq[3]),
+      "and on", as.character(x$ChiSq)[2], "degrees of freedom")
+  
+  cat("\nFisher's C =", as.character(x$Cstat[1]),
       "with P-value =", as.character(x$Cstat[3]),
       "and on", as.character(x$Cstat[2]), "degrees of freedom")
 

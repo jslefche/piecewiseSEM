@@ -45,26 +45,26 @@
 #' 
 #' @export
 #' 
-AIC_psem <- function(modelList, statistic = "loglik", 
+AIC_psem <- function(modelList, AIC.statistic = "loglik", 
                      Cstat = NULL, add.claims = NULL, basis.set = NULL, direction = NULL, 
                      interactions = FALSE, conserve = FALSE, conditional = FALSE, 
                      .progressBar = FALSE) {
   
-  if(statistic == "loglik") {
+  modelList <- removeData(modelList, formulas = 1)
+  
+  K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
+  
+  n.obs <- min(sapply(modelList, nObs))
+  
+  if(AIC.statistic == "loglik") {
     
     aic <- sum(sapply(modelList, AIC))
     
     aicc <- sum(sapply(modelList, MuMIn::AICc))
     
-  } else if(statistic == "dsep") {
+  } else if(AIC.statistic == "dsep") {
     
     if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
-    
-    modelList <- removeData(modelList, formulas = 1)
-    
-    K <- do.call(sum, lapply(modelList, function(i) attr(logLik(i), "df")))
-    
-    n.obs <- min(sapply(modelList, nObs))
     
     aicc <- as.numeric(Cstat[1] + 2*K)
     
@@ -77,7 +77,7 @@ AIC_psem <- function(modelList, statistic = "loglik",
   ret <- data.frame(
     AIC = aic,
     AICc = aicc,
-    BIC = bic,
+    # BIC = bic,
     K = K,
     n = n.obs
   )
@@ -123,14 +123,3 @@ AIC.psem <- function(object, ..., aicc = FALSE) {
   return(ret)
   
 }
-
-#' Generalized function for SEM BIC score
-#'
-#' @param object a psem object
-#' @param ... additional arguments to BIC
-#' 
-#' @method BIC psem
-#' 
-#' @export
-#' 
-BIC.psem <- function(object, ...) AIC_psem(object)$BIC
