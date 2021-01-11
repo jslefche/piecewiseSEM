@@ -28,6 +28,8 @@
 #' @param modelList A list of structural equations
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s) 
+#' @param interactions whether interactions should be included in independence claims. 
+#' Default is FALSE
 #' @return A \code{list} of independence claims.
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{dSep}}
@@ -35,7 +37,7 @@
 #' 
 #' @export
 #' 
-basisSet <- function(modelList, direction = NULL) {
+basisSet <- function(modelList, direction = NULL, interactions = FALSE) {
 
   amat <- getDAG(modelList)
 
@@ -70,17 +72,15 @@ basisSet <- function(modelList, direction = NULL) {
 
     b <- filterExogenous(b, modelList, amat)
 
-    b <- filterInteractions(b)
+    b <- filterInteractions(b, interactions)
 
     b <- removeCerror(b, modelList)
 
     b <- reverseAddVars(b, modelList, amat)
 
     b <- reverseNonLin(b, modelList, amat)
-    
-    # Need to write a function that makes sure categorical
-    #variables are always predictors in basis set
-    #b <- fixCatDir(modelList, b, amat)
+
+    b <- fixCatDir(b, modelList)
     
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
@@ -144,9 +144,23 @@ filterExogenous <- function(b, modelList, amat) {
 #' 
 #' @keywords internal
 #' 
-filterInteractions <- function(b) {
+filterInteractions <- function(b, interactions = FALSE) {
 
-  b <- lapply(b, function(i) if(any(grepl("\\:", i[1:2]))) NULL else i )
+  if(interactions == FALSE) {
+    
+    b <- lapply(b, function(i) if(any(grepl("\\:", i[1:2]))) NULL else i )
+    
+  } else {
+    
+    b <- lapply(b, function(i) {
+      
+      vars <- unlist(sapply(i, strsplit, ":"))
+      
+      if(any(vars[1] %in% vars[-1]) | grepl(":", vars[2])) NULL else i
+      
+    } )
+    
+  }
 
   b <- b[!sapply(b, is.null)]
 
@@ -386,6 +400,36 @@ flipOne <- function(rel, arrow, b) {
   
 
   return(list(cond[[1]], b_idx))
+  
+}
+
+#' Flip independence claims so categorical variables are not the response
+#' 
+#' @keywords internal
+#' 
+fixCatDir <- function(b, modelList) {
+  
+  b <- lapply(b, function(i) {
+    
+    var <- i[2]
+    
+    data <- modelList$data
+    
+    if(class(data[, var]) %in% c("factor", "character")) {
+      
+      var1 <- i[1]
+      
+      i[1] <- var
+      
+      i[2] <- var1
+      
+    } 
+    
+    return(i)
+    
+  } )
+  
+  return(b)
   
 }
 
