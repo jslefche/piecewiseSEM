@@ -4,7 +4,13 @@
 \alias{scaleGLM}
 \title{Compute standard deviation or relevant range of response for GLMs}
 \usage{
-scaleGLM(model, standardize = "scale", standardize.type = "latent.linear")
+scaleGLM(
+  model,
+  family.,
+  link.,
+  standardize = "scale",
+  standardize.type = "latent.linear"
+)
 }
 \description{
 Compute standard deviation or relevant range of response for GLMs

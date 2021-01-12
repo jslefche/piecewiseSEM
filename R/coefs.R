@@ -18,15 +18,14 @@
 #' length == 2 to the ranges to be used in standardization.}
 #' }
 #'
-#' For binary response models (i.e., binomial responses), standardized coefficients
-#' are obtained in one of two ways:\itemize{
-#' \item{\code{latent.linear} Referred to in Grace et al. (in review) as the standard form of
-#' the latent-theoretic (LT) approach. In this method, there is assumed to be a continuous
+#' For non-Gaussian responses, standardized coefficients are obtained in one of two ways:\itemize{
+#' \item{\code{latent.linear} Referred to in Grace et al. 2019 as the standard form of
+#' the latent-theoretic (LT) approach. In this method, there is assumed to be a continuous 
 #' latent propensity, y*, that underlies the observed binary responses. The standard
 #' deviation of y* is computed as the square-root of the variance of the predictions
-#' (on the linear or 'link' scale) plus the distribution-specific assumed variance
-#' (for logit links: pi^2/3, for probit links: 1).}
-#' \item{\code{Menard.OE} Referred to in Grace et al. (in review) as the standard form of
+#' (on the linear or 'link' scale) plus the distribution-specific theoretical variance in the
+#' case of binomial responses (for logit links: pi^2/3, for probit links: 1).}
+#' \item{\code{Menard.OE} Referred to in Grace et al. 2019 as the standard form of
 #' the observed-empirical (OE) approach. In this method, error variance is based on the
 #' differences between predicted scores and the observed binary data. The standard
 #' deviation used for standardization is computed as the square-root of the variance of
