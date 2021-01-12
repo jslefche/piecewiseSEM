@@ -18,8 +18,8 @@
 #' length == 2 to the ranges to be used in standardization.}
 #' }
 #'
-#' For non-Gaussian responses, standardized coefficients are obtained in one of two ways:\itemize{
-#' \item{\code{latent.linear} Referred to in Grace et al. 2019 as the standard form of
+#' For non-Gaussian responses, standardized coefficients are obtained in one of two ways:
+#' \itemize{ \item{\code{latent.linear} Referred to in Grace et al. 2019 as the standard form of
 #' the latent-theoretic (LT) approach. In this method, there is assumed to be a continuous 
 #' latent propensity, y*, that underlies the observed binary responses. The standard
 #' deviation of y* is computed as the square-root of the variance of the predictions
@@ -527,7 +527,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
             
           }
         
-    } else if(family. %in% c("binomial", "negbin", "quasibinomial", "poisson", "quasipoisson", "gamma"))
+    } else if(family. %in% c("binomial", "negbin", "poisson"))
       
       sd.y <- scaleGLM(model, family., link, standardize, standardize.type) else {
         
