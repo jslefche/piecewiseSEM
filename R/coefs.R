@@ -490,43 +490,55 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
   
   family. <- try(family(model), silent = TRUE)
   
-  if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
+  if(class(family.) %in% c("try-error", "family")) family. <- try(model$family, silent = TRUE)
   
   if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "gls", "lme")))
     
     family. <- list(family = "gaussian", link = "identity")
   
-  if(class(family.) == "try-error" | is.null(family.) | any(class(model) %in% c("glmerMod", "glmmPQL")))
+  if(class(family.) == "try-error" | is.null(family.)) {
     
-    sd.y <- NA else {
+    sd.y <- NA 
+    
+  } else {
+    
+    link. <- family(model)$link
+    
+    family. <- family(model)$family
+    
+    family. <- gsub("(.*)\\(.*\\)", "\\1", family.)
+    
+    if(family. == "gaussian") {
       
-      if(family.$family == "gaussian") {
+      if(all(standardize == "scale")) sd.y <- sd(data[, y], na.rm = TRUE) else
         
-        if(all(standardize == "scale")) sd.y <- sd(data[, y], na.rm = TRUE) else
+        if(all(standardize == "range")) sd.y <- diff(range(data[, y], na.rm = TRUE)) else
           
-          if(all(standardize == "range")) sd.y <- diff(range(data[, y], na.rm = TRUE)) else
+          if(is.list(standardize)) {
             
-            if(is.list(standardize)) {
+            nm <- which(names(standardize) == y)
+            
+            if(sum(nm) == 0) {
               
-              nm <- which(names(standardize) == y)
+              warning(paste0("Relevant range not specified for variable '", y, "'. Using observed range instead"), call. = FALSE)
               
-              if(sum(nm) == 0) {
-                
-                warning(paste0("Relevant range not specified for variable '", y, "'. Using observed range instead"), call. = FALSE)
-                
-                sd.y <- diff(range(data[, y], na.rm = TRUE)) 
-                
-              } else sd.y <- diff(range(standardize[[nm]]))
+              sd.y <- diff(range(data[, y], na.rm = TRUE)) 
               
-            }
-          
-      } else if(family.$family == "binomial")
+            } else sd.y <- diff(range(standardize[[nm]]))
+            
+          }
         
-        sd.y <- scaleGLM(model, standardize, standardize.type) else
-          
-          sd.y <- NA
+    } else if(family. %in% c("binomial", "negbin", "quasibinomial", "poisson", "quasipoisson", "gamma"))
+      
+      sd.y <- scaleGLM(model, family., link, standardize, standardize.type) else {
         
-    }
+        sd.y <- NA
+        
+        warning("Family or link function not supported: standardized coefficients not returned")
+        
+      }
+    
+  }
   
   return(sd.y)
   
@@ -536,38 +548,44 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
 #' 
 #' @keywords internal
 #' 
-scaleGLM <- function(model, standardize = "scale", standardize.type = "latent.linear") {
-
+scaleGLM <- function(model, family., link., standardize = "scale", standardize.type = "latent.linear") {
+  
   preds <- predict(model, type = "link")
-
+  
   if(standardize.type == "Menard.OE") {
-
+    
     y <- all.vars_notrans(model)[1]
-
+    
     data <- GetSingleData(model)
-
+    
     R <- cor(data[, y], predict(model, type = "response"))
-
+    
     sd.y <- sqrt(var(preds)) / R
-
+    
   }
-
+  
   if(standardize.type == "latent.linear") {
-
-    link. <- family(model)$link
-
-    if(link. == "logit") sigmaE <- pi^2/3 else
-
-      if(link. == "probit") sigmaE <- 1
-
-    sd.y <- sqrt(var(preds) + sigmaE)
-
+    
+    if(family. != "binomial") 
+      
+      sd.y <- sqrt(var(preds)) else
+        
+        if(family. == "binomial") {
+          
+          if(link. == "logit") sigmaE <- pi^2/3 else
+            
+            if(link. == "probit") sigmaE <- 1
+            
+            sd.y <- sqrt(var(preds) + sigmaE) 
+            
+        }
+    
   }
-
+  
   if(all(standardize == "range") | is.list(standardize)) sd.y <- sd.y * 6
-
+  
   return(sd.y)
-
+  
 }
 
 #' Calculate standard deviation or relevant range for interaction terms
@@ -597,77 +615,3 @@ scaleInt <- function(model, newdata, standardize) {
   } )
 
 }
-
-#' #' Determines if we need to use emmeans or emtrends
-#' #' 
-#' #' @keywords internal
-#' deparseInt <- function(coefName, model, catVars, vars){
-#'   piecesOfInt <- strsplit(coefName, ":")[[1]]
-#'   catVarsInInt <- piecesOfInt[piecesOfInt %in% catVars]
-#'   contVarsInInt <- piecesOfInt[!(piecesOfInt %in% catVars)]
-#'   
-#'   if(length(contVarsInInt)>0){
-#'     ret <- intTrend(model, catVarsInInt, contVarsInInt)
-#'   }else{
-#'     ret <- intCat(model, catVarsInInt)
-#'   }
-#'   ret <- ret[,-which(names(ret) %in% c("lower.CL", "upper.CL"))]
-#'   #clean up
-#'   names(ret) <- c("Predictor", "Estimate", "Std.Error", "DF")
-#'   ret$Crit.Value <- with(ret, Estimate/`Std.Error`)
-#'   ret$P.Value <- with(ret, 2 * pt(abs(Crit.Value), DF, 
-#'                                   lower.tail = FALSE))
-#'   
-#'   ret <- cbind(ret, isSig(ret[,6]))
-#'   names(ret)[7] <- ""  
-#'   
-#'   return(ret)
-#' }
-#' 
-#' 
-#' #' Uses emtrends to get the slope at different levels of factors
-#' #' 
-#' #' @keywords internal
-#' #' 
-#' 
-#' intTrend <- function(model, catVarsInInt, contVarsInInt){
-#'   meanTrends <- as.data.frame(emtrends(model, specs = catVarsInInt, var = contVarsInInt))
-#'   
-#'   #paste a big predictor
-#'   for(avar in catVarsInInt){
-#'     meanTrends[[avar]] <- paste(avar, "=", as.character( meanTrends[[avar]]))
-#'   }
-#'   
-#'   newvar <- sapply(1:nrow(meanTrends), function(i) paste(contVarsInInt, "at", 
-#'                                                          paste(meanTrends[i,catVarsInInt], collapse = ", ")))
-#'   
-#'   #clean up naming
-#'   meanTrends <- meanTrends[,-which(names(meanTrends) %in% catVarsInInt)]
-#'   meanTrends <- cbind(data.frame(Predictor = newvar), meanTrends)
-#'   
-#'   return(meanTrends)
-#' }
-#' 
-#' 
-#' #' Uses emmeans to get the mean at different levels of factors
-#' #' 
-#' #' @keywords internal
-#' #' 
-#' 
-#' intCat <- function(model, catVarsInInt){
-#'   meanInts <- as.data.frame(emmeans(model, catVarsInInt))
-#'   
-#'   #paste a big predictor
-#'   for(avar in catVarsInInt){
-#'     meanInts[[avar]] <- paste(avar, "=", as.character( meanInts[[avar]]))
-#'   }
-#'   
-#'   newvar <- sapply(1:nrow(meanInts), function(i) 
-#'     paste(meanInts[i,catVarsInInt], collapse = ", "))
-#'   
-#'   #clean up naming
-#'   meanInts <- meanInts[,-which(names(meanInts) %in% catVarsInInt)]
-#'   meanInts <- cbind(data.frame(Predictor = newvar), meanInts) 
-#'   
-#'   meanInts
-#' }
