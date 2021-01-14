@@ -47,23 +47,28 @@ LLchisq <- function(modelList, basis.set = NULL, interactions = FALSE) {
     
     modelList <- removeData(modelList, formulas = 1)
   
-    # loop over modelList and update models to get saturated modelw
     satModelList <- getSatModels(b, modelList, data)
-    
-    # get LL from model List
     
     M1 <- sapply(modelList, logLik)
     
     M2 <- sapply(satModelList, logLik)
     
-    ChiSq <- sum(-2*(M1 - M2))
+    ChiSq_ML <- -2*sum(M1 - M2)
+    
+    if(ChiSq_ML < 0) {
+      
+      ChiSq_ML <- NA
+      
+      warning("Check convergence: log-likelihood estimates lead to negative Chi-squared!")
+      
+    }
     
     DF <- sum(sapply(satModelList, function(x) attributes(logLik(x))$df)) -
       sum(sapply(modelList, function(x) attributes(logLik(x))$df))
     
-    P <- 1 - pchisq(ChiSq, DF)
+    P <- 1 - pchisq(ChiSq_ML, DF)
     
-    ret <- data.frame(Chisq = ChiSq, df = DF, P.Value = P)
+    ret <- data.frame(Chisq = ChiSq_ML, df = DF, P.Value = P)
     
     ret[, which(sapply(ret, is.numeric))] <- round(ret[, which(sapply(ret, is.numeric))], 3)
     
@@ -89,23 +94,10 @@ getSatModels <- function(b, modelList, data) {
     
     if(length(newVars) == 0) satModel <- model else {
       
-      if(any(class(model) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
-        
-        satModel <- suppressWarnings(
-          update(model,
-                 formula(paste(". ~ . +", paste(newVars, collapse = " + "), " + ", onlyBars(formula(model)))),
-                 data = data)
-        )
-        
-      } else {
-        
-        satModel <- suppressWarnings(
-          update(model,
-                 formula(paste(". ~ . +", paste(newVars, collapse = " + "))),
-                 data = data)
-        )
-        
-      }
+      satModel <- suppressWarnings(
+        update(model,
+               formula(paste(". ~ . +", paste(newVars, collapse = " + "))),
+               data = data) )
       
     }
     
