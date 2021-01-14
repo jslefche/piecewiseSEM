@@ -85,7 +85,7 @@
 #' @export
 #' 
 summary.psem <- function(object, ...,
-                         basis.set = NULL, direction = NULL, inactions = FALSE, conserve = FALSE, conditioning = FALSE,
+                         basis.set = NULL, direction = NULL, interactions = FALSE, conserve = FALSE, conditioning = FALSE,
                          add.claims = NULL,
                          standardize = "scale", standardize.type = "latent.linear", 
                          test.statistic = "F", test.type = "II",
