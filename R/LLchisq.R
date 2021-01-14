@@ -93,7 +93,7 @@ getSatModels <- function(b, modelList, data) {
         
         satModel <- suppressWarnings(
           update(model,
-                 formula(paste(". ~ . +", paste(newVars, collapse = " + "), " + ", onlyBars(formula(bMod)))),
+                 formula(paste(". ~ . +", paste(newVars, collapse = " + "), " + ", onlyBars(formula(model)))),
                  data = data)
         )
         
