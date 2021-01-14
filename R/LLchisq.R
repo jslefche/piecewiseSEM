@@ -9,6 +9,9 @@
 #' 
 #' @param modelList A list of structural equations created using \code{psem}.
 #' @param basis.set An optional list of independence claims.
+#' @param direction A \code{vector} of claims defining the specific
+#' directionality of independence claims; for use in special cases (see
+#'  \code{\link{dSep}}.
 #' @param interactions whether interactions should be included in basis set. 
 #' Default is FALSE
 #' 
@@ -16,7 +19,7 @@
 #' 
 #' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' 
-#' @seealso \code{\link{basisSet}}
+#' @seealso \code{\link{basisSet}}, \code{\link{dSep}}
 #' 
 #' @references Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics 
 #' for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.
@@ -33,9 +36,9 @@
 #' 
 #' @export 
 #' 
-LLchisq <- function(modelList, basis.set = NULL, interactions = FALSE) {
+LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE) {
   
-  if(is.null(basis.set)) b <- basisSet(modelList, direction = NULL, interactions) else b <- basis.set
+  if(is.null(basis.set)) b <- basisSet(modelList, direction, interactions) else b <- basis.set
 
   if(length(b) == 0) {
     
@@ -59,7 +62,7 @@ LLchisq <- function(modelList, basis.set = NULL, interactions = FALSE) {
       
       ChiSq_ML <- NA
       
-      warning("Check convergence: log-likelihood estimates lead to negative Chi-squared!")
+      warning("Check model convergence: log-likelihood estimates lead to negative Chi-squared!")
       
     }
     
