@@ -79,7 +79,7 @@ LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions 
       
       ChiSq_ML <- NA
       
-      warning("Check model convergence: log-likelihood estimates lead to negative Chi-squared!")
+      warning("Check model convergence: log-likelihood estimates lead to negative Chi-squared!", call. = FALSE)
       
     }
     
