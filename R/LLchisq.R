@@ -39,7 +39,7 @@ LLchisq <- function(modelList, basis.set = NULL, interactions = FALSE) {
 
   if(length(b) == 0) {
     
-    data.frame()
+    data.frame(Chisq = 0, df = 0, P.Value = 1)
     
   } else {
   
