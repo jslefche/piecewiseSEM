@@ -1,7 +1,7 @@
 #' Information criterion values for SEM
 #' 
 #' @param modelList a list of structural equations
-#' @param AIC.statistic whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+#' @param AIC.type whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
 #' should be reported. Default is \code{"loglik"}
 #' @param Cstat Fisher's C statistic obtained from \code{fisherC}
 #' @param add.claims an optional vector of additional independence claims (P-values) 
@@ -45,7 +45,7 @@
 #' 
 #' @export
 #' 
-AIC_psem <- function(modelList, AIC.statistic = "loglik", 
+AIC_psem <- function(modelList, AIC.type = "loglik", 
                      Cstat = NULL, add.claims = NULL, basis.set = NULL, direction = NULL, 
                      interactions = FALSE, conserve = FALSE, conditional = FALSE, 
                      .progressBar = FALSE) {
@@ -56,21 +56,21 @@ AIC_psem <- function(modelList, AIC.statistic = "loglik",
   
   n.obs <- min(sapply(modelList, nObs))
   
-  if(AIC.statistic == "loglik") {
+  if(AIC.type == "loglik") {
     
     aic <- sum(sapply(modelList, AIC))
     
     aicc <- sum(sapply(modelList, MuMIn::AICc))
     
-  } else if(AIC.statistic == "dsep") {
+  } else if(AIC.type == "dsep") {
     
     if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
     
-    aicc <- as.numeric(Cstat[1] + 2*K)
+    aic <- as.numeric(Cstat[1] + 2*K)
     
-    aicc <- dsepAIC * (n.obs/(n.obs - K - 1))
+    aicc <- aic * (n.obs/(n.obs - K - 1))
     
-    BIC <- as.numeric(Cstat[1] + log(n.obs)*K)
+    # BIC <- as.numeric(Cstat[1] + log(n.obs)*K)
     
   }
   
@@ -92,15 +92,17 @@ AIC_psem <- function(modelList, AIC.statistic = "loglik",
 #'
 #' @param object a psem object
 #' @param ... additional arguments to AIC
+#' @param AIC.type whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+#' should be reported. Default is \code{"loglik"}
 #' @param aicc whether correction for small sample size should be applied. Default is \code{FALSE}
 #'  
 #' @method AIC psem
 #'  
 #' @export
 #' 
-AIC.psem <- function(object, ..., aicc = FALSE) {
+AIC.psem <- function(object, ..., AIC.type = "loglik", aicc = FALSE) {
   
-  aicx <- AIC_psem(object)
+  aicx <- AIC_psem(object, AIC.type)
   
   if(aicc == FALSE) AICx <- aicx$AIC else AICx <- aicx$AICc
   
