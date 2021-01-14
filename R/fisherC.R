@@ -28,11 +28,11 @@ fisherC <- function(dTable, add.claims = NULL, basis.set = NULL, direction = NUL
 
   if(length(dTable) == 0) {
 
-    Cstat <- 0
+    Cstat <- NA
 
     DF <- 0
 
-    P <- 1
+    P <- NA
 
   } else {
 

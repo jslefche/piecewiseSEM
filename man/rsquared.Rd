@@ -24,6 +24,10 @@ generalized linear mixed effects models.
 For mixed models, marginal R2 considers only the variance by the fixed
 effects, and the conditional R2 by both the fixed and random effects.
 
+For generalized additive models fit to gaussian distribution, the function
+returns ths adjusted-R2. For all other distributions, it returns the proportion
+of deviance explained.
+
 For GLMs (\code{glm}), supported methods include: \itemize{
 \item\code{mcfadden} 1 - ratio of likelihoods of full vs. null models
 
@@ -88,6 +92,9 @@ DEFAULT method
 
     # Get R2 for generalized linear mixed effects model (glmmPQL)
     rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))
+    
+    # Get R2 for generalized additive models (gam)
+    rsquared(mgcv::gam(ynorm ~ x1, dat))
   }
 
 }

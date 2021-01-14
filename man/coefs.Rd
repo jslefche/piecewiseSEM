@@ -78,6 +78,9 @@ The means are generated using function \code{emmeans} in the \code{emmeans} pack
 Pairwise contrasts are further conducted among all levels using the default  
 correction for multiple testing. The results of those comparisons are given in the 
 significance codes (e.g., "a", "b", "ab") as reported in the \code{multcomp::cld} function.
+
+For non-linear variables (i.e., smoothing functions from \code{\link{mgcv::gam}}), there are
+no linear estimates reported.
 }
 \examples{
 mod <- psem(

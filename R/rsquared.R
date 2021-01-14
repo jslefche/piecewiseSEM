@@ -5,6 +5,10 @@
 #'
 #' For mixed models, marginal R2 considers only the variance by the fixed
 #' effects, and the conditional R2 by both the fixed and random effects.
+#' 
+#' For generalized additive models fit to gaussian distribution, the function
+#' returns ths adjusted-R2. For all other distributions, it returns the proportion
+#' of deviance explained.
 #'
 #' For GLMs (\code{glm}), supported methods include: \itemize{
 #' \item\code{mcfadden} 1 - ratio of likelihoods of full vs. null models
@@ -81,6 +85,9 @@
 #'
 #'     # Get R2 for generalized linear mixed effects model (glmmPQL)
 #'     rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))
+#'     
+#'     # Get R2 for generalized additive models (gam)
+#'     rsquared(mgcv::gam(ynorm ~ x1, dat))
 #'   }
 #'
 #' @export
@@ -99,7 +106,7 @@ rsquared <- function(modelList, method = NULL) {
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i) else
 
-    if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method) else
+    if(all(class(i) %in% c("glm", "lm"))) r <- rsquared.glm(i, method) else
 
     # if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
 
@@ -110,6 +117,8 @@ rsquared <- function(modelList, method = NULL) {
     if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method) else
 
     if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method) else
+      
+    if(any(class(i) %in% c("gam"))) r <- rsquared.gam(i) else
       
       r <- list(family = "gaussian", link = "identity", method = "none", R.squared = NA)
 
@@ -653,8 +662,19 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
 }
 
-# R^2 for glmmadmb objects
+# R^2 for gam objects
 # 
 # @keywords internal
 #
+rsquared.gam <- function(model) {
 
+  link <- family(model)$link
+  
+  family. <- family(model)$family
+  
+  if(family. == "gaussian") r <- summary(model)$r.sq else r <- summary(model)$dev.expl
+  
+  list(family = family., link = link, method = "none", R.squared = r)
+  
+}
+  

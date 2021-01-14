@@ -70,14 +70,15 @@ all.vars_trans <- function(formula.) {
 
       if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
 
-      c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
+      ret <- c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
 
+      ret <- gsub("s\\((.*)\\).*", "\\1", ret)
+      
       }
 
     } else unlist(strsplit(formula., " ~~ "))
 
 }
-
 
 #' Captures output table
 #' 
@@ -341,6 +342,9 @@ GetSingleData <- function(model) {
 
          "lme" = {
            dat <-  nlme::getData(model)
+         },
+         "gam" = {
+           dat <-  model$model
          }
 
   )

@@ -42,6 +42,9 @@
 #' Pairwise contrasts are further conducted among all levels using the default  
 #' correction for multiple testing. The results of those comparisons are given in the 
 #' significance codes (e.g., "a", "b", "ab") as reported in the \code{multcomp::cld} function.
+#' 
+#' For non-linear variables (i.e., smoothing functions from \code{\link{mgcv::gam}}), there are
+#' no linear estimates reported.
 #'
 #' @param modelList A list of structural equations, or a model.
 #' @param standardize The type of standardization: \code{none}, \code{scale}, \code{range}.
@@ -104,7 +107,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
   
   names(ret)[length(ret)] <- ""
 
-  if(any(ret$Estimate == "-")) warning("Categorical variables detected. Please refer to documentation for interpretation of Estimates!", call. = FALSE)
+  if(any(ret$Estimate == "-")) warning("Categorical or non-linear variables detected. Please refer to documentation for interpretation of Estimates!", call. = FALSE)
   
   return(ret)
 
@@ -200,6 +203,26 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
     
   }
   
+  if(any(class(model) %in% "gam")) {
+    
+    ret_linear <- as.data.frame(summary(model)$p.table)
+    
+    ret_linear <- cbind(ret_linear[, 1:2], DF = length(residuals(model)), ret_linear[, 3:4])
+    
+    ret_nonlinear <- as.data.frame(summary(model)$s.table)
+    
+    if(nrow(ret_nonlinear) == 0) ret <- ret_linear else {
+    
+      ret_nonlinear <- cbind(Estimate = NA, Std.Error = NA, ret_nonlinear[, 2:4])
+      
+      names(ret_nonlinear) <- names(ret_linear)
+      
+      ret <- rbind(ret_linear, ret_nonlinear)
+      
+    }
+  
+  }
+    
   ret <- cbind(ret, isSig(ret[, 5]))
   
   ret <- data.frame(
@@ -230,6 +253,8 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
 #' @keywords internal
 #' 
 handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.type = "II") {
+  
+  if(any(class(model) %in% "gam")) return(ret) else {
   
   if(any(class(model) %in% c("glmerMod", "merMod"))) test.statistic <- "Chisq"
   
@@ -315,6 +340,8 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
     
   }
   
+  }
+  
   # removed categorical interactions for now sorry JEKB
   #  
   # #what are the factors and their interactions?
@@ -393,7 +420,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
         
       }
       
-      B <- ret[ret$Predictor %in% c("(Intercept)", numVars), "Estimate"]
+      B <- ret[gsub("s\\((.*)\\).*", "\\1", ret$Predictor) %in% c("(Intercept)", numVars), "Estimate"]
       
       names(B) <- numVars
       
@@ -551,17 +578,6 @@ scaleGLM <- function(model, family., link., standardize = "scale", standardize.t
   
   preds <- predict(model, type = "link")
   
-  if(standardize.type == "Menard.OE") {
-    
-    y <- all.vars_notrans(model)[1]
-    
-    data <- GetSingleData(model)
-    
-    R <- cor(data[, y], predict(model, type = "response"))
-    
-    sd.y <- sqrt(var(preds)) / R
-    
-  }
   
   if(standardize.type == "latent.linear") {
     
@@ -578,6 +594,18 @@ scaleGLM <- function(model, family., link., standardize = "scale", standardize.t
             sd.y <- sqrt(var(preds) + sigmaE) 
             
         }
+    
+  }
+  
+  if(standardize.type == "Menard.OE") {
+    
+    y <- all.vars_notrans(model)[1]
+    
+    data <- GetSingleData(model)
+    
+    R <- cor(data[, y], predict(model, type = "response"))
+    
+    sd.y <- sqrt(var(preds)) / R
     
   }
   

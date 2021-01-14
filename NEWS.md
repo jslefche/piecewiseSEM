@@ -1,6 +1,7 @@
 ## Version 2.2.0 Release Notes
 -Added log-likelihood chi-squared goodness-of-fit and AIC statistics from Shipley & Douma 2020
 -Added coefficient standardization for GLM(M)
+-Added preliminary support for GAMs
 -Fixed issue with interactions coded with ":" and `coefs`
 
 ## Version 2.1.2 Release Note

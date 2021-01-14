@@ -46,7 +46,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = F
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
   
-  if(length(b) == 0) {
+  if(length(b) == 0 | any(unlist(sapply(modelList, class)) == "gam")) {
   
     data.frame()
     

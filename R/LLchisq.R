@@ -98,6 +98,10 @@ LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions 
   
 }
 
+#' Get saturated model by reinserting all excluded paths
+#' 
+#' @internal
+#' 
 getSatModels <- function(b, modelList, data) {
   
   lapply(1:length(modelList), function(i) {
@@ -113,6 +117,10 @@ getSatModels <- function(b, modelList, data) {
     newVars <- newVars[!newVars %in% all.vars_trans(model)]
     
     if(length(newVars) == 0) satModel <- model else {
+      
+      # if(!any(class(model) %in% "gam"))
+        
+        newVars <- sapply(newVars, function(x) gsub(".*\\((.*)\\).*", "\\1", x))
       
       satModel <- suppressWarnings(
         update(model,
