@@ -101,7 +101,7 @@ summary.psem <- function(object, ...,
 
   Cstat <- fisherC(dTable, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
-  ChiSq <- LLchisq(object, basis.set, interactions)
+  ChiSq <- LLchisq(object, basis.set, direction, interactions, conserve)
   
   AIC <- AIC_psem(object, AIC.type, add.claims, direction, interactions, conserve, conditioning, .progressBar)
 
