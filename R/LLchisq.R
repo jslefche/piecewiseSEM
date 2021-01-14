@@ -12,6 +12,8 @@
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #'  \code{\link{dSep}}.
+#' @param conserve Whether the most conservative log-likelihood should be returned;
+#' for use in special cases (see Details). Default is FALSE.
 #' @param interactions whether interactions should be included in basis set. 
 #' Default is FALSE
 #' 
@@ -36,7 +38,8 @@
 #' 
 #' @export 
 #' 
-LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE) {
+LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE,
+                    conserve = FALSE) {
   
   if(is.null(basis.set)) b <- basisSet(modelList, direction, interactions) else b <- basis.set
 
@@ -56,7 +59,21 @@ LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions 
     
     M2 <- sapply(satModelList, logLik)
     
-    ChiSq_ML <- -2*sum(M1 - M2)
+    M_diff <- M1 - M2
+    
+    if(conserve == TRUE) {
+      
+      for(i in unique(names(b))) {
+        
+        r <- which(names(b) == i)
+        
+        if(length(r) > 1) M_diff <- M_diff[-r[which.min(abs(M_diff[r]))]]
+    
+      } 
+      
+    }
+    
+    ChiSq_ML <- -2*sum(M_diff)
     
     if(ChiSq_ML < 0) {
       
