@@ -4,12 +4,15 @@
 \alias{AIC.psem}
 \title{Generalized function for SEM AIC(c) score}
 \usage{
-\method{AIC}{psem}(object, ..., aicc = FALSE)
+\method{AIC}{psem}(object, ..., AIC.type = "loglik", aicc = FALSE)
 }
 \arguments{
 \item{object}{a psem object}
 
 \item{...}{additional arguments to AIC}
+
+\item{AIC.type}{whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+should be reported. Default is \code{"loglik"}}
 
 \item{aicc}{whether correction for small sample size should be applied. Default is \code{FALSE}}
 }

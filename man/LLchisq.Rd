@@ -4,15 +4,28 @@
 \alias{LLchisq}
 \title{Generalized chi-squared for piecewise SEM}
 \usage{
-LLchisq(modelList, basis.set = NULL, interactions = FALSE)
+LLchisq(
+  modelList,
+  basis.set = NULL,
+  direction = NULL,
+  interactions = FALSE,
+  conserve = FALSE
+)
 }
 \arguments{
 \item{modelList}{A list of structural equations created using \code{psem}.}
 
 \item{basis.set}{An optional list of independence claims.}
 
+\item{direction}{A \code{vector} of claims defining the specific
+directionality of independence claims; for use in special cases (see
+ \code{\link{dSep}}.}
+
 \item{interactions}{whether interactions should be included in basis set. 
 Default is FALSE}
+
+\item{conserve}{Whether the most conservative log-likelihood should be returned;
+for use in special cases (see Details). Default is FALSE.}
 }
 \value{
 a data.frame corresponding to the Chi-squared statistic, d.f., and P-value
@@ -42,7 +55,7 @@ Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics
 for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.
 }
 \seealso{
-\code{\link{basisSet}}
+\code{\link{basisSet}}, \code{\link{dSep}}
 }
 \author{
 Jon Lefcheck <LefcheckJ@si.edu>

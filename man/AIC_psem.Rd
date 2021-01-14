@@ -6,7 +6,7 @@
 \usage{
 AIC_psem(
   modelList,
-  AIC.statistic = "loglik",
+  AIC.type = "loglik",
   Cstat = NULL,
   add.claims = NULL,
   basis.set = NULL,
@@ -20,7 +20,7 @@ AIC_psem(
 \arguments{
 \item{modelList}{a list of structural equations}
 
-\item{AIC.statistic}{whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+\item{AIC.type}{whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
 should be reported. Default is \code{"loglik"}}
 
 \item{Cstat}{Fisher's C statistic obtained from \code{fisherC}}
