@@ -529,7 +529,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
         
     } else if(family. %in% c("binomial", "negbin", "poisson"))
       
-      sd.y <- scaleGLM(model, family., link, standardize, standardize.type) else {
+      sd.y <- scaleGLM(model, family., link., standardize, standardize.type) else {
         
         sd.y <- NA
         
