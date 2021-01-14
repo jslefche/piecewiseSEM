@@ -516,7 +516,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
   
   family. <- try(family(model), silent = TRUE)
   
-  if(class(family.) %in% c("try-error", "family")) family. <- try(model$family, silent = TRUE)
+  if(class(family.) %in% c("try-error")) family. <- try(model$family, silent = TRUE)
   
   if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "gls", "lme")))
     
@@ -577,7 +577,6 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
 scaleGLM <- function(model, family., link., standardize = "scale", standardize.type = "latent.linear") {
   
   preds <- predict(model, type = "link")
-  
   
   if(standardize.type == "latent.linear") {
     
