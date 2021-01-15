@@ -576,6 +576,8 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
 #' 
 scaleGLM <- function(model, family., link., standardize = "scale", standardize.type = "latent.linear") {
   
+  if(family. != "binomial") standardize.type <- "Menard.OE"
+  
   preds <- predict(model, type = "link")
   
   if(standardize.type == "latent.linear") {
