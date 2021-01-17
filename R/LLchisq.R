@@ -100,7 +100,7 @@ LLchisq <- function(modelList, basis.set = NULL, direction = NULL, interactions 
 
 #' Get saturated model by reinserting all excluded paths
 #' 
-#' @internal
+#' @keywords internal
 #' 
 getSatModels <- function(b, modelList, data) {
   

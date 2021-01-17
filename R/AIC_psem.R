@@ -27,22 +27,6 @@
 #' Shipley, Bill. "The AIC model selection method applied to path analytic models compared using 
 #' a d‐separation test." Ecology 94.3 (2013): 560-564.
 #' 
-#' @examples 
-#' 
-#' mod <- psem(
-#' lm(rich ~ cover, data = keeley),
-#' lm(cover ~ firesev, data = keeley),
-#' lm(firesev ~ age, data = keeley),
-#' data = keeley
-#' )
-#' 
-#' # Get log-likelihood based AIC
-#' AIC(mod, statistic = "loglik")
-#' 
-#' # Get d-sep based AIC
-#' AIC(mod, statistic = "dsep")
-#' 
-#' 
 #' @export
 #' 
 AIC_psem <- function(modelList, AIC.type = "loglik", 
@@ -97,6 +81,21 @@ AIC_psem <- function(modelList, AIC.type = "loglik",
 #' @param aicc whether correction for small sample size should be applied. Default is \code{FALSE}
 #'  
 #' @method AIC psem
+#' 
+#' @examples 
+#' 
+#' mod <- psem(
+#' lm(rich ~ cover, data = keeley),
+#' lm(cover ~ firesev, data = keeley),
+#' lm(firesev ~ age, data = keeley),
+#' data = keeley
+#' )
+#' 
+#' # Get log-likelihood based AIC
+#' AIC(mod)
+#' 
+#' # Get d-sep based AIC
+#' AIC(mod, AIC.type = "dsep")
 #'  
 #' @export
 #' 

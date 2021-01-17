@@ -9,3 +9,4 @@ getSatModels(b, modelList, data)
 \description{
 Get saturated model by reinserting all excluded paths
 }
+\keyword{internal}

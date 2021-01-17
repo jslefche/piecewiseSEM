@@ -43,7 +43,7 @@
 #' correction for multiple testing. The results of those comparisons are given in the 
 #' significance codes (e.g., "a", "b", "ab") as reported in the \code{multcomp::cld} function.
 #' 
-#' For non-linear variables (i.e., smoothing functions from \code{\link{mgcv::gam}}), there are
+#' For non-linear variables (i.e., smoothing functions from \code{mgcv::gam}), there are
 #' no linear estimates reported.
 #'
 #' @param modelList A list of structural equations, or a model.

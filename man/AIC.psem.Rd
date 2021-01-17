@@ -19,3 +19,19 @@ should be reported. Default is \code{"loglik"}}
 \description{
 Generalized function for SEM AIC(c) score
 }
+\examples{
+
+mod <- psem(
+lm(rich ~ cover, data = keeley),
+lm(cover ~ firesev, data = keeley),
+lm(firesev ~ age, data = keeley),
+data = keeley
+)
+
+# Get log-likelihood based AIC
+AIC(mod)
+
+# Get d-sep based AIC
+AIC(mod, AIC.type = "dsep")
+ 
+}

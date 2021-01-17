@@ -50,23 +50,6 @@ a data.frame of AIC, AICc, d.f., and sample size
 \description{
 Information criterion values for SEM
 }
-\examples{
-
-mod <- psem(
-lm(rich ~ cover, data = keeley),
-lm(cover ~ firesev, data = keeley),
-lm(firesev ~ age, data = keeley),
-data = keeley
-)
-
-# Get log-likelihood based AIC
-AIC(mod, statistic = "loglik")
-
-# Get d-sep based AIC
-AIC(mod, statistic = "dsep")
-
-
-}
 \references{
 Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics 
 for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.
