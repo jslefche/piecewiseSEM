@@ -103,24 +103,18 @@ AIC.psem <- function(object, ..., AIC.type = "loglik", aicc = FALSE) {
   
   aicx <- AIC_psem(object, AIC.type)
   
-  if(aicc == FALSE) AICx <- aicx$AIC else AICx <- aicx$AICc
-  
   if(missing(...)) ret <- AICx else {
     
-    aicy <- AIC_psem(...)
+    dots <- list(object, ...)
     
-    if(aicc == FALSE) AICy <- aicy$AIC else AICy <- aicy$AICc
-    
-    dfx <- aicx$K; dfy <- aicy$K
-    
-    ret <- data.frame(
-      df = c(dfx, dfy),
-      AIC = c(AICx, AICy),
-      row.names = c(deparse(substitute(x)), deparse(substitute(y)))
-    )
+    aicy <- do.call(rbind, lapply(2:length(dots), function(i) AICy <- AIC_psem(dots[[i]], AIC.type)))
+
+    ret <- rbind(aicx, aicy)
     
   }
   
+  if(aicc == FALSE) ret <- subset(ret, select = -c(AICc))
+
   return(ret)
   
 }
