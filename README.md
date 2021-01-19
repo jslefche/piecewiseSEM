@@ -24,23 +24,6 @@ It also incorporates new functionality in the form of coefficient standardizatio
 
 Currently supported model classes: `lm, glm, gls, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod`
 
-## To add a new model class
-Frequently, we get requests to add new model classes. We'd like to accomodate wherever we can! Currently, to add a new model class, you will need to update the following functions in the following files:  
-- In `coefs.R`
-      - `getCoefficients()` - will need a method to generate a standardized coefficient table from your class
-      - `GetSDy()` - will need a method to get the proper SD of y, particularly for non-Gaussian error families
-- In `helpers.R`
-      - `GetSingleData()` - need a method to get a data frame from your class type
-      - `GetOLRE()` - if your class has random effects, will need a method to get observation level random effects
-      - `nObs()` - if your class has a non-standard way to get the number of observations, will need it here.
-      - You might need to write a `all.vars` method for you class. See `all.vars.merMod()` as an example.
-- In `psem.R`
-      - `evaluateClasses()` - so we know that this class can work in `piecewiseSEM`
-- In `rsquared.R`
-      - `rsquared()` - what function should be used to get the rsquared for your model class?
-      - Will need an `rsquared.youclass()` method to get the R^2
-
-### Example
 ```
 # Install development branch from github
 library(devtools)
