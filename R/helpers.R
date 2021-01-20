@@ -628,4 +628,27 @@ get_response <- function(mod) {
   
       return(as.character(r))
 
-      }
+}
+
+#' Get Left-hand side of formulae
+#' 
+#' @keywords internal
+#' 
+getLHS <- function(formulaList){
+  sapply(formulaList, function(x) as.character(x[[2]]))
+}
+
+#' Get Right-hand side of formulae
+#' 
+#' @keywords internal
+#' 
+getRHS <- function(formulaList){
+  rhs <- sapply(formulaList, function(x) all.vars(x)[-1])
+  unique(do.call(c, rhs))
+}
+
+#' Operator for non-overlap in sets
+#' 
+#' @keywords internal
+#' 
+"%not_in%" <- function(x, y) x[!x %in% y]
