@@ -659,7 +659,7 @@ getRHS <- function(formulaList){
 #' @description Takes a [psem] object, pulls out the
 #' DAG, and then sorts the psem object into the order
 #' of the DAG (from exogenous to terminal endogenous
-#' variable) for use by other functions. Also removes
+#' variable) for use by other functions. Note: removes
 #' correlated errors.
 #'
 #' @param object A fit [psem] object
@@ -670,6 +670,7 @@ getRHS <- function(formulaList){
 #' @examples
 getSortedPsem <- function(object){
   #first, remove data
+  dat <- object$data
   object <- removeData(object, formulas = 1)
   
   #Now, get formulae
@@ -686,4 +687,8 @@ getSortedPsem <- function(object){
   
   #Sort the object
   object <- object[lhs_sorted]
+  object$data <- dat
+  
+  #return
+  return(object)
 }
