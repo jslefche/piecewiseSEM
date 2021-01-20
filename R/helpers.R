@@ -666,8 +666,7 @@ getRHS <- function(formulaList){
 #'
 #' @return A new [psem] object, without the data.
 #' @export
-#'
-#' @examples
+
 getSortedPsem <- function(object){
   #first, remove data
   dat <- object$data

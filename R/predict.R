@@ -1,4 +1,4 @@
-#' Generate predictions from a fit piecewise SEM
+#' @title Generate predictions from a fit piecewise SEM
 #'
 #' @param object An object of class [psem]
 #' @param newdata Optional. A data frame with new values
@@ -83,7 +83,7 @@ predict.psem <- function(object, newdata=NULL,
 }
 
 
-#' Get fit values from a fitted piecewise SEM
+#' @title Get fit values from a fitted piecewise SEM
 #'
 #' @param object A  [psem] object
 #'
