@@ -652,3 +652,38 @@ getRHS <- function(formulaList){
 #' @keywords internal
 #' 
 "%not_in%" <- function(x, y) x[!x %in% y]
+
+
+#' Get a sorted psem object in DAG order
+#' 
+#' @description Takes a [psem] object, pulls out the
+#' DAG, and then sorts the psem object into the order
+#' of the DAG (from exogenous to terminal endogenous
+#' variable) for use by other functions. Also removes
+#' correlated errors.
+#'
+#' @param object A fit [psem] object
+#'
+#' @return A new [psem] object, without the data.
+#' @export
+#'
+#' @examples
+getSortedPsem <- function(object){
+  #first, remove data
+  object <- removeData(object, formulas = 1)
+  
+  #Now, get formulae
+  formulaList <- listFormula(object)
+  lhs <- getLHS(formulaList)
+  
+  names(object)<- lhs
+  
+  #sort some dags so we do things in the right order  
+  object_dag <- getDAG(formulaList)
+  sorted_dag <- sortDag(object_dag, formulaList)
+  lhs_sorted <- colnames(sorted_dag)
+  lhs_sorted <- lhs_sorted[which(lhs_sorted %in% lhs)]
+  
+  #Sort the object
+  object <- object[lhs_sorted]
+}
