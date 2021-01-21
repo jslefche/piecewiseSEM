@@ -72,7 +72,7 @@ AIC_psem <- function(modelList, AIC.type = "loglik",
   
 }
 
-#' Generalized function for SEM AIC(c) score
+#' Generic function for SEM AIC(c) score
 #'
 #' @param object a psem object
 #' @param ... additional arguments to AIC
@@ -103,7 +103,7 @@ AIC.psem <- function(object, ..., AIC.type = "loglik", aicc = FALSE) {
   
   aicx <- AIC_psem(object, AIC.type)
   
-  if(missing(...)) ret <- AICx else {
+  if(missing(...)) ret <- aicx else {
     
     dots <- list(object, ...)
     
