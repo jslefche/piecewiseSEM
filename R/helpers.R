@@ -663,10 +663,13 @@ getRHS <- function(formulaList){
 #' correlated errors.
 #'
 #' @param object A fit [psem] object
+#' @param keepdata Defaults to TRUE. Should the
+#' data with the psem be included in the returned
+#' object?
 #'
 #' @return A new [psem] object, without the data.
 #' @export
-getSortedPsem <- function(object){
+getSortedPsem <- function(object, keepdata = TRUE){
   #first, remove data
   dat <- object$data
   object <- removeData(object, formulas = 1)
@@ -685,7 +688,9 @@ getSortedPsem <- function(object){
   
   #Sort the object
   object <- object[lhs_sorted]
-  object$data <- dat
+  
+  #should we include the data?
+  if(keepdata) object$data <- dat
   
   #return
   return(object)
