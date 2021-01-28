@@ -1,6 +1,6 @@
 #' @title Generate predictions from a fit piecewise SEM
 #'
-#' @param object An object of class [psem]
+#' @param object An object of class [psem](psem)
 #' @param newdata Optional. A data frame with new values
 #' of exogenous variables
 #' @param se.fit Do you want to incorporate coefficient 
@@ -106,12 +106,26 @@ fitted.psem <- function(object){
   predict.psem(object)
 }
 
+
+#' Make sure predict arguments are passed as needed
+#' 
+#' @keywords internal
+#' 
+safe_predict <- function(mod, ...){
+  if(class(mod)[1] == "glm"){
+    predict(mod, type = "response", ...)
+  }else{
+    predict(mod, ...)
+  }
+}
+
+
 #' Extract fit values from models making up psem
 #' 
 #' @keywords internal
 #' 
 predict_piecewiseSEM_nodata <- function(modList, ...){
-  ret <- lapply(modList, predict, ...)
+  ret <- lapply(modList, safe_predict, ...)
   ret <- as.data.frame(do.call(cbind, ret))
   ret
 }
@@ -124,7 +138,7 @@ predict_piecewiseSEM_newdata <- function(modList, newdata, lhs_sorted, ...){
   #If there is new data...
   modData <- newdata
   for(j in 1:length(modList)){
-    pred <-  as.data.frame(predict(modList[[j]], newdata=modData, ...))
+    pred <-  as.data.frame(safe_predict(modList[[j]], newdata=modData, ...))
     modData <- cbind(modData, pred[,1])
     names(modData)[j+1] <- lhs_sorted[j]
   }
