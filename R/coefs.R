@@ -395,33 +395,23 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       vars <- all.vars.merMod(i)
       
-      newdata <- data[, vars]
+      newdata <- data[, vars, drop = FALSE]
       
       if(any(class(newdata) %in% c("SpatialPointsDataFrame"))) newdata <- newdata@data
       
       newdata <- dataTrans(formula(i), newdata)
       
-      vars <- attr(terms(i), "term.labels")
+      numVars <- attr(terms(i), "term.labels")
       
-      numVars <- vars[which(!sapply(data[, vars, drop = FALSE], class) %in% c("character", "factor"))]
+      idx <- sapply(numVars, function(x) {
+        
+        if(grepl("\\:", x)) x <- strsplit(x, ":")[[1]]
+        
+        !any(sapply(data[, x, drop = FALSE], class) %in% c("character", "factor"))
+        
+      } )
       
-      if(any(grepl("\\:", numVars))) {
-        
-        v <- sapply(numVars, function(x) {
-          
-          if(any(grepl("\\:", x))) {
-            
-            x. <- strsplit(x, ":")[[1]]
-            
-            x. <- gsub("(.*) \\+.*", "\\1", gsub(".*\\((.*)\\)", "\\1", x.))
-            
-            ifelse(!all(sapply(x., function(y) class(newdata[, y]) == "factor")), TRUE, FALSE)
-          
-          } else TRUE } )
-        
-        numVars <- numVars[v]
-        
-      }
+      if(length(idx) > 0) numVars <- numVars[idx]
       
       B <- ret[gsub("s\\((.*)\\).*", "\\1", ret$Predictor) %in% c("(Intercept)", numVars), "Estimate"]
       
@@ -461,7 +451,7 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
   
   vars <- all.vars.merMod(model)
   
-  numVars <- vars[which(!sapply(data[, vars], class) %in% c("character", "factor"))]
+  numVars <- vars[which(!sapply(data[, vars, drop = FALSE], class) %in% c("character", "factor"))]
   
   if(all(standardize == "scale"))
     
