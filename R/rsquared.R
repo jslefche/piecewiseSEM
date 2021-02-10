@@ -106,7 +106,7 @@ rsquared <- function(modelList, method = NULL) {
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i) else
 
-    if(all(class(i) %in% c("glm", "lm"))) r <- rsquared.glm(i, method) else
+    if(all(class(i) %in% c("glm", "lm", "negbin"))) r <- rsquared.glm(i, method) else
 
     # if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
 
@@ -201,6 +201,8 @@ rsquared.glm <- function(model, method = "nagelkerke") {
   
   family. <- family(model)$family
   
+  family. <- gsub("(.*)\\(.*\\)", "\\1", family.)
+  
   if(family. == "gaussian") {
     
     method <- "none"
@@ -208,16 +210,10 @@ rsquared.glm <- function(model, method = "nagelkerke") {
     r <- summary(lm(model$formula, model$data))$r.squared
     
   }
-  
-  null <- update(model, . ~ 1)
-  
-  nullLik <- exp(as.numeric(logLik(null)))
-  
-  modelLik <- exp(as.numeric(logLik(model)))
-  
+ 
   if(method == "mcfadden") {
     
-    r <- 1 - log(modelLik)/log(nullLik)
+    r <- 1 - (model$deviance / model$null.deviance)
     
   }
   
@@ -225,11 +221,11 @@ rsquared.glm <- function(model, method = "nagelkerke") {
     
     n <- nobs(model)
     
-    r <- 1 - (nullLik/modelLik)^(2/n)
+    r <- 1 - exp((model$deviance - model$null.deviance) / n)
     
     if(method == "nagelkerke")
       
-      r <- r / (1 - nullLik^(2/n))
+      r <- r / (1 - exp(-1 * model$null.deviance / n))
     
   }
   
