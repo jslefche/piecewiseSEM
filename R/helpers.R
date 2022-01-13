@@ -306,6 +306,10 @@ GetSingleData <- function(model) {
          "sarlm" = {
            dat <- eval(getCall(model)$data, environment(formula(model)))
          },
+         
+         "Sarlm" = {
+           dat <- eval(getCall(model)$data, environment(formula(model)))
+         },
 
          "glm" = {
            dat <- model$data
@@ -539,7 +543,7 @@ listFormula <- function(modelList, formulas = 0) {
 #' 
 #' @keywords internal
 #' 
-nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
+nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm", "Sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
 #' 

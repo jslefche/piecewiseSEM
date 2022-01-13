@@ -174,7 +174,7 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
 
   if(any(class(model) %in% c("lmerMod"))) ret <- getAnova(model)
 
-  if(all(class(model) %in% c("sarlm"))) {
+  if(all(class(model) %in% c("sarlm", "Sarlm"))) {
 
     ret <- as.data.frame(summary(model)$Coef)
 
@@ -479,7 +479,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
 
   if(class(family.) == "try-error") family. <- try(model$family, silent = TRUE)
 
-  if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "gls", "lme")))
+  if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "Sarlm", "gls", "lme")))
 
     family. <- list(family = "gaussian", link = "identity")
 

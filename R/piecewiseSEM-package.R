@@ -6,8 +6,8 @@
 #' Compared with traditional variance-covariance based SEM, piecewise SEM
 #' allows for fitting of models to different distributions through GLM and/or
 #' hierarchical/nested random structures through (G)LMER. Supported model
-#' classes include: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
-#' merModLmerTest, glmerMod}.
+#' classes include: \code{lm, glm, gls, pgls, sarlm, Sarlm, lme, glmmPQL,
+#' lmerMod, merModLmerTest, glmerMod}.
 #'
 #' \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
 #' \tab 2.1.1\cr Date: \tab 2020-04-20\cr Depends: \tab R (>= 3.5.0), nlme,
