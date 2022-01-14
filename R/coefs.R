@@ -361,7 +361,8 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 
       newdata <- dataTrans(formula(i), newdata)
 
-      numVars <- attr(terms(i), "term.labels")
+      numVars <- try (attr(terms(i), "term.labels"), silent=TRUE)
+      if( any(class(numVars) == "try-error")) numVars<-vars[-c(1)]
 
       if(any(grepl("\\:", numVars))) {
 
