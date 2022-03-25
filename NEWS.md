@@ -3,6 +3,7 @@
 -Added coefficient standardization for GLM(M)
 -Added preliminary support for GAMs
 -Fixed issue with interactions coded with ":" and `coefs`
+-Fixed issue with AICc and `AIC.type = "dsep"` calculating incorrectly
 
 ## Version 2.1.2 Release Note
 -Updated `coefs` to remove depracated function `emmeans::CLD`
