@@ -52,7 +52,7 @@ AIC_psem <- function(modelList, AIC.type = "loglik",
     
     aic <- as.numeric(Cstat[1] + 2*K)
     
-    aicc <- aic * (n.obs/(n.obs - K - 1))
+    aicc <- as.numeric(Cstat[1]) + 2*K*(n.obs/(n.obs - K - 1))
     
     # BIC <- as.numeric(Cstat[1] + log(n.obs)*K)
     
