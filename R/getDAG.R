@@ -53,41 +53,54 @@ getDAG <- function(modelList) {
 #'
 #' @keywords internal
 #'
-sortDag <- function(amat, formulaList) {
-
+sortDag <- function(amat, formulaList) { ##### MODIFIED FUNCTION: see https://github.com/jslefche/piecewiseSEM/issues/252
+  
   counter <- sapply(rownames(amat), function(i) {
-
+    
     indicated <- i
-
+    
     flag <- TRUE
-
+    
     counter <- 0
-
-    while(flag == TRUE) {
-
-      # pos <- sapply(formulaList, function(k) k[[1]] %in% indicated)
-      pos <- sapply(formulaList, function(k) as.character(k[[1]]) %in% indicated)
+    
+    while(flag) {
       
-      if(all(pos == FALSE) | sum(amat[, i]) == 0) flag <- FALSE else {
-
+      pos <- sapply(formulaList, function(k) k[1] %in% indicated)
+      
+      if(all(!pos) || sum(amat[, i]) == 0) flag <- FALSE 
+      
+      else { 
+        
         counter <- counter + 1
-
+        
         indicated <- formulaList[pos][[1]][-1]
-
-        flag <- TRUE
-
+        
+        if(counter == 1) flag <- TRUE
+        
+        else{
+          
+          if(any(indicated %in% memory_indicated)) { flag <- FALSE ; counter <- counter - 1}
+          
+          else flag <- TRUE
+          
+        }
+        
+        if(counter == 1) memory_indicated <- indicated
+        
+        else memory_indicated <- c(memory_indicated, indicated)
+        
       }
-
+      
     }
-
+    
     return(counter)
-
+    
   } )
-
+  
   amat = amat[names(sort(counter)), names(sort(counter))]
-
+  
   return(amat)
-
+  
 }
 
 # #' Generate adjacency matrix from list of structural equations
