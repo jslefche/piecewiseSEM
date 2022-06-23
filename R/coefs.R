@@ -601,7 +601,9 @@ scaleGLM <- function(model, family., link., standardize = "scale", standardize.t
     
     data <- GetSingleData(model)
     
-    R <- cor(data[, y], predict(model, type = "response"))
+    preds2 <- predict(model, type = "response")
+    
+    R <- cor(data[as.numeric(names(preds2)), y], preds2)
     
     sd.y <- sqrt(var(preds)) / R
     
