@@ -407,7 +407,9 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
         
         if(grepl("\\:", x)) x <- strsplit(x, ":")[[1]]
         
-        !any(sapply(data[, x, drop = FALSE], class) %in% c("character", "factor"))
+        coln <- all.vars_notrans(formula(i))
+
+        !any(sapply(data[, unname(coln[which(names(coln) %in% numVars)]), drop = FALSE], class) %in% c("character", "factor"))
         
       } )
       
