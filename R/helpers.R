@@ -27,33 +27,35 @@ all.vars.merMod <- function(formula.) {
 #' @keywords internal
 #' 
 all.vars_notrans <- function(formula.) {
-
+  
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
-
+  
   if(class(formula.) == "formula") {
-
+    
     if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
-
+    
     formula. <- all.vars_trans(formula.)
-
+    
     if(any(grepl(":", formula.))) {
-
+      
       idx <- which(grepl(":", formula.))
-
+      
       for(i in idx) formula.[i] <- paste(sapply(strsplit(formula.[i], ":"), stripTransformations), collapse = ":")
-
+      
       for(j in (1:length(formula.))[-idx]) formula.[j] <- stripTransformations(formula.[j])
-
+      
     } else {
-
+      
       formula. <- sapply(formula., stripTransformations)
-
+      
     }
-
+    
   } else formula. <- unlist(strsplit(formula., " ~~ "))
-
-  return(formula.)
-
+  
+  ret <- gsub("(,.*)", "", formula.)
+  
+  return(ret)
+  
 }
 
 #' Get vector of transformed variables
@@ -61,23 +63,25 @@ all.vars_notrans <- function(formula.) {
 #' @keywords internal
 #' 
 all.vars_trans <- function(formula.) {
-
+  
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
-
+  
   if(class(formula.) == "formula") {
-
+    
     if(formula.[[3]] == 1) deparse(formula.[[2]]) else {
-
+      
       if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
-
+      
       ret <- c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
-
+      
       ret <- gsub("s\\((.*)\\).*", "\\1", ret)
       
-      }
-
-    } else unlist(strsplit(formula., " ~~ "))
-
+      ret <- gsub("(,.*)", "", ret)
+      
+    }
+    
+  } else unlist(strsplit(formula., " ~~ "))
+  
 }
 
 #' Captures output table
