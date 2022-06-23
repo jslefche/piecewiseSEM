@@ -53,6 +53,10 @@ psem <- function(...) {
 #' 
 formatpsem <- function(x) {
 
+  evaluateClasses(x)
+  
+  stop_psem(x)
+  
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
   if(sum(idx) == 0) idx <- which(names(x) == "data")
@@ -98,8 +102,6 @@ formatpsem <- function(x) {
       if(any(sapply(x$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE)
 
     }
-      
-  evaluateClasses(x)
 
   formulaList <- listFormula(x, formulas = 1)
 
