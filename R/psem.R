@@ -166,6 +166,16 @@ evaluateClasses <- function(modelList) {
 
 }
 
+#' stop_psem
+#' 
+#' @internal
+stop_psem <- function(x) {
+  
+  
+  if(any(sapply(x, function(y) grepl("poly\\(.*\\)", formula(y))))) stop("Polynomials not supported", call. = F)
+  
+}
+
 #' Print psem
 #' 
 #' @param x an object of class psem
