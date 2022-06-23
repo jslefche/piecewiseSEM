@@ -453,6 +453,8 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
   
   numVars <- vars[which(!sapply(data[, vars, drop = FALSE], class) %in% c("character", "factor"))]
   
+  numVars <- na.omit(numVars)
+  
   if(all(standardize == "scale"))
     
     sd.x <- suppressWarnings(sapply(numVars[!grepl(":", numVars)][-1], function(x) sd(data[, x], na.rm = TRUE))) else
