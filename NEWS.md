@@ -1,3 +1,6 @@
+## Version 2.2.1 Release Notes
+-Fixed issue with infinite loops with `sortDag`
+
 ## Version 2.2.0 Release Notes
 -Added log-likelihood chi-squared goodness-of-fit and AIC statistics from Shipley & Douma 2020
 -Added coefficient standardization for GLM(M)
