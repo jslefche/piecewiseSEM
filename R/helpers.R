@@ -145,9 +145,9 @@ dataTrans <- function(formula., data) {
   trans <- trans[!duplicated(trans)]
   
   if(any(grepl("scale\\(.*\\)", trans))) {
-    
-    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
-    
+    # 
+    # trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
+    # 
     warning("`scale` applied directly to variable. Use argument `standardize = TRUE` instead.", call. = FALSE)
     
   }
@@ -156,13 +156,13 @@ dataTrans <- function(formula., data) {
     
     for(k in 1:length(notrans)) {
       
-      if(is.factor(data[, notrans[k]])) next else {
+      if(is.factor(data[, notrans[k]])) next else 
         
-        data[, notrans[k]] <-
+        if(grepl("scale(.*)", trans[k])) data[, notrans[k]] <- scale(data[, notrans[k]]) else
           
-          sapply(data[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
-        
-      }
+          data[, notrans[k]] <-
+            
+            sapply(data[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
       
     }
     
