@@ -321,19 +321,19 @@ GetSingleData <- function(model) {
          },
 
          "lmerMod" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
 
          "glmerMod" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
 
          "lmerModLmerTest" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
          
          "merModLmerTest" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
 
          "gls" = {
@@ -348,8 +348,8 @@ GetSingleData <- function(model) {
          }
 
   )
-
-  dat
+ 
+  return(dat)
 
 }
 
