@@ -166,11 +166,11 @@ evaluateClasses <- function(modelList) {
 
 }
 
-#' stop_psem
+#' Stop function for unsupported methods
 #' 
-#' @internal
+#' @keywords internal
+#' 
 stop_psem <- function(x) {
-  
   
   if(any(sapply(x, function(y) grepl("poly\\(.*\\)", formula(y))))) stop("Polynomials not supported", call. = F)
   
