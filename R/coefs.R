@@ -88,9 +88,9 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
 
-  if(class(data) %in% c("SpatialPointsDataFrame")) data <- data@data
+  if(any(class(data) %in% c("SpatialPointsDataFrame"))) data <- data@data
 
-  if(class(data) %in% c("comparative.data")) data <- data$data
+  if(any(class(data) %in% c("comparative.data"))) data <- data$data
 
   if(all(standardize != "none")) { 
     
@@ -451,6 +451,8 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
 #' 
 GetSDx <- function(model, modelList, data, standardize = "scale") {
   
+  data <- as.data.frame(data)
+  
   vars <- all.vars.merMod(model)
   
   numVars <- vars[which(!sapply(data[, vars, drop = FALSE], class) %in% c("character", "factor"))]
@@ -507,6 +509,8 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
 #' 
 GetSDy <- function(model, data, standardize = "scale", standardize.type = "latent.linear") {
   
+  data <- as.data.frame(data)
+  
   vars <- all.vars.merMod(model)
   
   y <- vars[1]
@@ -551,7 +555,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
             
           }
         
-    } else if(family. %in% c("binomial", "negbin", "poisson"))
+    } else if(family. %in% c("binomial", "Negative Binomial", "poisson"))
       
       sd.y <- scaleGLM(model, family., link., standardize, standardize.type) else {
         
