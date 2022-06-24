@@ -415,7 +415,7 @@ fixCatDir <- function(b, modelList) {
     
     var <- i[2]
     
-    data <- modelList$data
+    data <- as.data.frame(modelList$data)
     
     if(class(data[, var]) %in% c("factor", "character")) {
       

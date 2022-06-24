@@ -93,7 +93,7 @@ formatpsem <- function(x) {
   
   if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
   
-  if(class(x$data) == "comparative.data") { 
+  if(all(class(x$data) == "comparative.data")) { 
     
     if(any(sapply(x$data$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE) 
     
@@ -142,9 +142,10 @@ evaluateClasses <- function(modelList) {
 
   classes <- classes[!duplicated(classes)]
 
-  model.classes <- c(
+  supported.classes <- c(
     "character",
     "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data",
+    "data.table", "tbl_df", "tbl",
     "formula", "formula.cerror",
     "lm", "glm", "gls", "negbin",
     "lme", "glmmPQL",
@@ -154,12 +155,12 @@ evaluateClasses <- function(modelList) {
     "gam"
   )
 
-  if(!all(classes %in% model.classes))
+  if(!all(classes %in% supported.classes))
 
     stop(
       paste0(
-        "Unsupported model class in model list: ",
-        paste0(classes[!classes %in% model.classes], collapse = ", "),
+        "Unsupported class in model list: ",
+        paste0(classes[!classes %in% supported.classes], collapse = ", "),
         ". See 'help(piecewiseSEM)' for more details."),
       call. = FALSE
     )
