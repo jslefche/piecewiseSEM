@@ -561,6 +561,8 @@ onlyBars <- function(formula., slopes = TRUE) {
 
   if(slopes == TRUE) paste(sapply(f, function(x) paste0("(", deparse(x), ")")), collapse = " + ") else {
 
+    # paste(sapply(f, function(x) paste0("(1 ", gsub(".*(\\|.*)", "\\1", f), ")")), collapse = "+")
+    
     f <- f[sapply(f, function(x) grepl("1\\||1 \\|", deparse(x)))]
 
     paste(sapply(f, function(x) paste0("(", deparse(x), ")")), collapse = " + ")

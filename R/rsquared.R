@@ -344,7 +344,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
       
       rand <- onlyBars(formula(model))
       
-      f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+      f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = TRUE))
       
       nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = poisson(link = link), data = data))
       
