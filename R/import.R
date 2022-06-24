@@ -14,4 +14,6 @@
 #' nobs pchisq plogis poisson predict pt quasibinomial quasipoisson reformulate resid 
 #' residuals sd setNames terms update var vcov aggregate
 #' @importFrom utils capture.output combn head setTxtProgressBar txtProgressBar
+#' 
+#' @name import
 NULL

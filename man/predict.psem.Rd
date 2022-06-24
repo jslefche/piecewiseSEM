@@ -7,7 +7,7 @@
 \method{predict}{psem}(object, newdata = NULL, se.fit = FALSE, interval = "none", ...)
 }
 \arguments{
-\item{object}{An object of class [psem]}
+\item{object}{An object of class [psem](psem)}
 
 \item{newdata}{Optional. A data frame with new values
 of exogenous variables}

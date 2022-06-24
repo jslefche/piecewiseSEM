@@ -2,7 +2,7 @@
 % Please edit documentation in R/AIC_psem.R
 \name{AIC.psem}
 \alias{AIC.psem}
-\title{Generalized function for SEM AIC(c) score}
+\title{Generic function for SEM AIC(c) score}
 \usage{
 \method{AIC}{psem}(object, ..., AIC.type = "loglik", aicc = FALSE)
 }
@@ -17,7 +17,7 @@ should be reported. Default is \code{"loglik"}}
 \item{aicc}{whether correction for small sample size should be applied. Default is \code{FALSE}}
 }
 \description{
-Generalized function for SEM AIC(c) score
+Generic function for SEM AIC(c) score
 }
 \examples{
 

@@ -4,10 +4,14 @@
 \alias{getSortedPsem}
 \title{Get a sorted psem object in DAG order}
 \usage{
-getSortedPsem(object)
+getSortedPsem(object, keepdata = TRUE)
 }
 \arguments{
 \item{object}{A fit [psem] object}
+
+\item{keepdata}{Defaults to TRUE. Should the
+data with the psem be included in the returned
+object?}
 }
 \value{
 A new [psem] object, without the data.
