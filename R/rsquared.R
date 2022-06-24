@@ -263,10 +263,14 @@ rsquared.merMod <- function(model) {
   sigmaL <- sum(sapply(1:length(sigma), function(i) {
 
     sigma. <- sigma[[i]]
+    
+    if(all(rownames(sigma.) %in% colnames(X))) X. <- X else
+      
+      X. <- do.call(cbind, model.matrix(model, type = "randomListRaw")) 
 
-    Z <- as.matrix(X[, rownames(sigma.), drop = FALSE])
+    Z <- as.matrix(X.[, rownames(sigma.), drop = FALSE])
 
-    sum(rowSums((Z %*% sigma.) * Z))/nrow(X)
+    sum(rowSums((Z %*% sigma.) * Z))/nrow(X.)
 
   } ) )
 
@@ -293,10 +297,15 @@ rsquared.lme <- function(model) {
   sigma <- GetVarCov(model)
 
   sigmaL <- sum(sapply(sigma, function(i) {
+    
+    if(all(rownames(i) %in% colnames(X))) X. <- X else
+      
+      X. <- model.matrix(model$modelStruct$reStruct,
+                         data = model$data[rownames(model$fitted), , drop = FALSE]) 
+  
+    Z <- as.matrix(X.[, rownames(i), drop = FALSE])
 
-    Z <- as.matrix(X[, rownames(i), drop = FALSE])
-
-    sum(rowSums((Z %*% i) * Z))/nrow(X)
+    sum(rowSums((Z %*% i) * Z))/nrow(X.)
 
   } ) )
 
