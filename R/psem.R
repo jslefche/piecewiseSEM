@@ -57,6 +57,8 @@ formatpsem <- function(x) {
   
   stop_psem(x)
   
+  # checkTransformations(x)
+  
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
   if(sum(idx) == 0) idx <- which(names(x) == "data")
@@ -74,6 +76,8 @@ formatpsem <- function(x) {
     x$data <- GetData(x)
 
   }
+  
+  x <- checkData(x)
 
   if(any(is.na(names(x)))) {
 
@@ -83,23 +87,27 @@ formatpsem <- function(x) {
 
   }
   
-  vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x)))))
-
-  vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
-  
-  t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x)))))
-  
-  t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
-  
-  if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
-  
+  # if(!any(sapply(x, class) %in% "gam")) {
+  # 
+  #   vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x)))))
+  # 
+  #   vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
+  #   
+  #   t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x, smoothed = TRUE)))))
+  #   
+  #   t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
+  #   
+  #   if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
+  #   
+  # }
+    
   if(all(class(x$data) == "comparative.data")) { 
     
-    if(any(sapply(x$data$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE) 
+    if(any(sapply(x$data$data, is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE) 
     
     } else {
       
-      if(any(sapply(x$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE)
+      if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE)
 
     }
 
@@ -130,15 +138,36 @@ as.psem <- function(object, Class = "psem") {
   
 }
 
+#' Check to see whether supplied data.frame matches model-extracted data
+#' 
+#' @keywords internal
+#' 
+checkData <- function(x) {
+  
+  if(!identical(x$data, GetData(removeData(x)))) x$data <- GetData(removeData(x))
+  
+  return(x)
+  
+}
+
+#' Check to see whether variables exist as transformed and untransformed
+#' 
+#' @keywords internal
+#' 
+checkTransformations <- function(x) {
+  
+  
+}
+
 #' Evaluate model classes and stop if unsupported model class
 #' 
 #' @param modelList a list of structural equations or a model object
 #' 
 #' @export
 #' 
-evaluateClasses <- function(modelList) {
+evaluateClasses <- function(x) {
 
-  classes <- unlist(sapply(modelList, class))
+  classes <- unlist(sapply(x, class))
 
   classes <- classes[!duplicated(classes)]
 
