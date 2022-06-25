@@ -69,13 +69,13 @@ basisSet <- function(modelList, direction = NULL, interactions = FALSE) {
   b <- b[!sapply(b, is.null)]
 
   if(length(b) > 0) {
-
-    b <- filterSmoothed(b)
+    
+    b <- filterExogenous(b, modelList, amat)
+    
+    b <- filterSmoothed(b, modelList)
     
     b <- filterExisting(b, modelList)
-
-    b <- filterExogenous(b, modelList, amat)
-
+    
     b <- filterInteractions(b, interactions)
 
     b <- removeCerror(b, modelList)
@@ -172,11 +172,12 @@ filterInteractions <- function(b, interactions = FALSE) {
 
 }
 
-#' Filter smoothed and unsmoothed claims
+#' Filter claims that are both smoothed and unsmoothed to return only smoothed
+#' Filter linear claims that already exist as non-linear
 #' 
 #' @keywords internal
 #' 
-filterSmoothed <- function(b) {
+filterSmoothed <- function(b, modelList) {
   
   b <- sapply(b, function(x) {
     
@@ -187,6 +188,18 @@ filterSmoothed <- function(b) {
       if(any(vars[1] == vars[-(1:2)])) vars[-(which(vars[1] == vars[-(1:2)]) + 2)] else x
     
   } )
+  
+  b <- b[!sapply(b, is.null)]
+  
+  formulaList <- sapply(removeData(modelList), all.vars_trans, smoothed = FALSE)
+  
+  b <- sapply(b, function(x) {
+    
+    vars <- formulaList[[which(sapply(formulaList, function(y) y[1] == x[2]))]][-1]
+    
+    if(any(vars[1] %in% x[-2])) NULL else x
+    
+  } )  
   
   b <- b[!sapply(b, is.null)]
   
