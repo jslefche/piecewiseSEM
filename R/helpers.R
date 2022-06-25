@@ -62,7 +62,7 @@ all.vars_notrans <- function(formula.) {
 #' 
 #' @keywords internal
 #' 
-all.vars_trans <- function(formula.) {
+all.vars_trans <- function(formula., smoothed = FALSE) {
   
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
   
@@ -74,7 +74,7 @@ all.vars_trans <- function(formula.) {
       
       ret <- c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
       
-      ret <- gsub("s\\((.*)\\).*", "\\1", ret)
+      if(smoothed == FALSE) ret <- gsub("s\\((.*)\\).*", "\\1", ret)
       
       ret <- gsub("(,.*)", "", ret)
       

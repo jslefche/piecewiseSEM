@@ -46,7 +46,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = F
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
   
-  if(length(b) == 0 | any(unlist(sapply(modelList, class)) == "gam")) {
+  if(length(b) == 0) {
   
     data.frame()
     
@@ -132,15 +132,25 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressBar, pb) {
   
-  formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
+  formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans, smoothed = TRUE)
   
   bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
+  
+  if(any(class(bMod) != "gam")) {
+    
+    bnew <- b[[i]][-2]
+    
+    bnew <- gsub("s\\((.*)\\).*", "\\1", bnew)
+    
+    warning("Basis set includes smoothed terms in independence claim: claim is conducted with linear term!", call. = FALSE)
+    
+  } else bnew <- b
   
   if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
     
     bNewMod <- suppressWarnings(
       update(bMod,
-             formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))),
+             formula(paste(". ~ ", paste(rev(bnew), collapse = " + "), " + ", onlyBars(formula(bMod)))),
              data = data)
     )
     
@@ -148,7 +158,7 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
     
     bNewMod <- suppressWarnings(
       update(bMod,
-             formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
+             formula(paste(". ~ ", paste(rev(bnew), collapse = " + "))),
              data = data)
     )
     

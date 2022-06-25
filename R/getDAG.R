@@ -12,7 +12,7 @@ getDAG <- function(modelList) {
 
   fList <- fList[!sapply(fList, is.null)]
 
-  fList <- lapply(fList, all.vars_trans)
+  fList <- lapply(fList, all.vars_trans, smoothed = TRUE)
 
   vars <- unlist(fList)
 

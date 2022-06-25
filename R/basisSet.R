@@ -70,6 +70,8 @@ basisSet <- function(modelList, direction = NULL, interactions = FALSE) {
 
   if(length(b) > 0) {
 
+    b <- filterSmoothed(b)
+    
     b <- filterExisting(b, modelList)
 
     b <- filterExogenous(b, modelList, amat)
@@ -168,6 +170,28 @@ filterInteractions <- function(b, interactions = FALSE) {
 
   return(b)
 
+}
+
+#' Filter smoothed and unsmoothed claims
+#' 
+#' @keywords internal
+#' 
+filterSmoothed <- function(b) {
+  
+  b <- sapply(b, function(x) {
+    
+    vars <- gsub("s\\((.*)\\).*", "\\1", x)
+    
+    if(any(vars[2] == vars[-2])) NULL else 
+      
+      if(any(vars[1] == vars[-(1:2)])) vars[-(which(vars[1] == vars[-(1:2)]) + 2)] else x
+    
+  } )
+  
+  b <- b[!sapply(b, is.null)]
+  
+  return(b)
+  
 }
 
 #' Remove correlated errors from the basis set
@@ -414,6 +438,8 @@ fixCatDir <- function(b, modelList) {
   b <- lapply(b, function(i) {
     
     var <- i[2]
+    
+    var <- gsub(".*\\((.*)\\).*", "\\1", var)
     
     data <- as.data.frame(modelList$data)
     
