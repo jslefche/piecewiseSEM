@@ -341,14 +341,14 @@ GetSingleData <- function(model) {
          },
 
          "gls" = {
-           dat <-  nlme::getData(model)
+           dat <- nlme::getData(model)
          },
 
          "lme" = {
-           dat <-  nlme::getData(model)
+           dat <- nlme::getData(model)
          },
          "gam" = {
-           dat <-  model$model
+           dat <- eval(getCall(model)$data, environment(formula(model)))
          }
 
   )
