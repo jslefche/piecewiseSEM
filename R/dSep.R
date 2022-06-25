@@ -136,7 +136,9 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
   
   bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
   
-  if(any(class(bMod) != "gam")) {
+  # if variable is smoothed and appears in linear model
+  
+  if(!"gam" %in% class(bMod) & any(grepl("s\\(.*\\)", b[[i]]))) {
     
     bnew <- b[[i]][-2]
     
@@ -144,7 +146,7 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
     
     warning("Basis set includes smoothed terms in independence claim: claim is conducted with linear term!", call. = FALSE)
     
-  } else bnew <- b
+  } else bnew <- b[[i]][-2]
   
   if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
     
