@@ -172,14 +172,14 @@ filterInteractions <- function(b, interactions = FALSE) {
 
 }
 
-#' Filter claims that are both smoothed and unsmoothed to return only smoothed
-#' Filter linear claims that already exist as non-linear
+#' First filter claims that are both smoothed and unsmoothed to return only smoothed
+#' Second filter linear claims that already exist as non-linear
 #' 
 #' @keywords internal
 #' 
 filterSmoothed <- function(b, modelList) {
   
-  b <- sapply(b, function(x) {
+  b <- lapply(b, function(x) {
     
     vars <- gsub("s\\((.*)\\).*", "\\1", x)
     
@@ -193,15 +193,15 @@ filterSmoothed <- function(b, modelList) {
   
   formulaList <- sapply(removeData(modelList), all.vars_trans, smoothed = FALSE)
   
-  b <- sapply(b, function(x) {
-    
-    vars <- formulaList[[which(sapply(formulaList, function(y) y[1] == x[2]))]][-1]
-    
-    if(any(vars[1] %in% x[-2])) NULL else x
-    
-  } )  
-  
-  b <- b[!sapply(b, is.null)]
+  # b <- sapply(b, function(x) {
+  #   
+  #   vars <- formulaList[[which(sapply(formulaList, function(y) y[1] == x[2]))]][-1]
+  #   
+  #   if(any(vars[1] %in% x[-2])) NULL else x
+  #   
+  # } )  
+  # 
+  # b <- b[!sapply(b, is.null)]
   
   return(b)
   
