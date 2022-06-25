@@ -78,7 +78,7 @@ all.vars_trans <- function(formula., smoothed = FALSE) {
         
         ret <- gsub("s\\((.*)\\).*", "\\1", ret)
         
-        if(grepl("s\\(", ret)) ret <- paste0(ret, ")")
+        if(any(grepl("s\\(", ret))) ret <- sapply(ret, function(x) ifelse(grepl("s\\(", x)), paste(0, ")", x))
         
       }
       
