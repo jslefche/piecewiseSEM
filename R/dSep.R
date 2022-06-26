@@ -142,7 +142,7 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
     
     bnew <- b[[i]][-2]
     
-    bnew <- gsub("s\\((.*)\\).*", "\\1", bnew)
+    bnew <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", bnew)) 
     
     warning("Basis set includes smoothed terms in independence claim: claim is conducted with linear term!", call. = FALSE)
     
@@ -170,10 +170,14 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
   
   ct$Test.Type <- ifelse(is.na(ct$Estimate) | grepl("=", ct$Predictor), "anova", "coef")
 
-  a <- gsub("(s\\(.*),.*", "\\1", b[[i]][1])
+  if("gam" %in% class(bNewMod)) {
   
-  if(any(grepl("s\\(", a))) a <- sapply(a, function(x)
-    ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x))
+    a <- gsub("(s\\(.*),.*\\)", "\\1", b[[i]][1])
+    
+    if(any(grepl("s\\(", a))) a <- sapply(a, function(x)
+      ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x)) 
+  
+  } else a <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", b[[i]][1])) 
   
   ct <- ct[which(a == ct$Predictor), , drop = FALSE]
   
