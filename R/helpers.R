@@ -74,18 +74,22 @@ all.vars_trans <- function(formula., smoothed = FALSE) {
       
       ret <- c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
       
-      if(smoothed == FALSE) ret <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", ret)) else {
-        
-        ret <- gsub("(s\\(.*),.*", "\\1", ret)
-        
-        if(any(grepl("s\\(", ret))) ret <- sapply(ret, function(x) 
-          ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x))
-        
-      }
+      if(smoothed == FALSE) ret <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", ret)) 
       
-      ret <- gsub("(,.*)", "", ret)
+      # else {
+        
+        # ret <- gsub("(s\\(.*),.*", "\\1", ret)
+        # 
+        # if(any(grepl("s\\(", ret))) ret <- sapply(ret, function(x) 
+        #   ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x))
+        
+      # }
+      
+      # ret <- gsub("(,.*)", "", ret)
       
     }
+    
+    return(ret)
     
   } else unlist(strsplit(formula., " ~~ "))
   
