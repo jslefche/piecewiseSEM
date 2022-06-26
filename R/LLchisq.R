@@ -5,7 +5,7 @@
 #' 
 #' Here, a list of saturated models is first derived from the list of
 #' structured equations using the basis set. Then, the differences in summed
-#' log-likelihoods is computed and used to calculate  the Chi-squared statistic.
+#' log-likelihoods are computed and used to calculate the Chi-squared statistic.
 #' 
 #' @param modelList A list of structural equations created using \code{psem}.
 #' @param basis.set An optional list of independence claims.
@@ -110,18 +110,22 @@ getSatModels <- function(b, modelList, data) {
     
     y <- all.vars_trans(model)[1]
     
-    newVars <- na.omit(unlist(sapply(b, function(x) if(x[2] == y) x[-c(2)] else NA)))
+    newVars <- na.omit(unlist(lapply(b, function(x) if(x[2] == y) x[-c(2)] else NA)))
     
     newVars <- newVars[!duplicated(newVars)]
     
-    newVars <- newVars[!newVars %in% all.vars_trans(model)]
+    # if(any(gsub("s\\((.*)\\).*", "\\1", newVars))) {
+    #   
+    #   sapply(newVars, function(x) {
+    #     
+    #     
+    
+    newVars <- newVars[!newVars %in% all.vars_trans(model, smoothed = TRUE)]
     
     if(length(newVars) == 0) satModel <- model else {
       
-      # if(!any(class(model) %in% "gam"))
-        
-        newVars <- sapply(newVars, function(x) gsub(".*\\((.*)\\).*", "\\1", x))
-      
+      if(!"gam" %in% class(model)) newVars <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", newVars))
+
       satModel <- suppressWarnings(
         update(model,
                formula(paste(". ~ . +", paste(newVars, collapse = " + "))),
