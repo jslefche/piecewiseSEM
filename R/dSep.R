@@ -170,7 +170,12 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
   
   ct$Test.Type <- ifelse(is.na(ct$Estimate) | grepl("=", ct$Predictor), "anova", "coef")
 
-  ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
+  a <- gsub("(s\\(.*),.*", "\\1", b[[i]][1])
+  
+  if(any(grepl("s\\(", a))) a <- sapply(a, function(x)
+    ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x))
+  
+  ct <- ct[which(a == ct$Predictor), , drop = FALSE]
   
   rhs <- paste0(b[[i]][-2], collapse = " + ")
   
