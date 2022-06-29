@@ -45,7 +45,13 @@
 #' 
 anova.psem <- function(object, ..., digits = 3, anovafun = "Anova") {
  
+  nm <- deparse(substitute(object))
+  
+  nms <- deparse(substitute(...))
+  
   dots <- list(object, ...)
+  
+  names(dots) <- c(nm, nms)
   
   if(length(dots) > 1) {
      
@@ -127,7 +133,7 @@ anovaLRT <- function(object) {
   
   ret1 <- data.frame(
     Df = ChiSq1$df,
-    AIC = AIC(model1),
+    AIC(model1),
     Chisq = ChiSq1$Chisq,
     Chisq.diff = NA,
     Df.diff = NA,
@@ -135,7 +141,7 @@ anovaLRT <- function(object) {
     sig = NA
   )
   
-  rownames(ret1) <- deparse(substitute(object[[1]]))
+  # rownames(ret1) <- deparse(substitute(object[[1]]))
   
   ret2 <- do.call(rbind, lapply(2:length(object), function(i) {
     
@@ -151,7 +157,7 @@ anovaLRT <- function(object) {
     
     ret2 <- data.frame(
       Df = ChiSq2$df,
-      AIC = AIC(model2),
+      AIC(model2),
       Chisq = ChiSq2$Chisq,
       Chisq.diff = Chisq.diff,
       Df.diff = df.diff,
@@ -159,7 +165,7 @@ anovaLRT <- function(object) {
       sig = isSig(pvalue)
     )
     
-    rownames(ret2) <- deparse(substitute(object[[i]]))
+    # rownames(ret2) <- deparse(substitute(object[[i]]))
     
     return(ret2)
     
@@ -168,6 +174,8 @@ anovaLRT <- function(object) {
   ret <- rbind(ret1, ret2)
   
   colnames(ret)[ncol(ret)] <- ""
+  
+  rownames(ret) <- c(names(object)[1], paste("vs", names(object)[-1]))
   
   ret[is.na(ret)] <- ""
   
