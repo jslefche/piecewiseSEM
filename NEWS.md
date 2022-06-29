@@ -6,6 +6,7 @@ editor_options:
 
 ## Version 2.2.1 Release Notes
 
+-   Added d-sep and Chi-squared tests for `gam` models
 -   Added support for `tibble` and `data.table`
 -   Added `stop_psem` to deal with unsupported functions, e.g., `poly`
 -   Fixed issue with infinite loops with `sortDag`
@@ -21,6 +22,9 @@ editor_options:
 -   Fixed issue with `GetSDy` and `glm.nb`
 -   Fixed issue with `rsquared` when random slopes were not present as
     corresponding fixed effects
+-   Fixed issue with `GetSingleData` getting transformed data from `gam`
+    models
+-   Fixed issue with `anovaLRT` returning weird rownames
 
 ## Version 2.2.0 Release Notes
 
