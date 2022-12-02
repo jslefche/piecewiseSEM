@@ -422,7 +422,11 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
           
           sum(rowSums(Z %*% i) * Z) / nrow(X.)
           
-        } ) } } else if(RE == "all")
+        } ) } } else if(RE == "all") {
+          
+          if(all(rownames(i) %in% colnames(X))) X. <- X else
+            
+            X. <- do.call(cbind, model.matrix(model, type = "randomListRaw")) 
           
           out <- sapply(sigma, function(i) {
             
@@ -430,7 +434,9 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
             
             sum(rowSums(Z %*% i) * Z) / nrow(X.)
             
-          } )
+            } ) 
+          
+          }
   
   if(length(out) == 0) out <- 0
   
