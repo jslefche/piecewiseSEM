@@ -37,7 +37,7 @@ goodness-of-fit for piecewise structural equation models.
 \details{
 Here, a list of saturated models is first derived from the list of
 structured equations using the basis set. Then, the differences in summed
-log-likelihoods is computed and used to calculate  the Chi-squared statistic.
+log-likelihoods are computed and used to calculate the Chi-squared statistic.
 }
 \examples{
 mod <- psem(

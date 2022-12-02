@@ -25,6 +25,7 @@ editor_options:
 -   Fixed issue with `GetSingleData` getting transformed data from `gam`
     models
 -   Fixed issue with `anovaLRT` returning weird rownames
+-   Fixed issue passing single object to `anova.psem`
 
 ## Version 2.2.0 Release Notes
 

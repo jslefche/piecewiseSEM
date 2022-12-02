@@ -4,7 +4,7 @@
 \alias{evaluateClasses}
 \title{Evaluate model classes and stop if unsupported model class}
 \usage{
-evaluateClasses(modelList)
+evaluateClasses(x)
 }
 \arguments{
 \item{modelList}{a list of structural equations or a model object}

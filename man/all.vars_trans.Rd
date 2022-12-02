@@ -4,7 +4,7 @@
 \alias{all.vars_trans}
 \title{Get vector of transformed variables}
 \usage{
-\method{all}{vars_trans}(formula.)
+\method{all}{vars_trans}(formula., smoothed = FALSE)
 }
 \description{
 Get vector of transformed variables
