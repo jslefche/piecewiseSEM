@@ -51,7 +51,7 @@ anova.psem <- function(object, ..., digits = 3, anovafun = "Anova") {
   
   dots <- list(object, ...)
   
-  names(dots) <- c(nm, nms)
+  if(length(dots) > 1) names(dots) <- c(nm, nms) else names(dots) <- nm
   
   if(length(dots) > 1) {
      
