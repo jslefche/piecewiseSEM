@@ -255,7 +255,7 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
 #' 
 handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.type = "II") {
   
-  if(any(class(model) %in% "gam")) return(ret) else {
+  if(any(class(model) %in% "gam") | nrow(ret) == 1) return(ret) else {
   
   if(any(class(model) %in% c("glmerMod", "merMod"))) test.statistic <- "Chisq"
   

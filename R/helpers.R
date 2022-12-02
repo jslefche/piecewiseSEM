@@ -68,7 +68,7 @@ all.vars_trans <- function(formula., smoothed = FALSE) {
   
   if(class(formula.) == "formula") {
     
-    if(formula.[[3]] == 1) deparse(formula.[[2]]) else {
+    if(formula.[[3]] == 1) ret <- deparse(formula.[[2]]) else {
       
       if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
       
