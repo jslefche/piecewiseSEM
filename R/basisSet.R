@@ -470,6 +470,8 @@ fixCatDir <- function(b, modelList) {
 #' 
 print.basisSet <- function(x, ...) { 
   
+  if(length(x) == 0) print("No independence claims in basis set.") else {
+  
   ret <- lapply(x, function(oneLine) {
     
     st <- paste(oneLine[1], "|", oneLine[2], sep = " ")
@@ -483,5 +485,7 @@ print.basisSet <- function(x, ...) {
   names(ret) <- paste("Claim", 1:length(ret))
   
   print(ret)
+  
+  }
   
 }
