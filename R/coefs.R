@@ -429,7 +429,9 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
           
           Std.Estimate <- c(0, B[-1] * (sd.x / sd.y))
       
-      ret[which(gsub(".*\\((.*)\\)", "\\1", ret$Predictor) %in% c("(Intercept)", numVars)), "Std.Estimate"] <- Std.Estimate
+      # ret[which(gsub(".*\\((.*)\\)", "\\1", ret$Predictor) %in% c("(Intercept)", numVars)), "Std.Estimate"] <- Std.Estimate
+      #
+      ret[which(ret$Predictor %in% c("(Intercept)", numVars)), "Std.Estimate"] <- Std.Estimate
       
       ret <- cbind(ret[, 1:7], ret[, 9, drop = FALSE], sig = ret[, 8])
       
