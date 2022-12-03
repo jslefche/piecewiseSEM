@@ -321,7 +321,7 @@ GetSingleData <- function(model) {
            dat <- eval(getCall(model)$data, environment(formula(model)))
          },
 
-         "sarlm" = {
+         "Sarlm" = {
            dat <- eval(getCall(model)$data, environment(formula(model)))
          },
 
@@ -420,25 +420,19 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
         
         out <- sapply(sigma[idx], function(i) {
           
-          Z <- as.matrix(X.[, rownames(i), drop = FALSE])
+          Z <- as.matrix(X[, rownames(i), drop = FALSE])
           
-          sum(rowSums(Z %*% i) * Z) / nrow(X.)
+          sum(rowSums(Z %*% i) * Z) / nrow(X)
           
-        } ) } } else if(RE == "all") {
-          
-          if(all(rownames(i) %in% colnames(X))) X. <- X else
-            
-            X. <- do.call(cbind, model.matrix(model, type = "randomListRaw")) 
+        } ) } } else if(RE == "all")
           
           out <- sapply(sigma, function(i) {
             
-            Z <- as.matrix(X.[, rownames(i), drop = FALSE])
+            Z <- as.matrix(X[, rownames(i), drop = FALSE])
             
-            sum(rowSums(Z %*% i) * Z) / nrow(X.)
+            sum(rowSums(Z %*% i) * Z) / nrow(X)
             
-            } ) 
-          
-          }
+          } )
   
   if(length(out) == 0) out <- 0
   
@@ -572,7 +566,7 @@ listFormula <- function(modelList, formulas = 0) {
 #' 
 #' @keywords internal
 #' 
-nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
+nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "Sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
 #' 
