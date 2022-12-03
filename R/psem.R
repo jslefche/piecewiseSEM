@@ -4,8 +4,8 @@
 #' structural equation model.
 #'
 #' \code{psem} takes a list of structural equations, which can be model objects
-#' of classes: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
-#' lmerModLmerTest, glmerMod}.
+#' of classes: \code{lm, glm, gls, pgls, Sarlm, lme, glmmPQL, lmerMod,
+#' lmerModLmerTest, glmerMod, glmmTMB, gam}.
 #'
 #' It also takes objects of class \code{formula, formula.cerror}, corresponding
 #' to additional variables to be included in the tests of directed separation
@@ -179,7 +179,7 @@ evaluateClasses <- function(x) {
     "lm", "glm", "gls", "negbin",
     "lme", "glmmPQL",
     "lmerMod", "lmerModLmerTest", "glmerMod", "glmmTMB",
-    "sarlm",
+    "Sarlm",
     "pgls", "phylolm", "phyloglm",
     "gam"
   )

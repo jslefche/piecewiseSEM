@@ -6,7 +6,7 @@ editor_options:
 
 ## Version 2.3.0 Release Notes
 
--   Now supports model classes: `glmmTMB`
+-   Now supports model classes: `glmmTMB` , `Sarlm`
 -   Added d-sep and Chi-squared tests for `gam` models
 -   Added support for `tibble` and `data.table`
 -   Added `stop_psem` to deal with unsupported functions, e.g., `poly`

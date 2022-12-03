@@ -1,7 +1,7 @@
 Package: piecewiseSEM
 Type: Package
 Title: Piecewise Structural Equation Modeling
-Version: 2.2.1
+Version: 2.3.0
 Date: 2022-12-02
 Authors@R: c(
     person("Jon", "Lefcheck",   role = c("aut", "cre"), email = "LefcheckJ@si.edu"),
@@ -26,7 +26,8 @@ Imports:
     MuMIn,
     MASS,
     methods,
-    nlme
+    nlme,
+    performance
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
