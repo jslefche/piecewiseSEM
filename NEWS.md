@@ -4,8 +4,9 @@ editor_options:
     wrap: 72
 ---
 
-## Version 2.2.1 Release Notes
+## Version 2.3.0 Release Notes
 
+-   Now supports model classes: `glmmTMB`
 -   Added d-sep and Chi-squared tests for `gam` models
 -   Added support for `tibble` and `data.table`
 -   Added `stop_psem` to deal with unsupported functions, e.g., `poly`

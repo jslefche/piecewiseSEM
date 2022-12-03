@@ -9,6 +9,7 @@
 #' @importFrom MuMIn AICc
 #' @importFrom multcomp cld
 #' @importFrom nlme fixef getData getVarCov glsControl lmeControl ranef VarCorr
+#' @importFrom performance r2
 #' @importFrom stats AIC anova as.formula binomial cor cor.test drop.terms family 
 #' fitted formula gaussian getCall glm.control lm logLik model.frame model.matrix na.omit 
 #' nobs pchisq plogis poisson predict pt quasibinomial quasipoisson reformulate resid 

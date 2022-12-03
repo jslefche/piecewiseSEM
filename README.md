@@ -1,7 +1,7 @@
 # piecewiseSEM: Piecewise Structural Equation Modeling in R
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/piecewiseSEM)](https://cran.r-project.org/package=piecewiseSEM)
 
-## Version 2.2.0
+## Version 2.3.0
 ## Last updated: 02 December 2022
 
 ## To install
@@ -22,7 +22,7 @@ This version is a major update to the `piecewiseSEM` package that usesa complete
 
 It also incorporates new functionality in the form of coefficient standardization and updated methods for R^2 for mixed models.
 
-Currently supported model classes: `lm, glm, gls, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod`
+Currently supported model classes: `lm, glm, gls, lme, glmmPQL, lmerMod, merModLmerTest, glmerMod. glmmTMB, gam`
 
 ```
 # Install development branch from github
