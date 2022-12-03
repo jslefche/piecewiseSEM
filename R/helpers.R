@@ -195,6 +195,8 @@ dataTrans <- function(formula., data) {
 #'
 getAnova <- function(model, test.statistic = "F", test.type = "III") {
 
+  if(class(model) == "glmmTMB") test.statistic = "Chisq"
+  
   krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
 
   ct <- summary(model)$coefficients
@@ -347,8 +349,8 @@ GetSingleData <- function(model) {
            dat <- lme4::getData(model) #model@frame
          },
          
-         "merModLmerTest" = {
-           dat <- lme4::getData(model) #model@frame
+         "glmmTMB" = {
+           dat <- model$frame 
          },
 
          "gls" = {

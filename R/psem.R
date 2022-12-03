@@ -178,7 +178,7 @@ evaluateClasses <- function(x) {
     "formula", "formula.cerror",
     "lm", "glm", "gls", "negbin",
     "lme", "glmmPQL",
-    "lmerMod", "lmerModLmerTest", "glmerMod",
+    "lmerMod", "lmerModLmerTest", "glmerMod", "glmmTMB",
     "sarlm",
     "pgls", "phylolm", "phyloglm",
     "gam"

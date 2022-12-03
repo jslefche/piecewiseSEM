@@ -140,7 +140,7 @@ unstdCoefs <- function(modelList, data = NULL, test.statistic = "F", test.type =
         
         ret <- getCoefficients(i, data, test.statistic, test.type)
         
-        if(intercepts == FALSE) ret <- ret[ret$Predictor != "(Intercept)", ]
+        if(intercepts == FALSE) ret <- ret[!grepl("(Intercept)", ret$Predictor), ]
         
       }
     
@@ -204,6 +204,34 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
     
   }
   
+  if(all(class(model) == "glmmTMB")) {
+    
+    ret <- summary(model)$coefficients$cond
+    
+    ret <- data.frame(apply(ret, 2, as.numeric), row.names = rownames(ret))
+
+    ret <- cbind(ret[, 1:2], DF = length(residuals(model)), ret[, 3:4])
+
+    # ret <- ret[!sapply(ret, is.null)]
+    # 
+    # ret <- do.call(rbind, lapply(names(ret), function(i) {
+    #   
+    #   out <- ret[[i]]
+    #   
+    #   data.frame(
+    #     Response = paste(formula(model)[2]),
+    #     Predictor = c(paste0(rownames(out)[1], "-", i), rownames(out)[-1]),
+    #     out[, 1:2],
+    #     DF = length(residuals(model)),
+    #     out[, 3:4]
+    #   )
+    #   
+    # } ) )
+    # 
+    # rownames(ret) <- NULL
+    
+  }
+  
   if(any(class(model) %in% "gam")) {
     
     ret_linear <- as.data.frame(summary(model)$p.table)
@@ -223,9 +251,9 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
     }
   
   }
-    
+
   ret <- cbind(ret, isSig(ret[, 5]))
-  
+
   ret <- data.frame(
     Response = all.vars_trans(listFormula(list(model))[[1]])[1],
     Predictor = rownames(ret),
@@ -257,7 +285,7 @@ handleCategoricalCoefs <- function(ret, model, data, test.statistic = "F", test.
   
   if(any(class(model) %in% "gam") | nrow(ret) == 1) return(ret) else {
   
-  if(any(class(model) %in% c("glmerMod", "merMod"))) test.statistic <- "Chisq"
+  if(any(class(model) %in% c("glmerMod", "merMod", "glmmTMB"))) test.statistic <- "Chisq"
   
   vars <- names(data)
   
@@ -608,6 +636,8 @@ scaleGLM <- function(model, family., link., standardize = "scale", standardize.t
     data <- GetSingleData(model)
     
     preds2 <- predict(model, type = "response")
+    
+    if(is.null(names(preds2))) names(preds2) <- rownames(data)
     
     R <- cor(data[as.numeric(names(preds2)), y], preds2)
     

@@ -115,6 +115,8 @@ rsquared <- function(modelList, method = NULL) {
     if(all(class(i) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest"))) r <- rsquared.merMod(i) else
 
     if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method) else
+      
+    if(any(class(i) %in% c("glmmTMB"))) r <- rsquared.glmmTMB(i, method) else
 
     if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method) else
       
@@ -665,6 +667,22 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
   
   return(l)
 
+}
+
+# R^2 for glmmTMB
+#
+# @keywords internal
+#
+rsquared.glmmTMB <- function(model, method) {
+
+  data.frame(
+    Response = all.vars.merMod(formula(model))[1],
+    family = family(model)$family,
+    link = family(model)$link,
+    method = "none",
+    Marginal = performance::r2(model)$R2_marginal,
+    Conditional = performance::r2(model)$R2_conditional)
+  
 }
 
 # R^2 for gam objects

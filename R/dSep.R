@@ -148,7 +148,7 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
     
   } else bnew <- b[[i]][-2]
   
-  if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
+  if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod", "glmmTMB"))) {
     
     bNewMod <- suppressWarnings(
       update(bMod,
