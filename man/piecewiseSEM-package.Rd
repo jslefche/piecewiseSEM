@@ -12,12 +12,12 @@ and evaluation of individual model fits (e.g., through R-squared values).
 Compared with traditional variance-covariance based SEM, piecewise SEM
 allows for fitting of models to different distributions through GLM and/or
 hierarchical/nested random structures through (G)LMER. Supported model
-classes include: \code{lm, glm, gls, lme, glmmPQL, lmerMod, merModLmerTest, 
-glmerMod}.
+classes include: \code{lm, glm, gls, Sarlm, lme, glmmPQL, lmerMod, merModLmerTest, 
+glmerMod, glmmTMB, gam}.
 }
 \details{
 \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-\tab 2.2.1\cr Date: \tab 2022-12-022\cr Depends: \tab R (>= 4.2.0), car,
+\tab 2.3.0\cr Date: \tab 2022-12-022\cr Depends: \tab R (>= 4.2.0), car,
 DiagrammeR, emmeans, igraph, lme4, multcomp, MuMIn, MASS, methods, nlme\cr 
 License: \tab MIT\cr } The primary functions in the package are \code{\link{psem}} 
 which unites structural equations in a single model, and \code{summary.psem} can
