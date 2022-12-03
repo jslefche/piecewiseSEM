@@ -186,7 +186,7 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
     
   }
   
-  if(all(class(model) %in% c("sarlm"))) {
+  if(all(class(model) %in% c("Sarlm"))) {
     
     ret <- as.data.frame(summary(model)$Coef)
     
@@ -429,7 +429,9 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       newdata <- dataTrans(formula(i), newdata)
       
-      numVars <- attr(terms(i), "term.labels")
+      if(class(i) != "Sarlm") numVars <- attr(terms(i), "term.labels") else
+        
+        numVars <- colnames(i$X)[-1]
       
       idx <- sapply(numVars, function(x) {
         
@@ -549,7 +551,8 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
   
   if(class(family.) %in% c("try-error")) family. <- try(model$family, silent = TRUE)
   
-  if(class(family.) == "try-error" | is.null(family.) & all(class(model) %in% c("sarlm", "gls", "lme")))
+  if(class(family.) == "try-error" | is.null(family.) | all(is.na(family.))
+     & all(class(model) %in% c("Sarlm", "gls", "lme")))
     
     family. <- list(family = "gaussian", link = "identity")
   
@@ -559,9 +562,9 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
     
   } else {
     
-    link. <- family(model)$link
+    link. <- family.$link
     
-    family. <- family(model)$family
+    family. <- family.$family
     
     family. <- gsub("(.*)\\(.*\\)", "\\1", family.)
     

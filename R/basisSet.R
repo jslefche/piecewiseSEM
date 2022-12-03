@@ -329,11 +329,11 @@ reverseNonLin <- function(b, modelList, amat) {
 
       sapply(modelList[idm], function(x) {
 
-        .family <- try(family(x), silent = TRUE)
+        family. <- try(family(x), silent = TRUE)
 
-        if(class(.family) == "try-error") FALSE else
+        if(class(family.) == "try-error" | all(is.na(family.))) FALSE else
 
-          if(.family$family == "gaussian") FALSE else
+          if(family.$family == "gaussian") FALSE else
 
             TRUE
 
