@@ -116,9 +116,11 @@ rsquared <- function(modelList, method = NULL) {
 
     if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method) else
       
-    if(any(class(i) %in% c("glmmTMB"))) r <- rsquared.glmmTMB(i, method) else
+    if(any(class(i) %in% c("glmmTMB"))) r <- rsquared.glmmTMB(i) else
 
     if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method) else
+      
+    if(any(class(i) %in% c("Sarlm"))) r <- rsquared.Sarlm(i) else
       
     if(any(class(i) %in% c("gam"))) r <- rsquared.gam(i) else
       
@@ -393,7 +395,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
       if(family. == "binomial") {
 
-        if(method == "trigamma") method <- "delta"
+        if(method == "trigamma") method <- "theoretical"
 
         if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
         
@@ -556,6 +558,20 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
 }
 
+# R^2 for glmmTMB
+#
+# @keywords internal
+#
+rsquared.glmmTMB <- function(model) {
+  
+  list(family = family(model)$family, 
+       link = family(model)$link, 
+       method = "none", 
+       Marginal = performance::r2(model)$R2_marginal, 
+       Conditional = performance::r2(model)$R2_conditional)
+  
+}
+
 #' R^2 for glmmPQL objects
 #' 
 #' @keywords internal
@@ -669,26 +685,21 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
 }
 
-# R^2 for glmmTMB
-#
-# @keywords internal
-#
-rsquared.glmmTMB <- function(model, method) {
-
-  data.frame(
-    Response = all.vars.merMod(formula(model))[1],
-    family = family(model)$family,
-    link = family(model)$link,
-    method = "none",
-    Marginal = performance::r2(model)$R2_marginal,
-    Conditional = performance::r2(model)$R2_conditional)
+#' R^2 for Sarlm objects
+#' 
+#' @keywords internal
+#'
+rsquared.Sarlm <- function(model) {
+  
+  list(family = "gaussian", link = "identity", method = "none", 
+       R.squared = summary(model, Nagelkerke = TRUE)$NK)
   
 }
 
-# R^2 for gam objects
-# 
-# @keywords internal
-#
+#' R^2 for gam objects
+#' 
+#' @keywords internal
+#'
 rsquared.gam <- function(model) {
 
   link <- family(model)$link
@@ -700,4 +711,3 @@ rsquared.gam <- function(model) {
   list(family = family., link = link, method = "none", R.squared = r)
   
 }
-  
