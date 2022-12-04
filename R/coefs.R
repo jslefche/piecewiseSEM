@@ -429,7 +429,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       newdata <- dataTrans(formula(i), newdata)
       
-      if(class(i) != "Sarlm") numVars <- attr(terms(i), "term.labels") else
+      if(any(class(i) != "Sarlm")) numVars <- attr(terms(i), "term.labels") else
         
         numVars <- colnames(i$X)[-1]
       
