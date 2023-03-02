@@ -4,15 +4,10 @@
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
 #'
-#' @param e1 first variable included in correlated error 
-#' @param e2 second variable included in correlated error
+#' @param e1 first variable involved in correlated error
+#' @param e2 second variable involved in correlated error
 #' 
-#' @usage e1 %~~% e2
-#' 
-#' @author Jon Lefcheck <jlefcheck@@bigelow.org>
-#' 
-#' @aliases `~~`
-#' 
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
 #' @seealso \code{\link{cerror}}
 #' 
 #' @examples
