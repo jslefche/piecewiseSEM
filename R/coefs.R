@@ -403,7 +403,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
   
   if(!all(class(modelList) %in% c("list", "psem"))) modelList <- list(modelList)
   
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data 
+  if(is.null(data) & inherits(modelList, "psem")) data <- modelList$data 
   
   if(is.null(data)) data <- GetData(modelList)
   

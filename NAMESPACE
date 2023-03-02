@@ -2,9 +2,7 @@
 
 S3method(AIC,psem)
 S3method(anova,psem)
-S3method(fitted,psem)
 S3method(plot,psem)
-S3method(predict,psem)
 S3method(print,anova.psem)
 S3method(print,basisSet)
 S3method(print,multigroup.psem)

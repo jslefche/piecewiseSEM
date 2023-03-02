@@ -30,7 +30,7 @@ all.vars_notrans <- function(formula.) {
   
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
   
-  if(class(formula.) == "formula") {
+  if(inherits(formula., "formula")) {
     
     if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
     
