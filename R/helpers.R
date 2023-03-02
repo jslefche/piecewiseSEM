@@ -6,7 +6,7 @@ all.vars.merMod <- function(formula.) {
 
   if(!any(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
-  if(class(formula.) == "formula.cerror")
+  if(inherits(formula., "formula.cerror"))
 
     gsub(" " , "", unlist(strsplit(formula., "~~"))) else {
 
@@ -66,7 +66,7 @@ all.vars_trans <- function(formula., smoothed = FALSE) {
   
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
   
-  if(class(formula.) == "formula") {
+  if(inherits(formula., "formula")) {
     
     if(formula.[[3]] == 1) ret <- deparse(formula.[[2]]) else {
       
@@ -151,7 +151,7 @@ dataTrans <- function(formula., data) {
   
   notrans <- all.vars.merMod(formula.)
   
-  if(class(formula.) == "formula.cerror") notrans <- gsub(".*\\((.*)\\)", "\\1", notrans)
+  if(inherits(formula., "formula.cerror")) notrans <- gsub(".*\\((.*)\\)", "\\1", notrans)
   
   trans <- all.vars_trans(formula.)
   
@@ -195,7 +195,7 @@ dataTrans <- function(formula., data) {
 #'
 getAnova <- function(model, test.statistic = "F", test.type = "III") {
 
-  if(class(model) == "glmmTMB") test.statistic = "Chisq"
+  if(inherits(model, "glmmTMB")) test.statistic = "Chisq"
   
   krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
 

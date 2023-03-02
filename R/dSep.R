@@ -52,7 +52,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = F
     
   } else {
     
-    if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
+    if(inherits(modelList, "psem")) data <- modelList$data else data <- GetData(modelList)
     
     modelList <- removeData(modelList, formulas = 1)
     

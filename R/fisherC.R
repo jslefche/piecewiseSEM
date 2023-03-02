@@ -21,9 +21,9 @@
 fisherC <- function(dTable, add.claims = NULL, basis.set = NULL, direction = NULL, interactions = FALSE,
                     conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
 
-  if(class(dTable) == "list") dTable <- as.psem(dTable)
+  if(inherits(dTable, "list")) dTable <- as.psem(dTable)
   
-  if(class(dTable) == "psem") dTable <- dSep(dTable, basis.set, direction, interactions, 
+  if(inherits(dTable, "psem")) dTable <- dSep(dTable, basis.set, direction, interactions, 
                                              conserve, conditional, .progressBar)
 
   if(length(dTable) == 0) {

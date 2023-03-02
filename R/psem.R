@@ -223,7 +223,7 @@ print.psem <- function(x, ...) {
 
   formulas_print <- sapply(1:length(formulas), function(i) {
 
-    if(class(formulas[[i]]) == "formula.cerror")
+    if(inherits(formulas[[i]], "formula.cerror"))
 
       paste0("Correlated error: ", paste(formulas[[i]])) else
 

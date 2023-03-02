@@ -331,7 +331,7 @@ reverseNonLin <- function(b, modelList, amat) {
 
         family. <- try(family(x), silent = TRUE)
 
-        if(class(family.) == "try-error" | all(is.na(family.))) FALSE else
+        if(inherits(family., "try-error") | all(is.na(family.))) FALSE else
 
           if(family.$family == "gaussian") FALSE else
 

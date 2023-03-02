@@ -86,7 +86,7 @@ coefs <- function(modelList, standardize = "scale", standardize.type = "latent.l
 
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
 
-  if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
+  if(inherits(modelList, "psem")) data <- modelList$data else data <- GetData(modelList)
 
   if(any(class(data) %in% c("SpatialPointsDataFrame"))) data <- data@data
 
@@ -549,14 +549,14 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
   
   family. <- try(family(model), silent = TRUE)
   
-  if(class(family.) %in% c("try-error")) family. <- try(model$family, silent = TRUE)
+  if(inherits(family., "try-error")) family. <- try(model$family, silent = TRUE)
   
-  if(class(family.) == "try-error" | is.null(family.) | all(is.na(family.))
+  if(inherits(family., "try-error") | is.null(family.) | all(is.na(family.))
      & all(class(model) %in% c("Sarlm", "gls", "lme")))
     
     family. <- list(family = "gaussian", link = "identity")
   
-  if(class(family.) == "try-error" | is.null(family.)) {
+  if(inherits(family., "try-error") || is.null(family.)) {
     
     sd.y <- NA 
     
