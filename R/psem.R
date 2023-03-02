@@ -161,7 +161,7 @@ checkTransformations <- function(x) {
 
 #' Evaluate model classes and stop if unsupported model class
 #' 
-#' @param modelList a list of structural equations or a model object
+#' @param x a list of structural equations or a model object
 #' 
 #' @export
 #' 
