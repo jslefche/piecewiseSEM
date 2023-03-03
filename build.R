@@ -8,6 +8,9 @@ document(piecewiseSEM)
 #clean_vignettes(piecewiseSEM)
 #build_vignettes(piecewiseSEM)
 
+# create website for package
+pkgdown::build_site()
+
 # build package
 piecewiseSEM <- as.package("./piecewiseSEM") 
 devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "docs"),

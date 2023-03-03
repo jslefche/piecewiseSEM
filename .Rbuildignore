@@ -8,3 +8,4 @@
 ^R/anova\.R$
 ^docs$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$
