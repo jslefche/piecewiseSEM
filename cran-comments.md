@@ -1,5 +1,5 @@
 ## Update package
-This is a feature release with minor bug fixes. 
+This is a feature release including minor bug fixes. 
 
 ## R CMD check results
 There were no ERRORS or WARNINGS. 
@@ -8,4 +8,4 @@ There were no ERRORS or WARNINGS.
 Contact email has also been updated.
 
 ## Test environments
-* local Windows 10 install, R 4.0.3
+* local Windows 11 install, R 4.2.2
