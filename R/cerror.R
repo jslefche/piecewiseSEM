@@ -3,18 +3,14 @@
 #' Specifies correlated errors among predictors
 #'
 #' For use in \code{psem} to identify correlated sets of variables.
+#'
+#' @param e1 first variable involved in correlated error
+#' @param e2 second variable involved in correlated error
 #' 
-#' @param e1 one variable to be correlated
-#' @param e2 the other variable to be correlated
-#' 
-#' @author Jon Lefcheck <lefcheckj@@si.edu>
-#' 
-#' @aliases `~~`
-#' 
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
 #' @seealso \code{\link{cerror}}
 #' 
 #' @examples
-#'
 #' # Generate example data
 #' dat <- data.frame(x1 = runif(50),
 #'   x2 = runif(50), y1 = runif(50),

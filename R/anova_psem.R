@@ -45,7 +45,13 @@
 #' 
 anova.psem <- function(object, ..., digits = 3, anovafun = "Anova") {
  
+  nm <- deparse(substitute(object))
+  
+  nms <- deparse(substitute(...))
+  
   dots <- list(object, ...)
+  
+  if(length(dots) > 1) names(dots) <- c(nm, nms) else names(dots) <- nm
   
   if(length(dots) > 1) {
      
@@ -120,56 +126,56 @@ anovaTable <- function(object, anovafun = "Anova", digits = 3) {
 #' @keywords internal
 #' 
 anovaLRT <- function(object) {
-  
+
   model1 <- object[[1]]
   
-  model1.summary <- fisherC(model1, .progressBar = FALSE)
+  ChiSq1 <- LLchisq(model1)
   
   ret1 <- data.frame(
-    AIC = AIC(model1),
-    BIC = BIC(model1),
-    Fisher.C = model1.summary$Fisher.C,
-    Fisher.C.Diff = NA,
-    DF.diff = NA,
+    Df = ChiSq1$df,
+    AIC(model1),
+    Chisq = ChiSq1$Chisq,
+    Chisq.diff = NA,
+    Df.diff = NA,
     P.value = NA,
     sig = NA
   )
   
-  colnames(ret1)[ncol(ret1)] <- ""
-  
-  rownames(ret1) <- "1"
+  # rownames(ret1) <- deparse(substitute(object[[1]]))
   
   ret2 <- do.call(rbind, lapply(2:length(object), function(i) {
     
     model2 <- object[[i]]
   
-    model2.summary <- fisherC(model2, .progressBar = FALSE)
+    ChiSq2 <- LLchisq(model2)
     
-    Cdiff <- abs(model1.summary$Fisher.C - model2.summary$Fisher.C)
+    Chisq.diff <- abs(ChiSq1$Chisq - ChiSq2$Chisq)
     
-    dfdiff <- abs(model1.summary$df - model2.summary$df)
+    df.diff <- abs(ChiSq1$df - ChiSq2$df)
     
-    pvalue <- round(1 - pchisq(Cdiff, df = dfdiff), 4)
+    pvalue <- round(1 - pchisq(Chisq.diff, df = df.diff), 4)
     
-    ret <- data.frame(
-      AIC = AIC(model2),
-      BIC = BIC(model2),
-      Fisher.C = model2.summary$Fisher.C,
-      Fisher.C.Diff = Cdiff,
-      DF.diff = dfdiff,
+    ret2 <- data.frame(
+      Df = ChiSq2$df,
+      AIC(model2),
+      Chisq = ChiSq2$Chisq,
+      Chisq.diff = Chisq.diff,
+      Df.diff = df.diff,
       P.value = pvalue,
       sig = isSig(pvalue)
     )
-     
-    colnames(ret)[ncol(ret)] <- ""
     
-    rownames(ret) <- c(paste("vs", i))
+    # rownames(ret2) <- deparse(substitute(object[[i]]))
     
-    return(ret)
+    return(ret2)
     
   } ) )
 
   ret <- rbind(ret1, ret2)
+  
+  colnames(ret)[ncol(ret)] <- ""
+  
+  rownames(ret) <- c(names(object)[1], paste("vs", names(object)[-1]))
   
   ret[is.na(ret)] <- ""
   

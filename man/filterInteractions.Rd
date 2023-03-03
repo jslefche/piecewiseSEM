@@ -4,7 +4,7 @@
 \alias{filterInteractions}
 \title{Filter interactions from the d-sep tests}
 \usage{
-filterInteractions(b)
+filterInteractions(b, interactions = FALSE)
 }
 \description{
 Filter interactions from the d-sep tests

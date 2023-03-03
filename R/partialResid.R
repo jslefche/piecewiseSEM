@@ -33,12 +33,12 @@
 #'
 #' xresid <- resid(lm(x1 ~ x2, dat))
 #'
-#' plot(yresid, xresid)
+#' plot(xresid, yresid)
 #'
 #' # Use partialResid
 #' presid <- partialResid(y ~ x1, model)
 #'
-#' plot(presid) # identical plot!
+#' with(presid, plot(xresid, yresid)) # identical plot!
 #'
 #' @export 
 #' 
@@ -104,7 +104,7 @@ partialCorr <- function(formula., modelList, data = NULL) {
   
   if(!all(class(modelList) %in% c("psem", "list"))) modelList <- list(modelList)
   
-  if(is.null(data) & class(modelList) == "psem") data <- modelList$data
+  if(is.null(data) & inherits(modelList, "psem")) data <- modelList$data
   
   if(is.null(data)) data <- GetData(modelList)
   

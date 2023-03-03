@@ -12,17 +12,17 @@ and evaluation of individual model fits (e.g., through R-squared values).
 Compared with traditional variance-covariance based SEM, piecewise SEM
 allows for fitting of models to different distributions through GLM and/or
 hierarchical/nested random structures through (G)LMER. Supported model
-classes include: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
-merModLmerTest, glmerMod}.
+classes include: \code{lm, glm, gls, Sarlm, lme, glmmPQL, lmerMod, merModLmerTest, 
+glmerMod, glmmTMB, gam}.
 }
 \details{
 \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-\tab 2.1.1\cr Date: \tab 2020-04-20\cr Depends: \tab R (>= 3.5.0), nlme,
-pbkrtest\cr Suggests: \tab MASS, lme4\cr License: \tab MIT\cr } The primary
-functions in the package are \code{\link{psem}} which unites structural
-equations in a single model. \code{summary.psem} can be used on an object of
-class \code{psem} to provide various summary statistics for evaluation and
-interpretation.
+\tab 2.3.0\cr Date: \tab 2022-12-022\cr Depends: \tab R (>= 4.2.0), car,
+DiagrammeR, emmeans, igraph, lme4, multcomp, MuMIn, MASS, methods, nlme\cr 
+License: \tab MIT\cr } The primary functions in the package are \code{\link{psem}} 
+which unites structural equations in a single model, and \code{summary.psem} can
+be used on an object of class \code{psem} to provide various summary statistics for 
+evaluation and interpretation.
 }
 \references{
 Shipley, Bill. "A new inferential test for path models based on
@@ -37,6 +37,9 @@ context." Ecology 90.2 (2009): 363-368.
 
 Shipley, Bill. "The AIC model selection method applied to path analytic
 models compared using a d-separation test." Ecology 94.3 (2013): 560-564.
+
+Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics
+ for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.
 
 Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 "Standardized Coefficients in Regression and Structural Models with Binary Outcomes."

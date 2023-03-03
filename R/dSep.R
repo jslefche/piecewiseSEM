@@ -22,6 +22,8 @@
 #' @param direction A \code{vector} of claims defining the specific
 #' directionality of independence claims; for use in special cases (see
 #' Details).
+#' @param interactions whether interactions should be included in independence claims. 
+#' Default is FALSE
 #' @param conserve Whether the most conservative P-value should be returned;
 #' for use in special cases (see Details). Default is FALSE.
 #' @param conditioning Whether the conditioning variables should be shown in
@@ -40,10 +42,10 @@
 #' 
 #' @export 
 #' 
-dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE, 
-                 conditioning = FALSE, .progressBar = TRUE) {
+dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE, 
+                 conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
   
-  if(is.null(basis.set)) b <- basisSet(modelList, direction) else b <- basis.set
+  if(is.null(basis.set)) b <- basisSet(modelList, direction, interactions) else b <- basis.set
   
   if(any(duplicated(names(b))) & conserve == FALSE & is.null(direction)) dupOutput(b)
   
@@ -53,7 +55,7 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, conserve = FALSE
     
   } else {
     
-    if(class(modelList) == "psem") data <- modelList$data else data <- GetData(modelList)
+    if(inherits(modelList, "psem")) data <- modelList$data else data <- GetData(modelList)
     
     modelList <- removeData(modelList, formulas = 1)
     
@@ -133,15 +135,27 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressBar, pb) {
   
-  formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans)
+  formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans, smoothed = TRUE)
   
   bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
   
-  if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod"))) {
+  # if variable is smoothed and appears in linear model
+  
+  if(!"gam" %in% class(bMod) & any(grepl("s\\(.*\\)", b[[i]]))) {
+    
+    bnew <- b[[i]][-2]
+    
+    bnew <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", bnew)) 
+    
+    warning("Basis set includes smoothed terms in independence claim: claim is conducted with linear term!", call. = FALSE)
+    
+  } else bnew <- b[[i]][-2]
+  
+  if(any(class(bMod) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest", "glmerMod", "glmmTMB"))) {
     
     bNewMod <- suppressWarnings(
       update(bMod,
-             formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "), " + ", onlyBars(formula(bMod)))),
+             formula(paste(". ~ ", paste(rev(bnew), collapse = " + "), " + ", onlyBars(formula(bMod)))),
              data = data)
     )
     
@@ -149,7 +163,7 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
     
     bNewMod <- suppressWarnings(
       update(bMod,
-             formula(paste(". ~ ", paste(rev(b[[i]][-2]), collapse = " + "))),
+             formula(paste(". ~ ", paste(rev(bnew), collapse = " + "))),
              data = data)
     )
     
@@ -159,7 +173,16 @@ testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressB
   
   ct$Test.Type <- ifelse(is.na(ct$Estimate) | grepl("=", ct$Predictor), "anova", "coef")
 
-  ct <- ct[which(b[[i]][1] == ct$Predictor), , drop = FALSE]
+  if("gam" %in% class(bNewMod)) {
+  
+    a <- gsub("(s\\(.*),.*\\)", "\\1", b[[i]][1])
+    
+    if(any(grepl("s\\(", a))) a <- sapply(a, function(x)
+      ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x)) 
+  
+  } else a <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", b[[i]][1])) 
+  
+  ct <- ct[which(a == ct$Predictor), , drop = FALSE]
   
   rhs <- paste0(b[[i]][-2], collapse = " + ")
   

@@ -2,15 +2,14 @@
 % Please edit documentation in R/cerror.R
 \name{\%~~\%}
 \alias{\%~~\%}
-\alias{`~~`}
 \title{Correlated error operator}
 \usage{
 e1 \%~~\% e2
 }
 \arguments{
-\item{e1}{one variable to be correlated}
+\item{e1}{first variable involved in correlated error}
 
-\item{e2}{the other variable to be correlated}
+\item{e2}{second variable involved in correlated error}
 }
 \description{
 Specifies correlated errors among predictors
@@ -19,7 +18,6 @@ Specifies correlated errors among predictors
 For use in \code{psem} to identify correlated sets of variables.
 }
 \examples{
-
 # Generate example data
 dat <- data.frame(x1 = runif(50),
   x2 = runif(50), y1 = runif(50),
@@ -56,5 +54,5 @@ coefs(sem)
 \code{\link{cerror}}
 }
 \author{
-Jon Lefcheck <lefcheckj@si.edu>
+Jon Lefcheck <LefcheckJ@si.edu>, Jarrett Byrnes
 }

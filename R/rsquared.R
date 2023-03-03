@@ -5,6 +5,10 @@
 #'
 #' For mixed models, marginal R2 considers only the variance by the fixed
 #' effects, and the conditional R2 by both the fixed and random effects.
+#' 
+#' For generalized additive models fit to gaussian distribution, the function
+#' returns ths adjusted-R2. For all other distributions, it returns the proportion
+#' of deviance explained.
 #'
 #' For GLMs (\code{glm}), supported methods include: \itemize{
 #' \item\code{mcfadden} 1 - ratio of likelihoods of full vs. null models
@@ -81,6 +85,9 @@
 #'
 #'     # Get R2 for generalized linear mixed effects model (glmmPQL)
 #'     rsquared(MASS::glmmPQL(ypois ~ x1, random = ~ 1 | random, family = poisson, dat))
+#'     
+#'     # Get R2 for generalized additive models (gam)
+#'     rsquared(mgcv::gam(ynorm ~ x1, dat))
 #'   }
 #'
 #' @export
@@ -99,7 +106,7 @@ rsquared <- function(modelList, method = NULL) {
 
     if(all(class(i) %in% c("gls"))) r <- rsquared.gls(i) else
 
-    if(any(class(i) %in% c("glm"))) r <- rsquared.glm(i, method) else
+    if(all(class(i) %in% c("glm", "lm", "negbin"))) r <- rsquared.glm(i, method) else
 
     # if(any(class(i) %in% c("phylolm", "phyloglm"))) r <- rsquared.phylolm(i)
 
@@ -108,8 +115,14 @@ rsquared <- function(modelList, method = NULL) {
     if(all(class(i) %in% c("lmerMod", "merModLmerTest", "lmerModLmerTest"))) r <- rsquared.merMod(i) else
 
     if(any(class(i) %in% c("glmerMod"))) r <- rsquared.glmerMod(i, method) else
+      
+    if(any(class(i) %in% c("glmmTMB"))) r <- rsquared.glmmTMB(i) else
 
     if(any(class(i) %in% c("glmmPQL"))) r <- rsquared.glmmPQL(i, method) else
+      
+    if(any(class(i) %in% c("Sarlm"))) r <- rsquared.Sarlm(i) else
+      
+    if(any(class(i) %in% c("gam"))) r <- rsquared.gam(i) else
       
       r <- list(family = "gaussian", link = "identity", method = "none", R.squared = NA)
 
@@ -192,6 +205,8 @@ rsquared.glm <- function(model, method = "nagelkerke") {
   
   family. <- family(model)$family
   
+  family. <- gsub("(.*)\\(.*\\)", "\\1", family.)
+  
   if(family. == "gaussian") {
     
     method <- "none"
@@ -199,16 +214,10 @@ rsquared.glm <- function(model, method = "nagelkerke") {
     r <- summary(lm(model$formula, model$data))$r.squared
     
   }
-  
-  null <- update(model, . ~ 1)
-  
-  nullLik <- exp(as.numeric(logLik(null)))
-  
-  modelLik <- exp(as.numeric(logLik(model)))
-  
+ 
   if(method == "mcfadden") {
     
-    r <- 1 - log(modelLik)/log(nullLik)
+    r <- 1 - (model$deviance / model$null.deviance)
     
   }
   
@@ -216,11 +225,11 @@ rsquared.glm <- function(model, method = "nagelkerke") {
     
     n <- nobs(model)
     
-    r <- 1 - (nullLik/modelLik)^(2/n)
+    r <- 1 - exp((model$deviance - model$null.deviance) / n)
     
     if(method == "nagelkerke")
       
-      r <- r / (1 - nullLik^(2/n))
+      r <- r / (1 - exp(-1 * model$null.deviance / n))
     
   }
   
@@ -258,10 +267,14 @@ rsquared.merMod <- function(model) {
   sigmaL <- sum(sapply(1:length(sigma), function(i) {
 
     sigma. <- sigma[[i]]
+    
+    if(all(rownames(sigma.) %in% colnames(X))) X. <- X else
+      
+      X. <- do.call(cbind, model.matrix(model, type = "randomListRaw")) 
 
-    Z <- as.matrix(X[, rownames(sigma.), drop = FALSE])
+    Z <- as.matrix(X.[, rownames(sigma.), drop = FALSE])
 
-    sum(rowSums((Z %*% sigma.) * Z))/nrow(X)
+    sum(rowSums((Z %*% sigma.) * Z))/nrow(X.)
 
   } ) )
 
@@ -288,10 +301,15 @@ rsquared.lme <- function(model) {
   sigma <- GetVarCov(model)
 
   sigmaL <- sum(sapply(sigma, function(i) {
+    
+    if(all(rownames(i) %in% colnames(X))) X. <- X else
+      
+      X. <- model.matrix(model$modelStruct$reStruct,
+                         data = model$data[rownames(model$fitted), , drop = FALSE]) 
+  
+    Z <- as.matrix(X.[, rownames(i), drop = FALSE])
 
-    Z <- as.matrix(X[, rownames(i), drop = FALSE])
-
-    sum(rowSums((Z %*% i) * Z))/nrow(X)
+    sum(rowSums((Z %*% i) * Z))/nrow(X.)
 
   } ) )
 
@@ -339,7 +357,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
       
       rand <- onlyBars(formula(model))
       
-      f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+      f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = TRUE))
       
       nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = poisson(link = link), data = data))
       
@@ -377,7 +395,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
 
       if(family. == "binomial") {
 
-        if(method == "trigamma") method <- "delta"
+        if(method == "trigamma") method <- "theoretical"
 
         if(!method %in% c("theoretical", "delta")) stop("Unsupported method!")
         
@@ -540,6 +558,20 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
 }
 
+# R^2 for glmmTMB
+#
+# @keywords internal
+#
+rsquared.glmmTMB <- function(model) {
+  
+  list(family = family(model)$family, 
+       link = family(model)$link, 
+       method = "none", 
+       Marginal = performance::r2(model)$R2_marginal, 
+       Conditional = performance::r2(model)$R2_conditional)
+  
+}
+
 #' R^2 for glmmPQL objects
 #' 
 #' @keywords internal
@@ -653,8 +685,29 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
 
 }
 
-# R^2 for glmmadmb objects
-# 
-# @keywords internal
-#
+#' R^2 for Sarlm objects
+#' 
+#' @keywords internal
+#'
+rsquared.Sarlm <- function(model) {
+  
+  list(family = "gaussian", link = "identity", method = "none", 
+       R.squared = summary(model, Nagelkerke = TRUE)$NK)
+  
+}
 
+#' R^2 for gam objects
+#' 
+#' @keywords internal
+#'
+rsquared.gam <- function(model) {
+
+  link <- family(model)$link
+  
+  family. <- family(model)$family
+  
+  if(family. == "gaussian") r <- summary(model)$r.sq else r <- summary(model)$dev.expl
+  
+  list(family = family., link = link, method = "none", R.squared = r)
+  
+}

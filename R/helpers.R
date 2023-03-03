@@ -6,7 +6,7 @@ all.vars.merMod <- function(formula.) {
 
   if(!any(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
-  if(class(formula.) == "formula.cerror")
+  if(inherits(formula., "formula.cerror"))
 
     gsub(" " , "", unlist(strsplit(formula., "~~"))) else {
 
@@ -27,57 +27,73 @@ all.vars.merMod <- function(formula.) {
 #' @keywords internal
 #' 
 all.vars_notrans <- function(formula.) {
-
+  
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
-
-  if(class(formula.) == "formula") {
-
+  
+  if(inherits(formula., "formula")) {
+    
     if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
-
+    
     formula. <- all.vars_trans(formula.)
-
+    
     if(any(grepl(":", formula.))) {
-
+      
       idx <- which(grepl(":", formula.))
-
+      
       for(i in idx) formula.[i] <- paste(sapply(strsplit(formula.[i], ":"), stripTransformations), collapse = ":")
-
+      
       for(j in (1:length(formula.))[-idx]) formula.[j] <- stripTransformations(formula.[j])
-
+      
     } else {
-
+      
       formula. <- sapply(formula., stripTransformations)
-
+      
     }
-
+    
   } else formula. <- unlist(strsplit(formula., " ~~ "))
-
-  return(formula.)
-
+  
+  ret <- gsub("(,.*)", "", formula.)
+  
+  return(ret)
+  
 }
 
 #' Get vector of transformed variables
 #' 
 #' @keywords internal
 #' 
-all.vars_trans <- function(formula.) {
-
+all.vars_trans <- function(formula., smoothed = FALSE) {
+  
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
-
-  if(class(formula.) == "formula") {
-
-    if(formula.[[3]] == 1) deparse(formula.[[2]]) else {
-
+  
+  if(inherits(formula., "formula")) {
+    
+    if(formula.[[3]] == 1) ret <- deparse(formula.[[2]]) else {
+      
       if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
-
-      c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
-
-      }
-
-    } else unlist(strsplit(formula., " ~~ "))
-
+      
+      ret <- c(rownames(attr(terms(formula.), "factors"))[1], labels(terms(formula.)))
+      
+      if(smoothed == FALSE) ret <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", ret)) 
+      
+      # else {
+        
+        # ret <- gsub("(s\\(.*),.*", "\\1", ret)
+        # 
+        # if(any(grepl("s\\(", ret))) ret <- sapply(ret, function(x) 
+        #   ifelse(grepl("s\\(", x) & !grepl("\\)", x), paste0(x, ")"), x))
+        
+      # }
+      
+      # ret <- gsub("(,.*)", "", ret)
+      
+    }
+    
+    return(ret)
+    
+  } else unlist(strsplit(formula., " ~~ "))
+  
 }
-
 
 #' Captures output table
 #' 
@@ -135,7 +151,7 @@ dataTrans <- function(formula., data) {
   
   notrans <- all.vars.merMod(formula.)
   
-  if(class(formula.) == "formula.cerror") notrans <- gsub(".*\\((.*)\\)", "\\1", notrans)
+  if(inherits(formula., "formula.cerror")) notrans <- gsub(".*\\((.*)\\)", "\\1", notrans)
   
   trans <- all.vars_trans(formula.)
   
@@ -144,9 +160,9 @@ dataTrans <- function(formula., data) {
   trans <- trans[!duplicated(trans)]
   
   if(any(grepl("scale\\(.*\\)", trans))) {
-    
-    trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
-    
+    # 
+    # trans[which(grepl("scale(.*)", trans))] <- notrans[which(grepl("scale(.*)", trans))]
+    # 
     warning("`scale` applied directly to variable. Use argument `standardize = TRUE` instead.", call. = FALSE)
     
   }
@@ -155,13 +171,13 @@ dataTrans <- function(formula., data) {
     
     for(k in 1:length(notrans)) {
       
-      if(is.factor(data[, notrans[k]])) next else {
+      if(is.factor(data[, notrans[k]])) next else 
         
-        data[, notrans[k]] <-
+        if(grepl("scale(.*)", trans[k])) data[, notrans[k]] <- scale(data[, notrans[k]]) else
           
-          sapply(data[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
-        
-      }
+          data[, notrans[k]] <-
+            
+            sapply(data[, notrans[k]], function(x) eval(parse(text = gsub(notrans[k], x, trans[k]))))
       
     }
     
@@ -179,6 +195,8 @@ dataTrans <- function(formula., data) {
 #'
 getAnova <- function(model, test.statistic = "F", test.type = "III") {
 
+  if(inherits(model, "glmmTMB")) test.statistic = "Chisq"
+  
   krp <- as.data.frame(car::Anova(model, test.statistic = test.statistic, type = test.type))
 
   ct <- summary(model)$coefficients
@@ -303,7 +321,7 @@ GetSingleData <- function(model) {
            dat <- eval(getCall(model)$data, environment(formula(model)))
          },
 
-         "sarlm" = {
+         "Sarlm" = {
            dat <- eval(getCall(model)$data, environment(formula(model)))
          },
 
@@ -320,32 +338,35 @@ GetSingleData <- function(model) {
          },
 
          "lmerMod" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
 
          "glmerMod" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
 
          "lmerModLmerTest" = {
-           dat <- model@frame
+           dat <- lme4::getData(model) #model@frame
          },
          
-         "merModLmerTest" = {
-           dat <- model@frame
+         "glmmTMB" = {
+           dat <- model$frame 
          },
 
          "gls" = {
-           dat <-  nlme::getData(model)
+           dat <- nlme::getData(model)
          },
 
          "lme" = {
-           dat <-  nlme::getData(model)
+           dat <- nlme::getData(model)
+         },
+         "gam" = {
+           dat <- eval(getCall(model)$data, environment(formula(model)))
          }
 
   )
-
-  dat
+ 
+  return(dat)
 
 }
 
@@ -385,9 +406,13 @@ GetOLRE <- function(sigma, model, X, data, RE = c("all", "RE", "OLRE")) {
     
     out <- sapply(sigma[idx.], function(i) {
       
-      Z <- as.matrix(X[, rownames(i), drop = FALSE])
+      if(all(rownames(i) %in% colnames(X))) X. <- X else
+        
+        X. <- do.call(cbind, model.matrix(model, type = "randomListRaw")) 
       
-      sum(rowSums(Z %*% i) * Z) / nrow(X)
+      Z <- as.matrix(X.[, rownames(i), drop = FALSE])
+      
+      sum(rowSums(Z %*% i) * Z) / nrow(X.)
       
     } ) else if(RE == "OLRE") {
       
@@ -539,7 +564,7 @@ listFormula <- function(modelList, formulas = 0) {
 #' 
 #' @keywords internal
 #' 
-nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "sarlm"))) length(fitted(object)) else nobs(object, ...)
+nObs <- function(object, ...) if(any(class(object) %in% c("phylolm", "phyloglm", "Sarlm"))) length(fitted(object)) else nobs(object, ...)
 
 #' Get random effects from merMod
 #' 
@@ -551,6 +576,8 @@ onlyBars <- function(formula., slopes = TRUE) {
 
   if(slopes == TRUE) paste(sapply(f, function(x) paste0("(", deparse(x), ")")), collapse = " + ") else {
 
+    # paste(sapply(f, function(x) paste0("(1 ", gsub(".*(\\|.*)", "\\1", f), ")")), collapse = "+")
+    
     f <- f[sapply(f, function(x) grepl("1\\||1 \\|", deparse(x)))]
 
     paste(sapply(f, function(x) paste0("(", deparse(x), ")")), collapse = " + ")
@@ -622,4 +649,70 @@ get_response <- function(mod) {
   
       return(as.character(r))
 
-      }
+}
+
+#' Get Left-hand side of formulae
+#' 
+#' @keywords internal
+#' 
+getLHS <- function(formulaList){
+  sapply(formulaList, function(x) as.character(x[[2]]))
+}
+
+#' Get Right-hand side of formulae
+#' 
+#' @keywords internal
+#' 
+getRHS <- function(formulaList){
+  rhs <- sapply(formulaList, function(x) all.vars(x)[-1])
+  unique(do.call(c, rhs))
+}
+
+#' Operator for non-overlap in sets
+#' 
+#' @keywords internal
+#' 
+"%not_in%" <- function(x, y) x[!x %in% y]
+
+
+#' Get a sorted psem object in DAG order
+#' 
+#' @description Takes a [psem] object, pulls out the
+#' DAG, and then sorts the psem object into the order
+#' of the DAG (from exogenous to terminal endogenous
+#' variable) for use by other functions. Note: removes
+#' correlated errors.
+#'
+#' @param object A fit [psem] object
+#' @param keepdata Defaults to TRUE. Should the
+#' data with the psem be included in the returned
+#' object?
+#'
+#' @return A new [psem] object, without the data.
+#' @export
+getSortedPsem <- function(object, keepdata = TRUE){
+  #first, remove data
+  dat <- object$data
+  object <- removeData(object, formulas = 1)
+  
+  #Now, get formulae
+  formulaList <- listFormula(object)
+  lhs <- getLHS(formulaList)
+  
+  names(object)<- lhs
+  
+  #sort some dags so we do things in the right order  
+  object_dag <- getDAG(formulaList)
+  sorted_dag <- sortDag(object_dag, formulaList)
+  lhs_sorted <- colnames(sorted_dag)
+  lhs_sorted <- lhs_sorted[which(lhs_sorted %in% lhs)]
+  
+  #Sort the object
+  object <- object[lhs_sorted]
+  
+  #should we include the data?
+  if(keepdata) object$data <- dat
+  
+  #return
+  return(object)
+}

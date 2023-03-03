@@ -9,6 +9,7 @@ fisherC(
   add.claims = NULL,
   basis.set = NULL,
   direction = NULL,
+  interactions = FALSE,
   conserve = FALSE,
   conditional = FALSE,
   .progressBar = FALSE
@@ -25,6 +26,9 @@ to be added to the basis set}
 \item{direction}{a vector of claims defining the specific directionality of any independence 
 claim(s)}
 
+\item{interactions}{whether interactions should be included in independence claims. 
+Default is FALSE}
+
 \item{conserve}{whether the most conservative P-value should be returned. 
 Default is FALSE}
 
@@ -34,7 +38,7 @@ Default is FALSE}
 \item{.progressBar}{an optional progress bar. Default is FALSE}
 }
 \value{
-a vector corresponding to the C statistic, d.f., and P-value
+a data.frame corresponding to the C statistic, d.f., and P-value
 }
 \description{
 Summarize tests of directed separation using Fisher's C statistic

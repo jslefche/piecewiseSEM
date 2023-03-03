@@ -12,7 +12,7 @@ getDAG <- function(modelList) {
 
   fList <- fList[!sapply(fList, is.null)]
 
-  fList <- lapply(fList, all.vars_trans)
+  fList <- lapply(fList, all.vars_trans, smoothed = TRUE)
 
   vars <- unlist(fList)
 
@@ -38,11 +38,8 @@ getDAG <- function(modelList) {
 
   amat <- sortDag(amat, fList)
 
-  if(
-    sum(colSums(amat) > 0) < 1 &
-    igraph::is_dag(igraph::graph_from_adjacency_matrix(amat))
-  )
-
+  if(!igraph::is_dag(igraph::graph_from_adjacency_matrix(amat)))
+    
     stop("Model is non-recursive. Remove feedback loops!", call. = FALSE)
 
   return(amat)
@@ -53,40 +50,54 @@ getDAG <- function(modelList) {
 #'
 #' @keywords internal
 #'
-sortDag <- function(amat, formulaList) {
-
+sortDag <- function(amat, formulaList) { 
+  
   counter <- sapply(rownames(amat), function(i) {
-
+    
     indicated <- i
-
+    
     flag <- TRUE
-
+    
     counter <- 0
-
-    while(flag == TRUE) {
-
+    
+    while(flag) {
+      
       pos <- sapply(formulaList, function(k) k[1] %in% indicated)
-
-      if(all(pos == FALSE) | sum(amat[, i]) == 0) flag <- FALSE else {
-
+      
+      if(all(!pos) || sum(amat[, i]) == 0) flag <- FALSE 
+      
+      else { 
+        
         counter <- counter + 1
-
+        
         indicated <- formulaList[pos][[1]][-1]
-
-        flag <- TRUE
-
+        
+        if(counter == 1) flag <- TRUE
+        
+        else{
+          
+          if(any(indicated %in% memory_indicated)) { flag <- FALSE ; counter <- counter - 1}
+          
+          else flag <- TRUE
+          
+        }
+        
+        if(counter == 1) memory_indicated <- indicated
+        
+        else memory_indicated <- c(memory_indicated, indicated)
+        
       }
-
+      
     }
-
+    
     return(counter)
-
+    
   } )
-
-  amat = amat[names(sort(counter)), names(sort(counter))]
-
+  
+  amat <- amat[names(sort(counter)), names(sort(counter))]
+  
   return(amat)
-
+  
 }
 
 # #' Generate adjacency matrix from list of structural equations

@@ -4,8 +4,8 @@
 #' structural equation model.
 #'
 #' \code{psem} takes a list of structural equations, which can be model objects
-#' of classes: \code{lm, glm, gls, pgls, sarlm, lme, glmmPQL, lmerMod,
-#' lmerModLmerTest, glmerMod}.
+#' of classes: \code{lm, glm, gls, pgls, Sarlm, lme, glmmPQL, lmerMod,
+#' lmerModLmerTest, glmerMod, glmmTMB, gam}.
 #'
 #' It also takes objects of class \code{formula, formula.cerror}, corresponding
 #' to additional variables to be included in the tests of directed separation
@@ -16,9 +16,12 @@
 #' internally from the structural equations.
 #'
 #' @param \dots A list of structural equations
+#' 
 #' @return Returns an object of class \code{psem}
-#' @author Jon Lefcheck <lefcheckj@@si.edu>
+#' 
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
+#' 
 #' @examples 
 #' mod <- psem(
 #' lm(rich ~ cover, data = keeley),
@@ -49,6 +52,12 @@ psem <- function(...) {
 #' 
 formatpsem <- function(x) {
 
+  evaluateClasses(x)
+  
+  stop_psem(x)
+  
+  # checkTransformations(x)
+  
   idx <- which(sapply(x, function(y) any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data"))))
 
   if(sum(idx) == 0) idx <- which(names(x) == "data")
@@ -66,6 +75,8 @@ formatpsem <- function(x) {
     x$data <- GetData(x)
 
   }
+  
+  x <- checkData(x)
 
   if(any(is.na(names(x)))) {
 
@@ -75,27 +86,29 @@ formatpsem <- function(x) {
 
   }
   
-  vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x)))))
-
-  vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
-  
-  t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x)))))
-  
-  t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
-  
-  if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
-  
-  if(class(x$data) == "comparative.data") { 
+  # if(!any(sapply(x, class) %in% "gam")) {
+  # 
+  #   vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x)))))
+  # 
+  #   vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
+  #   
+  #   t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x, smoothed = TRUE)))))
+  #   
+  #   t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
+  #   
+  #   if(length(vars) != length(t_vars)) stop("Some variables appear as alternately transformed and untransformed. Apply transformations across the entire model", call. = FALSE)
+  #   
+  # }
     
-    if(any(sapply(x$data$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE) 
+  if(all(class(x$data) == "comparative.data")) { 
+    
+    if(any(sapply(x$data$data, is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE) 
     
     } else {
       
-      if(any(sapply(x$data[, vars], is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE)
+      if(any(sapply(x$data, is.na))) warning("NAs detected in the dataset. Consider removing all rows with NAs to prevent fitting to different subsets of data", call. = FALSE)
 
     }
-      
-  evaluateClasses(x)
 
   formulaList <- listFormula(x, formulas = 1)
 
@@ -124,39 +137,72 @@ as.psem <- function(object, Class = "psem") {
   
 }
 
+#' Check to see whether supplied data.frame matches model-extracted data
+#' 
+#' @keywords internal
+#' 
+checkData <- function(x) {
+  
+  if(!identical(x$data, GetData(removeData(x)))) x$data <- GetData(removeData(x))
+  
+  return(x)
+  
+}
+
+#' Check to see whether variables exist as transformed and untransformed
+#' 
+#' @keywords internal
+#' 
+checkTransformations <- function(x) {
+  
+  
+}
+
 #' Evaluate model classes and stop if unsupported model class
 #' 
-#' @param modelList a list of structural equations or a model object
+#' @param x a list of structural equations or a model object
 #' 
 #' @export
 #' 
-evaluateClasses <- function(modelList) {
+evaluateClasses <- function(x) {
 
-  classes <- unlist(sapply(modelList, class))
+  classes <- unlist(sapply(x, class))
 
   classes <- classes[!duplicated(classes)]
 
-  model.classes <- c(
+  supported.classes <- c(
     "character",
     "matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data",
+    "data.table", "tbl_df", "tbl",
     "formula", "formula.cerror",
     "lm", "glm", "gls", "negbin",
     "lme", "glmmPQL",
-    "lmerMod", "lmerModLmerTest", "glmerMod",
-    "sarlm",
-    "pgls", "phylolm", "phyloglm"
+    "lmerMod", "lmerModLmerTest", "glmerMod", "glmmTMB",
+    "Sarlm",
+    "pgls", "phylolm", "phyloglm",
+    "gam"
   )
 
-  if(!all(classes %in% model.classes))
+  if(!all(classes %in% supported.classes))
 
     stop(
       paste0(
-        "Unsupported model class in model list: ",
-        paste0(classes[!classes %in% model.classes], collapse = ", "),
+        "Unsupported class in model list: ",
+        paste0(classes[!classes %in% supported.classes], collapse = ", "),
         ". See 'help(piecewiseSEM)' for more details."),
       call. = FALSE
     )
 
+}
+
+#' Stop function for unsupported methods
+#' 
+#' @keywords internal
+#' 
+stop_psem <- function(x) {
+  
+  if(any(sapply(x, function(y) grepl("poly\\(.*\\)", formula(y))))) stop("Polynomials not supported", call. = F)
+  
 }
 
 #' Print psem
@@ -176,7 +222,7 @@ print.psem <- function(x, ...) {
 
   formulas_print <- sapply(1:length(formulas), function(i) {
 
-    if(class(formulas[[i]]) == "formula.cerror")
+    if(inherits(formulas[[i]], "formula.cerror"))
 
       paste0("Correlated error: ", paste(formulas[[i]])) else
 

@@ -8,6 +8,7 @@ dSep(
   modelList,
   basis.set = NULL,
   direction = NULL,
+  interactions = FALSE,
   conserve = FALSE,
   conditioning = FALSE,
   .progressBar = TRUE
@@ -21,6 +22,9 @@ dSep(
 \item{direction}{A \code{vector} of claims defining the specific
 directionality of independence claims; for use in special cases (see
 Details).}
+
+\item{interactions}{whether interactions should be included in independence claims. 
+Default is FALSE}
 
 \item{conserve}{Whether the most conservative P-value should be returned;
 for use in special cases (see Details). Default is FALSE.}

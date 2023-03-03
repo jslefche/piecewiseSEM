@@ -28,18 +28,19 @@
 #' @param modelList A list of structural equations
 #' @param direction a vector of claims defining the specific directionality of any independence 
 #' claim(s) 
+#' @param interactions whether interactions should be included in independence claims. 
+#' Default is FALSE
 #' 
 #' @return A \code{list} of independence claims.
 #' 
-#' @author Jon Lefcheck <lefcheckj@@si.edu>
-#' 
+#' @author Jon Lefcheck <LefcheckJ@@si.edu>
 #' @seealso \code{\link{dSep}}
 #' 
 #' @references Shipley, Bill. "A new inferential test for path models based on directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #' 
 #' @export
 #' 
-basisSet <- function(modelList, direction = NULL) {
+basisSet <- function(modelList, direction = NULL, interactions = FALSE) {
 
   amat <- getDAG(modelList)
 
@@ -69,22 +70,22 @@ basisSet <- function(modelList, direction = NULL) {
   b <- b[!sapply(b, is.null)]
 
   if(length(b) > 0) {
-
-    b <- filterExisting(b, modelList)
-
+    
     b <- filterExogenous(b, modelList, amat)
-
-    b <- filterInteractions(b)
+    
+    b <- filterSmoothed(b, modelList)
+    
+    b <- filterExisting(b, modelList)
+    
+    b <- filterInteractions(b, interactions)
 
     b <- removeCerror(b, modelList)
 
     b <- reverseAddVars(b, modelList, amat)
 
     b <- reverseNonLin(b, modelList, amat)
-    
-    # Need to write a function that makes sure categorical
-    #variables are always predictors in basis set
-    #b <- fixCatDir(modelList, b, amat)
+
+    b <- fixCatDir(b, modelList)
     
     if(!is.null(direction)) b <- specifyDir(b, direction)
 
@@ -148,14 +149,48 @@ filterExogenous <- function(b, modelList, amat) {
 #' 
 #' @keywords internal
 #' 
-filterInteractions <- function(b) {
+filterInteractions <- function(b, interactions = FALSE) {
 
-  b <- lapply(b, function(i) if(any(grepl("\\:", i[1:2]))) NULL else i )
+  if(interactions == FALSE) {
+    
+    b <- lapply(b, function(i) if(any(grepl("\\:", i[1:2]))) NULL else i )
+    
+  } else {
+    
+    b <- lapply(b, function(i) {
+      
+      vars <- unlist(sapply(i, strsplit, ":"))
+      
+      if(any(vars[1] %in% vars[-1]) | grepl(":", vars[2])) NULL else i
+      
+    } )
+    
+  }
 
   b <- b[!sapply(b, is.null)]
 
   return(b)
 
+}
+
+#' First, remove claims where linear and non-linear terms appear in the same claim
+#' 
+#' @keywords internal
+#' 
+filterSmoothed <- function(b, modelList) {
+  
+  b <- lapply(b, function(i) {
+    
+    vars <- gsub("(.*)\\,.*", "\\1", gsub("s\\((.*)\\).*", "\\1", i)) 
+    
+    if(vars[1] == vars[2] | any(vars[1] %in% vars[-(1:2)])) NULL else i
+    
+  } )
+  
+  b <- b[!sapply(b, is.null)]
+  
+  return(b)
+  
 }
 
 #' Remove correlated errors from the basis set
@@ -295,11 +330,11 @@ reverseNonLin <- function(b, modelList, amat) {
 
       sapply(modelList[idm], function(x) {
 
-        .family <- try(family(x), silent = TRUE)
+        family. <- try(family(x), silent = TRUE)
 
-        if(class(.family) == "try-error") FALSE else
+        if(inherits(family., "try-error") | all(is.na(family.))) FALSE else
 
-          if(.family$family == "gaussian") FALSE else
+          if(family.$family == "gaussian") FALSE else
 
             TRUE
 
@@ -393,6 +428,38 @@ flipOne <- function(rel, arrow, b) {
   
 }
 
+#' Flip independence claims so categorical variables are not the response
+#' 
+#' @keywords internal
+#' 
+fixCatDir <- function(b, modelList) {
+  
+  b <- lapply(b, function(i) {
+    
+    var <- i[2]
+    
+    var <- gsub(".*\\((.*)\\).*", "\\1", var)
+    
+    data <- as.data.frame(modelList$data)
+    
+    if(class(data[, var]) %in% c("factor", "character")) {
+      
+      var1 <- i[1]
+      
+      i[1] <- var
+      
+      i[2] <- var1
+      
+    } 
+    
+    return(i)
+    
+  } )
+  
+  return(b)
+  
+}
+
 #' Print basis set
 #' 
 #' @method print basisSet
@@ -404,6 +471,8 @@ flipOne <- function(rel, arrow, b) {
 #' 
 print.basisSet <- function(x, ...) { 
   
+  if(length(x) == 0) print("No independence claims in basis set.") else {
+  
   ret <- lapply(x, function(oneLine) {
     
     st <- paste(oneLine[1], "|", oneLine[2], sep = " ")
@@ -414,6 +483,10 @@ print.basisSet <- function(x, ...) {
     
   } )
   
+  names(ret) <- paste("Claim", 1:length(ret))
+  
   print(ret)
+  
+  }
   
 }
