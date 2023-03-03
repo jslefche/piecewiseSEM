@@ -44,5 +44,5 @@ summary(mod)
 \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 }
 \author{
-Jon Lefcheck <lefcheckj@si.edu>
+Jon Lefcheck <LefcheckJ@si.edu>
 }
