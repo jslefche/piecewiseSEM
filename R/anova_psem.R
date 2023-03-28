@@ -92,7 +92,7 @@ anovaTable <- function(object, anovafun = "Anova", digits = 3) {
     
     DF <- ifelse(any(grepl("numDF", colnames(dat))), dat$numDF, dat$Df)
     
-    Test.Stat <- ifelse(any(grepl("F value", colnames(dat))), dat$`F-value`, dat[, 1])
+    Test.Stat <- ifelse(any(grepl("F value", colnames(dat))), dat$`F value`, ifelse(any(grepl("F-value", colnames(dat))), dat$`F-value`, dat[, 1]))
     
     ret <- data.frame(
       Response = response,
