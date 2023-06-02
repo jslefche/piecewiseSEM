@@ -4,6 +4,9 @@ editor_options:
     wrap: 72
 ---
 
+## Version 2.3.01 Release Notes
+-   Updated contact email
+
 ## Version 2.3.0 Release Notes
 
 -   Now supports model classes: `glmmTMB` , `Sarlm`

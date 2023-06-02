@@ -9,3 +9,4 @@ There were no NOTES.
 ## Notes
 
 ## Test environments
+* local: Windows 11 install, R 4.2.2

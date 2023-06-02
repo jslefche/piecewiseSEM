@@ -1,8 +1,8 @@
 # piecewiseSEM: Piecewise Structural Equation Modeling in R
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/piecewiseSEM)](https://cran.r-project.org/package=piecewiseSEM)
 
-## Version 2.3.0
-## Last updated: 31 May 2023
+## Version 2.3.01
+## Last updated: 01 June 2023
 
 ## To install
 

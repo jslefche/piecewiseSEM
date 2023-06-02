@@ -1,8 +1,8 @@
 Package: piecewiseSEM
 Type: Package
 Title: Piecewise Structural Equation Modeling
-Version: 2.3.0
-Date: 2023-05-31
+Version: 2.3.01
+Date: 2023-06-01
 Authors@R: c(
     person("Jon", "Lefcheck",   role = c("aut", "cre"), email = "jlefcheck@umces.edu"),
     person("Jarrett", "Byrnes",  role = "aut", email = "jarrett.byrnes@umb.edu"),
