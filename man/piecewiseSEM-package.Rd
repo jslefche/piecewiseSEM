@@ -2,10 +2,12 @@
 % Please edit documentation in R/piecewiseSEM-package.R
 \docType{package}
 \name{piecewiseSEM-package}
-\alias{piecewiseSEM-package}
 \alias{piecewiseSEM}
-\title{Piecewise Structural Equation Modeling}
+\alias{piecewiseSEM-package}
+\title{The 'piecewiseSEM` package}
 \description{
+Piecewise structural equation modeling
+
 Fitting and evaluation of piecewise structural equation models, complete
 with goodness-of-fit tests, estimates of (standardized) path coefficients,
 and evaluation of individual model fits (e.g., through R-squared values).
@@ -14,10 +16,9 @@ allows for fitting of models to different distributions through GLM and/or
 hierarchical/nested random structures through (G)LMER. Supported model
 classes include: \code{lm, glm, gls, Sarlm, lme, glmmPQL, lmerMod, merModLmerTest, 
 glmerMod, glmmTMB, gam}.
-}
-\details{
+
 \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-\tab 2.3.01\cr Date: \tab 2023-06-01\cr Depends: \tab R (>= 4.2.0), car,
+\tab 2.3.01\cr Date: \tab 2024-06-06\cr Depends: \tab R (>= 4.4.0), car,
 DiagrammeR, emmeans, igraph, lme4, multcomp, MuMIn, MASS, methods, nlme\cr 
 License: \tab MIT\cr } The primary functions in the package are \code{\link{psem}} 
 which unites structural equations in a single model, and \code{summary.psem} can
@@ -50,7 +51,15 @@ of determination R2 and intra-class correlation coefficient from generalized
 linear mixed-effects models revisited and expanded."
 Journal of the Royal Society Interface 14.134 (2017): 20170213.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/jslefche/}
+  \item Report bugs at \url{https://github.com/jslefche/piecewiseSEM/issues}
+}
+
+}
 \author{
-Jon Lefcheck <jlefcheck@umces.edu>
+Jon Lefcheck <jslefche@gmail.com>
 }
 \keyword{package}

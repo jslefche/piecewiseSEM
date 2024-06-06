@@ -1,38 +1,36 @@
-#####-----Build script
+#-----BUILD SCRIPT--------------------------------------------------------------
 
-# generate documentation
+#-----Generate documentation----------------------------------------------------
+
 roxygen2::roxygenise()
 
-# build documentation and vignettes
-document(piecewiseSEM)
-#clean_vignettes(piecewiseSEM)
-#build_vignettes(piecewiseSEM)
+#-----Create website for package------------------------------------------------
 
-# create website for package
 pkgdown::build_site()
 
-# build package
-piecewiseSEM <- as.package("./piecewiseSEM") 
-devtools::use_build_ignore(c("build.R", ".git", ".gitignore", "docs"),
-                           pkg = "./piecewiseSEM")
-# Load package
-load_all(piecewiseSEM, reset = T)
+#-----Build package-------------------------------------------------------------
 
-### Check and build
-check(piecewiseSEM, cran=TRUE)
-build(piecewiseSEM, path="./piecewiseSEM/builds")
-devtools::check_built("./piecewiseSEM_2.0.tar.gz")
-install(piecewiseSEM) 
+# piecewiseSEM <- devtools::as.package("./piecewiseSEM")
+
+# Add files to .Rbuildignore
+usethis::use_build_ignore(c("build.R", ".git", ".gitignore", "docs"))
+
+# Load package
+devtools::load_all("./piecewiseSEM", reset = T)
+
+# Check and build
+devtools::check("piecewiseSEM", cran = T)
+
+devtools::build("piecewiseSEM")
+
+devtools::check_built("piecewiseSEM")
+
+#-----Examples------------------------------------------------------------------
+
 #run_examples(piecewiseSEM) 
 
-### Build pkgdown site
-library(pkgdown)
-setwd("piecewiseSEM")
-build_site()
-
-
-#####-----Examples to verify functionality
 library(piecewiseSEM)
+
 data(keeley)
 
 # fit model
@@ -46,13 +44,19 @@ mod
 
 # d-sep tests
 basisSet(mod)
+
 dSep(mod)
+
 fisherC(mod)
-AIC(mod, AIC.type = "dsep")
+
+AIC(mod) #likelihood based
+
+AIC(mod, AIC.type = "dsep") #dsep based
 
 # Chisq
 LLchisq(mod)
-AIC(mode, AIC.type = "loglik")
+
+AIC(mod, AIC.type = "loglik")
 
 # Rsquared
 rsquared(mod)
@@ -64,11 +68,11 @@ summary(mod)
 residuals(mod)
 
 # plotting
-plot(mod)
-
-plot(mod, node_attrs = list(
-   shape = "rectangle", color = "black",
-   fillcolor = "orange", x = 3, y=1:4))
+# plot(mod)
+# 
+# plot(mod, node_attrs = list(
+#    shape = "rectangle", color = "black",
+#    fillcolor = "orange", x = 3, y = 1:4))
 
 # add correlated error
 mod2 <- psem(
@@ -86,6 +90,7 @@ anova(mod, mod2)
 
 # test mixed models
 library(lme4)
+# library(MASS)
 library(nlme)
 
 # using lme
@@ -96,7 +101,7 @@ shipley_psem <- psem(
   data = shipley),
   lme(Growth ~ Date, random = ~ 1 | site / tree, na.action = na.omit,
   data = shipley),
-  glmmPQL(Live ~ Growth + (1 | site) + (1 | tree),
+  glmer(Live ~ Growth + (1 | site) + (1 | tree),
   family = binomial(link = "logit"), data = shipley))
 
 summary(shipley_psem)
@@ -127,3 +132,7 @@ meadow_mod <- psem(
 )
 
 multigroup(meadow_mod, group = "grazed")
+
+#-----Submit to CRAN------------------------------------------------------------
+
+release("piecewiseSEM")

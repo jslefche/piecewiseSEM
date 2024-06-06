@@ -1,4 +1,6 @@
-#' Piecewise Structural Equation Modeling
+#' The 'piecewiseSEM` package
+#' 
+#' @description Piecewise structural equation modeling
 #'
 #' Fitting and evaluation of piecewise structural equation models, complete
 #' with goodness-of-fit tests, estimates of (standardized) path coefficients,
@@ -10,17 +12,14 @@
 #' glmerMod, glmmTMB, gam}.
 #'
 #' \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-#' \tab 2.3.01\cr Date: \tab 2023-06-01\cr Depends: \tab R (>= 4.2.0), car,
+#' \tab 2.3.01\cr Date: \tab 2024-06-06\cr Depends: \tab R (>= 4.4.0), car,
 #' DiagrammeR, emmeans, igraph, lme4, multcomp, MuMIn, MASS, methods, nlme\cr 
 #' License: \tab MIT\cr } The primary functions in the package are \code{\link{psem}} 
 #' which unites structural equations in a single model, and \code{summary.psem} can
 #' be used on an object of class \code{psem} to provide various summary statistics for 
 #' evaluation and interpretation.
 #'
-#' @name piecewiseSEM-package
-#' @aliases piecewiseSEM-package piecewiseSEM
-#' @docType package
-#' @author Jon Lefcheck <jlefcheck@@umces.edu>
+#' @author Jon Lefcheck <jslefche@@gmail.com>
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 #'
@@ -47,4 +46,4 @@
 #' Journal of the Royal Society Interface 14.134 (2017): 20170213.
 #' @keywords package
 #'
-NULL
+"_PACKAGE"
