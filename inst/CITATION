@@ -6,6 +6,6 @@ bibentry(
   number = "5",
   pages = "573-579",
   year = "2016",
-  author = person(c("Jonathan", "S."), "Lefcheck", role = c("aut", "cre"), email = "LefcheckJ@si.edu"),
+  author = person(c("Jonathan", "S."), "Lefcheck", role = c("aut", "cre"), email = "jslefche@gmail.com"),
   doi = "10.1111/2041-210X.12512"
   )
