@@ -25,6 +25,14 @@ devtools::build("piecewiseSEM")
 
 devtools::check_built("piecewiseSEM")
 
+# Check on R-hub
+
+# devtools::spell_check()
+
+# devtools::check_rhub("piecewiseSEM")
+
+# check_win_devel()
+
 #-----Examples------------------------------------------------------------------
 
 #run_examples(piecewiseSEM) 
@@ -135,4 +143,4 @@ multigroup(meadow_mod, group = "grazed")
 
 #-----Submit to CRAN------------------------------------------------------------
 
-release("piecewiseSEM")
+devtools::release("piecewiseSEM")
