@@ -16,14 +16,14 @@ pkgdown::build_site()
 usethis::use_build_ignore(c("build.R", ".git", ".gitignore", "docs"))
 
 # Load package
-devtools::load_all("./piecewiseSEM", reset = T)
+devtools::load_all(".", reset = T)
 
 # Check and build
-devtools::check("piecewiseSEM", cran = T)
+devtools::check(".", cran = T)
 
-devtools::build("piecewiseSEM")
+devtools::build(".")
 
-devtools::check_built("piecewiseSEM")
+devtools::check_built(".")
 
 # Check on R-hub
 
