@@ -143,4 +143,4 @@ multigroup(meadow_mod, group = "grazed")
 
 #-----Submit to CRAN------------------------------------------------------------
 
-devtools::release("piecewiseSEM")
+devtools::release(".")
