@@ -12,7 +12,7 @@ getDAG <- function(modelList) {
 
   fList <- fList[!sapply(fList, is.null)]
 
-  fList <- lapply(fList, all.vars_trans, smoothed = TRUE)
+  fList <- lapply(fList, all_vars_trans, smoothed = TRUE)
 
   vars <- unlist(fList)
 
@@ -142,7 +142,7 @@ sortDag <- function(amat, formulaList) {
 # 
 #   do.call(rbind, lapply(fList, function(i) {
 # 
-#     f <- all.vars_trans(i)
+#     f <- all_vars_trans(i)
 # 
 #     matrix(c(f[-1], rep(f[1], length(f) - 1)), ncol = 2)
 # 

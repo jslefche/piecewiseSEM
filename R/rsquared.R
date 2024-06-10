@@ -128,7 +128,7 @@ rsquared <- function(modelList, method = NULL) {
 
     ret <- do.call(data.frame, r)
 
-    ret <- data.frame(Response = all.vars.merMod(formula(i))[1], ret)
+    ret <- data.frame(Response = all_vars_merMod(formula(i))[1], ret)
 
     # if(ncol(ret) != 5) ret[, ncol(ret) + 1] <- NA
 
@@ -357,7 +357,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
       
       rand <- onlyBars(formula(model))
       
-      f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = TRUE))
+      f <- paste(all_vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = TRUE))
       
       nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = poisson(link = link), data = data))
       
@@ -409,7 +409,7 @@ rsquared.glmerMod <- function(model, method = "trigamma") {
           
           rand <- onlyBars(formula(model))
           
-          f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+          f <- paste(all_vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
           
           nullmodel <- suppressWarnings(lme4::glmer(formula(f), family = binomial(link = link), data = data))
           
@@ -518,7 +518,7 @@ rsquared.negbin <- function(model, method = "trigamma") {
 
     rand <- onlyBars(formula(model))
 
-    f <- paste(all.vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
+    f <- paste(all_vars_trans(formula(model))[1], " ~ 1 + ", onlyBars(formula(model), slopes = FALSE))
 
     nullmodel <- suppressWarnings(lme4::glmer.nb(formula(f), family = negative.binomial(link = link), data))
 
@@ -598,7 +598,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
   
     if(family. %in% c("poisson", "quasipoisson")) {
   
-      f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
+      f <- paste(all_vars_trans(formula(model))[1], " ~ 1")
   
       if(family. == "poisson")
   
@@ -638,7 +638,7 @@ rsquared.glmmPQL <- function(model, method = "trigamma") {
   
       if(method == "delta") {
   
-        f <- paste(all.vars_trans(formula(model))[1], " ~ 1")
+        f <- paste(all_vars_trans(formula(model))[1], " ~ 1")
   
         if(family. == "binomial")
   

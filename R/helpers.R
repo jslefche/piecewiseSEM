@@ -2,7 +2,7 @@
 #' 
 #' @keywords internal
 #' 
-all.vars.merMod <- function(formula.) {
+all_vars_merMod <- function(formula.) {
 
   if(!any(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
 
@@ -26,7 +26,7 @@ all.vars.merMod <- function(formula.) {
 #' 
 #' @keywords internal
 #' 
-all.vars_notrans <- function(formula.) {
+all_vars_notrans <- function(formula.) {
   
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
   
@@ -34,7 +34,7 @@ all.vars_notrans <- function(formula.) {
     
     if(any(grepl("\\|", formula.))) formula. <- lme4::nobars(formula.)
     
-    formula. <- all.vars_trans(formula.)
+    formula. <- all_vars_trans(formula.)
     
     if(any(grepl(":", formula.))) {
       
@@ -62,7 +62,7 @@ all.vars_notrans <- function(formula.) {
 #' 
 #' @keywords internal
 #' 
-all.vars_trans <- function(formula., smoothed = FALSE) {
+all_vars_trans <- function(formula., smoothed = FALSE) {
   
   if(!all(class(formula.) %in% c("formula", "formula.cerror"))) formula. <- formula(formula.)
   
@@ -149,11 +149,11 @@ cbind_fill <- function(...) {
 #' 
 dataTrans <- function(formula., data) {
   
-  notrans <- all.vars.merMod(formula.)
+  notrans <- all_vars_merMod(formula.)
   
   if(inherits(formula., "formula.cerror")) notrans <- gsub(".*\\((.*)\\)", "\\1", notrans)
   
-  trans <- all.vars_trans(formula.)
+  trans <- all_vars_trans(formula.)
   
   trans <- unlist(strsplit(trans, "\\:"))
   
@@ -486,9 +486,9 @@ isSig <- function(p) {
 #' 
 # KRp <- function(model, vars, data, intercepts = FALSE) {
 # 
-#   # if(any(grepl("\\*", all.vars_notrans(formula(model)))) & !all(grepl("\\*", vars))) {
+#   # if(any(grepl("\\*", all_vars_notrans(formula(model)))) & !all(grepl("\\*", vars))) {
 # 
-#     f <- all.vars_trans(formula(model))
+#     f <- all_vars_trans(formula(model))
 # 
 #     model <- update(model, as.formula(paste(f[1], " ~ ", paste(f[-1], collapse = " + "), " + ", paste(onlyBars(formula(model)), collapse = " + "))))
 # 
@@ -664,9 +664,12 @@ getLHS <- function(formulaList){
 #' @keywords internal
 #' 
 getRHS <- function(formulaList){
+  
   rhs <- sapply(formulaList, function(x) all.vars(x)[-1])
+  
   unique(do.call(c, rhs))
-}
+
+  }
 
 #' Operator for non-overlap in sets
 #' 

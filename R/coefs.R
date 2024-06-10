@@ -255,7 +255,7 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
   ret <- cbind(ret, isSig(ret[, 5]))
 
   ret <- data.frame(
-    Response = all.vars_trans(listFormula(list(model))[[1]])[1],
+    Response = all_vars_trans(listFormula(list(model))[[1]])[1],
     Predictor = rownames(ret),
     ret
   )
@@ -421,7 +421,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
       
       ret <- unstdCoefs(i, data, test.statistic, test.type, intercepts)
       
-      vars <- all.vars.merMod(i)
+      vars <- all_vars_merMod(i)
       
       newdata <- data[, vars, drop = FALSE]
       
@@ -437,7 +437,7 @@ stdCoefs <- function(modelList, data = NULL, standardize = "scale", standardize.
         
         if(grepl("\\:", x)) x <- strsplit(x, ":")[[1]]
         
-        coln <- all.vars_notrans(formula(i))
+        coln <- all_vars_notrans(formula(i))
 
         !any(sapply(data[, unname(coln[which(names(coln) %in% numVars)]), drop = FALSE], class) %in% c("character", "factor"))
         
@@ -485,7 +485,7 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
   
   data <- as.data.frame(data)
   
-  vars <- all.vars.merMod(model)
+  vars <- all_vars_merMod(model)
   
   numVars <- vars[which(!sapply(data[, vars, drop = FALSE], class) %in% c("character", "factor"))]
   
@@ -501,7 +501,7 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
           
           if(is.list(standardize)) {
             
-            vars <- unlist(sapply(modelList, all.vars_notrans))
+            vars <- unlist(sapply(modelList, all_vars_notrans))
             
             vars <- vars[!grepl(":", vars)]
             
@@ -525,9 +525,9 @@ GetSDx <- function(model, modelList, data, standardize = "scale") {
             
           } else stop("`standardize` must be either 'scale' or 'range' (or a list of ranges).", call. = FALSE)
   
-  if(any(grepl(":", all.vars_notrans(model)))) sd.x <- c(sd.x, scaleInt(model, data, standardize))
+  if(any(grepl(":", all_vars_notrans(model)))) sd.x <- c(sd.x, scaleInt(model, data, standardize))
   
-  sd.x <- sd.x[names(sd.x) %in% all.vars_notrans(model)[-1]]
+  sd.x <- sd.x[names(sd.x) %in% all_vars_notrans(model)[-1]]
   
   if(length(sd.x) == 0) sd.x <- NA
   
@@ -543,7 +543,7 @@ GetSDy <- function(model, data, standardize = "scale", standardize.type = "laten
   
   data <- as.data.frame(data)
   
-  vars <- all.vars.merMod(model)
+  vars <- all_vars_merMod(model)
   
   y <- vars[1]
   
@@ -634,7 +634,7 @@ scaleGLM <- function(model, family., link., standardize = "scale", standardize.t
   
   if(standardize.type == "Menard.OE") {
     
-    y <- all.vars_notrans(model)[1]
+    y <- all_vars_notrans(model)[1]
     
     data <- GetSingleData(model)
     

@@ -34,9 +34,9 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
   
   intModelList <- lapply(modelList, function(i) {
     
-    # rhs1 <- paste(paste(all.vars_trans(i)[-1], collapse = " + "))
+    # rhs1 <- paste(paste(all_vars_trans(i)[-1], collapse = " + "))
     
-    rhs2 <- paste(paste(all.vars_trans(i)[-1], "*", group), collapse = " + ")
+    rhs2 <- paste(paste(all_vars_trans(i)[-1], "*", group), collapse = " + ")
 
     i <- update(i, formula(paste(". ~ ", rhs2))) # paste(rhs1, " + ", rhs2))))
     
@@ -80,7 +80,7 @@ multigroup <- function(modelList, group, standardize = "scale", standardize.type
         
         if(ct[j, ncol(ct)] == "c") {
       
-          model <- modelList[[which(sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1] == ct[j, "Response"]))]]
+          model <- modelList[[which(sapply(listFormula(modelList), function(x) all_vars_merMod(x)[1] == ct[j, "Response"]))]]
           
           data. <- data[data[, group] == i, ]
           

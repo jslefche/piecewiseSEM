@@ -52,7 +52,7 @@ partialResid <- function(formula., modelList, data = NULL) {
   
   modelList <- removeData(modelList, formulas = 1)
   
-  vars <- all.vars_notrans(formula.)
+  vars <- all_vars_notrans(formula.)
   
   vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
@@ -114,13 +114,13 @@ partialCorr <- function(formula., modelList, data = NULL) {
   
   rcor <- cor(rdata[, 1], rdata[, 2], use = "complete.obs")
   
-  vars <- all.vars_notrans(formula.)
+  vars <- all_vars_notrans(formula.)
   
   vars <- gsub(".*\\((.*)\\)", "\\1", vars)
   
   vars <- strsplit(vars, ":|\\*")
   
-  flag <- unlist(vars) %in% unlist(sapply(listFormula(modelList), function(x) all.vars.merMod(x)[1]))
+  flag <- unlist(vars) %in% unlist(sapply(listFormula(modelList), function(x) all_vars_merMod(x)[1]))
   
   if(all(flag == FALSE)) {
     
@@ -142,7 +142,7 @@ partialCorr <- function(formula., modelList, data = NULL) {
       
       if(all(class(x) == "numeric")) 0 else
         
-        length(all.vars.merMod(formula(x))) - 2
+        length(all_vars_merMod(formula(x))) - 2
       
     ) )
     
@@ -161,8 +161,8 @@ partialCorr <- function(formula., modelList, data = NULL) {
   }
   
   ret <- data.frame(
-    Response = paste0("~~", all.vars_trans(formula.)[[1]]),
-    Predictor = paste0("~~", paste(all.vars_trans(formula.)[[2]], collapse = ":")),
+    Response = paste0("~~", all_vars_trans(formula.)[[1]]),
+    Predictor = paste0("~~", paste(all_vars_trans(formula.)[[2]], collapse = ":")),
     Estimate = rcor,
     Std.Error = NA,
     DF = N,
@@ -180,17 +180,17 @@ partialCorr <- function(formula., modelList, data = NULL) {
 #' 
 getResidModels <- function(vars, modelList, data) {
   
-  yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all.vars.merMod(x)[1])
+  yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all_vars_merMod(x)[1])
   
   if(all(yvar == FALSE)) {
     
     vars <- rev(vars)
     
-    yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all.vars.merMod(x)[1])
+    yvar <- sapply(listFormula(modelList), function(x) vars[[1]] %in% all_vars_merMod(x)[1])
     
   }
   
-  xvar <- sapply(listFormula(modelList), function(x) all(vars[[2]] %in% all.vars.merMod(x)[1]))
+  xvar <- sapply(listFormula(modelList), function(x) all(vars[[2]] %in% all_vars_merMod(x)[1]))
   
   if(all(yvar == FALSE) & all(xvar == FALSE)) {
     
@@ -210,7 +210,7 @@ getResidModels <- function(vars, modelList, data) {
       
       xvar <- sapply(listFormula(modelList), function(x) {
         
-        f <- all.vars.merMod(x)
+        f <- all_vars_merMod(x)
         
         any(f[1] == vars[[1]] & f[-1] %in% vars[[2]])
         
@@ -220,15 +220,15 @@ getResidModels <- function(vars, modelList, data) {
     
     ymod <- modelList[[which(yvar)]]
     
-    # if(length(all.vars.merMod) < 3) stop("Variables are part of a simple linear regression: partial residuals cannot be calculated!")
+    # if(length(all_vars_merMod) < 3) stop("Variables are part of a simple linear regression: partial residuals cannot be calculated!")
     
-    termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars_notrans(ymod)[-1]))
+    termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all_vars_notrans(ymod)[-1]))
     
     if(length(termlabels.y) == 0) {
       
       vars[[2]] <- rev(vars[[2]])
       
-      termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all.vars_notrans(ymod)[-1]))
+      termlabels.y <- which(grepl(paste(vars[[2]], collapse = ":"), all_vars_notrans(ymod)[-1]))
       
     }
     
@@ -244,7 +244,7 @@ getResidModels <- function(vars, modelList, data) {
       
       xmod <- modelList[[which(xvar)]]
       
-      newyvar <- all.vars_trans(xmod)[which(paste(vars[[2]], collapse = ":") == all.vars_notrans(xmod))]
+      newyvar <- all_vars_trans(xmod)[which(paste(vars[[2]], collapse = ":") == all_vars_notrans(xmod))]
       
       if(length(vars[[2]]) > 1) {
         
@@ -265,14 +265,14 @@ getResidModels <- function(vars, modelList, data) {
         names(data)[ncol(data)] <- paste(vars[[2]], collapse = "......")
         
         xmod <- update(xmod,
-                       formula(paste(paste(vars[[2]], collapse = "......"), "~ ", paste(all.vars_trans(ymod)[-1], collapse = " + "))),
+                       formula(paste(paste(vars[[2]], collapse = "......"), "~ ", paste(all_vars_trans(ymod)[-1], collapse = " + "))),
                        data = data)
         
       } else {
         
         if(length(termlabels.y) > 0) {
           
-          f <- paste(newyvar, " ~ ", paste(all.vars_trans(ymod)[-1], collapse = " + "))
+          f <- paste(newyvar, " ~ ", paste(all_vars_trans(ymod)[-1], collapse = " + "))
           
           xmod <- update(xmod, formula(f))
           

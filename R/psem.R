@@ -88,11 +88,11 @@ formatpsem <- function(x) {
   
   # if(!any(sapply(x, class) %in% "gam")) {
   # 
-  #   vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_notrans(x)))))
+  #   vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all_vars_notrans(x)))))
   # 
   #   vars <- vars[!duplicated(vars) & !grepl("\\:", vars)]
   #   
-  #   t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all.vars_trans(x, smoothed = TRUE)))))
+  #   t_vars <- as.vector(unlist(sapply(removeData(x, formulas = 1), function(x) unname(all_vars_trans(x, smoothed = TRUE)))))
   #   
   #   t_vars <- t_vars[!duplicated(t_vars) & !grepl("\\:", t_vars)]
   #   
@@ -112,7 +112,7 @@ formatpsem <- function(x) {
 
   formulaList <- listFormula(x, formulas = 1)
 
-  if(any(duplicated(sapply(formulaList, function(y) all.vars.merMod(y)[1]))))
+  if(any(duplicated(sapply(formulaList, function(y) all_vars_merMod(y)[1]))))
 
     stop("Duplicate responses detected in the model list. Collapse into single multiple regression!", call. = FALSE)
 
@@ -293,7 +293,7 @@ update.psem <- function(object, ...) {
 
     } else if(all(class(i) %in% c("character", "formula", "formula.cerror"))) {
 
-      if(length(all.vars.merMod(i)) == 1 | class(i) %in% "formula.cerror") {
+      if(length(all_vars_merMod(i)) == 1 | class(i) %in% "formula.cerror") {
 
         idx <- which(names(object) == "data")
 
@@ -303,9 +303,9 @@ update.psem <- function(object, ...) {
 
         resp <- sapply(object, function(y) if(!any(class(y) %in% c("matrix", "data.frame", "SpatialPointsDataFrame", "comparative.data")))
 
-          all.vars.merMod(y)[1] else "")
+          all_vars_merMod(y)[1] else "")
 
-        idx <- which(resp == all.vars.merMod(i)[1])
+        idx <- which(resp == all_vars_merMod(i)[1])
 
         object[[idx]] <- update(object[[idx]], i)
 

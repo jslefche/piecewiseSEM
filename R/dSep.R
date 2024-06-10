@@ -135,7 +135,7 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressBar, pb) {
   
-  formulaList <- lapply(listFormula(modelList, formulas = 1), all.vars_trans, smoothed = TRUE)
+  formulaList <- lapply(listFormula(modelList, formulas = 1), all_vars_trans, smoothed = TRUE)
   
   bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
   

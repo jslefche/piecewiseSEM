@@ -108,7 +108,7 @@ getSatModels <- function(b, modelList, data) {
     
     model <- modelList[[i]]
     
-    y <- all.vars_trans(model)[1]
+    y <- all_vars_trans(model)[1]
     
     newVars <- na.omit(unlist(lapply(b, function(x) if(x[2] == y) x[-c(2)] else NA)))
     
@@ -120,7 +120,7 @@ getSatModels <- function(b, modelList, data) {
     #     
     #     
     
-    newVars <- newVars[!newVars %in% all.vars_trans(model, smoothed = TRUE)]
+    newVars <- newVars[!newVars %in% all_vars_trans(model, smoothed = TRUE)]
     
     if(length(newVars) == 0) satModel <- model else {
       
