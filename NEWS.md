@@ -4,8 +4,9 @@ editor_options:
     wrap: 72
 ---
 
-## Version 2.3.01 Release Notes
+## Version 2.3.0.1 Release Notes
 -   Updated contact email
+-   Fixed issue with S3 methods and `all`
 
 ## Version 2.3.0 Release Notes
 

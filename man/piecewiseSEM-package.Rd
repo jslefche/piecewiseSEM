@@ -18,7 +18,7 @@ classes include: \code{lm, glm, gls, Sarlm, lme, glmmPQL, lmerMod, merModLmerTes
 glmerMod, glmmTMB, gam}.
 
 \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-\tab 2.3.01\cr Date: \tab 2024-06-06\cr Depends: \tab R (>= 4.4.0), car,
+\tab 2.3.0.1\cr Date: \tab 2024-06-11\cr Depends: \tab R (>= 4.4.0), car,
 DiagrammeR, emmeans, igraph, lme4, multcomp, MuMIn, MASS, methods, nlme\cr 
 License: \tab MIT\cr } The primary functions in the package are \code{\link{psem}} 
 which unites structural equations in a single model, and \code{summary.psem} can
