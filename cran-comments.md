@@ -1,5 +1,5 @@
 ## Update package
-Fixed anchors in cross-references in documentation.
+Fixed anchors in cross-references in documentation. Reduced version number to 3 components.
 
 ## R CMD check results
 There were no ERRORS or WARNINGS.

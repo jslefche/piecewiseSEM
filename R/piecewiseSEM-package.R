@@ -12,7 +12,7 @@
 #' glmerMod, glmmTMB, gam}.
 #'
 #' \tabular{ll}{ Package: \tab piecewiseSEM\cr Type: \tab Package\cr Version:
-#' \tab 2.3.0.2\cr Date: \tab 2025-09-02\cr Depends: \tab R (>= 4.5.0), car,
+#' \tab 2.3.1\cr Date: \tab 2025-09-02\cr Depends: \tab R (>= 4.5.0), car,
 #' DiagrammeR, emmeans, igraph, lme4, multcomp, MuMIn, MASS, methods, nlme\cr 
 #' License: \tab MIT\cr } The primary functions in the package are \code{\link{psem}} 
 #' which unites structural equations in a single model, and \code{summary.psem} can

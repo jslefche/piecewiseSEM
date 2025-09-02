@@ -4,8 +4,9 @@ editor_options:
     wrap: 72
 ---
 
-## Version 2.3.0.2 Release Notes
+## Version 2.3.1 Release Notes
 -   Fixed issue with anchors in cross-references
+-   Updated version number to three components
 
 ## Version 2.3.0.1 Release Notes
 -   Updated contact email
