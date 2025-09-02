@@ -61,13 +61,13 @@
 #' @return Returns a \code{data.frame} of coefficients, their standard errors,
 #' degrees of freedom, and significance tests.
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jim Grace
+#' @author Jon Lefcheck <jslefche@@gmail.com>, Jim Grace
 #' 
 #' @references Grace, J.B., Johnson, D.A., Lefcheck, J.S., and Byrnes, J.E.
 #' "Standardized Coefficients in Regression and Structural Models with Binary Outcomes." 
 #' Ecosphere 9(6): e02283.
 #' 
-#' @seealso \code{\link{Anova}}, \code{\link[emmeans]{emmeans}}, \code{\link[multcomp]{cld}}
+#' @seealso \code{\link[car]{Anova}}, \code{\link[emmeans]{emmeans}}, \code{\link[multcomp]{cld}}
 #'  
 #' @examples 
 #' mod <- psem(

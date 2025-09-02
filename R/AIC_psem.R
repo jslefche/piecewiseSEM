@@ -19,7 +19,7 @@
 #' 
 #' @return a data.frame of AIC, AICc, d.f., and sample size
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jim Grace
+#' @author Jon Lefcheck <jslefche@@gmail.com>, Jim Grace
 #' 
 #' @references Shipley, Bill, and Jacob C. Douma. "Generalized AIC and chi‐squared statistics 
 #' for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): e02960.

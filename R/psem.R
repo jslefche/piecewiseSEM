@@ -19,7 +19,8 @@
 #' 
 #' @return Returns an object of class \code{psem}
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' @author Jon Lefcheck <jslefche@@gmail.com>
+#' 
 #' @seealso \code{\link{summary.psem}}, \code{\link{\%~~\%}}
 #' 
 #' @examples 

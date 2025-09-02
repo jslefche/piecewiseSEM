@@ -33,7 +33,7 @@
 #' @return Returns a \code{data.frame} of independence claims and their
 #' significance values.
 #' 
-#' @author Jon Lefcheck <lefcheckj@@si.edu>, Jarrett Byrnes
+#' @author Jon Lefcheck <jslefche@@gmail.com>, Jarrett Byrnes
 #' 
 #' @seealso \code{\link{basisSet}}
 #' 

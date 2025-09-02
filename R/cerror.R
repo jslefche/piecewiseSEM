@@ -7,7 +7,8 @@
 #' @param e1 first variable involved in correlated error
 #' @param e2 second variable involved in correlated error
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>, Jarrett Byrnes
+#' @author Jon Lefcheck <jslefche@@gmail.com>, Jarrett Byrnes
+#' 
 #' @seealso \code{\link{cerror}}
 #' 
 #' @examples

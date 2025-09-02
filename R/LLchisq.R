@@ -19,7 +19,7 @@
 #' 
 #' @return a data.frame corresponding to the Chi-squared statistic, d.f., and P-value
 #' 
-#' @author Jon Lefcheck <LefcheckJ@@si.edu>
+#' @author Jon Lefcheck <jslefche@@gmail.com>
 #' 
 #' @seealso \code{\link{basisSet}}, \code{\link{dSep}}
 #' 
