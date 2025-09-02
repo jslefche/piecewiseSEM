@@ -54,5 +54,5 @@ coefs(sem)
 \code{\link{cerror}}
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>, Jarrett Byrnes
+Jon Lefcheck <jslefche@gmail.com>, Jarrett Byrnes
 }

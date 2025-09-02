@@ -58,5 +58,5 @@ for path models consistent with directed acyclic graphs." Ecology 101.3 (2020): 
 \code{\link{basisSet}}, \code{\link{dSep}}
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>
+Jon Lefcheck <jslefche@gmail.com>
 }

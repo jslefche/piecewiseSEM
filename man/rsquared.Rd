@@ -105,5 +105,5 @@ from generalized linear mixed-effects models revisited and expanded."
 Journal of the Royal Society Interface 14.134 (2017): 20170213.
 }
 \author{
-Jon Lefcheck <lefcheckj@si.edu>
+Jon Lefcheck <jslefche@gmail.com>
 }

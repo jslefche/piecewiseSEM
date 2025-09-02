@@ -58,5 +58,5 @@ Shipley, Bill. "The AIC model selection method applied to path analytic models c
 a d‐separation test." Ecology 94.3 (2013): 560-564.
 }
 \author{
-Jon Lefcheck <LefcheckJ@si.edu>, Jim Grace
+Jon Lefcheck <jslefche@gmail.com>, Jim Grace
 }

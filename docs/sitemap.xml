@@ -1,396 +1,134 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/piecewiseSEM.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/AIC.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/AIC_psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/all.vars.merMod.html</loc>
-  </url>
-  <url>
-    <loc>/reference/all.vars_notrans.html</loc>
-  </url>
-  <url>
-    <loc>/reference/all.vars_trans.html</loc>
-  </url>
-  <url>
-    <loc>/reference/all_vars_merMod.html</loc>
-  </url>
-  <url>
-    <loc>/reference/all_vars_notrans.html</loc>
-  </url>
-  <url>
-    <loc>/reference/all_vars_trans.html</loc>
-  </url>
-  <url>
-    <loc>/reference/anova.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/anovaLRT.html</loc>
-  </url>
-  <url>
-    <loc>/reference/anovaLRT.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/anovasingle.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/anovaTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/basisSet.html</loc>
-  </url>
-  <url>
-    <loc>/reference/BIC.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/captureTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cbind_fill.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cerror.html</loc>
-  </url>
-  <url>
-    <loc>/reference/checkData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/checkTransformations.html</loc>
-  </url>
-  <url>
-    <loc>/reference/coefs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cyclic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Dag.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dataTrans.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dSep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dupOutput.html</loc>
-  </url>
-  <url>
-    <loc>/reference/endogenous.reverse.html</loc>
-  </url>
-  <url>
-    <loc>/reference/evaluateClasses.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter.exogenous.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filterExisting.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filterExogenous.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filterInteractions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filterSmoothed.html</loc>
-  </url>
-  <url>
-    <loc>/reference/findbars.lme.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fisherC.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fixCatDir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/formatpsem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.basis.set.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.dag.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.formula.list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.model.control.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.random.formula.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.scaled.data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.scaled.model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get.sort.dag.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getAnova.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getCoefficients.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getDAG.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GetData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getLHS.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GetOLRE.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getResidModels.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getRHS.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getSatModels.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GetSDx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GetSDy.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getSingleData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getSortedPsem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GetVarCov.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_response.html</loc>
-  </url>
-  <url>
-    <loc>/reference/grapes-not_in-grapes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/grapes-twiddle-twiddle-grapes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/handleCategoricalCoefs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/import.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/infCrit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/isSig.html</loc>
-  </url>
-  <url>
-    <loc>/reference/keeley.html</loc>
-  </url>
-  <url>
-    <loc>/reference/KRp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/listFormula.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LLchisq.html</loc>
-  </url>
-  <url>
-    <loc>/reference/meadows.html</loc>
-  </url>
-  <url>
-    <loc>/reference/multigroup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nObs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/onlyBars.html</loc>
-  </url>
-  <url>
-    <loc>/reference/partial.resid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/partialCorr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/partialResid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/piecewiseSEM-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.anova.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.attr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.basisSet.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.multigroup.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.summary.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeCerror.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/resid.lme.html</loc>
-  </url>
-  <url>
-    <loc>/reference/residuals.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reverseAddVars.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reverseNonLin.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.gam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.glm.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.glmerMod.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.glmmPQL.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.gls.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.lm.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.lme.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.merMod.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.negbin.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rsquared.Sarlm.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scaleFam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scaleGLM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scaleInt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.aic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.basis.set.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.coefs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.fisher.c.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.fit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.missing.paths.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sem.model.fits.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shipley.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sortDag.html</loc>
-  </url>
-  <url>
-    <loc>/reference/specifyDir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stdCoefs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stop_psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stripTransformations.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summary.psem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/testBasisSetElements.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unstdCoefs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/update.psem.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/piecewiseSEM.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/AIC.psem.html</loc></url>
+<url><loc>/reference/AIC_psem.html</loc></url>
+<url><loc>/reference/all.vars.merMod.html</loc></url>
+<url><loc>/reference/all.vars_notrans.html</loc></url>
+<url><loc>/reference/all.vars_trans.html</loc></url>
+<url><loc>/reference/all_vars_merMod.html</loc></url>
+<url><loc>/reference/all_vars_notrans.html</loc></url>
+<url><loc>/reference/all_vars_trans.html</loc></url>
+<url><loc>/reference/anova.psem.html</loc></url>
+<url><loc>/reference/anovaLRT.html</loc></url>
+<url><loc>/reference/anovaLRT.psem.html</loc></url>
+<url><loc>/reference/anovasingle.psem.html</loc></url>
+<url><loc>/reference/anovaTable.html</loc></url>
+<url><loc>/reference/as.psem.html</loc></url>
+<url><loc>/reference/basisSet.html</loc></url>
+<url><loc>/reference/BIC.psem.html</loc></url>
+<url><loc>/reference/captureTable.html</loc></url>
+<url><loc>/reference/cbind_fill.html</loc></url>
+<url><loc>/reference/cerror.html</loc></url>
+<url><loc>/reference/checkData.html</loc></url>
+<url><loc>/reference/checkTransformations.html</loc></url>
+<url><loc>/reference/coefs.html</loc></url>
+<url><loc>/reference/cyclic.html</loc></url>
+<url><loc>/reference/Dag.html</loc></url>
+<url><loc>/reference/dataTrans.html</loc></url>
+<url><loc>/reference/dSep.html</loc></url>
+<url><loc>/reference/dupOutput.html</loc></url>
+<url><loc>/reference/endogenous.reverse.html</loc></url>
+<url><loc>/reference/evaluateClasses.html</loc></url>
+<url><loc>/reference/filter.exogenous.html</loc></url>
+<url><loc>/reference/filterExisting.html</loc></url>
+<url><loc>/reference/filterExogenous.html</loc></url>
+<url><loc>/reference/filterInteractions.html</loc></url>
+<url><loc>/reference/filterSmoothed.html</loc></url>
+<url><loc>/reference/findbars.lme.html</loc></url>
+<url><loc>/reference/fisherC.html</loc></url>
+<url><loc>/reference/fixCatDir.html</loc></url>
+<url><loc>/reference/formatpsem.html</loc></url>
+<url><loc>/reference/get.basis.set.html</loc></url>
+<url><loc>/reference/get.dag.html</loc></url>
+<url><loc>/reference/get.formula.list.html</loc></url>
+<url><loc>/reference/get.model.control.html</loc></url>
+<url><loc>/reference/get.random.formula.html</loc></url>
+<url><loc>/reference/get.scaled.data.html</loc></url>
+<url><loc>/reference/get.scaled.model.html</loc></url>
+<url><loc>/reference/get.sort.dag.html</loc></url>
+<url><loc>/reference/getAnova.html</loc></url>
+<url><loc>/reference/getCoefficients.html</loc></url>
+<url><loc>/reference/getDAG.html</loc></url>
+<url><loc>/reference/GetData.html</loc></url>
+<url><loc>/reference/getLHS.html</loc></url>
+<url><loc>/reference/GetOLRE.html</loc></url>
+<url><loc>/reference/getResidModels.html</loc></url>
+<url><loc>/reference/getRHS.html</loc></url>
+<url><loc>/reference/getSatModels.html</loc></url>
+<url><loc>/reference/GetSDx.html</loc></url>
+<url><loc>/reference/GetSDy.html</loc></url>
+<url><loc>/reference/getSingleData.html</loc></url>
+<url><loc>/reference/getSortedPsem.html</loc></url>
+<url><loc>/reference/GetVarCov.html</loc></url>
+<url><loc>/reference/get_response.html</loc></url>
+<url><loc>/reference/grapes-not_in-grapes.html</loc></url>
+<url><loc>/reference/grapes-twiddle-twiddle-grapes.html</loc></url>
+<url><loc>/reference/handleCategoricalCoefs.html</loc></url>
+<url><loc>/reference/import.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/infCrit.html</loc></url>
+<url><loc>/reference/isSig.html</loc></url>
+<url><loc>/reference/keeley.html</loc></url>
+<url><loc>/reference/KRp.html</loc></url>
+<url><loc>/reference/listFormula.html</loc></url>
+<url><loc>/reference/LLchisq.html</loc></url>
+<url><loc>/reference/meadows.html</loc></url>
+<url><loc>/reference/multigroup.html</loc></url>
+<url><loc>/reference/nObs.html</loc></url>
+<url><loc>/reference/onlyBars.html</loc></url>
+<url><loc>/reference/partial.resid.html</loc></url>
+<url><loc>/reference/partialCorr.html</loc></url>
+<url><loc>/reference/partialResid.html</loc></url>
+<url><loc>/reference/piecewiseSEM-package.html</loc></url>
+<url><loc>/reference/plot.psem.html</loc></url>
+<url><loc>/reference/print.anova.psem.html</loc></url>
+<url><loc>/reference/print.attr.html</loc></url>
+<url><loc>/reference/print.basisSet.html</loc></url>
+<url><loc>/reference/print.multigroup.psem.html</loc></url>
+<url><loc>/reference/print.psem.html</loc></url>
+<url><loc>/reference/print.summary.psem.html</loc></url>
+<url><loc>/reference/psem.html</loc></url>
+<url><loc>/reference/removeCerror.html</loc></url>
+<url><loc>/reference/removeData.html</loc></url>
+<url><loc>/reference/resid.lme.html</loc></url>
+<url><loc>/reference/residuals.psem.html</loc></url>
+<url><loc>/reference/reverseAddVars.html</loc></url>
+<url><loc>/reference/reverseNonLin.html</loc></url>
+<url><loc>/reference/rsquared.gam.html</loc></url>
+<url><loc>/reference/rsquared.glm.html</loc></url>
+<url><loc>/reference/rsquared.glmerMod.html</loc></url>
+<url><loc>/reference/rsquared.glmmPQL.html</loc></url>
+<url><loc>/reference/rsquared.gls.html</loc></url>
+<url><loc>/reference/rsquared.html</loc></url>
+<url><loc>/reference/rsquared.lm.html</loc></url>
+<url><loc>/reference/rsquared.lme.html</loc></url>
+<url><loc>/reference/rsquared.merMod.html</loc></url>
+<url><loc>/reference/rsquared.negbin.html</loc></url>
+<url><loc>/reference/rsquared.Sarlm.html</loc></url>
+<url><loc>/reference/scaleFam.html</loc></url>
+<url><loc>/reference/scaleGLM.html</loc></url>
+<url><loc>/reference/scaleInt.html</loc></url>
+<url><loc>/reference/sem.aic.html</loc></url>
+<url><loc>/reference/sem.basis.set.html</loc></url>
+<url><loc>/reference/sem.coefs.html</loc></url>
+<url><loc>/reference/sem.fisher.c.html</loc></url>
+<url><loc>/reference/sem.fit.html</loc></url>
+<url><loc>/reference/sem.missing.paths.html</loc></url>
+<url><loc>/reference/sem.model.fits.html</loc></url>
+<url><loc>/reference/shipley.html</loc></url>
+<url><loc>/reference/sortDag.html</loc></url>
+<url><loc>/reference/specifyDir.html</loc></url>
+<url><loc>/reference/stdCoefs.html</loc></url>
+<url><loc>/reference/stop_psem.html</loc></url>
+<url><loc>/reference/stripTransformations.html</loc></url>
+<url><loc>/reference/summary.psem.html</loc></url>
+<url><loc>/reference/testBasisSetElements.html</loc></url>
+<url><loc>/reference/unstdCoefs.html</loc></url>
+<url><loc>/reference/update.psem.html</loc></url>
 </urlset>
+

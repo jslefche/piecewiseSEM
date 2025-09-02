@@ -65,5 +65,5 @@ directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
 \code{\link{basisSet}}
 }
 \author{
-Jon Lefcheck <lefcheckj@si.edu>, Jarrett Byrnes
+Jon Lefcheck <jslefche@gmail.com>, Jarrett Byrnes
 }
