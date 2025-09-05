@@ -178,7 +178,7 @@ getCoefficients <- function(model, data = NULL, test.statistic = "F", test.type 
       
       # krp <- KRp(model, vars[-1], data, intercepts = TRUE)
   
-      ret <- getAnova(model)
+      ret <- getAnova(model, test.statistic = test.statistic, test.type = test.type)
       
       # ret <- cbind(ret[, 1:2], DF = nobs(model), ret[, 3], P.Value = NA)
       
