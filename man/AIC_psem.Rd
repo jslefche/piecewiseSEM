@@ -14,7 +14,8 @@ AIC_psem(
   interactions = FALSE,
   conserve = FALSE,
   conditional = FALSE,
-  .progressBar = FALSE
+  .progressBar = FALSE,
+  ncores = 1L
 )
 }
 \arguments{
@@ -43,6 +44,10 @@ Default is FALSE}
 Default is FALSE}
 
 \item{.progressBar}{an optional progress bar. Default is FALSE}
+
+\item{ncores}{Integer. Number of cores used to evaluate independence claims
+in parallel when \code{Cstat} is recomputed via \code{\link{fisherC}} (only
+relevant for \code{AIC.type = "dsep"}). Default is \code{1L} (serial).}
 }
 \value{
 a data.frame of AIC, AICc, d.f., and sample size

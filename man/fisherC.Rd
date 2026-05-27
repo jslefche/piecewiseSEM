@@ -12,7 +12,8 @@ fisherC(
   interactions = FALSE,
   conserve = FALSE,
   conditional = FALSE,
-  .progressBar = FALSE
+  .progressBar = FALSE,
+  ncores = 1L
 )
 }
 \arguments{
@@ -32,10 +33,15 @@ Default is FALSE}
 \item{conserve}{whether the most conservative P-value should be returned. 
 Default is FALSE}
 
-\item{conditional}{whether the conditioning variables should be shown in the table. 
+\item{conditional}{whether the conditioning variables should be shown in the table.
 Default is FALSE}
 
 \item{.progressBar}{an optional progress bar. Default is FALSE}
+
+\item{ncores}{Integer. Number of cores used to evaluate independence claims
+in parallel when \code{dTable} is recomputed via \code{\link{dSep}}.
+Default is \code{1L} (serial). Ignored when \code{dTable} is already a
+data.frame.}
 }
 \value{
 a data.frame corresponding to the C statistic, d.f., and P-value

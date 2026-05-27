@@ -11,7 +11,8 @@ dSep(
   interactions = FALSE,
   conserve = FALSE,
   conditioning = FALSE,
-  .progressBar = TRUE
+  .progressBar = TRUE,
+  ncores = 1L
 )
 }
 \arguments{
@@ -32,7 +33,15 @@ for use in special cases (see Details). Default is FALSE.}
 \item{conditioning}{Whether the conditioning variables should be shown in
 the summary table. Default is FALSE.}
 
-\item{.progressBar}{An optional progress bar. Default is TRUE.}
+\item{.progressBar}{An optional progress bar. Default is TRUE.
+Automatically disabled when \code{ncores > 1}.}
+
+\item{ncores}{Integer. Number of cores used to evaluate independence claims
+in parallel. Default is \code{1L} (serial evaluation, preserves the
+pre-2.3.2 behavior exactly). On Linux/macOS uses
+\code{\link[parallel]{mclapply}} (forking); on Windows uses
+\code{\link[parallel]{parLapply}} on a PSOCK cluster. Values greater than
+\code{parallel::detectCores()} are accepted but typically not useful.}
 }
 \value{
 Returns a \code{data.frame} of independence claims and their

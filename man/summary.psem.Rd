@@ -19,7 +19,8 @@
   test.type = "II",
   intercepts = FALSE,
   AIC.type = "loglik",
-  .progressBar = TRUE
+  .progressBar = TRUE,
+  ncores = 1L
 )
 }
 \arguments{
@@ -58,10 +59,14 @@ variables (from \code{\link[car]{Anova}})}
 \item{intercepts}{whether intercepts should be included in the coefficient  table
 Default is FALSE}
 
-\item{AIC.type}{whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score 
+\item{AIC.type}{whether the log-likelihood \code{"loglik"} or d-sep \code{"dsep"} AIC score
 should be reported. Default is \code{"loglik"}}
 
 \item{.progressBar}{an optional progress bar. Default is TRUE}
+
+\item{ncores}{Integer. Number of cores used to evaluate independence claims
+in parallel. Default is \code{1L} (serial). Passed through to
+\code{\link{dSep}}; see there for details.}
 }
 \value{
 The function \code{summary.psem} returns a list of summary
