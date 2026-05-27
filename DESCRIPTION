@@ -27,6 +27,7 @@ Imports:
     MASS,
     methods,
     nlme,
+    parallel,
     performance
 License: GPL-3
 Encoding: UTF-8
