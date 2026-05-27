@@ -29,21 +29,33 @@
 #' @param conditioning Whether the conditioning variables should be shown in
 #' the summary table. Default is FALSE.
 #' @param .progressBar An optional progress bar. Default is TRUE.
-#' 
+#' Automatically disabled when \code{ncores > 1}.
+#' @param ncores Integer. Number of cores used to evaluate independence claims
+#' in parallel. Default is \code{1L} (serial evaluation, preserves the
+#' pre-2.3.2 behavior exactly). On Linux/macOS uses
+#' \code{\link[parallel]{mclapply}} (forking); on Windows uses
+#' \code{\link[parallel]{parLapply}} on a PSOCK cluster. Values greater than
+#' \code{parallel::detectCores()} are accepted but typically not useful.
+#'
 #' @return Returns a \code{data.frame} of independence claims and their
 #' significance values.
-#' 
+#'
 #' @author Jon Lefcheck <jslefche@@gmail.com>, Jarrett Byrnes
-#' 
+#'
 #' @seealso \code{\link{basisSet}}
-#' 
+#'
 #' @references Shipley, Bill. "A new inferential test for path models based on
 #' directed acyclic graphs." Structural Equation Modeling 7.2 (2000): 206-218.
-#' 
-#' @export 
-#' 
-dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE, 
-                 conserve = FALSE, conditioning = FALSE, .progressBar = TRUE) {
+#'
+#' @export
+#'
+dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = FALSE,
+                 conserve = FALSE, conditioning = FALSE, .progressBar = TRUE,
+                 ncores = 1L) {
+
+  ncores <- as.integer(ncores)
+  if(length(ncores) != 1L || is.na(ncores) || ncores < 1L)
+    stop("`ncores` must be a positive integer.", call. = FALSE)
   
   if(is.null(basis.set)) b <- basisSet(modelList, direction, interactions) else b <- basis.set
   
@@ -58,16 +70,56 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = F
     if(inherits(modelList, "psem")) data <- modelList$data else data <- GetData(modelList)
     
     modelList <- removeData(modelList, formulas = 1)
-    
-    if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
-    
-    ret <- do.call(rbind, lapply(1:length(b), function(i)
-      
-      testBasisSetElements(i, b, modelList, data, conditioning, .progressBar, pb) 
-      
-      ) )
-    
-    if(.progressBar == TRUE) close(pb)
+
+    # Pre-compute loop invariants once instead of recomputing per basis-set element.
+    # `formulaList` and `respMap` (response variable of each model) do not change
+    # across iterations.
+    formulaList <- lapply(listFormula(modelList, formulas = 1), all_vars_trans, smoothed = TRUE)
+    respMap <- vapply(formulaList, `[`, character(1), 1L)
+
+    if(ncores == 1L) {
+
+      # Serial path — byte-identical to the pre-ncores implementation.
+      if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
+
+      ret_list <- lapply(1:length(b), function(i)
+        testBasisSetElements(i, b, modelList, respMap, data, conditioning, .progressBar, pb))
+
+      if(.progressBar == TRUE) close(pb)
+
+    } else {
+
+      # Parallel path — progress bar disabled because workers cannot share `pb`.
+      if(.Platform$OS.type == "windows") {
+
+        cl <- parallel::makePSOCKcluster(ncores)
+        on.exit(parallel::stopCluster(cl), add = TRUE)
+        parallel::clusterEvalQ(cl, requireNamespace("piecewiseSEM", quietly = TRUE))
+        parallel::clusterExport(
+          cl,
+          varlist = c("b", "modelList", "respMap", "data", "conditioning"),
+          envir = environment()
+        )
+        ret_list <- parallel::parLapply(cl, seq_along(b), function(i)
+          testBasisSetElements(i, b, modelList, respMap, data, conditioning, FALSE, NULL))
+
+      } else {
+
+        ret_list <- parallel::mclapply(seq_along(b), function(i)
+          testBasisSetElements(i, b, modelList, respMap, data, conditioning, FALSE, NULL),
+          mc.cores = ncores)
+
+      }
+
+      errs <- vapply(ret_list, inherits, logical(1), "try-error")
+      if(any(errs))
+        stop("dSep parallel worker failed: ",
+             conditionMessage(attr(ret_list[[which(errs)[1]]], "condition")),
+             call. = FALSE)
+
+    }
+
+    ret <- do.call(rbind, ret_list)
     
     rownames(ret) <- NULL
     
@@ -133,11 +185,9 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 #' @keywords internal
 #' 
-testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressBar, pb) {
-  
-  formulaList <- lapply(listFormula(modelList, formulas = 1), all_vars_trans, smoothed = TRUE)
-  
-  bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
+testBasisSetElements <- function(i, b, modelList, respMap, data, conditioning, .progressBar, pb) {
+
+  bMod <- modelList[[match(b[[i]][2], respMap)]]
   
   # if variable is smoothed and appears in linear model
   

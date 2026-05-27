@@ -4,7 +4,16 @@
 \alias{testBasisSetElements}
 \title{Evaluate conditional independence claim from the basis set}
 \usage{
-testBasisSetElements(i, b, modelList, data, conditioning, .progressBar, pb)
+testBasisSetElements(
+  i,
+  b,
+  modelList,
+  respMap,
+  data,
+  conditioning,
+  .progressBar,
+  pb
+)
 }
 \description{
 Evaluate conditional independence claim from the basis set
