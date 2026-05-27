@@ -16,7 +16,10 @@
 #' @param conditional whether the conditioning variables should be shown in the table. 
 #' Default is FALSE
 #' @param .progressBar an optional progress bar. Default is FALSE
-#' 
+#' @param ncores Integer. Number of cores used to evaluate independence claims
+#' in parallel when \code{Cstat} is recomputed via \code{\link{fisherC}} (only
+#' relevant for \code{AIC.type = "dsep"}). Default is \code{1L} (serial).
+#'
 #' @return a data.frame of AIC, AICc, d.f., and sample size
 #' 
 #' @author Jon Lefcheck <jslefche@@gmail.com>, Jim Grace
@@ -29,10 +32,10 @@
 #' 
 #' @export
 #' 
-AIC_psem <- function(modelList, AIC.type = "loglik", 
-                     Cstat = NULL, add.claims = NULL, basis.set = NULL, direction = NULL, 
-                     interactions = FALSE, conserve = FALSE, conditional = FALSE, 
-                     .progressBar = FALSE) {
+AIC_psem <- function(modelList, AIC.type = "loglik",
+                     Cstat = NULL, add.claims = NULL, basis.set = NULL, direction = NULL,
+                     interactions = FALSE, conserve = FALSE, conditional = FALSE,
+                     .progressBar = FALSE, ncores = 1L) {
   
   modelList <- removeData(modelList, formulas = 1)
   
@@ -48,7 +51,7 @@ AIC_psem <- function(modelList, AIC.type = "loglik",
     
   } else if(AIC.type == "dsep") {
     
-    if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar)
+    if(missing(Cstat)) Cstat <- fisherC(modelList, add.claims, basis.set, direction, conserve, conditional, .progressBar, ncores)
     
     aic <- as.numeric(Cstat[1] + 2*K)
     

@@ -10,21 +10,25 @@
 #' Default is FALSE
 #' @param conserve whether the most conservative P-value should be returned. 
 #' Default is FALSE
-#' @param conditional whether the conditioning variables should be shown in the table. 
+#' @param conditional whether the conditioning variables should be shown in the table.
 #' Default is FALSE
 #' @param .progressBar an optional progress bar. Default is FALSE
-#' 
+#' @param ncores Integer. Number of cores used to evaluate independence claims
+#' in parallel when \code{dTable} is recomputed via \code{\link{dSep}}.
+#' Default is \code{1L} (serial). Ignored when \code{dTable} is already a
+#' data.frame.
+#'
 #' @return a data.frame corresponding to the C statistic, d.f., and P-value
-#' 
+#'
 #' @export
 #'
 fisherC <- function(dTable, add.claims = NULL, basis.set = NULL, direction = NULL, interactions = FALSE,
-                    conserve = FALSE, conditional = FALSE, .progressBar = FALSE) {
+                    conserve = FALSE, conditional = FALSE, .progressBar = FALSE, ncores = 1L) {
 
   if(inherits(dTable, "list")) dTable <- as.psem(dTable)
-  
-  if(inherits(dTable, "psem")) dTable <- dSep(dTable, basis.set, direction, interactions, 
-                                             conserve, conditional, .progressBar)
+
+  if(inherits(dTable, "psem")) dTable <- dSep(dTable, basis.set, direction, interactions,
+                                             conserve, conditional, .progressBar, ncores)
 
   if(length(dTable) == 0) {
 
