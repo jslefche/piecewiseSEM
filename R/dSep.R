@@ -58,13 +58,19 @@ dSep <- function(modelList, basis.set = NULL, direction = NULL, interactions = F
     if(inherits(modelList, "psem")) data <- modelList$data else data <- GetData(modelList)
     
     modelList <- removeData(modelList, formulas = 1)
-    
+
+    # Pre-compute loop invariants once instead of recomputing per basis-set element.
+    # `formulaList` and `respMap` (response variable of each model) do not change
+    # across iterations.
+    formulaList <- lapply(listFormula(modelList, formulas = 1), all_vars_trans, smoothed = TRUE)
+    respMap <- vapply(formulaList, `[`, character(1), 1L)
+
     if(.progressBar == T & length(b) > 0)  pb <- txtProgressBar(min = 0, max = length(b), style = 3)
-    
+
     ret <- do.call(rbind, lapply(1:length(b), function(i)
-      
-      testBasisSetElements(i, b, modelList, data, conditioning, .progressBar, pb) 
-      
+
+      testBasisSetElements(i, b, modelList, respMap, data, conditioning, .progressBar, pb)
+
       ) )
     
     if(.progressBar == TRUE) close(pb)
@@ -133,11 +139,9 @@ dupOutput <- function(b, conserve = FALSE) {
 #' 
 #' @keywords internal
 #' 
-testBasisSetElements <- function(i, b, modelList, data, conditioning, .progressBar, pb) {
-  
-  formulaList <- lapply(listFormula(modelList, formulas = 1), all_vars_trans, smoothed = TRUE)
-  
-  bMod <- modelList[[which(sapply(formulaList, function(x) x[1] == b[[i]][2]))]]
+testBasisSetElements <- function(i, b, modelList, respMap, data, conditioning, .progressBar, pb) {
+
+  bMod <- modelList[[match(b[[i]][2], respMap)]]
   
   # if variable is smoothed and appears in linear model
   
